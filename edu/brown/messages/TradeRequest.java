@@ -2,6 +2,7 @@ package brown.messages;
 
 import java.util.List;
 
+import brown.server.Account;
 import brown.server.Share;
 
 public class TradeRequest {
@@ -29,6 +30,18 @@ public class TradeRequest {
 	public TradeRequest safeCopy(Integer correctID) {
 		return new TradeRequest(toID, correctID, moniesRequested, 
 				sharesRequested, moniesOffered, sharesOffered);
+	}
+	
+	public boolean isSatisfied(Account toAccount, Account fromAccount) {
+		if (fromAccount.monies < moniesOffered || !fromAccount.shares.containsAll(sharesOffered)) {
+			return false;
+		}
+		
+		if (toAccount.monies < moniesRequested || !toAccount.shares.containsAll(sharesRequested)) {
+			return false;
+		}
+		
+		return true;
 	}
 
 }

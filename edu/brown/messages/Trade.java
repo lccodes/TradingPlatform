@@ -1,10 +1,13 @@
 package brown.messages;
 
 public class Trade extends Message {
+	public final TradeRequest tradeRequest;
+	public final boolean accept;
 
-	public Trade(int ID) {
+	public Trade(int ID, TradeRequest tradeRequest, boolean accept) {
 		super(ID);
-		// TODO Auto-generated constructor stub
+		this.tradeRequest = tradeRequest;
+		this.accept = accept;
 	}
 
 }
