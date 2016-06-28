@@ -18,6 +18,12 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
+/**
+ * This is the server that all trading agent games
+ * will implement. It abstracts away all of the communication
+ * logic and largely the shared market structures (auctions, markets, trading)
+ * so that designers can focus on their game specifics
+ */
 public abstract class AgentServer {
 	public static int PORT = 2222;
 	
@@ -74,6 +80,11 @@ public abstract class AgentServer {
 	    });
 	}
 
+	/*
+	 * This method is invoked when a new agent connects to the game
+	 * @param connection - details of their connection to the server
+	 * @param registration - details of their game logic agent status
+	 */
 	protected void onRegistration(Connection connection, Registration registration) {
 		if (registration.getID() == null) {
 			return;
@@ -87,6 +98,12 @@ public abstract class AgentServer {
 		}
 	}
 
+	/*
+	 * The server recieves trade requests and forwards them to the correct agent(s)
+	 * @param connection - agent connection info
+	 * @param privateID - (safe) privateID of the requesting agent
+	 * @param tradeRequest - the trade request
+	 */
 	protected void onTradeRequest(Connection connection, Integer privateID, TradeRequest tradeRequest) {
 		TradeRequest tr = tradeRequest.safeCopy(privateToPublic.get(privateID));
 		if (privateID != -1) {
@@ -97,6 +114,11 @@ public abstract class AgentServer {
 		pendingTradeRequests.add(tr);
 	}
 	
+	/*
+	 * What happens when a trade request is accepted or rejected
+	 * @param connection - agent connection info
+	 * @param trade - tuple of trade request and acceptance boolean
+	 */
 	protected void onTrade(Connection connection, Trade trade) {
 		Integer privateTo = connections.get(connection);
 		Integer privateFrom = publicToPrivate(trade.tradeRequest.fromID);
@@ -137,14 +159,25 @@ public abstract class AgentServer {
 		}
 	}
 
+	/*
+	 * This will handle the logic for requests to purchase from public markets
+	 */
 	protected void onPurchaseRequest(Connection connection, Integer privateID, PurchaseRequest purchaseRequest) {
 		// TODO Auto-generated method stub
 	}
 
+	/*
+	 * This will handle what happens when an agent sends in a bid in response to a 
+	 * BidRequest for an auction
+	 */
 	protected void onBid(Connection connection, Integer privateID, Bid bid) {
 		// TODO Auto-generated method stub
 	}
 	
+	/*
+	 * Sends a bank update to a set of agents
+	 * @param List<Integer> set of IDs to send to
+	 */
 	protected void sendBankUpdates(List<Integer> IDs) {
 		synchronized(IDs) {
 			for (Integer ID : IDs) {
@@ -157,6 +190,11 @@ public abstract class AgentServer {
 		}
 	}
 	
+	/*
+	 * Agents only know eachothers public IDs. Private IDs are only known to the agents
+	 * themselves and are needed to authorize any actions. The server refers to agents
+	 * by their private IDs at all times.
+	 */
 	protected Integer publicToPrivate(Integer id) {
 		for (Entry<Integer, Integer> ptp : privateToPublic.entrySet()) {
 			if (ptp.getValue() == id) {
@@ -167,6 +205,10 @@ public abstract class AgentServer {
 		return null;
 	}
 	
+	/*
+	 * Retrieves a connection (needed to send a message to a client) from
+	 * the agent's private ID
+	 */
 	protected Connection privateToConnection(Integer id) {
 		for (Entry<Connection, Integer> ctp : connections.entrySet()) {
 			if (ctp.getValue() == id) {
