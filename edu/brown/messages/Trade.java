@@ -1,5 +1,10 @@
 package brown.messages;
 
+/**
+ * This message provides an avenue for agents to
+ * either accept or decline a trade request. The initiating agent
+ * can also cancel the TR with this method.
+ */
 public class Trade extends Message {
 	public final TradeRequest tradeRequest;
 	public final boolean accept;

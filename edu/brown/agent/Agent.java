@@ -13,8 +13,15 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+/*
+ * All bidding agents will implement this class
+ * It abstracts away the communication issues and let's authors focus on writing bidding logic.
+ */
 public abstract class Agent {
 	
+	/*
+	 * Implementations should always invoke super()
+	 */
 	public Agent(String host, int port) throws AgentCreationException {
 		Client client = new Client();
 	    client.start();
@@ -40,7 +47,27 @@ public abstract class Agent {
 		});
 	}
 	
+	/*
+	 * Whenever an agent's bank changes, the server sends a bank update
+	 * @param bankUpdate - contains the old bank state and new bank state
+	 * note: both accounts provided are immutable
+	 */
 	protected abstract void onBankUpdate(BankUpdate bankUpdate);
+	
+	/*
+	 * Whenever an auction is occuring, the server will request a bid
+	 * using this method and provide information about the auction as
+	 * a part of the request
+	 * @param bidRequest - auction metadata
+	 */
 	protected abstract void onBidRequest(BidRequest bidRequest);
+	
+	/*
+	 * Whenever another agent requests a trade either directly with this
+	 * agent or to all agents, this method is invoked with the details
+	 * of the trade. 
+	 * @param tradeRequest - from fields describe what this agent will recieve
+	 * and to fields describe what it will give up
+	 */
 	protected abstract void onTradeRequest(TradeRequest tradeRequest);
 }

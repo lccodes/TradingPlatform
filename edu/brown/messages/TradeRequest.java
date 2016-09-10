@@ -5,6 +5,11 @@ import java.util.List;
 import brown.markets.Share;
 import brown.server.Account;
 
+/*
+ * A message sent to the server by an agent
+ * when it wants to initiate a trade
+ * note: -1 indicates offer to all agents
+ */
 public class TradeRequest {
 	public final Integer toID;
 	public final Integer fromID;
@@ -27,11 +32,19 @@ public class TradeRequest {
 		this.sharesRequested = sharesRequested;
 	}
 	
+	/*
+	 * Overwrites the fromID field to prevent malicious
+	 * offer creation
+	 */
 	public TradeRequest safeCopy(Integer correctID) {
 		return new TradeRequest(toID, correctID, moniesRequested, 
 				sharesRequested, moniesOffered, sharesOffered);
 	}
 	
+	/*
+	 * Method that determines if two agents' accounts satisfy
+	 * the assets needed to execute this trade
+	 */
 	public boolean isSatisfied(Account toAccount, Account fromAccount) {
 		if (fromAccount.monies < moniesOffered || !fromAccount.shares.containsAll(sharesOffered)) {
 			return false;
