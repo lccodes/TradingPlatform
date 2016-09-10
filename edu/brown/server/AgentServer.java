@@ -178,7 +178,7 @@ public abstract class AgentServer {
 	 * Sends a bank update to a set of agents
 	 * @param List<Integer> set of IDs to send to
 	 */
-	protected void sendBankUpdates(List<Integer> IDs) {
+	public void sendBankUpdates(List<Integer> IDs) {
 		synchronized(IDs) {
 			for (Integer ID : IDs) {
 				Connection connection = privateToConnection(ID);
@@ -217,6 +217,13 @@ public abstract class AgentServer {
 		}
 		
 		return null;
+	}
+	
+	/*
+	 * Retrieves an agent's bank account from its public ID
+	 */
+	public Account publicToAccount(Integer id) {
+		return bank.get(publicToPrivate(id));
 	}
 	
 	public static void main(String args) {
