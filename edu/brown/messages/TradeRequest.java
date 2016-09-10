@@ -2,8 +2,8 @@ package brown.messages;
 
 import java.util.List;
 
+import brown.markets.Share;
 import brown.server.Account;
-import brown.server.Share;
 
 public class TradeRequest {
 	public final Integer toID;

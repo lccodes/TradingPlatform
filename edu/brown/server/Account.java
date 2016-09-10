@@ -3,6 +3,8 @@ package brown.server;
 import java.util.LinkedList;
 import java.util.List;
 
+import brown.markets.Share;
+
 public class Account {
 	public final Integer ID;
 	public final Integer monies;

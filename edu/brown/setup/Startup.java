@@ -12,6 +12,7 @@ import com.esotericsoftware.kryo.Kryo;
 
 public final class Startup {
 	
+	//TODO: Consider reflection for dynamic loading
 	public static boolean start(Kryo kryo) {
 		kryo.register(BankUpdate.class);
 		kryo.register(Bid.class);

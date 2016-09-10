@@ -2,10 +2,10 @@ package brown.test;
 
 import java.util.LinkedList;
 
+import brown.markets.Share;
 import brown.messages.Registration;
 import brown.server.Account;
 import brown.server.AgentServer;
-import brown.server.Share;
 
 import com.esotericsoftware.kryonet.Connection;
 
