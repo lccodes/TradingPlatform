@@ -59,8 +59,21 @@ public abstract class PM {
 		return cost(0, shareNum);
 	}
 	
-	public abstract Share buyYes(int shareNum);
-	public abstract Share buyNo(int shareNum);
+	/*
+	 * Returns a share to an agent that buys yes
+	 * @param agentID : agent's public ID
+	 * @param shareNum : int
+	 * @return share : share object; extendable in real games
+	 */
+	public abstract Share buyYes(Integer agentID, int shareNum);
+	
+	/*
+	 * Returns a share to an agent that buys no
+	 * @param agentID : agent's public ID
+	 * @param shareNum : int
+	 * @return share : share object; extendable in real games
+	 */
+	public abstract Share buyNo(Integer agentID, int shareNum);
 	
 	/*
 	 * Closes the market and pays shareholders

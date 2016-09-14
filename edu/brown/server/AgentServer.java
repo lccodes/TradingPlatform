@@ -8,7 +8,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import brown.markets.PredictionMarket;
 import brown.messages.Bid;
+import brown.messages.MarketUpdate;
 import brown.messages.PurchaseRequest;
 import brown.messages.Registration;
 import brown.messages.Trade;
@@ -191,6 +193,16 @@ public abstract class AgentServer {
 	}
 	
 	/*
+	 * Sends a market update to every agent
+	 * about the state of all the public markets
+	 */
+	public void sendMarketUpdate(List<PredictionMarket> markets) {
+		//NOTE: No need for sync since this is access only
+		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
+		theServer.sendToAllTCP(mupdate);
+	}
+	
+	/*
 	 * Agents only know eachothers public IDs. Private IDs are only known to the agents
 	 * themselves and are needed to authorize any actions. The server refers to agents
 	 * by their private IDs at all times.
@@ -224,10 +236,6 @@ public abstract class AgentServer {
 	 */
 	public Account publicToAccount(Integer id) {
 		return bank.get(publicToPrivate(id));
-	}
-	
-	public static void main(String args) {
-		// TODO server main
 	}
 
 }
