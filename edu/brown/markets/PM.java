@@ -33,7 +33,7 @@ public abstract class PM {
 	 * @param qd2 : new quantity no
 	 * @return cost : double
 	 */
-	private double cost(int newq1, int newq2) {
+	public double cost(int newq1, int newq2) {
 		if (!open) {
 			return -1;
 		}

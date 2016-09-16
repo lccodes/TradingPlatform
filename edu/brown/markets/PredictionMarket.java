@@ -1,5 +1,8 @@
 package brown.markets;
 
+import brown.agent.Agent;
+import brown.messages.PurchaseRequest;
+
 /**
  * Public accesors to private PM
  * @author lcamery
@@ -34,20 +37,20 @@ public class PredictionMarket {
 	 * Returns a share to an agent that buys yes
 	 * @param agentID : agent's public ID
 	 * @param shareNum : int
-	 * @return share : share object; extendable in real games
 	 */
-	public Share buyYes(Integer agentID, int shareNum) {
-		return pm.buyYes(agentID, shareNum);
+	public void buyYes(Agent agent, int shareNum) {
+		PurchaseRequest pr = new PurchaseRequest(agent.ID, pm, shareNum, 0);
+		agent.CLIENT.sendTCP(pr);
 	}
 	
 	/*
 	 * Returns a share to an agent that buys no
 	 * @param agentID : agent's public ID
 	 * @param shareNum : int
-	 * @return share : share object; extendable in real games
 	 */
-	public Share buyNo(Integer agentID, int shareNum) {
-		return pm.buyNo(agentID, shareNum);
+	public void buyNo(Agent agent, int shareNum) {
+		PurchaseRequest pr = new PurchaseRequest(agent.ID, pm, 0, shareNum);
+		agent.CLIENT.sendTCP(pr);
 	}
 
 }

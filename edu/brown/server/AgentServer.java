@@ -1,6 +1,7 @@
 package brown.server;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,10 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import brown.markets.PM;
 import brown.markets.PredictionMarket;
+import brown.markets.Share;
+import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.MarketUpdate;
 import brown.messages.PurchaseRequest;
@@ -34,6 +38,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	//Consider time limiting these
 	protected List<TradeRequest> pendingTradeRequests;
+	protected List<PM> markets;
 	
 	private int agentCount;
 	
@@ -45,6 +50,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
+		this.markets = new CopyOnWriteArrayList<PM>();
 		this.privateToPublic.put(-1, -1);
 		
 		theServer = new Server();
@@ -92,12 +98,32 @@ public abstract class AgentServer {
 			return;
 		}
 		
-		connections.put(connection, registration.getID());
-		//TODO: Consider removing old connection if present
-		if (!privateToPublic.containsKey(registration.getID())) {
-			privateToPublic.put(registration.getID(), agentCount++);
-			bank.put(registration.getID(), new Account(registration.getID()));
+		Collection<Integer> allIds = connections.values();
+		Integer theID = registration.getID();
+		if (allIds.contains(theID)) {
+			Connection oldConnection = null;
+			for (Connection c : connections.keySet()) {
+				if (connections.get(c).equals(theID)) {
+					oldConnection = c;
+					if (!oldConnection.getRemoteAddressTCP().equals(connection.getRemoteAddressTCP())) {
+						return;
+					}
+					break;
+				}
+			}
+			connections.remove(oldConnection);
+		} else {
+			theID = new Integer((int) (Math.random() * 1000000000));
+			while(allIds.contains(theID)) {
+				theID = new Integer((int) (Math.random() * 1000000000));
+			}
+			
+			privateToPublic.put(theID, agentCount++);
+			bank.put(theID, new Account(theID));
 		}
+		
+		connections.put(connection, theID);
+		theServer.sendToTCP(connection.getID(), new Registration(theID));
 	}
 
 	/*
@@ -164,8 +190,36 @@ public abstract class AgentServer {
 	/*
 	 * This will handle the logic for requests to purchase from public markets
 	 */
-	protected void onPurchaseRequest(Connection connection, Integer privateID, PurchaseRequest purchaseRequest) {
-		// TODO Auto-generated method stub
+	protected void onPurchaseRequest(Connection connection, Integer privateID, 
+			PurchaseRequest purchaseRequest) {
+		PM predictionmarket = purchaseRequest.predictionmarket;
+		Account oldAccount = bank.get(privateID);
+		synchronized(predictionmarket) {
+			synchronized(oldAccount) {
+				double cost = predictionmarket.cost(purchaseRequest.shareYes,
+						purchaseRequest.shareNo);
+				if (oldAccount.monies >= cost) {
+					List<Share> newShares = new LinkedList<Share>();
+					Share yes = predictionmarket.buyYes(privateID,
+							purchaseRequest.shareYes);
+					if (yes != null) {
+						newShares.add(yes);
+					}
+					
+					Share no = predictionmarket.buyNo(privateID, 
+							purchaseRequest.shareNo);
+					if (no != null) {
+						newShares.add(no);
+					}
+					
+					Account newAccount = oldAccount.add(0, newShares);
+					newAccount = newAccount.remove(cost, null);
+					bank.put(privateID, newAccount);
+					BankUpdate bu = new BankUpdate(privateID, oldAccount, newAccount);
+					theServer.sendToTCP(connection.getID(), bu);
+				}
+			}
+		}
 	}
 
 	/*
@@ -203,7 +257,7 @@ public abstract class AgentServer {
 	}
 	
 	/*
-	 * Agents only know eachothers public IDs. Private IDs are only known to the agents
+	 * Agents only know each other's public IDs. Private IDs are only known to the agents
 	 * themselves and are needed to authorize any actions. The server refers to agents
 	 * by their private IDs at all times.
 	 */

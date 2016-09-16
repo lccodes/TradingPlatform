@@ -5,6 +5,7 @@ import java.io.IOException;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
+import brown.messages.Registration;
 import brown.messages.TradeRequest;
 import brown.setup.Startup;
 
@@ -18,33 +19,44 @@ import com.esotericsoftware.kryonet.Listener;
  * It abstracts away the communication issues and let's authors focus on writing bidding logic.
  */
 public abstract class Agent {
+	public final Client CLIENT;
+	public Integer ID;
 	
 	/*
 	 * Implementations should always invoke super()
 	 */
 	public Agent(String host, int port) throws AgentCreationException {
-		Client client = new Client();
-	    client.start();
+		this.CLIENT = new Client();
+		this.ID = null;
+		
+	    CLIENT.start();
 	    try {
-			client.connect(5000, host, port, port);
+			CLIENT.connect(5000, host, port, port);
 		} catch (IOException e) {
 			throw new AgentCreationException("Failed to connect to server");
 		}
-	    Kryo agentKryo = client.getKryo();
+	    Kryo agentKryo = CLIENT.getKryo();
 		Startup.start(agentKryo);
 		
 		Agent agent = this;
-		client.addListener(new Listener() {
+		CLIENT.addListener(new Listener() {
 		       public void received (Connection connection, Object message) {
-		    	   if (message instanceof BankUpdate) {
-		    		   agent.onBankUpdate((BankUpdate) message);
-		    	   } else if (message instanceof BidRequest) {
-		    		   agent.onBidRequest((BidRequest) message);
-		    	   } else if (message instanceof TradeRequest) {
-		    		   agent.onTradeRequest((TradeRequest) message);
+		    	   synchronized(agent) {
+			    	   if (message instanceof BankUpdate) {
+			    		   agent.onBankUpdate((BankUpdate) message);
+			    	   } else if (message instanceof BidRequest) {
+			    		   agent.onBidRequest((BidRequest) message);
+			    	   } else if (message instanceof TradeRequest) {
+			    		   agent.onTradeRequest((TradeRequest) message);
+			    	   } else if (message instanceof Registration) {
+			    		   Registration reg = (Registration) message;
+			    		   agent.ID = reg.getID();
+			    	   }
 		    	   }
 		       }
 		});
+		
+		CLIENT.sendTCP(new Registration(-1));
 	}
 	
 	/*

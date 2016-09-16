@@ -1,5 +1,7 @@
 package brown.setup;
 
+import brown.markets.PM;
+import brown.markets.PredictionMarket;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.BidRequest;
@@ -21,6 +23,8 @@ public final class Startup {
 		kryo.register(Registration.class);
 		kryo.register(Trade.class);
 		kryo.register(TradeRequest.class);
+		kryo.register(PM.class);
+		kryo.register(PredictionMarket.class);
 		
 		return true;
 	}

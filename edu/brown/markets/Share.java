@@ -6,4 +6,5 @@ package brown.markets;
  */
 public interface Share {
 	Integer getAgentPublicId();
+	int getCount();
 }

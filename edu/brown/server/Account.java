@@ -7,7 +7,7 @@ import brown.markets.Share;
 
 public class Account {
 	public final Integer ID;
-	public final Integer monies;
+	public final double monies;
 	public final List<Share> shares;
 	
 	public Account(Integer ID) {
@@ -16,24 +16,24 @@ public class Account {
 		this.shares = new LinkedList<Share>();
 	}
 	
-	private Account(Integer ID, Integer monies, List<Share> shares) {
+	private Account(Integer ID, double monies, List<Share> shares) {
 		this.ID = ID;
 		this.monies = monies;
 		this.shares = shares;
 	}
 	
-	public Account add(Integer newMonies, List<Share> newShares) {
-		if (newMonies == null || newShares == null) {
-			return null;
+	public Account add(double newMonies, List<Share> newShares) {
+		if (newShares == null) {
+			return new Account(this.ID, newMonies+this.monies, shares);
 		}
 		
 		this.shares.addAll(newShares);
 		return new Account(this.ID, newMonies+this.monies, shares);
 	}
 	
-	public Account remove(Integer removeMonies, List<Share> removeShares) {
-		if (removeMonies == null || removeShares == null) {
-			return null;
+	public Account remove(double removeMonies, List<Share> removeShares) {
+		if (removeShares == null) {
+			return new Account(this.ID, this.monies-removeMonies, this.shares);
 		}
 		
 		this.shares.removeAll(removeShares);
