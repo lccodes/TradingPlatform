@@ -1,6 +1,6 @@
 package brown.test;
 
-import brown.markets.Share;
+import brown.assets.Share;
 
 public class TestShare implements Share {
 

@@ -1,6 +1,7 @@
 package brown.test;
 
 import brown.agent.Agent;
+import brown.assets.Account;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
@@ -10,13 +11,13 @@ public class TestAgent extends Agent {
 
 	public TestAgent(String host, int port) throws AgentCreationException {
 		super(host, port);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected void onBankUpdate(BankUpdate bankUpdate) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(bankUpdate.getID().equals(this.ID));
+		Account account = bankUpdate.newAccount;
+		System.out.println(account.monies == 100.0);
 	}
 
 	@Override
@@ -29,6 +30,11 @@ public class TestAgent extends Agent {
 	protected void onTradeRequest(TradeRequest tradeRequest) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static void main(String[] args) throws AgentCreationException {
+		new TestAgent("localhost", 9922);
+		while(true) {}
 	}
 
 }

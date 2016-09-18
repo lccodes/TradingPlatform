@@ -9,9 +9,10 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import brown.assets.Account;
+import brown.assets.Share;
 import brown.markets.PM;
 import brown.markets.PredictionMarket;
-import brown.markets.Share;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.MarketUpdate;
@@ -19,6 +20,8 @@ import brown.messages.PurchaseRequest;
 import brown.messages.Registration;
 import brown.messages.Trade;
 import brown.messages.TradeRequest;
+import brown.setup.Logging;
+import brown.setup.Startup;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -31,8 +34,6 @@ import com.esotericsoftware.kryonet.Server;
  * so that designers can focus on their game specifics
  */
 public abstract class AgentServer {
-	public static int PORT = 2222;
-	
 	protected Map<Connection, Integer> connections;
 	protected Map<Integer, Integer> privateToPublic;
 	protected Map<Integer, Account> bank;
@@ -41,10 +42,11 @@ public abstract class AgentServer {
 	protected List<PM> markets;
 	
 	private int agentCount;
-	
+	private final int PORT;
 	private Server theServer;
 	
-	public AgentServer() {
+	public AgentServer(int port) {
+		this.PORT = port;
 		this.agentCount = 0;
 		this.connections = new ConcurrentHashMap<Connection,Integer>();
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
@@ -55,10 +57,11 @@ public abstract class AgentServer {
 		
 		theServer = new Server();
 	    theServer.start();
+	    Startup.start(theServer.getKryo());
 	    try {
 			theServer.bind(PORT, PORT);
 		} catch (IOException e) {
-			System.out.println("[X] Server failed to start due to port conflict");
+			Logging.log("[X] Server failed to start due to port conflict");
 			return;
 		}
 	    
@@ -69,6 +72,7 @@ public abstract class AgentServer {
 	        	if (connections.containsKey(connection)) {
 	        		id = connections.get(connection);
 	        	} else if (message instanceof Registration) {
+	        		Logging.log("[-] registration recieved from " + connection.getID());
 	            	aServer.onRegistration(connection, (Registration) message);
 	            	return;
 	            } else {
@@ -76,16 +80,21 @@ public abstract class AgentServer {
 	            }
 	        	
 	        	if (message instanceof Bid) {
+	        		Logging.log("[-] bid recieved from " + id);
 	        		aServer.onBid(connection, id, (Bid) message);
 	            } else if (message instanceof PurchaseRequest) {
+	            	Logging.log("[-] purchaserequest recieved from " + id);
 	            	aServer.onPurchaseRequest(connection, id, (PurchaseRequest) message);
 	            } else if (message instanceof TradeRequest) {
+	            	Logging.log("[-] traderequest recieved from " + id);
 	            	aServer.onTradeRequest(connection, id, (TradeRequest) message);
 	            } else if (message instanceof Trade) {
+	            	Logging.log("[-] trade recieved from " + id);
 	            	aServer.onTrade(connection, (Trade) message);
 	            }
 	        }
 	    });
+	    Logging.log("[-] server started");
 	}
 
 	/*
@@ -124,10 +133,12 @@ public abstract class AgentServer {
 		
 		connections.put(connection, theID);
 		theServer.sendToTCP(connection.getID(), new Registration(theID));
+		
+		Logging.log("[-] registered " + theID);
 	}
 
 	/*
-	 * The server recieves trade requests and forwards them to the correct agent(s)
+	 * The server receives trade requests and forwards them to the correct agent(s)
 	 * @param connection - agent connection info
 	 * @param privateID - (safe) privateID of the requesting agent
 	 * @param tradeRequest - the trade request
@@ -241,7 +252,8 @@ public abstract class AgentServer {
 				if (connection == null) {
 					continue;
 				}
-				theServer.sendToTCP(connection.getID(), bank.get(ID));
+				BankUpdate bu = new BankUpdate(ID, null, bank.get(ID));
+				theServer.sendToTCP(connection.getID(), bu);
 			}
 		}
 	}

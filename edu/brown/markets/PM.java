@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.server.Account;
+import brown.assets.Account;
+import brown.assets.Share;
 import brown.server.AgentServer;
 
 /**

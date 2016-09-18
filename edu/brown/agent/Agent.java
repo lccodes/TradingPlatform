@@ -30,13 +30,14 @@ public abstract class Agent {
 		this.ID = null;
 		
 	    CLIENT.start();
+	    Kryo agentKryo = CLIENT.getKryo();
+		Startup.start(agentKryo);
 	    try {
 			CLIENT.connect(5000, host, port, port);
 		} catch (IOException e) {
 			throw new AgentCreationException("Failed to connect to server");
 		}
-	    Kryo agentKryo = CLIENT.getKryo();
-		Startup.start(agentKryo);
+	    
 		
 		Agent agent = this;
 		CLIENT.addListener(new Listener() {

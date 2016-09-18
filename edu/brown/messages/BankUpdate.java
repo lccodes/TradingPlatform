@@ -1,6 +1,6 @@
 package brown.messages;
 
-import brown.server.Account;
+import brown.assets.Account;
 
 /**
  * Message provided to agents when their accounts change
@@ -8,6 +8,12 @@ import brown.server.Account;
 public class BankUpdate extends Message {
 	public final Account oldAccount;
 	public final Account newAccount;
+	
+	public BankUpdate() {
+		super(null);
+		this.oldAccount = null;
+		this.newAccount = null;
+	}
 
 	public BankUpdate(int ID, Account oldAccount, Account newAccount) {
 		super(ID);

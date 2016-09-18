@@ -2,8 +2,8 @@ package brown.messages;
 
 import java.util.List;
 
-import brown.markets.Share;
-import brown.server.Account;
+import brown.assets.Account;
+import brown.assets.Share;
 
 /*
  * A message sent to the server by an agent
