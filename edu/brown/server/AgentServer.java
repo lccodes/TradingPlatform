@@ -39,11 +39,11 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	//Consider time limiting these
 	protected List<TradeRequest> pendingTradeRequests;
-	protected List<PM> markets;
+	protected Map<Integer, PM> markets;
 	
 	private int agentCount;
 	private final int PORT;
-	private Server theServer;
+	protected Server theServer;
 	
 	public AgentServer(int port) {
 		this.PORT = port;
@@ -52,7 +52,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
-		this.markets = new CopyOnWriteArrayList<PM>();
+		this.markets = new ConcurrentHashMap<Integer, PM>();
 		this.privateToPublic.put(-1, -1);
 		
 		theServer = new Server();
@@ -203,7 +203,10 @@ public abstract class AgentServer {
 	 */
 	protected void onPurchaseRequest(Connection connection, Integer privateID, 
 			PurchaseRequest purchaseRequest) {
-		PM predictionmarket = purchaseRequest.predictionmarket;
+		PM predictionmarket = markets.get(purchaseRequest.predictionmarket.ID);
+		if (predictionmarket == null) {
+			return;
+		}
 		Account oldAccount = bank.get(privateID);
 		synchronized(predictionmarket) {
 			synchronized(oldAccount) {

@@ -3,17 +3,27 @@ package brown.test;
 import brown.assets.Share;
 
 public class TestShare implements Share {
+	private final Integer ID;
+	private final Integer COUNT;
+	
+	public TestShare() {
+		this.ID = null;
+		this.COUNT = null;
+	}
+	
+	public TestShare(Integer ID, int count) {
+		this.ID = ID;
+		this.COUNT = count;
+	}
 
 	@Override
 	public Integer getAgentPublicId() {
-		// TODO Auto-generated method stub
-		return null;
+		return ID;
 	}
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return COUNT.intValue();
 	}
 
 }

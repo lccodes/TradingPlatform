@@ -20,8 +20,18 @@ public abstract class PM {
 	protected final List<Share> no;
 	protected final double b;
 	protected boolean open;
+	public final Integer ID;
 	
-	public PM(double b) {
+	public PM() {
+		this.ID = null;
+		this.yes = new ArrayList<Share>();
+		this.no = new ArrayList<Share>();
+		this.b = 0;
+		this.open = true;
+	}
+	
+	public PM(Integer id, double b) {
+		this.ID = id;
 		this.yes = new ArrayList<Share>();
 		this.no = new ArrayList<Share>();
 		this.b = b;

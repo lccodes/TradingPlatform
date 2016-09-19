@@ -11,6 +11,7 @@ public class TestAgent extends Agent {
 
 	public TestAgent(String host, int port) throws AgentCreationException {
 		super(host, port);
+		GameSetup.setup(this.CLIENT.getKryo());
 	}
 
 	@Override

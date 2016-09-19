@@ -1,12 +1,9 @@
 package brown.test;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import brown.assets.Account;
-import brown.markets.PM;
 import brown.messages.Registration;
 import brown.server.AgentServer;
 
@@ -16,11 +13,10 @@ public class TestServer extends AgentServer {
 	
 	public TestServer(int port) {
 		super(port);
+		GameSetup.setup(this.theServer.getKryo());
 	}
 
 	private final double B = 1.0;
-	
-	private Map<String, PM> predictionmarket;
 	
 	@Override
 	protected void onRegistration(Connection connection, Registration registration) {
@@ -36,8 +32,7 @@ public class TestServer extends AgentServer {
 	}
 	
 	public void startGame() {
-		predictionmarket = new HashMap<String, PM>();
-		predictionmarket.put("test", new TestPM(B));
+		this.markets.put(1, new TestPM(1, B));
 	}
 
 }
