@@ -1,5 +1,7 @@
 package brown.setup;
 
+import java.util.ArrayList;
+
 import brown.assets.Account;
 import brown.assets.Share;
 import brown.markets.PM;
@@ -7,6 +9,7 @@ import brown.markets.PredictionMarket;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.BidRequest;
+import brown.messages.MarketUpdate;
 import brown.messages.Message;
 import brown.messages.PurchaseRequest;
 import brown.messages.Registration;
@@ -32,6 +35,8 @@ public final class Startup {
 		kryo.register(Account.class);
 		kryo.register(java.util.LinkedList.class);
 		kryo.register(Share.class);
+		kryo.register(MarketUpdate.class);
+		kryo.register(ArrayList.class);
 		
 		return true;
 	}

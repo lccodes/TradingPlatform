@@ -5,6 +5,7 @@ import java.io.IOException;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
+import brown.messages.MarketUpdate;
 import brown.messages.Registration;
 import brown.messages.TradeRequest;
 import brown.setup.Startup;
@@ -52,6 +53,8 @@ public abstract class Agent {
 			    	   } else if (message instanceof Registration) {
 			    		   Registration reg = (Registration) message;
 			    		   agent.ID = reg.getID();
+			    	   } else if (message instanceof MarketUpdate) {
+			    		   agent.onMarketUpdate((MarketUpdate) message);
 			    	   }
 		    	   }
 		       }
@@ -60,6 +63,8 @@ public abstract class Agent {
 		CLIENT.sendTCP(new Registration(-1));
 	}
 	
+	protected abstract void onMarketUpdate(MarketUpdate marketUpdate);
+
 	/*
 	 * Whenever an agent's bank changes, the server sends a bank update
 	 * @param bankUpdate - contains the old bank state and new bank state

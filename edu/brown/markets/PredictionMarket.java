@@ -11,7 +11,14 @@ import brown.messages.PurchaseRequest;
 public class PredictionMarket {
 	protected final PM pm;
 	
-	public PredictionMarket(PM internal) {
+	public PredictionMarket() {
+		this.pm = null;
+	}
+	
+	public PredictionMarket(PM internal) throws MarketCreationException {
+		if (internal == null) {
+			throw new MarketCreationException("Null PM");
+		}
 		this.pm = internal;
 	}
 	

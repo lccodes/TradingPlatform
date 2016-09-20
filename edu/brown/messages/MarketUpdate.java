@@ -6,6 +6,11 @@ import brown.markets.PredictionMarket;
 
 public class MarketUpdate extends Message {
 	public final List<PredictionMarket> MARKETS;
+	
+	public MarketUpdate() {
+		super(null);
+		MARKETS = null;
+	}
 
 	public MarketUpdate(Integer ID, List<PredictionMarket> markets) {
 		super(ID);

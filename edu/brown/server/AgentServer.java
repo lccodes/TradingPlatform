@@ -11,6 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.Account;
 import brown.assets.Share;
+import brown.markets.MarketCreationException;
 import brown.markets.PM;
 import brown.markets.PredictionMarket;
 import brown.messages.BankUpdate;
@@ -207,6 +208,7 @@ public abstract class AgentServer {
 		if (predictionmarket == null) {
 			return;
 		}
+
 		Account oldAccount = bank.get(privateID);
 		synchronized(predictionmarket) {
 			synchronized(oldAccount) {
@@ -231,6 +233,7 @@ public abstract class AgentServer {
 					bank.put(privateID, newAccount);
 					BankUpdate bu = new BankUpdate(privateID, oldAccount, newAccount);
 					theServer.sendToTCP(connection.getID(), bu);
+					this.sendMarketUpdate(predictionmarket);
 				}
 			}
 		}
@@ -265,10 +268,21 @@ public abstract class AgentServer {
 	 * Sends a market update to every agent
 	 * about the state of all the public markets
 	 */
-	public void sendMarketUpdate(List<PredictionMarket> markets) {
+	public void sendAllMarketUpdates(List<PredictionMarket> markets) {
 		//NOTE: No need for sync since this is access only
 		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
 		theServer.sendToAllTCP(mupdate);
+	}
+	
+	public void sendMarketUpdate(PM pm) {
+		List<PredictionMarket> markets = new LinkedList<PredictionMarket>();
+		try {
+			markets.add(new PredictionMarket(pm));
+			MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
+			theServer.sendToAllTCP(mupdate);
+		} catch (MarketCreationException e) {
+			return;
+		}
 	}
 	
 	/*
