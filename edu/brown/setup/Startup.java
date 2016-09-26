@@ -13,6 +13,7 @@ import brown.messages.MarketUpdate;
 import brown.messages.Message;
 import brown.messages.PurchaseRequest;
 import brown.messages.Registration;
+import brown.messages.Rejection;
 import brown.messages.Trade;
 import brown.messages.TradeRequest;
 
@@ -37,6 +38,7 @@ public final class Startup {
 		kryo.register(Share.class);
 		kryo.register(MarketUpdate.class);
 		kryo.register(ArrayList.class);
+		kryo.register(Rejection.class);
 		
 		return true;
 	}

@@ -19,6 +19,7 @@ import brown.messages.Bid;
 import brown.messages.MarketUpdate;
 import brown.messages.PurchaseRequest;
 import brown.messages.Registration;
+import brown.messages.Rejection;
 import brown.messages.Trade;
 import brown.messages.TradeRequest;
 import brown.setup.Logging;
@@ -205,7 +206,13 @@ public abstract class AgentServer {
 	protected void onPurchaseRequest(Connection connection, Integer privateID, 
 			PurchaseRequest purchaseRequest) {
 		PM predictionmarket = markets.get(purchaseRequest.predictionmarket.ID);
-		if (predictionmarket == null) {
+		if (predictionmarket == null 
+				|| predictionmarket.getPriceYes(purchaseRequest.shareYes) != 
+				purchaseRequest.predictionmarket.getPriceYes(purchaseRequest.shareYes)
+				|| predictionmarket.getPriceYes(purchaseRequest.shareNo) != 
+						purchaseRequest.predictionmarket.getPriceYes(purchaseRequest.shareNo)) {
+			Rejection rej = new Rejection(privateID, purchaseRequest);
+			this.theServer.sendToTCP(connection.getID(), rej);
 			return;
 		}
 
