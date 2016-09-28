@@ -15,7 +15,7 @@ import brown.server.AgentServer;
  * @author lcamery
  *
  */
-public abstract class PM {
+public abstract class PM implements Market {
 	protected final List<Share> yes;
 	protected final List<Share> no;
 	protected final double b;
@@ -57,7 +57,7 @@ public abstract class PM {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double getPriceYes(int shareNum) {
+	public double pricePositive(int shareNum) {
 		return cost(shareNum, 0);
 	}
 	
@@ -66,7 +66,7 @@ public abstract class PM {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double getPriceNo(int shareNum) {
+	public double priceNegative(int shareNum) {
 		return cost(0, shareNum);
 	}
 	
@@ -76,7 +76,7 @@ public abstract class PM {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public abstract Share buyYes(Integer agentID, int shareNum);
+	public abstract Share buyPositive(Integer agentID, int shareNum);
 	
 	/*
 	 * Returns a share to an agent that buys no
@@ -84,7 +84,7 @@ public abstract class PM {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public abstract Share buyNo(Integer agentID, int shareNum);
+	public abstract Share buyNegative(Integer agentID, int shareNum);
 	
 	/*
 	 * Closes the market and pays shareholders
@@ -110,6 +110,16 @@ public abstract class PM {
 		
 		server.sendBankUpdates(IDs);
 		return true;
+	}
+	
+	public MarketWrapper wrap() {
+		try {
+			return new PredictionMarket(this);
+		} catch (MarketCreationException e) {
+			System.out.println("[x] error making market");
+		}
+		
+		return null;
 	}
 	
 }

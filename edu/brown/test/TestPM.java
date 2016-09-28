@@ -14,7 +14,7 @@ public class TestPM extends PM {
 	}
 	
 	@Override
-	public Share buyYes(Integer agentID, int shareNum) {
+	public Share buyPositive(Integer agentID, int shareNum) {
 		if (shareNum <= 0) {
 			return null;
 		}
@@ -25,7 +25,7 @@ public class TestPM extends PM {
 	}
 
 	@Override
-	public Share buyNo(Integer agentID, int shareNum) {
+	public Share buyNegative(Integer agentID, int shareNum) {
 		if (shareNum <= 0) {
 			return null;
 		}
@@ -33,6 +33,18 @@ public class TestPM extends PM {
 		Share testShares = new TestShare(agentID, shareNum);
 		this.no.add(testShares);
 		return testShares;
+	}
+
+	@Override
+	public void sellPositive(Integer agentID, int shareNum) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sellNegative(Integer agentID, int shareNum) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

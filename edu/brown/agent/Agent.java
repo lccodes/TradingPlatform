@@ -40,7 +40,7 @@ public abstract class Agent {
 		}
 	    
 		
-		Agent agent = this;
+		final Agent agent = this;
 		CLIENT.addListener(new Listener() {
 		       public void received (Connection connection, Object message) {
 		    	   synchronized(agent) {

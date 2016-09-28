@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import brown.assets.Account;
 import brown.assets.Share;
+import brown.markets.Market;
+import brown.markets.MarketWrapper;
 import brown.markets.PM;
 import brown.markets.PredictionMarket;
 import brown.messages.BankUpdate;
@@ -39,6 +41,8 @@ public final class Startup {
 		kryo.register(MarketUpdate.class);
 		kryo.register(ArrayList.class);
 		kryo.register(Rejection.class);
+		kryo.register(MarketWrapper.class);
+		kryo.register(Market.class);
 		
 		return true;
 	}

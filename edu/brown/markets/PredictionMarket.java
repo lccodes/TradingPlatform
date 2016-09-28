@@ -8,7 +8,7 @@ import brown.messages.PurchaseRequest;
  * @author lcamery
  *
  */
-public class PredictionMarket {
+public class PredictionMarket implements MarketWrapper {
 	protected final PM pm;
 	
 	public PredictionMarket() {
@@ -28,7 +28,7 @@ public class PredictionMarket {
 	 * @return cost : double
 	 */
 	public double getPriceYes(int shareNum) {
-		return pm.getPriceYes(shareNum);
+		return pm.pricePositive(shareNum);
 	}
 	
 	/*
@@ -37,7 +37,7 @@ public class PredictionMarket {
 	 * @return cost : double
 	 */
 	public double getPriceNo(int shareNum) {
-		return pm.getPriceNo(shareNum);
+		return pm.priceNegative(shareNum);
 	}
 	
 	/*

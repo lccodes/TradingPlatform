@@ -11,9 +11,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.Account;
 import brown.assets.Share;
-import brown.markets.MarketCreationException;
-import brown.markets.PM;
-import brown.markets.PredictionMarket;
+import brown.markets.Market;
+import brown.markets.MarketWrapper;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.MarketUpdate;
@@ -41,7 +40,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	//Consider time limiting these
 	protected List<TradeRequest> pendingTradeRequests;
-	protected Map<Integer, PM> markets;
+	protected Map<Integer, Market> markets;
 	
 	private int agentCount;
 	private final int PORT;
@@ -54,7 +53,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
-		this.markets = new ConcurrentHashMap<Integer, PM>();
+		this.markets = new ConcurrentHashMap<Integer, Market>();
 		this.privateToPublic.put(-1, -1);
 		
 		theServer = new Server();
@@ -67,7 +66,7 @@ public abstract class AgentServer {
 			return;
 		}
 	    
-	    AgentServer aServer = this;
+	    final AgentServer aServer = this;
 	    theServer.addListener(new Listener() {
 	        public void received (Connection connection, Object message) {
 	        	Integer id = null;
@@ -203,33 +202,32 @@ public abstract class AgentServer {
 	/*
 	 * This will handle the logic for requests to purchase from public markets
 	 */
-	protected void onPurchaseRequest(Connection connection, Integer privateID, 
-			PurchaseRequest purchaseRequest) {
-		PM predictionmarket = markets.get(purchaseRequest.predictionmarket.ID);
-		if (predictionmarket == null 
-				|| predictionmarket.getPriceYes(purchaseRequest.shareYes) != 
-				purchaseRequest.predictionmarket.getPriceYes(purchaseRequest.shareYes)
-				|| predictionmarket.getPriceYes(purchaseRequest.shareNo) != 
-						purchaseRequest.predictionmarket.getPriceYes(purchaseRequest.shareNo)) {
-			Rejection rej = new Rejection(privateID, purchaseRequest);
-			this.theServer.sendToTCP(connection.getID(), rej);
-			return;
-		}
-
+	protected void onPurchaseRequest(Connection connection, Integer privateID, PurchaseRequest purchaseRequest) {
+		Market market = markets.get(purchaseRequest.predictionmarket.ID);
 		Account oldAccount = bank.get(privateID);
-		synchronized(predictionmarket) {
+		synchronized(market) {
 			synchronized(oldAccount) {
-				double cost = predictionmarket.cost(purchaseRequest.shareYes,
+				double pYes = market.pricePositive(purchaseRequest.shareYes);
+				double pNo = market.priceNegative(purchaseRequest.shareNo);
+				if (market == null 
+						||pYes != purchaseRequest.predictionmarket.pricePositive(purchaseRequest.shareYes)
+						|| pNo != purchaseRequest.predictionmarket.priceNegative(purchaseRequest.shareNo)) {
+					Rejection rej = new Rejection(privateID, purchaseRequest);
+					this.theServer.sendToTCP(connection.getID(), rej);
+					return;
+				}
+				
+				double cost = market.cost(purchaseRequest.shareYes,
 						purchaseRequest.shareNo);
 				if (oldAccount.monies >= cost) {
 					List<Share> newShares = new LinkedList<Share>();
-					Share yes = predictionmarket.buyYes(privateID,
+					Share yes = market.buyPositive(privateID,
 							purchaseRequest.shareYes);
 					if (yes != null) {
 						newShares.add(yes);
 					}
 					
-					Share no = predictionmarket.buyNo(privateID, 
+					Share no = market.buyNegative(privateID, 
 							purchaseRequest.shareNo);
 					if (no != null) {
 						newShares.add(no);
@@ -240,7 +238,7 @@ public abstract class AgentServer {
 					bank.put(privateID, newAccount);
 					BankUpdate bu = new BankUpdate(privateID, oldAccount, newAccount);
 					theServer.sendToTCP(connection.getID(), bu);
-					this.sendMarketUpdate(predictionmarket);
+					this.sendMarketUpdate(market);
 				}
 			}
 		}
@@ -275,21 +273,17 @@ public abstract class AgentServer {
 	 * Sends a market update to every agent
 	 * about the state of all the public markets
 	 */
-	public void sendAllMarketUpdates(List<PredictionMarket> markets) {
+	public void sendAllMarketUpdates(List<MarketWrapper> markets) {
 		//NOTE: No need for sync since this is access only
 		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
 		theServer.sendToAllTCP(mupdate);
 	}
 	
-	public void sendMarketUpdate(PM pm) {
-		List<PredictionMarket> markets = new LinkedList<PredictionMarket>();
-		try {
-			markets.add(new PredictionMarket(pm));
-			MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
-			theServer.sendToAllTCP(mupdate);
-		} catch (MarketCreationException e) {
-			return;
-		}
+	public void sendMarketUpdate(Market market) {
+		List<MarketWrapper> markets = new LinkedList<MarketWrapper>();
+		markets.add(market.wrap());
+		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
+		theServer.sendToAllTCP(mupdate);
 	}
 	
 	/*
