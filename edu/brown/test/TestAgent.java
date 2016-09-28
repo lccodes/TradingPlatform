@@ -3,7 +3,7 @@ package brown.test;
 import brown.agent.Agent;
 import brown.assets.Account;
 import brown.exceptions.AgentCreationException;
-import brown.markets.PredictionMarket;
+import brown.markets.MarketWrapper;
 import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
 import brown.messages.MarketUpdate;
@@ -43,7 +43,7 @@ public class TestAgent extends Agent {
 
 	@Override
 	protected void onMarketUpdate(MarketUpdate marketUpdate) {
-		for(PredictionMarket pm : marketUpdate.MARKETS) {
+		for(MarketWrapper pm : marketUpdate.MARKETS) {
 			if (first) {
 				System.out.println(pm.getPriceYes(2) <= 1.44);
 				pm.buyYes(this, 2);

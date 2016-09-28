@@ -2,7 +2,7 @@ package brown.test;
 
 import brown.agent.Agent;
 import brown.exceptions.AgentCreationException;
-import brown.markets.PredictionMarket;
+import brown.markets.MarketWrapper;
 import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
 import brown.messages.MarketUpdate;
@@ -44,7 +44,7 @@ public class LukeAgent extends Agent {
 
 	@Override
 	protected void onMarketUpdate(MarketUpdate marketUpdate) {
-		for(PredictionMarket pm : marketUpdate.MARKETS) {
+		for(MarketWrapper pm : marketUpdate.MARKETS) {
 			if (pm.getPriceYes(1) < .85) {
 				pm.buyYes(this, 1);
 			} else {
