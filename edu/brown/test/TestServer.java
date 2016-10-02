@@ -3,9 +3,9 @@ package brown.test;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.assets.Account;
-import brown.markets.MarketWrapper;
+import brown.assets.accounting.Account;
 import brown.messages.Registration;
+import brown.securities.SecurityWrapper;
 import brown.server.AgentServer;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -31,7 +31,7 @@ public class TestServer extends AgentServer {
 		IDS.add(connections.get(connection));
 		this.sendBankUpdates(IDS);
 		
-		List<MarketWrapper> ms = new LinkedList<MarketWrapper>();
+		List<SecurityWrapper> ms = new LinkedList<SecurityWrapper>();
 		ms.add(this.markets.get(1).wrap());
 		this.sendAllMarketUpdates(ms);
 	}

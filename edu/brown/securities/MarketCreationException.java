@@ -1,4 +1,4 @@
-package brown.markets;
+package brown.securities;
 
 public class MarketCreationException extends Exception {
 

@@ -1,8 +1,8 @@
-package brown.markets;
+package brown.securities;
 
 import brown.agent.Agent;
 
-public interface MarketWrapper {
+public interface SecurityWrapper {
 	
 	public void buyYes(Agent agent, int shareNum);
 	public void buyNo(Agent agent, int shareNum);

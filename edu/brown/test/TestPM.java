@@ -1,7 +1,7 @@
 package brown.test;
 
-import brown.assets.Share;
-import brown.markets.PM;
+import brown.assets.value.Share;
+import brown.securities.prediction.PM;
 
 public class TestPM extends PM {
 	

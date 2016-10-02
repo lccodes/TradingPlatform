@@ -1,6 +1,6 @@
 package brown.messages;
 
-import brown.assets.Account;
+import brown.assets.accounting.Account;
 
 /**
  * Message provided to agents when their accounts change

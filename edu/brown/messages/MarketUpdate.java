@@ -2,17 +2,17 @@ package brown.messages;
 
 import java.util.List;
 
-import brown.markets.MarketWrapper;
+import brown.securities.SecurityWrapper;
 
 public class MarketUpdate extends Message {
-	public final List<MarketWrapper> MARKETS;
+	public final List<SecurityWrapper> MARKETS;
 	
 	public MarketUpdate() {
 		super(null);
 		MARKETS = null;
 	}
 
-	public MarketUpdate(Integer ID, List<MarketWrapper> markets) {
+	public MarketUpdate(Integer ID, List<SecurityWrapper> markets) {
 		super(ID);
 		this.MARKETS = markets;
 	}
