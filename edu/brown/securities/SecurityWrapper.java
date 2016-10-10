@@ -4,10 +4,12 @@ import brown.agent.Agent;
 
 public interface SecurityWrapper {
 	
-	public void buyYes(Agent agent, int shareNum);
-	public void buyNo(Agent agent, int shareNum);
+	public Integer getID();
 	
-	public double getPriceYes(int shareNum);
-	public double getPriceNo(int shareNum);
+	public void buy(Agent agent, int shareNum);
+	public void sell(Agent agent, int shareNum);
+	
+	public double bid(int shareNum);
+	public double ask(int shareNum);
 
 }

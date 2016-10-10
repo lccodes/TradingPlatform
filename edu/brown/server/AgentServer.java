@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.Share;
+import brown.assets.accounting.Transaction;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.MarketUpdate;
@@ -178,7 +178,7 @@ public abstract class AgentServer {
 				Account fromAccount = bank.get(privateFrom);
 				
 				if (trade.tradeRequest.isSatisfied(toAccount, fromAccount)) {
-					Account middleTo = toAccount.remove(trade.tradeRequest.moniesRequested,
+					/*Account middleTo = toAccount.remove(trade.tradeRequest.moniesRequested,
 							trade.tradeRequest.sharesRequested);
 					Account newTo = middleTo.add(trade.tradeRequest.moniesOffered,
 							trade.tradeRequest.sharesOffered);
@@ -194,7 +194,7 @@ public abstract class AgentServer {
 					List<Integer> ids = new LinkedList<Integer>();
 					ids.add(privateTo);
 					ids.add(privateFrom);
-					sendBankUpdates(ids);
+					sendBankUpdates(ids);*/
 				}
 			}
 		}
@@ -204,15 +204,15 @@ public abstract class AgentServer {
 	 * This will handle the logic for requests to purchase from public markets
 	 */
 	protected void onPurchaseRequest(Connection connection, Integer privateID, PurchaseRequest purchaseRequest) {
-		Security market = markets.get(purchaseRequest.predictionmarket.ID);
+		Security market = markets.get(purchaseRequest.market.getID());
 		Account oldAccount = bank.get(privateID);
 		synchronized(market) {
 			synchronized(oldAccount) {
-				double pYes = market.pricePositive(purchaseRequest.shareYes);
-				double pNo = market.priceNegative(purchaseRequest.shareNo);
+				double pYes = market.bid(purchaseRequest.shareYes);
+				double pNo = market.ask(purchaseRequest.shareNo);
 				if (market == null 
-						||pYes != purchaseRequest.predictionmarket.pricePositive(purchaseRequest.shareYes)
-						|| pNo != purchaseRequest.predictionmarket.priceNegative(purchaseRequest.shareNo)) {
+						|| pYes != purchaseRequest.market.bid(purchaseRequest.shareYes)
+						|| pNo != purchaseRequest.market.ask(purchaseRequest.shareNo)) {
 					Rejection rej = new Rejection(privateID, purchaseRequest);
 					this.theServer.sendToTCP(connection.getID(), rej);
 					return;
@@ -221,25 +221,28 @@ public abstract class AgentServer {
 				double cost = market.cost(purchaseRequest.shareYes,
 						purchaseRequest.shareNo);
 				if (oldAccount.monies >= cost) {
-					List<Share> newShares = new LinkedList<Share>();
-					Share yes = market.buyPositive(privateID,
+					List<Transaction> update = new LinkedList<Transaction>();
+					Transaction yes = market.buy(privateID,
 							purchaseRequest.shareYes);
 					if (yes != null) {
-						newShares.add(yes);
+						update.add(yes);
 					}
 					
-					Share no = market.buyNegative(privateID, 
+					Transaction no = market.sell(privateID, 
 							purchaseRequest.shareNo);
 					if (no != null) {
-						newShares.add(no);
+						update.add(no);
 					}
 					
-					Account newAccount = oldAccount.add(0, newShares);
+					Account newAccount = oldAccount.add(0, update);
 					newAccount = newAccount.remove(cost, null);
 					bank.put(privateID, newAccount);
 					BankUpdate bu = new BankUpdate(privateID, oldAccount, newAccount);
 					theServer.sendToTCP(connection.getID(), bu);
 					this.sendMarketUpdate(market);
+				} else {
+					Rejection rej = new Rejection(privateID, purchaseRequest);
+					theServer.sendToTCP(connection.getID(), rej);
 				}
 			}
 		}

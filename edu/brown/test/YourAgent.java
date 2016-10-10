@@ -5,6 +5,7 @@ import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
 import brown.messages.MarketUpdate;
+import brown.messages.Rejection;
 import brown.messages.TradeRequest;
 /**
  * 
@@ -67,6 +68,12 @@ public class YourAgent extends Agent {
 		while(true) {
 			agent.myLogc();
 		}
+	}
+
+	@Override
+	protected void onRejection(Rejection message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

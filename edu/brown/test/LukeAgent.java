@@ -5,6 +5,7 @@ import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
 import brown.messages.MarketUpdate;
+import brown.messages.Rejection;
 import brown.messages.TradeRequest;
 import brown.securities.SecurityWrapper;
 /**
@@ -45,10 +46,10 @@ public class LukeAgent extends Agent {
 	@Override
 	protected void onMarketUpdate(MarketUpdate marketUpdate) {
 		for(SecurityWrapper pm : marketUpdate.MARKETS) {
-			if (pm.getPriceYes(1) < .85) {
-				pm.buyYes(this, 1);
+			if (pm.bid(1) < .85) {
+				pm.buy(this, 1);
 			} else {
-				System.out.println(pm.getPriceYes(1));
+				System.out.println(pm.bid(1));
 			}
 		}
 	}
@@ -56,6 +57,12 @@ public class LukeAgent extends Agent {
 	public static void main(String[] args) throws AgentCreationException {
 		new LukeAgent("localhost", 9922);
 		while(true) {}
+	}
+
+	@Override
+	protected void onRejection(Rejection message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

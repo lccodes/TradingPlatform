@@ -29,8 +29,8 @@ public class PredictionMarket implements SecurityWrapper {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double getPriceYes(int shareNum) {
-		return pm.pricePositive(shareNum);
+	public double bid(int shareNum) {
+		return pm.bid(shareNum);
 	}
 	
 	/*
@@ -38,8 +38,8 @@ public class PredictionMarket implements SecurityWrapper {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double getPriceNo(int shareNum) {
-		return pm.priceNegative(shareNum);
+	public double ask(int shareNum) {
+		return pm.ask(shareNum);
 	}
 	
 	/*
@@ -47,7 +47,7 @@ public class PredictionMarket implements SecurityWrapper {
 	 * @param agentID : agent's public ID
 	 * @param shareNum : int
 	 */
-	public void buyYes(Agent agent, int shareNum) {
+	public void buy(Agent agent, int shareNum) {
 		PurchaseRequest pr = new PurchaseRequest(agent.ID, pm, shareNum, 0);
 		agent.CLIENT.sendTCP(pr);
 	}
@@ -57,9 +57,14 @@ public class PredictionMarket implements SecurityWrapper {
 	 * @param agentID : agent's public ID
 	 * @param shareNum : int
 	 */
-	public void buyNo(Agent agent, int shareNum) {
+	public void sell(Agent agent, int shareNum) {
 		PurchaseRequest pr = new PurchaseRequest(agent.ID, pm, 0, shareNum);
 		agent.CLIENT.sendTCP(pr);
+	}
+
+	@Override
+	public Integer getID() {
+		return pm.getID();
 	}
 
 }

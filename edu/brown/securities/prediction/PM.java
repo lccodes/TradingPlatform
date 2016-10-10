@@ -48,7 +48,8 @@ public abstract class PM implements Security {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double pricePositive(int shareNum) {
+	@Override
+	public double bid(int shareNum) {
 		return cost(shareNum, 0);
 	}
 	
@@ -57,7 +58,8 @@ public abstract class PM implements Security {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double priceNegative(int shareNum) {
+	@Override
+	public double ask(int shareNum) {
 		return cost(0, shareNum);
 	}
 	

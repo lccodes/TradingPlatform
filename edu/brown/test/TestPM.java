@@ -1,50 +1,35 @@
 package brown.test;
 
-import brown.assets.value.Share;
+import brown.assets.accounting.Transaction;
 import brown.securities.prediction.PM;
 
 public class TestPM extends PM {
 	
-	public TestPM() {
-		super(0, 0);
-	}
-
-	public TestPM(Integer id, double b) {
-		super(id, b);
+	public TestPM(Integer ID, double b) {
+		super(ID, b);
 	}
 	
-	@Override
-	public Share buyPositive(Integer agentID, int shareNum) {
-		if (shareNum <= 0) {
-			return null;
-		}
-		
-		Share testShares = new TestShare(agentID, shareNum);
-		this.yes.add(testShares);
-		return testShares;
+	public TestPM() {
+		super(null, 0);
 	}
 
 	@Override
-	public Share buyNegative(Integer agentID, int shareNum) {
-		if (shareNum <= 0) {
-			return null;
-		}
-		
-		Share testShares = new TestShare(agentID, shareNum);
-		this.no.add(testShares);
-		return testShares;
+	public Integer getID() {
+		return this.ID;
 	}
 
 	@Override
-	public void sellPositive(Integer agentID, int shareNum) {
-		// TODO Auto-generated method stub
-		
+	public Transaction buy(Integer agentID, int shareNum) {
+		Transaction trans = new Transaction(this, shareNum, agentID, cost(shareNum, 0));
+		this.yes++;
+		return trans;
 	}
 
 	@Override
-	public void sellNegative(Integer agentID, int shareNum) {
-		// TODO Auto-generated method stub
-		
+	public Transaction sell(Integer agentID, int shareNum) {
+		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, shareNum));
+		this.no++;
+		return trans;
 	}
 
 }

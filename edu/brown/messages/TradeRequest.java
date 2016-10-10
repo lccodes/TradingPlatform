@@ -46,11 +46,11 @@ public class TradeRequest {
 	 * the assets needed to execute this trade
 	 */
 	public boolean isSatisfied(Account toAccount, Account fromAccount) {
-		if (fromAccount.monies < moniesOffered || !fromAccount.shares.containsAll(sharesOffered)) {
+		if (fromAccount.monies < moniesOffered || !fromAccount.transactions.containsAll(sharesOffered)) {
 			return false;
 		}
 		
-		if (toAccount.monies < moniesRequested || !toAccount.shares.containsAll(sharesRequested)) {
+		if (toAccount.monies < moniesRequested || !toAccount.transactions.containsAll(sharesRequested)) {
 			return false;
 		}
 		

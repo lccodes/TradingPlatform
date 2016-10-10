@@ -33,7 +33,7 @@ public final class Startup {
 		kryo.register(Registration.class);
 		kryo.register(Trade.class);
 		kryo.register(TradeRequest.class);
-		kryo.register(PM.class);
+		kryo.register(Security.class);
 		kryo.register(PredictionMarket.class);
 		kryo.register(Account.class);
 		kryo.register(java.util.LinkedList.class);
@@ -42,7 +42,7 @@ public final class Startup {
 		kryo.register(ArrayList.class);
 		kryo.register(Rejection.class);
 		kryo.register(SecurityWrapper.class);
-		kryo.register(Security.class);
+		kryo.register(PM.class);
 		
 		return true;
 	}
