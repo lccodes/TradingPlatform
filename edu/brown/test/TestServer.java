@@ -26,6 +26,7 @@ public class TestServer extends AgentServer {
 		Account oldAccount = bank.get(connections.get(connection));
 		Account newAccount = oldAccount.add(100, null);
 		bank.put(connections.get(connection), newAccount);
+		System.out.println(oldAccount);
 		
 		List<Integer> IDS = new LinkedList<Integer>();
 		IDS.add(connections.get(connection));
