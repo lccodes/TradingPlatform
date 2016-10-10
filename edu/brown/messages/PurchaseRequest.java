@@ -1,6 +1,6 @@
 package brown.messages;
 
-import brown.markets.PM;
+import brown.securities.prediction.PM;
 
 public class PurchaseRequest extends Message {
 	public final PM predictionmarket;

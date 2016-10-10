@@ -1,14 +1,16 @@
-package brown.markets;
+package brown.securities.prediction;
 
 import brown.agent.Agent;
 import brown.messages.PurchaseRequest;
+import brown.securities.MarketCreationException;
+import brown.securities.SecurityWrapper;
 
 /**
  * Public accesors to private PM
  * @author lcamery
  *
  */
-public class PredictionMarket implements MarketWrapper {
+public class PredictionMarket implements SecurityWrapper {
 	protected final PM pm;
 	
 	public PredictionMarket() {

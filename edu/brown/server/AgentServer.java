@@ -6,13 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import brown.assets.Account;
-import brown.assets.Share;
-import brown.markets.Market;
-import brown.markets.MarketWrapper;
+import brown.assets.accounting.Account;
+import brown.assets.value.Share;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.MarketUpdate;
@@ -21,6 +20,8 @@ import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.Trade;
 import brown.messages.TradeRequest;
+import brown.securities.Security;
+import brown.securities.SecurityWrapper;
 import brown.setup.Logging;
 import brown.setup.Startup;
 
@@ -40,7 +41,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	//Consider time limiting these
 	protected List<TradeRequest> pendingTradeRequests;
-	protected Map<Integer, Market> markets;
+	protected Map<Integer, Security> markets;
 	
 	private int agentCount;
 	private final int PORT;
@@ -53,7 +54,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
-		this.markets = new ConcurrentHashMap<Integer, Market>();
+		this.markets = new ConcurrentHashMap<Integer, Security>();
 		this.privateToPublic.put(-1, -1);
 		
 		theServer = new Server();
@@ -203,7 +204,7 @@ public abstract class AgentServer {
 	 * This will handle the logic for requests to purchase from public markets
 	 */
 	protected void onPurchaseRequest(Connection connection, Integer privateID, PurchaseRequest purchaseRequest) {
-		Market market = markets.get(purchaseRequest.predictionmarket.ID);
+		Security market = markets.get(purchaseRequest.predictionmarket.ID);
 		Account oldAccount = bank.get(privateID);
 		synchronized(market) {
 			synchronized(oldAccount) {
@@ -273,14 +274,14 @@ public abstract class AgentServer {
 	 * Sends a market update to every agent
 	 * about the state of all the public markets
 	 */
-	public void sendAllMarketUpdates(List<MarketWrapper> markets) {
+	public void sendAllMarketUpdates(List<SecurityWrapper> markets) {
 		//NOTE: No need for sync since this is access only
 		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
 		theServer.sendToAllTCP(mupdate);
 	}
 	
-	public void sendMarketUpdate(Market market) {
-		List<MarketWrapper> markets = new LinkedList<MarketWrapper>();
+	public void sendMarketUpdate(Security market) {
+		List<SecurityWrapper> markets = new LinkedList<SecurityWrapper>();
 		markets.add(market.wrap());
 		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
 		theServer.sendToAllTCP(mupdate);
@@ -320,6 +321,30 @@ public abstract class AgentServer {
 	 */
 	public Account publicToAccount(Integer id) {
 		return bank.get(publicToPrivate(id));
+	}
+	
+	/*
+	 * Sets an agent's bank account from its public ID
+	 */
+	public void setAccount(Integer id, Account account) {
+		bank.put(publicToPrivate(id), account);
+	}
+
+	/*
+	 * Sends a bank update to a set of agents
+	 * @param List<Integer> set of IDs to send to
+	 */
+	public void sendBankUpdates(Set<Integer> IDs) {
+		synchronized(IDs) {
+			for (Integer ID : IDs) {
+				Connection connection = privateToConnection(ID);
+				if (connection == null) {
+					continue;
+				}
+				BankUpdate bu = new BankUpdate(ID, null, bank.get(ID));
+				theServer.sendToTCP(connection.getID(), bu);
+			}
+		}
 	}
 
 }

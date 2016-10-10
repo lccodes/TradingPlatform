@@ -1,4 +1,4 @@
-package brown.assets;
+package brown.assets.value;
 
 /**
  * All non-cash assets will extend this class

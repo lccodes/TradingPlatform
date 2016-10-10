@@ -1,6 +1,6 @@
 package brown.test;
 
-import brown.assets.Share;
+import brown.assets.value.Share;
 
 public class TestShare implements Share {
 	private final Integer ID;

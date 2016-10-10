@@ -2,12 +2,8 @@ package brown.setup;
 
 import java.util.ArrayList;
 
-import brown.assets.Account;
-import brown.assets.Share;
-import brown.markets.Market;
-import brown.markets.MarketWrapper;
-import brown.markets.PM;
-import brown.markets.PredictionMarket;
+import brown.assets.accounting.Account;
+import brown.assets.value.Share;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
 import brown.messages.BidRequest;
@@ -18,6 +14,10 @@ import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.Trade;
 import brown.messages.TradeRequest;
+import brown.securities.Security;
+import brown.securities.SecurityWrapper;
+import brown.securities.prediction.PM;
+import brown.securities.prediction.PredictionMarket;
 
 import com.esotericsoftware.kryo.Kryo;
 
@@ -41,8 +41,8 @@ public final class Startup {
 		kryo.register(MarketUpdate.class);
 		kryo.register(ArrayList.class);
 		kryo.register(Rejection.class);
-		kryo.register(MarketWrapper.class);
-		kryo.register(Market.class);
+		kryo.register(SecurityWrapper.class);
+		kryo.register(Security.class);
 		
 		return true;
 	}

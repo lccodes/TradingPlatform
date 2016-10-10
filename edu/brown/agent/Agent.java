@@ -7,6 +7,7 @@ import brown.messages.BankUpdate;
 import brown.messages.BidRequest;
 import brown.messages.MarketUpdate;
 import brown.messages.Registration;
+import brown.messages.Rejection;
 import brown.messages.TradeRequest;
 import brown.setup.Startup;
 
@@ -55,6 +56,8 @@ public abstract class Agent {
 			    		   agent.ID = reg.getID();
 			    	   } else if (message instanceof MarketUpdate) {
 			    		   agent.onMarketUpdate((MarketUpdate) message);
+			    	   } else if (message instanceof Rejection) {
+			    		   agent.onRejection((Rejection) message);
 			    	   }
 		    	   }
 		       }
@@ -63,6 +66,14 @@ public abstract class Agent {
 		CLIENT.sendTCP(new Registration(-1));
 	}
 	
+	/*
+	 * Whenever a request is rejected, this method is sent
+	 * with the rejected request
+	 * @param rejection : includes the rejected method and might
+	 * say why
+	 */
+	protected abstract void onRejection(Rejection message);
+
 	protected abstract void onMarketUpdate(MarketUpdate marketUpdate);
 
 	/*

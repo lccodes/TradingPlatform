@@ -1,7 +1,9 @@
-package brown.assets;
+package brown.assets.accounting;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import brown.assets.value.Share;
 
 public class Account {
 	public final Integer ID;
