@@ -16,7 +16,7 @@ import brown.messages.Trade;
 import brown.messages.TradeRequest;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
-import brown.securities.prediction.PM;
+import brown.securities.prediction.PMYes;
 import brown.securities.prediction.PredictionMarket;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -42,7 +42,7 @@ public final class Startup {
 		kryo.register(ArrayList.class);
 		kryo.register(Rejection.class);
 		kryo.register(SecurityWrapper.class);
-		kryo.register(PM.class);
+		kryo.register(PMYes.class);
 		
 		return true;
 	}

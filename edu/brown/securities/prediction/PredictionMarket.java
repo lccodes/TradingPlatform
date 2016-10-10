@@ -3,6 +3,7 @@ package brown.securities.prediction;
 import brown.agent.Agent;
 import brown.messages.PurchaseRequest;
 import brown.securities.MarketCreationException;
+import brown.securities.Security;
 import brown.securities.SecurityWrapper;
 
 /**
@@ -11,13 +12,13 @@ import brown.securities.SecurityWrapper;
  *
  */
 public class PredictionMarket implements SecurityWrapper {
-	protected final PM pm;
+	protected final Security pm;
 	
 	public PredictionMarket() {
 		this.pm = null;
 	}
 	
-	public PredictionMarket(PM internal) throws MarketCreationException {
+	public PredictionMarket(Security internal) throws MarketCreationException {
 		if (internal == null) {
 			throw new MarketCreationException("Null PM");
 		}

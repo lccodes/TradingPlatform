@@ -5,7 +5,10 @@ import java.util.List;
 
 import brown.assets.accounting.Account;
 import brown.messages.Registration;
+import brown.securities.SecurityFactory;
 import brown.securities.SecurityWrapper;
+import brown.securities.prediction.PMLedger;
+import brown.securities.prediction.PMTriple;
 import brown.server.AgentServer;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -33,13 +36,23 @@ public class TestServer extends AgentServer {
 		this.sendBankUpdates(IDS);
 		
 		List<SecurityWrapper> ms = new LinkedList<SecurityWrapper>();
-		ms.add(this.markets.get(1).wrap());
+		ms.add(this.exchange.getSecurity(1).wrap());
+		ms.add(this.exchange.getSecurity(2).wrap());
 		this.sendAllMarketUpdates(ms);
 	}
 	
+	public void closePM(boolean yes) {
+		this.exchange.close(this, 1, yes);
+	}
+	
 	public void startGame() {
-		this.markets.put(1, new TestPM(1, B));
-		System.out.println("[-] market added");
+		PMTriple triple = SecurityFactory.makePM(1, 2, B);
+		PMLedger yesLedger = new PMLedger(null);
+		PMLedger noLedger = new PMLedger(yesLedger);
+		yesLedger.setLedger(noLedger);
+		this.exchange.open(triple.yes, yesLedger);
+		this.exchange.open(triple.no, noLedger);
+		System.out.println("[-] markets added");
 	}
 
 }

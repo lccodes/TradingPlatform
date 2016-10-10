@@ -1,10 +1,5 @@
 package brown.securities.prediction;
 
-import brown.assets.accounting.Transaction;
-import brown.securities.MarketCreationException;
-import brown.securities.Security;
-import brown.securities.SecurityWrapper;
-
 /**
  * Private backend prediction market implementation
  * Agents are provided pointers to the public face
@@ -12,21 +7,18 @@ import brown.securities.SecurityWrapper;
  * @author lcamery
  *
  */
-public abstract class PM implements Security {
+public class PMBackend {
 	protected double yes;
 	protected double no;
 	protected final double b;
-	public final Integer ID;
 	
-	public PM() {
-		this.ID = null;
+	public PMBackend() {
 		this.yes = 0;
 		this.no = 0;
 		this.b = 1;
 	}
 	
-	public PM(Integer id, double b) {
-		this.ID = id;
+	public PMBackend(double b) {
 		this.yes = 0;
 		this.no = 0;
 		this.b = b;
@@ -48,7 +40,6 @@ public abstract class PM implements Security {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	@Override
 	public double bid(int shareNum) {
 		return cost(shareNum, 0);
 	}
@@ -58,35 +49,24 @@ public abstract class PM implements Security {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	@Override
 	public double ask(int shareNum) {
 		return cost(0, shareNum);
 	}
 	
 	/*
 	 * Returns a share to an agent that buys yes
-	 * @param agentID : agent's public ID
 	 * @param shareNum : int
-	 * @return share : share object; extendable in real games
 	 */
-	public abstract Transaction buy(Integer agentID, int shareNum);
+	public void yes(int shareNum) {
+		this.yes += shareNum;
+	}
 	
 	/*
 	 * Returns a share to an agent that buys no
-	 * @param agentID : agent's public ID
 	 * @param shareNum : int
-	 * @return share : share object; extendable in real games
 	 */
-	public abstract Transaction sell(Integer agentID, int shareNum);
-	
-	public SecurityWrapper wrap() {
-		try {
-			return new PredictionMarket(this);
-		} catch (MarketCreationException e) {
-			System.out.println("[x] error making market");
-		}
-		
-		return null;
+	public void no(int shareNum) {
+		this.no += shareNum;
 	}
 	
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.accounting.Account;
+import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Transaction;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
@@ -20,6 +21,7 @@ import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.Trade;
 import brown.messages.TradeRequest;
+import brown.securities.Exchange;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
 import brown.setup.Logging;
@@ -41,7 +43,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	//Consider time limiting these
 	protected List<TradeRequest> pendingTradeRequests;
-	protected Map<Integer, Security> markets;
+	protected Exchange exchange;
 	
 	private int agentCount;
 	private final int PORT;
@@ -54,7 +56,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
-		this.markets = new ConcurrentHashMap<Integer, Security>();
+		this.exchange = new Exchange();
 		this.privateToPublic.put(-1, -1);
 		
 		theServer = new Server();
@@ -204,7 +206,8 @@ public abstract class AgentServer {
 	 * This will handle the logic for requests to purchase from public markets
 	 */
 	protected void onPurchaseRequest(Connection connection, Integer privateID, PurchaseRequest purchaseRequest) {
-		Security market = markets.get(purchaseRequest.market.getID());
+		Security market = exchange.getSecurity(purchaseRequest.market.getID());
+		Ledger ledger = exchange.getLedger(purchaseRequest.market.getID());
 		Account oldAccount = bank.get(privateID);
 		synchronized(market) {
 			synchronized(oldAccount) {
@@ -226,12 +229,14 @@ public abstract class AgentServer {
 							purchaseRequest.shareYes);
 					if (yes != null) {
 						update.add(yes);
+						ledger.add(yes);
 					}
 					
 					Transaction no = market.sell(privateID, 
 							purchaseRequest.shareNo);
 					if (no != null) {
 						update.add(no);
+						ledger.add(no);
 					}
 					
 					Account newAccount = oldAccount.add(0, update);

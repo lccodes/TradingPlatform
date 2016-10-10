@@ -10,10 +10,25 @@ import brown.securities.Security;
 import brown.server.AgentServer;
 
 public class PMLedger extends Ledger {
+	private boolean closed;
+	private PMLedger other;
+	
+	public PMLedger(PMLedger other) {
+		this.closed = false;
+		this.other = other;
+	}
 
 	@Override
 	public void close(AgentServer server, Security security, boolean pay) {
+		if (closed) {
+			return;
+		}
+		
 		if (!pay) {
+			this.closed = true;
+			if (other != null) {
+				other.close(server, security, pay);
+			}
 			return;
 		}
 		
@@ -27,7 +42,14 @@ public class PMLedger extends Ledger {
 			ids.add(account.ID);
 		}
 		
-		server.sendBankUpdates(ids);	
+		server.sendBankUpdates(ids);
+		if (other != null) {
+			other.close(server, security, pay);
+		}
+	}
+	
+	public void setLedger(PMLedger ledger) {
+		this.other = ledger;
 	}
 
 }
