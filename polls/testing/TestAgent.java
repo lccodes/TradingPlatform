@@ -1,5 +1,6 @@
 package testing;
 
+import messages.PollMessage;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.MarketUpdate;
@@ -26,12 +27,17 @@ public class TestAgent extends PollAgent {
 
   @Override
   protected void onBankUpdate(BankUpdate bankUpdate) {
-    // TODO Auto-generated method stub
-    
+    System.out.println("old monies: " + bankUpdate.oldAccount.monies);
+    System.out.println("monies received: " + bankUpdate.newAccount.monies);
   }
   
   public static void main(String[] args) throws AgentCreationException {
     new TestAgent("localhost", 9999);
     while(true){}
+  }
+
+  @Override
+  protected void onPollMessage(PollMessage message) {
+    System.out.println("new poll: " + message);
   }
 }

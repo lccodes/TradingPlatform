@@ -1,9 +1,11 @@
 package setup;
 
+import messages.Poll;
+
 import com.esotericsoftware.kryo.Kryo;
 
 public final class GameSetup {
   public static void setup(Kryo kryo) {
-    //TODO:
+    kryo.register(Poll.class);
   }
 }
