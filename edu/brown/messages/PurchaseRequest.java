@@ -4,21 +4,21 @@ import brown.securities.Security;
 
 public class PurchaseRequest extends Message {
 	public final Security market;
-	public final int shareYes;
-	public final int shareNo;
+	public final int buy;
+	public final int sell;
 	
 	public PurchaseRequest() {
 		super(null);
 		market = null;
-		shareYes = 0;
-		shareNo = 0;
+		buy = 0;
+		sell = 0;
 	}
 
 	public PurchaseRequest(int ID, Security predictionmarket, int shareYes, int shareNo) {
 		super(ID);
 		this.market = predictionmarket;
-		this.shareYes = shareYes;
-		this.shareNo = shareNo;
+		this.buy = shareYes;
+		this.sell = shareNo;
 	}
 
 }

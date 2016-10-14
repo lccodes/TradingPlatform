@@ -211,29 +211,29 @@ public abstract class AgentServer {
 		Account oldAccount = bank.get(privateID);
 		synchronized(market) {
 			synchronized(oldAccount) {
-				double pYes = market.bid(purchaseRequest.shareYes);
-				double pNo = market.ask(purchaseRequest.shareNo);
+				double priceBuy = market.bid(purchaseRequest.buy);
+				double priceSell = market.ask(purchaseRequest.sell);
 				if (market == null 
-						|| pYes != purchaseRequest.market.bid(purchaseRequest.shareYes)
-						|| pNo != purchaseRequest.market.ask(purchaseRequest.shareNo)) {
+						|| priceBuy > purchaseRequest.market.bid(purchaseRequest.buy)
+						|| priceSell < purchaseRequest.market.ask(purchaseRequest.sell)) {
 					Rejection rej = new Rejection(privateID, purchaseRequest);
 					this.theServer.sendToTCP(connection.getID(), rej);
 					return;
 				}
 				
-				double cost = market.cost(purchaseRequest.shareYes,
-						purchaseRequest.shareNo);
+				double cost = market.cost(purchaseRequest.buy,
+						purchaseRequest.sell);
 				if (oldAccount.monies >= cost) {
 					List<Transaction> update = new LinkedList<Transaction>();
 					Transaction yes = market.buy(privateID,
-							purchaseRequest.shareYes);
+							purchaseRequest.buy);
 					if (yes != null) {
 						update.add(yes);
 						ledger.add(yes);
 					}
 					
 					Transaction no = market.sell(privateID, 
-							purchaseRequest.shareNo);
+							purchaseRequest.sell);
 					if (no != null) {
 						update.add(no);
 						ledger.add(no);
@@ -244,7 +244,7 @@ public abstract class AgentServer {
 					bank.put(privateID, newAccount);
 					BankUpdate bu = new BankUpdate(privateID, oldAccount, newAccount);
 					theServer.sendToTCP(connection.getID(), bu);
-					this.sendMarketUpdate(market);
+					//this.sendMarketUpdate(market);
 				} else {
 					Rejection rej = new Rejection(privateID, purchaseRequest);
 					theServer.sendToTCP(connection.getID(), rej);
