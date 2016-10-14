@@ -3,6 +3,7 @@ package brown.setup;
 import java.util.ArrayList;
 
 import brown.assets.accounting.Account;
+import brown.assets.accounting.Transaction;
 import brown.assets.value.Share;
 import brown.messages.BankUpdate;
 import brown.messages.Bid;
@@ -43,6 +44,7 @@ public final class Startup {
 		kryo.register(Rejection.class);
 		kryo.register(SecurityWrapper.class);
 		kryo.register(PMYes.class);
+		kryo.register(Transaction.class);
 		
 		return true;
 	}

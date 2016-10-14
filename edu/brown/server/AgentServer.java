@@ -354,5 +354,16 @@ public abstract class AgentServer {
 			}
 		}
 	}
+	
+	/**
+	 * Singular bank update
+	 * @param ID
+	 * @param oldA
+	 * @param newA
+	 */
+	public void sendBankUpdate(Integer ID, Account oldA, Account newA) {
+	  BankUpdate bu = new BankUpdate(ID, oldA, newA);
+    theServer.sendToTCP(this.privateToConnection(ID).getID(), bu);
+	}
 
 }
