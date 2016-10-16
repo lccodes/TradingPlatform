@@ -5,9 +5,8 @@ import java.util.List;
 
 import brown.assets.accounting.Account;
 import brown.messages.Registration;
+import brown.securities.Security;
 import brown.securities.SecurityFactory;
-import brown.securities.SecurityWrapper;
-import brown.securities.prediction.PMLedger;
 import brown.securities.prediction.PMTriple;
 import brown.server.AgentServer;
 
@@ -35,9 +34,9 @@ public class TestServer extends AgentServer {
 		IDS.add(connections.get(connection));
 		this.sendBankUpdates(IDS);
 		
-		List<SecurityWrapper> ms = new LinkedList<SecurityWrapper>();
-		ms.add(this.exchange.getSecurity(1).wrap());
-		ms.add(this.exchange.getSecurity(2).wrap());
+		List<Security> ms = new LinkedList<Security>();
+		ms.add(this.exchange.getSecurity(1));
+		ms.add(this.exchange.getSecurity(2));
 		this.sendAllMarketUpdates(ms);
 	}
 	
@@ -47,11 +46,8 @@ public class TestServer extends AgentServer {
 	
 	public void startGame() {
 		PMTriple triple = SecurityFactory.makePM(1, 2, B);
-		PMLedger yesLedger = new PMLedger(null);
-		PMLedger noLedger = new PMLedger(yesLedger);
-		yesLedger.setLedger(noLedger);
-		this.exchange.open(triple.yes, yesLedger);
-		this.exchange.open(triple.no, noLedger);
+		this.exchange.open(triple.yes, triple.ledgerYes);
+		this.exchange.open(triple.no, triple.ledgerNo);
 		System.out.println("[-] markets added");
 	}
 

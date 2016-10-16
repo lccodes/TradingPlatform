@@ -9,8 +9,10 @@ import brown.server.AgentServer;
 
 public abstract class Ledger {
 	protected List<Transaction> transactions;
+	protected final Security security;
 	
-	public Ledger() {
+	public Ledger(Security security) {
+		this.security = security;
 		this.transactions = new LinkedList<Transaction>();
 	}
 	
@@ -26,6 +28,6 @@ public abstract class Ledger {
 		return transactions.iterator();
 	}
 	
-	public abstract void close(AgentServer server, Security security, boolean pay);
+	public abstract void close(AgentServer server, boolean pay);
 
 }

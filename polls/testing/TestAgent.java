@@ -5,6 +5,7 @@ import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.MarketUpdate;
 import brown.messages.Rejection;
+import brown.securities.SecurityWrapper;
 import agent.PollAgent;
 
 public class TestAgent extends PollAgent {
@@ -21,8 +22,11 @@ public class TestAgent extends PollAgent {
 
   @Override
   protected void onMarketUpdate(MarketUpdate marketUpdate) {
-    // TODO Auto-generated method stub
-    
+    System.out.println("new market");
+    for (SecurityWrapper sec : marketUpdate.MARKETS) {
+    	sec.buy(this, 1);
+    	break;
+    }
   }
 
   @Override

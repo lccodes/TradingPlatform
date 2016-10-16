@@ -17,7 +17,7 @@ public class Exchange {
 	
 	public void close(AgentServer server, Security security, boolean pay) {
 		synchronized(security){
-			ledgers.get(security).close(server, security, pay);
+			ledgers.get(security).close(server, pay);
 			ledgers.remove(security);
 			securities.remove(security.getID());
 		}
@@ -26,7 +26,7 @@ public class Exchange {
 	public void close(AgentServer server, Integer ID, boolean pay) {
 		Security security = securities.get(ID);
 		synchronized(security){
-			ledgers.get(security).close(server, security, pay);
+			ledgers.get(security).close(server, pay);
 			ledgers.remove(security);
 			securities.remove(security.getID());
 		}

@@ -225,16 +225,14 @@ public abstract class AgentServer {
 						purchaseRequest.sell);
 				if (oldAccount.monies >= cost) {
 					List<Transaction> update = new LinkedList<Transaction>();
-					Transaction yes = market.buy(privateID,
-							purchaseRequest.buy);
-					if (yes != null) {
+					if (purchaseRequest.buy > 0) {
+						Transaction yes = market.buy(privateID, purchaseRequest.buy);
 						update.add(yes);
 						ledger.add(yes);
 					}
 					
-					Transaction no = market.sell(privateID, 
-							purchaseRequest.sell);
-					if (no != null) {
+					if (purchaseRequest.sell > 0) {
+						Transaction no = market.sell(privateID, purchaseRequest.sell);
 						update.add(no);
 						ledger.add(no);
 					}
@@ -281,9 +279,14 @@ public abstract class AgentServer {
 	/*
 	 * Sends a market update to every agent
 	 * about the state of all the public markets
+	 * 
+	 * NOTE: No need for sync since this is access only
 	 */
-	public void sendAllMarketUpdates(List<SecurityWrapper> markets) {
-		//NOTE: No need for sync since this is access only
+	public void sendAllMarketUpdates(List<Security> securities) {
+		List<SecurityWrapper> markets = new LinkedList<SecurityWrapper>();
+		for (Security sec : securities) {
+			markets.add(sec.wrap());
+		}
 		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
 		theServer.sendToAllTCP(mupdate);
 	}
@@ -363,7 +366,7 @@ public abstract class AgentServer {
 	 */
 	public void sendBankUpdate(Integer ID, Account oldA, Account newA) {
 	  BankUpdate bu = new BankUpdate(ID, oldA, newA);
-    theServer.sendToTCP(this.privateToConnection(ID).getID(), bu);
+	  theServer.sendToTCP(this.privateToConnection(ID).getID(), bu);
 	}
 
 }

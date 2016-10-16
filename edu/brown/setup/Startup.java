@@ -1,5 +1,6 @@
 package brown.setup;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import brown.assets.accounting.Account;
@@ -17,6 +18,8 @@ import brown.messages.Trade;
 import brown.messages.TradeRequest;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
+import brown.securities.prediction.PMBackend;
+import brown.securities.prediction.PMNo;
 import brown.securities.prediction.PMYes;
 import brown.securities.prediction.PredictionMarket;
 
@@ -45,6 +48,9 @@ public final class Startup {
 		kryo.register(SecurityWrapper.class);
 		kryo.register(PMYes.class);
 		kryo.register(Transaction.class);
+		kryo.register(PMBackend.class);
+		kryo.register(PMNo.class);
+		kryo.register(Timestamp.class);
 		
 		return true;
 	}

@@ -13,13 +13,14 @@ public class PMLedger extends Ledger {
 	private boolean closed;
 	private PMLedger other;
 	
-	public PMLedger(PMLedger other) {
+	public PMLedger(Security security, PMLedger other) {
+		super(security);
 		this.closed = false;
 		this.other = other;
 	}
 
 	@Override
-	public void close(AgentServer server, Security security, boolean pay) {
+	public void close(AgentServer server, boolean pay) {
 		if (closed) {
 			return;
 		}
@@ -27,8 +28,9 @@ public class PMLedger extends Ledger {
 		if (!pay) {
 			this.closed = true;
 			if (other != null) {
-				other.close(server, security, pay);
+				other.close(server, pay);
 			}
+			
 			return;
 		}
 		
@@ -44,7 +46,7 @@ public class PMLedger extends Ledger {
 		
 		server.sendBankUpdates(ids);
 		if (other != null) {
-			other.close(server, security, pay);
+			other.close(server, pay);
 		}
 	}
 	
