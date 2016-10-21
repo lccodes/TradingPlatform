@@ -69,4 +69,19 @@ public class PMBackend {
 		this.no += shareNum;
 	}
 	
+	/*
+	 * How many shares does it take to get to the
+	 * @param desired price : double 
+	 */
+	public double howMany(double price, boolean direction) {
+	  double top = !direction ? this.yes : this.no;
+	  double side = direction ? this.yes : this.no;
+    return this.b
+        * Math.log(Math.exp(price
+            / this.b
+            + Math.log(Math.pow(Math.E, this.yes / this.b)
+                + Math.pow(Math.E, this.no / this.b)))
+            - Math.exp(top / this.b)) - side;
+	}
+	
 }
