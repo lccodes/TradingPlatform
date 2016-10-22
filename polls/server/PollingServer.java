@@ -50,6 +50,7 @@ public class PollingServer extends AgentServer {
     this.round = true;
     this.marketOpen = new AtomicBoolean(false);
     this.TRUE = random.nextDouble();
+    System.out.println("[-] truth: " + this.TRUE);
     
     PMTriple triple = SecurityFactory.makePM(1, 2, 1);
     this.exchange.open(triple.yes, triple.ledgerYes);

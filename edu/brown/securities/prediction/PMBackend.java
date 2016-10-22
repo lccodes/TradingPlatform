@@ -25,14 +25,25 @@ public class PMBackend {
 	}
 	
 	/*
+	 * Price function
+	 * @param direction : boolean
+	 * @return price : double
+	 */
+	public double price(boolean direction) {
+		double up = Math.exp(yes/b);
+		double down = Math.exp(no/b);
+		return direction ? up/(up+down) : down/(down+up);
+	}
+	
+	/*
 	 * Cost function
 	 * @param qd1 : new quantity yes
 	 * @param qd2 : new quantity no
 	 * @return cost : double
 	 */
-	public double cost(int newq1, int newq2) {
-		return b*Math.log(Math.pow(Math.E, (newq1 + yes)/b) + Math.pow(Math.E, (newq2+no)/b))
-				- b*Math.log(Math.pow(Math.E, yes/b) + Math.pow(Math.E, no/b));
+	public double cost(double newq1, double newq2) {
+		return b*Math.log(Math.exp((newq1 + yes)/b) + Math.exp((newq2+no)/b))
+				- b*Math.log(Math.exp(yes/b) + Math.exp(no/b));
 	}
 	
 	/*
@@ -57,7 +68,7 @@ public class PMBackend {
 	 * Returns a share to an agent that buys yes
 	 * @param shareNum : int
 	 */
-	public void yes(int shareNum) {
+	public void yes(double shareNum) {
 		this.yes += shareNum;
 	}
 	
@@ -65,23 +76,33 @@ public class PMBackend {
 	 * Returns a share to an agent that buys no
 	 * @param shareNum : int
 	 */
-	public void no(int shareNum) {
+	public void no(double shareNum) {
 		this.no += shareNum;
 	}
 	
 	/*
-	 * How many shares does it take to get to the
+	 * How many shares does it take to get to the desired price
 	 * @param desired price : double 
 	 */
 	public double howMany(double price, boolean direction) {
 	  double top = !direction ? this.yes : this.no;
 	  double side = direction ? this.yes : this.no;
-    return this.b
-        * Math.log(Math.exp(price
-            / this.b
-            + Math.log(Math.pow(Math.E, this.yes / this.b)
-                + Math.pow(Math.E, this.no / this.b)))
-            - Math.exp(top / this.b)) - side;
+	  double p = direction ? price : (1-price);
+	  return this.b*Math.log((p*Math.exp(top/this.b))/(1-p)) - side;
 	}
+	
+	/*
+	 * How many shares does it take to fill this budget
+	 */
+	public double budgetToShares(double budget, boolean direction) {
+		  double top = !direction ? this.yes : this.no;
+		  double side = direction ? this.yes : this.no;
+		  return this.b
+	        * Math.log(Math.exp(budget
+	            / this.b
+	            + Math.log(Math.pow(Math.E, this.yes / this.b)
+	                + Math.pow(Math.E, this.no / this.b)))
+	            - Math.exp(top / this.b)) - side;
+		}
 	
 }

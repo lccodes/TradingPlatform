@@ -16,8 +16,7 @@ public class TestAgent extends PollAgent {
 
   @Override
   protected void onRejection(Rejection message) {
-    // TODO Auto-generated method stub
-    
+    System.out.println("On rejection: " + message);
   }
 
   @Override
@@ -35,13 +34,13 @@ public class TestAgent extends PollAgent {
     System.out.println("monies received: " + bankUpdate.newAccount.monies);
   }
   
+  @Override
+  protected void onPollMessage(PollMessage message) {
+    System.out.println("new poll: " + message.polls.get(0).prob);
+  }
+  
   public static void main(String[] args) throws AgentCreationException {
     new TestAgent("localhost", 9999);
     while(true){}
-  }
-
-  @Override
-  protected void onPollMessage(PollMessage message) {
-    System.out.println("new poll: " + message);
   }
 }

@@ -211,11 +211,7 @@ public abstract class AgentServer {
 		Account oldAccount = bank.get(privateID);
 		synchronized(market) {
 			synchronized(oldAccount) {
-				double priceBuy = market.bid(purchaseRequest.buy);
-				double priceSell = market.ask(purchaseRequest.sell);
-				if (market == null 
-						|| priceBuy > purchaseRequest.market.bid(purchaseRequest.buy)
-						|| priceSell < purchaseRequest.market.ask(purchaseRequest.sell)) {
+				if (market == null) {
 					Rejection rej = new Rejection(privateID, purchaseRequest);
 					this.theServer.sendToTCP(connection.getID(), rej);
 					return;

@@ -2,6 +2,7 @@ package brown.setup;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Transaction;
@@ -51,6 +52,7 @@ public final class Startup {
 		kryo.register(PMBackend.class);
 		kryo.register(PMNo.class);
 		kryo.register(Timestamp.class);
+		kryo.register(Date.class);
 		
 		return true;
 	}
