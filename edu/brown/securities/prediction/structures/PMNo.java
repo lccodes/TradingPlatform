@@ -1,9 +1,10 @@
-package brown.securities.prediction;
+package brown.securities.prediction.structures;
 
 import brown.assets.accounting.Transaction;
 import brown.securities.MarketCreationException;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
+import brown.securities.prediction.PredictionMarket;
 
 /**
  * Private backend prediction market implementation
@@ -12,16 +13,16 @@ import brown.securities.SecurityWrapper;
  * @author lcamery
  *
  */
-public class PMYes implements Security {
+public class PMNo implements Security {
 	protected final PMBackend backend;
 	protected final Integer ID;
 	
-	public PMYes() {
+	public PMNo() {
 		this.ID = null;
 		this.backend = null;
 	}
 	
-	public PMYes(Integer id, PMBackend backend) {
+	public PMNo(Integer id, PMBackend backend) {
 		this.ID = id;
 		this.backend = backend;
 	}
@@ -41,7 +42,7 @@ public class PMYes implements Security {
 	 */
 	@Override
 	public double bid(int shareNum) {
-		return cost(shareNum, 0);
+		return cost(0, shareNum);
 	}
 	
 	/*
@@ -51,7 +52,7 @@ public class PMYes implements Security {
 	 */
 	@Override
 	public double ask(int shareNum) {
-		return cost(-1*shareNum, 0);
+		return cost(0, -1 * shareNum);
 	}
 	
 	/*
@@ -61,8 +62,8 @@ public class PMYes implements Security {
 	 * @return share : share object; extendable in real games
 	 */
 	public Transaction buy(Integer agentID, int shareNum) {
-		Transaction trans = new Transaction(this, shareNum, agentID, cost(shareNum, 0));
-		backend.yes(shareNum);
+		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, shareNum));
+		backend.no(shareNum);
 		return trans;
 	}
 	
@@ -73,8 +74,8 @@ public class PMYes implements Security {
 	 * @return share : share object; extendable in real games
 	 */
 	public Transaction sell(Integer agentID, int shareNum) {
-		Transaction trans = new Transaction(this, shareNum, agentID, cost(-1 * shareNum, 0));
-		backend.yes(-1*shareNum);
+		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, -1 * shareNum));
+		backend.no(-1*shareNum);
 		return trans;
 	}
 	

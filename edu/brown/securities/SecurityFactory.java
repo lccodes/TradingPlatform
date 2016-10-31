@@ -1,10 +1,10 @@
 package brown.securities;
 
-import brown.securities.prediction.PMBackend;
 import brown.securities.prediction.PMLedger;
-import brown.securities.prediction.PMNo;
 import brown.securities.prediction.PMTriple;
-import brown.securities.prediction.PMYes;
+import brown.securities.prediction.structures.PMBackend;
+import brown.securities.prediction.structures.PMNo;
+import brown.securities.prediction.structures.PMYes;
 
 public final class SecurityFactory {
 

@@ -1,5 +1,9 @@
 package brown.securities.prediction;
 
+import brown.securities.prediction.structures.PMBackend;
+import brown.securities.prediction.structures.PMNo;
+import brown.securities.prediction.structures.PMYes;
+
 public class PMTriple {
 	public final PMBackend backend;
 	public final PMYes yes;
