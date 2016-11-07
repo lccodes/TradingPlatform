@@ -1,10 +1,11 @@
-package brown.securities.prediction;
+package brown.securities.prediction.structures;
 
 import brown.assets.accounting.Transaction;
 import brown.securities.MarketCreationException;
 import brown.securities.Security;
 import brown.securities.SecurityType;
 import brown.securities.SecurityWrapper;
+import brown.securities.prediction.PredictionMarket;
 
 /**
  * Private backend prediction market implementation

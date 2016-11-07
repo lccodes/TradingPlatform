@@ -1,4 +1,4 @@
-package brown.securities.prediction;
+package brown.securities.prediction.structures;
 
 /**
  * Private backend prediction market implementation

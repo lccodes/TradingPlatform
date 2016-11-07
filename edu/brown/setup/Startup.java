@@ -19,10 +19,10 @@ import brown.messages.Trade;
 import brown.messages.TradeRequest;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
-import brown.securities.prediction.PMBackend;
-import brown.securities.prediction.PMNo;
-import brown.securities.prediction.PMYes;
 import brown.securities.prediction.PredictionMarket;
+import brown.securities.prediction.structures.PMBackend;
+import brown.securities.prediction.structures.PMNo;
+import brown.securities.prediction.structures.PMYes;
 
 import com.esotericsoftware.kryo.Kryo;
 
