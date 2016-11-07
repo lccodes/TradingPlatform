@@ -3,6 +3,7 @@ package brown.securities.prediction;
 import brown.assets.accounting.Transaction;
 import brown.securities.MarketCreationException;
 import brown.securities.Security;
+import brown.securities.SecurityType;
 import brown.securities.SecurityWrapper;
 
 /**
@@ -90,6 +91,11 @@ public class PMYes implements Security {
 	
 	public Integer getID() {
 		return this.ID;
+	}
+
+	@Override
+	public SecurityType getType() {
+		return SecurityType.PredictionYes;
 	}
 	
 }

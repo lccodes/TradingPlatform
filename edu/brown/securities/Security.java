@@ -5,6 +5,7 @@ import brown.assets.accounting.Transaction;
 public interface Security {
 	
 	public Integer getID();
+	public SecurityType getType();
 	
 	public Transaction buy(Integer agentID, int shareNum);
 	public Transaction sell(Integer agentID, int shareNum);

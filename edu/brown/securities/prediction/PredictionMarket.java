@@ -4,6 +4,7 @@ import brown.agent.Agent;
 import brown.messages.PurchaseRequest;
 import brown.securities.MarketCreationException;
 import brown.securities.Security;
+import brown.securities.SecurityType;
 import brown.securities.SecurityWrapper;
 
 /**
@@ -66,6 +67,11 @@ public class PredictionMarket implements SecurityWrapper {
 	@Override
 	public Integer getID() {
 		return pm.getID();
+	}
+
+	@Override
+	public SecurityType getType() {
+		return this.pm.getType();
 	}
 
 }
