@@ -64,7 +64,7 @@ public class PMYes implements Security {
 	 */
 	public Transaction buy(Integer agentID, int shareNum) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(shareNum, 0));
-		backend.yes(shareNum);
+		backend.yes(agentID, shareNum);
 		return trans;
 	}
 	
@@ -76,7 +76,7 @@ public class PMYes implements Security {
 	 */
 	public Transaction sell(Integer agentID, int shareNum) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(-1 * shareNum, 0));
-		backend.yes(-1*shareNum);
+		backend.yes(agentID, -1*shareNum);
 		return trans;
 	}
 	

@@ -64,7 +64,7 @@ public class PMNo implements Security {
 	 */
 	public Transaction buy(Integer agentID, int shareNum) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, shareNum));
-		backend.no(shareNum);
+		backend.no(agentID, shareNum);
 		return trans;
 	}
 	
@@ -76,7 +76,7 @@ public class PMNo implements Security {
 	 */
 	public Transaction sell(Integer agentID, int shareNum) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, -1 * shareNum));
-		backend.no(-1*shareNum);
+		backend.no(agentID, -1*shareNum);
 		return trans;
 	}
 	

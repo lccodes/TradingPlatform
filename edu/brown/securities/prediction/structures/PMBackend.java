@@ -10,7 +10,7 @@ package brown.securities.prediction.structures;
 public class PMBackend {
 	protected double yes;
 	protected double no;
-	protected final double b;
+	protected double b;
 	
 	public PMBackend() {
 		this.yes = 0;
@@ -22,6 +22,12 @@ public class PMBackend {
 		this.yes = 0;
 		this.no = 0;
 		this.b = b;
+	}
+	
+	public PMBackend(double b, double yes, double no) {
+		this.b = b;
+		this.yes = yes;
+		this.no = no;
 	}
 	
 	/*
@@ -68,7 +74,7 @@ public class PMBackend {
 	 * Returns a share to an agent that buys yes
 	 * @param shareNum : int
 	 */
-	public void yes(double shareNum) {
+	public void yes(Integer agentID, double shareNum) {
 		this.yes += shareNum;
 	}
 	
@@ -76,7 +82,7 @@ public class PMBackend {
 	 * Returns a share to an agent that buys no
 	 * @param shareNum : int
 	 */
-	public void no(double shareNum) {
+	public void no(Integer agentID, double shareNum) {
 		this.no += shareNum;
 	}
 	
@@ -103,6 +109,13 @@ public class PMBackend {
 	            + Math.log(Math.pow(Math.E, this.yes / this.b)
 	                + Math.pow(Math.E, this.no / this.b)))
 	            - Math.exp(top / this.b)) - side;
-		}
+	}
+	
+	/*
+	 * Allows the market maker to update b
+	 */
+	public void setB(double b) {
+		this.b = b;
+	}
 	
 }
