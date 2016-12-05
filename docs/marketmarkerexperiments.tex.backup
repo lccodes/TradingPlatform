@@ -1,0 +1,38 @@
+\section{Motivation}
+
+So... LMSR... while great in theory (why?? path independence), sucks in practice (why??).
+We want to 
+
+\section{Goals}
+To test five different market maker mechanisms for their liquidity sensitivity,
+profit expectation and accuracy.  
+
+
+\section{Definitions}
+
+In this document we care only about prediction markets. 
+We denote time by $\Time\in\mathbb{R}_+$ ...
+A prediction market trades a single option...
+An \mydef{option} is a security that yields a return depending, has a price 
+$\OptionPrice(\Option,\Time)$ at time $\Time$ ....
+An \mydef{agent} $\Agent\in\Agents$ has 
+a belief $\AgentBelief_{\Agent\Time} \in [0,1]$ at time $\Time$ 
+is a measure of the degree ...
+A \mydef{prediction market} is a tuple $\left<\Option_0,\Option_1, \Agents, \Book\right>$...
+A prediction market has a \mydef{book}... 
+A book at time $\Time$ records all the transactions made up to time $\Time$
+A transaction 
+A \mydef{market maker} is ...
+
+In this experiments we will test the following five market markers.
+\subsection{Market Maker 1}
+\subsection{Market Maker 2}
+\subsection{Market Maker 3}
+\subsection{Market Maker 4}
+\subsection{Market Maker 5}
+
+\section{Setup}
+
+\subsection{Types}
+
+\subsection{Metrics}

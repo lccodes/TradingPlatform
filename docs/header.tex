@@ -1,0 +1,103 @@
+\documentclass[letterpaper,11pt]{article}
+
+% Encoding
+\usepackage[utf8]{inputenc}
+
+% Page structure
+\usepackage{geometry}
+\geometry{margin=2.54cm}
+\usepackage[skins]{tcolorbox}
+%\geometry{top=1.54cm}
+
+% Titles
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape}
+
+% Headers and Footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% Graphics, figures and plots
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{pgfplots}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{changepage}
+
+% Etc
+\usepackage{hyperref}
+
+% Bibliography
+\usepackage[numbers]{natbib}
+
+%%%%%%%%%%
+% Math
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{eurosym}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{bm} % defines a com­mand \bm which makes its ar­gu­ment bold
+\usepackage{bbm}
+
+\usepackage{enumitem, hyperref}
+\makeatletter
+\def\namedlabel#1#2{\begingroup
+    #2%
+    \def\@currentlabel{#2}%
+    \phantomsection\label{#1}\endgroup
+}
+\makeatother
+
+%%%% Mathematical Environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{case}[theorem]{Case}
+
+%%%%%%%%%%
+% Pseudocode
+\usepackage[ruled]{algorithm2e}
+%\usepackage{algpseudocode}
+%\usepackage{verbatim}
+
+%%%%%%%%%%
+% Operators
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\Exp}{\mathbb{E}}
+\DeclareMathOperator*{\Var}{\text{Var}}
+\DeclareMathOperator*{\Cov}{\text{Cov}}
+
+%%%%%%%%%%
+% Paired -- \command* will automatically resize
+\DeclarePairedDelimiter\paren{(}{)}           % (parentheses)
+\DeclarePairedDelimiter\ang{\langle}{\rangle} % <angle brackets>
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}   % |absolute value|
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}  % ||norm||
+\DeclarePairedDelimiter\bkt{[}{]}             % [brackets]
+\DeclarePairedDelimiter\set{\{}{\}}           % {braces}
+
+
+%%%%%%%%%%
+
+\title{Market Maker Experiments}
+
+\author{Luke Camery and Amy Greenwald}
+
+%%%%
