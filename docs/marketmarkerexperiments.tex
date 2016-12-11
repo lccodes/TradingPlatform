@@ -10,33 +10,67 @@ profit expectation and accuracy.
 
 \section{Definitions}
 
-In this document we care only about prediction markets. 
-We denote time by $\Time\in\mathbb{R}_+$ ...
-An \mydef{event} has an outcome where we restrict
-our attention to a binary outcome: YES in case the event occurs 
-and NO otherwise. We assume there is a way to unambiguously determine the outcome of an event. 
-An \mydef{option} is a security that yields a return depending on the outcome
-of an event, has a price 
-$\OptionPrice(\Option,\Time)$ at time $\Time$ ....
-An \mydef{agent} $\Agent\in\Agents$ has 
-a belief $\AgentBelief_{\Agent\Time} \in [0,1]$ at time $\Time$ 
-is a measure of the degree ...
-A \mydef{prediction market} trades outcomes in an event. Formally,
-a prediction market is a tuple $\left<\Option_0,\Option_1, \Agents, \Book\right>$...
-A prediction market has a \mydef{book}... 
-A book at time $\Time$ records all the transactions made up to time $\Time$
-A transaction 
-A \mydef{market maker} is ...
+We denote time by $\Time\in\mathbb{R}_+$. We denote money by $\Money\in\mathbb{R}$.\\
 
-In this experiments we will test the following five market markers.
-\subsection{Market Maker 1}
-\subsection{Market Maker 2}
-\subsection{Market Maker 3}
-\subsection{Market Maker 4}
-\subsection{Market Maker 5}
+An \mydef{event} has an outcome where we restrict our attention to a binary outcome. 
+The outcome is equal to YES in case the event occurs and NO otherwise. We assume there 
+is a way to unambiguously determine the outcome of an event. The mechanism for making
+the determination is $\R$.\\
+
+$\R$ is an oracle for mapping an \mydef{event} to an outcome.\\
+
+An \mydef{option} is a security that yields a return depending on the outcome of an 
+event. Each \mydef{option} has a price, a $\Option_{\Time}$ when $\R(\Option)$ will be
+evaluated, and an outcome. The \mydef{option} will convert to \$1 if $\Option_{outcome}$
+equals $\R(\Option)$ otherwise it converts to \$0.\\
+
+The function $\OptionPrice(\Option,\Time)$ at time $\Time$ reflects the likelihood 
+of the $\Option_{outcome}$ being realized at the strike date $\Option_{\Time}$.\\
+
+An \mydef{agent} $\Agent\in\Agents$ has a belief $\AgentBelief_{\Agent\Time} \in [0,1]$ 
+at time $\Time$. The $\AgentBelief_{\Agent\Time}$ reflects the agent's private belief
+in the expected likelihood of the $\Option_{outcome}$ being realized. This belief maps
+directly to the price that the agent is willing to pay for the $\Option$.\\
+
+A \mydef{prediction market} $\Market$ trades outcomes in an event. Formally, a prediction market 
+is a tuple $\left<\Option_0,\Option_1, \Agents, \Book\right>$. Each \mydef{agent} 
+$\Agent\in\Agents$ purchases some number of $\Option_0$ and $\Option_1$ paying the price 
+quoted by the \mydef{prediction market} at each time $\Time$ when the \mydef{agent} $\Agent$ 
+made the purchases. A prediction market has a \mydef{book} $\Book$ that maps $\Agent\in\Agents$ to a tuple $\left<\mathbb{R},\mathbb{R}\right>$ which tracks the number of $\Option_0$ and $\Option_1$ 
+purchased by that \mydef{agent} $\Agent$.
+
+A \mydef{book} $\Book_{\Market,\Time}$ accepts an \mydef{agent} $\Agent$ and returns the number of 
+each \mydef{option} $\Option$ that \mydef{agent} $\Agent$ has purchased at time $\Time$. A 
+\mydef{book} $\Book$ at time $\Time$ records all the transactions made up to time $\Time$.\\
+
+A \mydef{market maker} $\MarketMaker$ is \mydef{predciction market} and strategy for setting prices
+on each \mydef{option} $\Option_0$ and $\Option_1$ at time $\Time$. Each \mydef{market maker} has
+their own function $\Price(\Option,\Time,\Agent,\mathbb{R})$ where the quantity $\mathbb{R}$ is the
+number of the option desired by the \mydef{agent} $\Agent$, and the output is the money $\Money$
+required by the \mydef{market maker} $\MarketMaker$ from the \mydef{agent} $\Agent$. \\
+
+We formalize the pricing fnction as$\Price:\left<\Option,\Time,\Agent,\mathbb{R}\right> \rightarrow \Money$.\\
+
+A \mydef{market} is defined as a \mydef{prediction market}.\\
+
+\section{Market Makers}
+In these experiments we will test the following five market markers.
+\subsection{Logarithmic Market Scoring Rule}
+\subsection{Luke's Online Budget Weighted Average}
+\subsection{Yiling and Jen's Expert Weighted Majority}
+\subsection{Luke's Weighted Majority}
+\subsection{Practical Liquidity Sensitive Market Maker}
 
 \section{Setup}
 
 \subsection{Types}
 
 \subsection{Metrics}
+\subsubsection{Liquidity Sensitivity}
+\subsubsection{Market Maker Profit}
+\subsubsection{Social Welfare}
+\subsubsection{Accuracy}
+\paragraph{Regret}
+\paragraph{Expectation}
+\paragraph{Mean Squared Error}
+\subsubsection{Precision}

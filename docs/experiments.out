@@ -1,11 +1,17 @@
 \BOOKMARK [1][-]{section.1}{Motivation}{}% 1
 \BOOKMARK [1][-]{section.2}{Goals}{}% 2
 \BOOKMARK [1][-]{section.3}{Definitions}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Market Maker 1}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Market Maker 2}{section.3}% 5
-\BOOKMARK [2][-]{subsection.3.3}{Market Maker 3}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.4}{Market Maker 4}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.5}{Market Maker 5}{section.3}% 8
-\BOOKMARK [1][-]{section.4}{Setup}{}% 9
-\BOOKMARK [2][-]{subsection.4.1}{Types}{section.4}% 10
-\BOOKMARK [2][-]{subsection.4.2}{Metrics}{section.4}% 11
+\BOOKMARK [1][-]{section.4}{Market Makers}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Logarithmic Market Scoring Rule}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Luke's Online Budget Weighted Average}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.3}{Yiling and Jen's Expert Weighted Majority}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.4}{Luke's Weighted Majority}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.5}{Practical Liquidity Sensitive Market Maker}{section.4}% 9
+\BOOKMARK [1][-]{section.5}{Setup}{}% 10
+\BOOKMARK [2][-]{subsection.5.1}{Types}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.2}{Metrics}{section.5}% 12
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Liquidity Sensitivity}{subsection.5.2}% 13
+\BOOKMARK [3][-]{subsubsection.5.2.2}{Market Maker Profit}{subsection.5.2}% 14
+\BOOKMARK [3][-]{subsubsection.5.2.3}{Social Welfare}{subsection.5.2}% 15
+\BOOKMARK [3][-]{subsubsection.5.2.4}{Accuracy}{subsection.5.2}% 16
+\BOOKMARK [3][-]{subsubsection.5.2.5}{Precision}{subsection.5.2}% 17

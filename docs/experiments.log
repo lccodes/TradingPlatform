@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.9.1)  5 DEC 2016 17:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.8.11)  11 DEC 2016 17:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1223,25 +1223,89 @@ LaTeX Font Info:    Try loading font information for U+rsfs on input line 5.
 (/usr/share/texlive/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
-(./marketmarkerexperiments.tex) [1
+(./marketmarkerexperiments.tex
+Underfull \hbox (badness 10000) in paragraph at lines 13--14
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--19
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--26
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--29
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--34
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 42--45
+
+ []
+
+[1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \hbox (badness 10000) in paragraph at lines 46--51
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 52--53
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--55
+
+ []
+
+)
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[2]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 6.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 6.
  (./experiments.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 6.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 6.
-Package rerunfilecheck Info: File `experiments.out' has not changed.
-(rerunfilecheck)             Checksum: 477D2C8B15CEDB2688A97F362238A5BE;598.
+
+
+Package rerunfilecheck Warning: File `experiments.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `experiments.out':
+(rerunfilecheck)             Before: 840A12028E5E676C8586BDE10CA54B3A;131
+(rerunfilecheck)             After:  8A99561566E4F837C083C49069F627A9;1123.
  ) 
 Here is how much of TeX's memory you used:
- 31646 strings out of 493105
- 716084 string characters out of 6137073
- 917488 words of memory out of 5000000
- 34560 multiletter control sequences out of 15000+600000
- 16288 words of font info for 61 fonts, out of 8000000 for 9000
+ 31657 strings out of 493105
+ 716195 string characters out of 6137072
+ 918504 words of memory out of 5000000
+ 34559 multiletter control sequences out of 15000+600000
+ 17240 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,6n,85p,829b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,11n,85p,829b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texli
@@ -1249,13 +1313,15 @@ ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmss12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/symbols/msbm10.pfb>
-Output written on experiments.pdf (1 page, 100010 bytes).
+lic/amsfonts/cm/cmsl10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmss12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+sy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msb
+m10.pfb>
+Output written on experiments.pdf (2 pages, 127415 bytes).
 PDF statistics:
- 104 PDF objects out of 1000 (max. 8388607)
- 90 compressed objects within 1 object stream
- 13 named destinations out of 1000 (max. 500000)
- 101 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 102 PDF objects out of 1000 (max. 8388607)
+ 85 compressed objects within 1 object stream
+ 23 named destinations out of 1000 (max. 500000)
+ 37 words of extra memory for PDF output out of 10000 (max. 10000000)
 
