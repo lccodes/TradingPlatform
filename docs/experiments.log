@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.8.11)  11 DEC 2016 17:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.9.18)  11 DEC 2016 20:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1249,29 +1249,55 @@ Underfull \hbox (badness 10000) in paragraph at lines 27--29
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 30--34
+Underfull \hbox (badness 10000) in paragraph at lines 30--35
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 42--45
+Underfull \hbox (badness 10000) in paragraph at lines 43--46
 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 46--51
+Underfull \hbox (badness 10000) in paragraph at lines 47--52
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 52--53
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 54--55
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--58
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 77--83
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--88
+
+ []
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 89--91
 
  []
 
@@ -1282,30 +1308,23 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2]
+[3]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 6.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 6.
  (./experiments.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 6.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 6.
-
-
-Package rerunfilecheck Warning: File `experiments.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `experiments.out':
-(rerunfilecheck)             Before: 840A12028E5E676C8586BDE10CA54B3A;131
-(rerunfilecheck)             After:  8A99561566E4F837C083C49069F627A9;1123.
+Package rerunfilecheck Info: File `experiments.out' has not changed.
+(rerunfilecheck)             Checksum: D49DEA4EF70ADF353A8E0B0074356C18;1192.
  ) 
 Here is how much of TeX's memory you used:
- 31657 strings out of 493105
- 716195 string characters out of 6137072
- 918504 words of memory out of 5000000
- 34559 multiletter control sequences out of 15000+600000
+ 31679 strings out of 493105
+ 716516 string characters out of 6137072
+ 919511 words of memory out of 5000000
+ 34579 multiletter control sequences out of 15000+600000
  17240 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,11n,85p,829b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,12n,85p,829b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texli
@@ -1318,10 +1337,10 @@ sfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmss12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 sy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msb
 m10.pfb>
-Output written on experiments.pdf (2 pages, 127415 bytes).
+Output written on experiments.pdf (3 pages, 137355 bytes).
 PDF statistics:
- 102 PDF objects out of 1000 (max. 8388607)
- 85 compressed objects within 1 object stream
- 23 named destinations out of 1000 (max. 500000)
- 37 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 154 PDF objects out of 1000 (max. 8388607)
+ 135 compressed objects within 2 object streams
+ 25 named destinations out of 1000 (max. 500000)
+ 157 words of extra memory for PDF output out of 10000 (max. 10000000)
 

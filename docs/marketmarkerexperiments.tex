@@ -28,9 +28,10 @@ The function $\OptionPrice(\Option,\Time)$ at time $\Time$ reflects the likeliho
 of the $\Option_{outcome}$ being realized at the strike date $\Option_{\Time}$.\\
 
 An \mydef{agent} $\Agent\in\Agents$ has a belief $\AgentBelief_{\Agent\Time} \in [0,1]$ 
-at time $\Time$. The $\AgentBelief_{\Agent\Time}$ reflects the agent's private belief
-in the expected likelihood of the $\Option_{outcome}$ being realized. This belief maps
-directly to the price that the agent is willing to pay for the $\Option$.\\
+at time $\Time$ and a budget $\AgentBudget$, which is set a priori and fixed. The $\AgentBelief_{\Agent\Time}$ 
+reflects the agent's private belief in the expected likelihood of the $\Option_{outcome}$ 
+being realized. This belief maps directly to the price that the agent is willing to pay 
+for the $\Option$.\\
 
 A \mydef{prediction market} $\Market$ trades outcomes in an event. Formally, a prediction market 
 is a tuple $\left<\Option_0,\Option_1, \Agents, \Book\right>$. Each \mydef{agent} 
@@ -53,6 +54,8 @@ We formalize the pricing fnction as$\Price:\left<\Option,\Time,\Agent,\mathbb{R}
 
 A \mydef{market} is defined as a \mydef{prediction market}.\\
 
+The \mydef{market depth} $\MarketDepth$ is the number of \mydef{agents} that have participated in the market.\\
+
 \section{Market Makers}
 In these experiments we will test the following five market markers.
 \subsection{Logarithmic Market Scoring Rule}
@@ -64,13 +67,34 @@ In these experiments we will test the following five market markers.
 \section{Setup}
 
 \subsection{Types}
+A \mydef{BasicAgent} follows from the definition of these \mydef{market makers} as truthful
+mechanisms. Each \mydef{BasicAgent} reports its belief $\AgentBelief$ and budget $\AgentBudget$
+truthfully when requested by the mechanism. Each \mydef{BasicAgent} is rational and profit
+maximizing.
 
 \subsection{Metrics}
 \subsubsection{Liquidity Sensitivity}
+This research uses a novel definition of the vague concept of liquidity sensitivity. The need
+for a unified definiton stems from the known issue that LMSR can provide \"too little\" or 
+\"too much\" weight to each agent depending on its liquidity parameter and market depth. One extreme
+example us that an infinitesimally low liquidity parameter will allow an \mydef{agent} with a nonzero
+budget to dictate the market price regardless of how many \mydef{agents} have already participated in
+the market.\\
+
+We define a \mydef{market maker} as \mydef{liquidity sensitive} if two \mydef{agents} that have identical
+transactions in the \mydef{market} will have equal impacts on the \mydef{market price} proportional to 
+the \mydef{market depth} $\MarketDepth_{1}$ at time $\Time_{1}$ of the first purchase, the \mydef{market depth} 
+$\MarketDepth_{2}$ at time $\Time_{2}$ of the second purchase, and the difference in time $\Time_{1} - \Time_{2}$.\\
+
+We formalize \mydef{liquidity sensitive} as the function $\Delta = f(\MarketDepth_{1},\MarketDepth_{2},\Time_{\Delta})$
+having a constant $\Delta$.\\
+
 \subsubsection{Market Maker Profit}
 \subsubsection{Social Welfare}
 \subsubsection{Accuracy}
-\paragraph{Regret}
-\paragraph{Expectation}
-\paragraph{Mean Squared Error}
+\textbf{Regret}
+\textbf{Expectation}
+\textbf{Mean Squared Error}
 \subsubsection{Precision}
+
+\subsection{Experimental Design}
