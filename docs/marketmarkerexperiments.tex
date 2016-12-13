@@ -1,11 +1,20 @@
 \section{Motivation}
-
-So... LMSR... while great in theory (why?? path independence), sucks in practice (why??).
-We want to 
+The Logarithmic Market Scoring Rule (LMSR), while popular in the theoretical
+literature, faces several critical barriers to adoption. The first is that
+the \mydef{market maker} is bounded loss, which is a non-starter for most
+real world applications. The second is that the \mydef{market maker} is not
+sensitive to liquidity. This means that a improperly configured \mydef{market maker}
+might allow any agent with a positive budget to drastically swing the price or at
+the other extreme, not allow any agent to modify the price much at all. LMSR is
+well studied, however, because it has Path Independence and Translation Invariance.
+Many other theoretical \mydef{market makers} have been proposed that also have
+these two properties, but with additional benefits, and some offer tradeoffs in
+order to gain more desirable properties. This work seeks to quantify these
+tradeoffs emperically.
 
 \section{Goals}
 To test five different market maker mechanisms for their liquidity sensitivity,
-profit expectation and accuracy.  
+profit expectation, and accuracy.  
 
 
 \section{Definitions}
@@ -73,13 +82,15 @@ truthfully when requested by the mechanism. Each \mydef{BasicAgent} is rational 
 maximizing.
 
 \subsection{Metrics}
+This research will use the following metrics to evaluate each of the five mechanisms.
 \subsubsection{Liquidity Sensitivity}
 This research uses a novel definition of the vague concept of liquidity sensitivity. The need
 for a unified definiton stems from the known issue that LMSR can provide \"too little\" or 
 \"too much\" weight to each agent depending on its liquidity parameter and market depth. One extreme
 example us that an infinitesimally low liquidity parameter will allow an \mydef{agent} with a nonzero
 budget to dictate the market price regardless of how many \mydef{agents} have already participated in
-the market.\\
+the market. Our novel definition attempts to quanity consistency across \mydef{market depths} without
+overly constraining implementations. \\
 
 We define a \mydef{market maker} as \mydef{liquidity sensitive} if two \mydef{agents} that have identical
 transactions in the \mydef{market} will have equal impacts on the \mydef{market price} proportional to 
@@ -90,11 +101,49 @@ We formalize \mydef{liquidity sensitive} as the function $\Delta = f(\MarketDept
 having a constant $\Delta$.\\
 
 \subsubsection{Market Maker Profit}
-\subsubsection{Social Welfare}
-\subsubsection{Accuracy}
-\textbf{Regret}
-\textbf{Expectation}
-\textbf{Mean Squared Error}
-\subsubsection{Precision}
+We define the \mydef{market maker profit} as the money $\Money$ held by the \mydef{market maker} $\MarketMaker$
+after the outcome is realized. Formally, the \mydef{market maker profit} is the sum of all payments collected from
+all \mydef{agents} $\Agent\in\Agents$ minus the total realized value of all \mydef{options} issued by the
+\mydef{market maker}.
 
-\subsection{Experimental Design}
+\subsubsection{Social Welfare}
+We define the profit of an agent as the sum of the realized value of its \mydef{options} minus the
+sum of the cost of each of its \mydef{options}.
+
+We define \mydef{social welfare} as the \mydef{market maker profit} plus the sum of each agent's profit.
+
+\subsubsection{Accuracy}
+Since the accuracy of a prediction market depends on the accuracy of each of its participants
+as well as a usually unknown ground truth value, we utilize several well studied definitions
+to evaluate each mechanism's accuracy.
+\textbf{Regret}
+We define the \mydef{regret} of a mechanism as the difference between the mechanism's accuracy
+and the accuracy of the most accurate agent $\Agent\in\Agents$, who can be thought of as the
+best expert. The most accurate agent $\Agent\in\Agents$ is the agent $\Agent$ whose belief is
+most frequently aligned with the outcome over n trials.
+
+\textbf{Expectation}
+We define the \mydef{expectation accuracy} as the difference between the expert's prediction
+and the weighted expected value for each agent $\Agent\in\Agent$. Each agent's belief is weighted
+based off their budget and then an expected value is calculated.
+
+\textbf{Mean Squared Error}
+We define the \mydef{Mean Squared Error} as $\frac{1}{n}\sum_{t=1}^{n} \big(\Market_{0,1} - O_{0,1}\big)^2$. MSE
+is computed across n agents $\Agent\in\Agents$. 
+
+\subsubsection{Precision}
+\mydef{Precision} is the consistency of the \mydef{market maker}. \mydef{Precision} is computed by taking a \mydef{market maker}
+and a set of agents $\Agents$, and randomizing the order that the agents enter the market. \mydef{Precision} is the
+percentage of predictions across all simulations that are the same as the majority outcome. This means that if 6 of
+the 10 simulations have the \mydef{market} predicting $Outcome_{1}$ then the \mydef{Precision} is 0.6.
+
+\section{Experimental Design}
+The following simulations will be run by having an identical set of agents enter each \mydef{market} using each
+of the five \mydef{market makers}. After each simulation, the \mydef{market makers} will be scored for every
+metric. After all the simulations, the \mydef{market makers} will be ranked for each metric depending on the emperical
+results. A simulation will be run for the cross product of the following characteristics:
+\begin{enumerate}
+  \item Agent Number: 3, 5, 10, 50, 100, 1000, 10000.
+  \item Agent Belief: Uniform $[0,1]$, Normal w/ Mean 0.5, Beta(0.5,0.5).
+  \item Agent Budget: Uniform $[0,100]$, Uniform $[0,10]$, Normal w/ Mean 5, 10*Beta(0.5,0.5).
+\end{enumerate}
