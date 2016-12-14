@@ -10,7 +10,7 @@ well studied, however, because it has Path Independence and Translation Invarian
 Many other theoretical \mydef{market makers} have been proposed that also have
 these two properties, but with additional benefits, and some offer tradeoffs in
 order to gain more desirable properties. This work seeks to quantify these
-tradeoffs emperically.
+tradeoffs empirically.
 
 \section{Goals}
 To test five different market maker mechanisms for their liquidity sensitivity,
@@ -19,51 +19,53 @@ profit expectation, and accuracy.
 
 \section{Definitions}
 
-We denote time by $\Time\in\mathbb{R}_+$. We denote money by $\Money\in\mathbb{R}$.\\
+We denote time by $\Time\in\mathbb{R}_+$. \\%We denote money by $\Money\in\mathbb{R}$.\\
 
 An \mydef{event} has an outcome where we restrict our attention to a binary outcome. 
-The outcome is equal to YES in case the event occurs and NO otherwise. We assume there 
-is a way to unambiguously determine the outcome of an event. The mechanism for making
-the determination is $\R$.\\
+The outcome is equal to YES in case the event occurs and NO otherwise. 
+We denote the YES outcome with a 1 and the NO outcome with a 0.
+We assume there is a way to unambiguously determine the outcome of an event. \\
 
-$\R$ is an oracle for mapping an \mydef{event} to an outcome.\\
+$\Revealer$ is an oracle for mapping an \mydef{event} to an outcome.
+We denote the outcome of event $\Event$ under $\Revealer$ as $\Revealer(\Event) \in \{0,1\}$.\\
 
-An \mydef{option} is a security that yields a return depending on the outcome of an 
-event. Each \mydef{option} has a price, a $\Option_{\Time}$ when $\R(\Option)$ will be
-evaluated, and an outcome. The \mydef{option} will convert to \$1 if $\Option_{outcome}$
-equals $\R(\Option)$ otherwise it converts to \$0.\\
+An \mydef{option} $\Option$ is a security that yields a return depending on the outcome of an 
+event $\Option_\Event$. Each \mydef{option} has a direction $\Option_\OptionDirection \in \{0, 1\}$
+and a strike time $\Option_\Time$ when $\Revealer(\Option_\Event)$ will be evaluated. 
+The \mydef{option} will convert to \$1 if $\Revealer(\Option_\Event)$ equals 
+$\Option_\OptionDirection$, otherwise it converts to \$0. Two options are said to be
+complementary if they trade opposite directions in the same event. Given an
+event $\Event$, we denote the complementary options as 
+$\Option_{0}$ and $\Option_{1}$.
+\\
 
-The function $\OptionPrice(\Option,\Time)$ at time $\Time$ reflects the likelihood 
-of the $\Option_{outcome}$ being realized at the strike date $\Option_{\Time}$.\\
+Given an \mydef{option} $\Option$,
+an \mydef{agent} $\Agent\in\Agents_\Option$ has a \mydef{private belief} 
+$\Agent_\AgentBelief \in [0,1]$ 
+and a \mydef{budget} $\Agent_\AgentBudget \in \mathbb{R}_+$.
+The agent's private belief $\Agent_\AgentBelief$ 
+is the subjective probability that the agent
+assigns to the outcome of event $\Option_\Event$ being $\Option_\OptionDirection$
+at strike time.\\
 
-An \mydef{agent} $\Agent\in\Agents$ has a belief $\AgentBelief_{\Agent\Time} \in [0,1]$ 
-at time $\Time$ and a budget $\AgentBudget$, which is set a priori and fixed. The $\AgentBelief_{\Agent\Time}$ 
-reflects the agent's private belief in the expected likelihood of the $\Option_{outcome}$ 
-being realized. This belief maps directly to the price that the agent is willing to pay 
-for the $\Option$.\\
+A \mydef{prediction market} $\Market$ trades complementary options. 
+Formally, a prediction market is a tuple $\Market = \left<\Option_0,\Option_1, 
+\Agents_{\Option_0} \cup \Agents_{\Option_1} \right>$ where each \mydef{agent} 
+$\Agent\in\Agents_\Market = \Agents_{\Option_0} \cup \Agents_{\Option_1}$ purchases 
+either some number of $\Option_0$ or $\Option_1$ options paying the price quoted by the 
+\mydef{market maker}.\\
 
-A \mydef{prediction market} $\Market$ trades outcomes in an event. Formally, a prediction market 
-is a tuple $\left<\Option_0,\Option_1, \Agents, \Book\right>$. Each \mydef{agent} 
-$\Agent\in\Agents$ purchases some number of $\Option_0$ and $\Option_1$ paying the price 
-quoted by the \mydef{prediction market} at each time $\Time$ when the \mydef{agent} $\Agent$ 
-made the purchases. A prediction market has a \mydef{book} $\Book$ that maps $\Agent\in\Agents$ to a tuple $\left<\mathbb{R},\mathbb{R}\right>$ which tracks the number of $\Option_0$ and $\Option_1$ 
-purchased by that \mydef{agent} $\Agent$.
 
-A \mydef{book} $\Book_{\Market,\Time}$ accepts an \mydef{agent} $\Agent$ and returns the number of 
-each \mydef{option} $\Option$ that \mydef{agent} $\Agent$ has purchased at time $\Time$. A 
-\mydef{book} $\Book$ at time $\Time$ records all the transactions made up to time $\Time$.\\
+A \mydef{market maker} $\OptionPrice_\Market$ is a function 
+that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$ 
+and a quantity $\Quantity\in\mathbb{R}_+$ at time $\Time \in [0,\Time_\Option)$ 
+to a price $\OptionPrice(\Option,\Agent,\Quantity, \Time) \in \mathbb{R}_+$. 
+By definition $\OptionPrice(\Option,\Agent, \Time) = \Revealer(\Option_\Event)$ if 
+$\Time \ge \Time_\Option$.
 
-A \mydef{market maker} $\MarketMaker$ is \mydef{predciction market} and strategy for setting prices
-on each \mydef{option} $\Option_0$ and $\Option_1$ at time $\Time$. Each \mydef{market maker} has
-their own function $\Price(\Option,\Time,\Agent,\mathbb{R})$ where the quantity $\mathbb{R}$ is the
-number of the option desired by the \mydef{agent} $\Agent$, and the output is the money $\Money$
-required by the \mydef{market maker} $\MarketMaker$ from the \mydef{agent} $\Agent$. \\
+%The \mydef{market depth} $\MarketDepth$ is the number of \mydef{agents} that have 
+%participated in the prediction market, i.e. $|\Agents_\Option|$.
 
-We formalize the pricing fnction as$\Price:\left<\Option,\Time,\Agent,\mathbb{R}\right> \rightarrow \Money$.\\
-
-A \mydef{market} is defined as a \mydef{prediction market}.\\
-
-The \mydef{market depth} $\MarketDepth$ is the number of \mydef{agents} that have participated in the market.\\
 
 \section{Market Makers}
 In these experiments we will test the following five market markers.
@@ -101,10 +103,16 @@ We formalize \mydef{liquidity sensitive} as the function $\Delta = f(\MarketDept
 having a constant $\Delta$.\\
 
 \subsubsection{Market Maker Profit}
-We define the \mydef{market maker profit} as the money $\Money$ held by the \mydef{market maker} $\MarketMaker$
-after the outcome is realized. Formally, the \mydef{market maker profit} is the sum of all payments collected from
-all \mydef{agents} $\Agent\in\Agents$ minus the total realized value of all \mydef{options} issued by the
-\mydef{market maker}.
+We define the \mydef{market maker profit} on prediction market $\Market$ at time $\Time$ as\\
+$\sum_{\Agent\in\Agents_\Option} [
+\int_{\Time} 
+\Price(\Option_0,\Agent,\Time, \AgentStrategy^{0}_{\Agent}(\Time))\AgentStrategy^{0}_{\Agent}(\Time)dt
++\int_{\Time} 
+\Price(\Option_1,\Agent,\Time, \AgentStrategy^{1}_{\Agent}(\Time))\AgentStrategy^{1}_{\Agent}(\Time)dt
+-\int_{\Time} 
+\Revealer(\Option_\Event)\AgentStrategy^{0}_{\Agent}(\Time)dt
+-\int_{\Time}
+\Revealer(\Option_\Event)\AgentStrategy^{1}_{\Agent}(\Time)dt]$
 
 \subsubsection{Social Welfare}
 We define the profit of an agent as the sum of the realized value of its \mydef{options} minus the
