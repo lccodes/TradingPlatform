@@ -1,0 +1,119 @@
+\section{Model}
+
+\subsection{Definitions}
+
+We denote \mydef{time} by $\Time\in\mathbb{R}_+$. \\
+
+An \mydef{event} $\Event$ has an outcome at time $\Event_\Time \in \mathbb{R}_+$ 
+where we restrict our attention to a binary outcome. 
+The outcome is equal to YES in case the event occurs, and NO otherwise. 
+We denote the YES outcome with a 1, and the NO outcome with a 0.
+We assume there is a way to unambiguously determine the outcome of an event. \\
+
+$\Revealer$ is an \mydef{oracle} for mapping an event to an outcome.
+We denote the outcome of event $\Event$ under $\Revealer$ as 
+$\Revealer(\Event) \in \{0,1\}$.\\
+
+An \mydef{option} $\Option$ is a security that yields a return depending on 
+the outcome of an event $\Option_\Event$ at time $\Event_\Time$. Each option has a direction 
+$\Option_\OptionDirection \in \{0, 1\}$ and a strike time $\Option_\Time = \Event_\Time$ 
+when $\Revealer(\Option_\Event)$ will be evaluated. 
+The option will convert to \$1 at time $\Option_\Time$ if $\Revealer(\Option_\Event)$ equals 
+$\Option_\OptionDirection$, otherwise it converts to \$0. Two options are said to be
+\mydef{complementary options} if they trade opposite directions in the same event. Given an
+event $\Event$, we denote the complementary options as 
+$\OptionComplements = \left<\Option_{0}, \Option_{1}\right>$.\\
+
+Given complementary options $\Option_{0}$ and $\Option_{1}$,
+let $\Agents_{\Option_0}$ be the \mydef{set of agents} that acquire option
+$\Option_{0}$, and similarly let $\Agents_{\Option_1}$ be the set 
+of agents that acquire option $\Option_{1}$. 
+Let $\Agents_\Option = \Agents_{\Option_0} \cup \Agents_{\Option_1}$
+be the set of all agents trading complementary options.\\
+
+An \mydef{agent} $\Agent\in\Agents_\Option$ has a \mydef{private belief} 
+$\Agent_\AgentBelief \in [0,1]$ 
+and a \mydef{budget} $\Agent_\AgentBudget \in \mathbb{R}_+$.
+The agent's private belief $\Agent_\AgentBelief$ 
+is the subjective probability that the agent
+assigns to the outcome of event $\Option_\Event$ being direction $\Option_\OptionDirection$
+at strike time $\Option_\Time$.\\
+
+An agent's $\Agent\in\Agents_\Option$ \mydef{strategy} 
+$\AgentStrategy_\Agent(\Time) \in \mathbb{R}_+$ specifies the quantity of option 
+$\Option$ purchased by the agent at time $\Time$.\\
+
+A \mydef{prediction market} $\Market$ trades complementary options. 
+Formally, a prediction market is a tuple $\Market = 
+\left<\Option_c, \Agents_\Option \right>$ where each \mydef{agent} 
+$\Agent\in\Agents_\Option$ purchases 
+either some number of $\Option_0$ or $\Option_1$ options paying the price quoted by the 
+market maker.\\
+
+
+A \mydef{market maker} $\OptionPrice_\Market$ is a function 
+that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$ 
+and a quantity $\Quantity\in\mathbb{R}_+$ at time $\Time \in [0,\Time_\Option)$ 
+to a price $\OptionPrice(\Option,\Agent,\Quantity, \Time) \in \mathbb{R}_+$. 
+By definition $\OptionPrice(\Option,\Agent, \Time) = \Revealer(\Option_\Event)$ if 
+$\Time \ge \Time_\Option$.
+
+\subsection{Assumptions}
+
+\commente{WITHOUT LOSS OF GENERALITY???}
+In our model we assume that agent $\Agent \in \Agents_\Option$ has an arrival time 
+$\Agent_\Time \in \mathbb{R}_+$ where $\Agent_\Time < \Option_\Time$, 
+and execute their strategy only once at time $\Agent_\Time$.\\
+
+We assume that agents' private beliefs and budgets are not common knowledge
+but are drawn from known distributions $\AgentBelief \sim v(\cdot)$ and
+$\AgentBudget \sim b(\cdot)$.\\
+
+We assume agents are allow to observe the true current price of any option.\\
+
+We assume that the market maker mechanism and all its parameters are common knowledge.\\
+
+%The \mydef{market depth} $\MarketDepth$ is the number of \mydef{agents} that have 
+%participated in the prediction market, i.e. $|\Agents_\Option|$.
+
+\subsection{Problems}
+  
+  \begin{definition} (Market Maker Revenue)
+  \label{def:mmr}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the revenue obtained from $\OptionPrice_\Market$ is defined as
+     $$R(\OptionPrice_\Market, \Agents_\Option) = 
+      \sum_{\Agent\in\Agents_\Option} \left[
+	\int_{\Time = 0}^{\Time = \Option_\Time} 
+	  \Price_\Market(\Option_0,\Agent,\Time, \AgentStrategy^{0}_{\Agent}(\Time))\AgentStrategy^{0}_{\Agent}(\Time)dt
+	  + \int_{\Time = 0}^{\Time = \Option_\Time} 
+	  \Price_\Market(\Option_1,\Agent,\Time, \AgentStrategy^{1}_{\Agent}(\Time))\AgentStrategy^{1}_{\Agent}(\Time)dt\right]$$
+  \end{definition}
+  
+    \begin{definition} (Market Maker Cost)
+  \label{def:mmc}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the cost to $\OptionPrice_\Market$ is defined as
+     $$ C(\OptionPrice_\Market, \Agents_\Option) =
+     \sum_{\Agent\in\Agents_\Option} \left[
+	\int_{\Time = 0}^{\Time = \Option_\Time} 
+	\Revealer(\Option_\Event)\AgentStrategy^{0}_{\Agent}(\Time)dt
+	+\int_{\Time = 0}^{\Time = \Option_\Time} 
+	\Revealer(\Option_\Event)\AgentStrategy^{1}_{\Agent}(\Time)dt
+	\right]$$
+  \end{definition}
+
+      \begin{definition} (Market Maker Proft)
+  \label{def:mmf}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the profit of $\OptionPrice_\Market$ is defined as
+     $$ P(\OptionPrice_\Market, \Agents_\Option) = R(\OptionPrice_\Market, \Agents_\Option) 
+     -C(\OptionPrice_\Market, \Agents_\Option)$$
+  \end{definition}
+  
+\begin{definition} (Profit-Maximizing Market Maker).
+\label{def:pmmm}
+Among all Market Makers, find the one that maximizes Profit.
+\end{definition}
+
+
