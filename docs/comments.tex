@@ -1,0 +1,15 @@
+%and reflects the likelihood 
+%of $\Revealer(\Option_\Event) = \Option_\OptionDirection$ at the strike time $\Time_\Option$.
+%A prediction market has a \mydef{book} $\Book$ that maps $\Agent\in\Agents_\Market$ 
+%to a tuple $\left<\mathbb{R},\mathbb{R}\right>$ which tracks the number of 
+%$\Option_0$ and $\Option_1$ purchased by that \mydef{agent} $\Agent$.
+
+%A \mydef{book} $\Book_{\Market,\Time}$ accepts an \mydef{agent} $\Agent$ and returns the number of 
+%each \mydef{option} $\Option$ that \mydef{agent} $\Agent$ has purchased at time $\Time$. A 
+%\mydef{book} $\Book$ at time $\Time$ records all the transactions made up to time $\Time$.\\
+
+%A \mydef{market maker} $\MarketMaker$ is \mydef{prediction market} and strategy for setting prices
+%on each \mydef{option} $\Option_0$ and $\Option_1$ at time $\Time$. Each \mydef{market maker} has
+%their own function $\Price(\Option,\Time,\Agent,\mathbb{R})$ where the quantity $\mathbb{R}$ is the
+%number of the option desired by the \mydef{agent} $\Agent$, and the output is the money $\Money$
+%required by the \mydef{market maker} $\MarketMaker$ from the \mydef{agent} $\Agent$. \\
