@@ -2,7 +2,7 @@
 \subsection{Optimal MM}
 Given N traders and M market makers where M < N, which of our five market makers is the
 dominant strategy to implement for a profit maximizing agent. 
-If none exists then what is the Bayes Nash equilibrium.\\
+If none exists then what is the Bayes Nash Equilibrium (BNE).\\
 
 \subsection{Social Planner MM}
 Given N traders and M market makers where M < N, which of our five market makers would
@@ -14,6 +14,23 @@ a social planner implement to maximize accuracy.
 \section{Market Makers}
 In these experiments we will test the following five market markers.
 \subsection{Logarithmic Market Scoring Rule}
+LMSR is a strictly proper scoring rule developed by Robert Hanson. LMSR uses a logarithmic cost function: \\
+$C(q_1,q_2) = b\ln(e^{\frac{q_1}{b} + e^{\frac{q_2}{b}}}$ where $q_1$ and $q_2$ represent the number of shares acquired for each of the binary events: 1 and 2. The cost charged to a trader wanting to buy $q_a$ shares on event 1 and $q_b$ shares on event 1 is: $C(q_1 + q_a, q_2 + q_b) - C(q_1,q_2)$. Traders are charged for their movement in the market prediction. $b$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $b\n(2)$. A large b means that it would cost a lot to move the market price while a small b makes large swings relatively inexpensive.\\
+
+The instantaneous price of LMSR market x, which is also the market prediction for x, is quoted with: $p_x = \frac{e^{\frac{q_1}{b}}}{e^{\frac{q_1}{b}} + e^{\frac{q_2}{b}}$. \\
+
+\textbf{Advantages}\\
+\begin{enumerate}
+\item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate [Hanson 2003]}
+\item{Translation Invariance - all prices sum to unity. (Direct mapping to a probability.)}
+\end{enumerate}
+
+\textbf{Disadvantages} \\
+\begin{enumerate}
+\item{Liquidity Insensitive - the market cannot adjust to periods with low or high activity. The market maker must set the liquidity parameter based on their prior belief, but has little to no guidance on how to set it.}
+\item{Guaranteed Loss - the market maker cannot profit and has a guaranteed bounded loss.}
+}
+\end{enumerate}
 \subsection{Luke's Online Budget Weighted Average}
 \subsection{Yiling and Jen's Expert Weighted Majority}
 \subsection{Luke's Weighted Majority}

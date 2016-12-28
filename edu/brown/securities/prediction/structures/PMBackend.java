@@ -8,8 +8,8 @@ package brown.securities.prediction.structures;
  *
  */
 public class PMBackend {
-	protected double yes;
-	protected double no;
+	public double yes;
+	public double no;
 	protected double b;
 	
 	public PMBackend() {
