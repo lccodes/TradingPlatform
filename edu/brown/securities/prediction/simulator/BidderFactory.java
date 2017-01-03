@@ -1,4 +1,4 @@
-package brown.test.prediction;
+package brown.securities.prediction.simulator;
 
 import java.util.Collections;
 import java.util.LinkedList;

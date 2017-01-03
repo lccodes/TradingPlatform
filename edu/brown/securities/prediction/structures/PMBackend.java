@@ -10,24 +10,28 @@ package brown.securities.prediction.structures;
 public class PMBackend {
 	public double yes;
 	public double no;
-	protected double b;
+	public double b;
+	public double alpha;
 	
 	public PMBackend() {
 		this.yes = 0;
 		this.no = 0;
 		this.b = 1;
+		this.alpha = 0;
 	}
 	
 	public PMBackend(double b) {
 		this.yes = 0;
 		this.no = 0;
 		this.b = b;
+		this.alpha = 0;
 	}
 	
 	public PMBackend(double b, double yes, double no) {
 		this.b = b;
 		this.yes = yes;
 		this.no = no;
+		this.alpha = 0;
 	}
 	
 	/*

@@ -1,4 +1,4 @@
-package brown.test.prediction;
+package brown.securities.prediction.simulator;
 
 public class Bidder {
 	public final double value;
