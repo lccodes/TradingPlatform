@@ -75,24 +75,21 @@ public class Simulator {
 		MarketMakerFactory mmf = new MarketMakerFactory();
 		//mmf.add(new LiquiditySensitive(.1));
 		//mmf.add(new LiquiditySensitive(.2));
-		mmf.add(new LiquiditySensitive(.4));
-		mmf.add(new LiquiditySensitive(.4));
+		mmf.add(new LiquiditySensitive(.99));
+		mmf.add(new LiquiditySensitive(1));
 		BidderFactory bf = new BidderFactory();
-		int x = 10;
+		int x = 100;
 		while (x-- > 0) {
 			bf.addBidder(Math.random(), 2);
 		}
 		System.out.println("Average: " + bf.getAverage());
-		x = 10;
-		double costa = 0;
-		double costb = 0;
-		while (x-- > 0) {
-			Simulator simulator = new Simulator(mmf.make(), bf.getBidders());
-			SimulationResult sr = simulator.simulate(false);
-			costa += sr.getCost(mmf.make().get(0));
-			costb += sr.getCost(mmf.make().get(1));
+		
+		Simulator simulator = new Simulator(mmf.make(), bf.getBidders());
+		SimulationResult sr = simulator.simulate(false);
+		System.out.println(sr);
+		for(PMBackend mm : mmf.make()) {
+			System.out.println(mm.price(true));
 		}
-		System.out.println(costa + " " + costb);
 	}
 
 }
