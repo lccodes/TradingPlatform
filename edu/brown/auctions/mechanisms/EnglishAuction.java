@@ -3,57 +3,83 @@ package brown.auctions.mechanisms;
 import brown.assets.value.Good;
 import brown.auctions.Auction;
 import brown.auctions.BundleType;
+import brown.auctions.bundles.SimpleBidBundle;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidRequest;
 
 public class EnglishAuction implements Auction {
+	private final Integer ID;
+	private Integer winnerID;
+	private final Good GOOD;
+	private int currentPrice;
+	private int ticksSince;
+	
+	public EnglishAuction(Integer id, Good good) {
+		this.ID = id;
+		this.GOOD = good;
+		this.winnerID = null;
+		this.currentPrice = 0;
+		this.ticksSince = 0;
+	}
+	
+	public EnglishAuction(Integer id, Good good, int reserve) {
+		this.ID = id;
+		this.GOOD = good;
+		this.winnerID = null;
+		this.currentPrice = reserve;
+		this.ticksSince = 0;
+	}
 
 	@Override
 	public Integer getID() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.ID;
 	}
 
 	@Override
 	public BundleType getBundleType() {
-		// TODO Auto-generated method stub
-		return null;
+		return BundleType.Simple;
 	}
 
 	@Override
 	public BidRequest getBidRequest() {
-		// TODO Auto-generated method stub
-		return null;
+		if (this.isOver()) {
+			return null;
+		}
+		return new BidRequest(0, this.ID, this.getBundleType(), this.currentPrice, this.GOOD);
 	}
 
 	@Override
 	public boolean isOver() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.ticksSince > 5;
 	}
 
 	@Override
 	public void handleBid(Bid bid) {
-		// TODO Auto-generated method stub
+		if (!(bid.Bundle instanceof SimpleBidBundle) || bid.AuctionID != this.ID) {
+			return;
+		}
 		
+		SimpleBidBundle bb = (SimpleBidBundle) bid.Bundle;
+		if (bb.Bid > this.currentPrice) {
+			this.ticksSince = 0;
+			this.currentPrice = bb.Bid;
+			this.winnerID = bid.AgentID;
+		}
 	}
 
 	@Override
 	public Good getGood() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.GOOD;
 	}
 
 	@Override
 	public Integer getWinner() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.winnerID;
 	}
 
 	@Override
 	public void tick(long time) {
-		// TODO Auto-generated method stub
-		
+		this.ticksSince++;
 	}
 
 }
