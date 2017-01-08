@@ -3,14 +3,26 @@ package brown.auctions.bundles;
 import brown.auctions.BidBundle;
 
 public class SimpleBidBundle implements BidBundle {
-	public final int Bid;
+	private final double Bid;
+	private final Integer AgentID;
 	
-	public SimpleBidBundle(int bid) {
+	public SimpleBidBundle() {
+		this.Bid = 0;
+		this.AgentID = null;
+	}
+	
+	public SimpleBidBundle(double bid, Integer agent) {
 		this.Bid = bid;
+		this.AgentID = agent;
 	}
 
 	@Override
-	public int getCost() {
+	public double getCost() {
 		return this.Bid;
+	}
+
+	@Override
+	public Integer getAgent() {
+		return this.AgentID;
 	}
 }

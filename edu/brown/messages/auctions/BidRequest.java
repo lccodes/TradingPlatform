@@ -7,8 +7,11 @@ import brown.messages.Message;
 public class BidRequest extends Message {
 	public final Integer AuctionID;
 	public final BundleType BundleType;
-	public final int CurrentPrice;
 	public final Good Good;
+	
+	public final double CurrentPrice;
+	public final boolean HighBidder;
+	public final Integer HighBidderID;
 	
 	public BidRequest() {
 		super(null);
@@ -16,15 +19,20 @@ public class BidRequest extends Message {
 		this.BundleType = null;
 		this.CurrentPrice = 0;
 		this.Good = null;
+		this.HighBidder = false;
+		this.HighBidderID = -1;
 	}
 	
 	public BidRequest(int ID, Integer auctionID, BundleType bundleType,
-			int currentPrice, Good good) {
+			double currentPrice, Good good, boolean highBidder,
+			Integer highBidderID) {
 		super(ID);
 		this.AuctionID = auctionID;
 		this.BundleType = bundleType;
 		this.CurrentPrice = currentPrice;
 		this.Good = good;
+		this.HighBidder = highBidder;
+		this.HighBidderID = highBidderID;
 	}
 
 }

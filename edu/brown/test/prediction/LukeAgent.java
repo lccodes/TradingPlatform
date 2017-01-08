@@ -1,4 +1,4 @@
-package brown.test;
+package brown.test.prediction;
 
 import brown.agent.Agent;
 import brown.exceptions.AgentCreationException;

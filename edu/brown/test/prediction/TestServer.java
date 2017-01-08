@@ -1,4 +1,4 @@
-package brown.test;
+package brown.test.prediction;
 
 import java.util.LinkedList;
 import java.util.List;

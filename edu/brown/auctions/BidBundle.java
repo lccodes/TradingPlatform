@@ -1,5 +1,6 @@
 package brown.auctions;
 
 public interface BidBundle {
-	int getCost();
+	double getCost();
+	Integer getAgent();
 }

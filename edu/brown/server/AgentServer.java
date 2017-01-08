@@ -15,6 +15,7 @@ import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Transaction;
 import brown.assets.value.Good;
 import brown.auctions.Auction;
+import brown.auctions.BidBundle;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
@@ -314,14 +315,23 @@ public abstract class AgentServer {
 				auction.tick(System.currentTimeMillis());
 				if (auction.isOver()) {
 					toRemove.add(auction);
-					Integer winner = auction.getWinner();
-					Account account = this.bank.get(winner);
+					BidBundle winner = auction.getWinner();
+					if (winner.getAgent() == null) {
+						continue;
+					}
+					Account account = this.bank.get(winner.getAgent());
 					if (account == null) {
 						continue;
 					}
-					this.bank.put(winner, account.add(0, auction.getGood()));
+					Good good = auction.getGood();
+					good.setAgentID(winner.getAgent());
+					Account newA = account.add(-1 * winner.getCost(), good);
+					this.bank.put(winner.getAgent(), newA);
+					this.sendBankUpdate(winner.getAgent(), account, newA);
 				} else {
-					theServer.sendToAllTCP(auction.getBidRequest());
+					for (Map.Entry<Connection, Integer> id : this.connections.entrySet()) {
+						this.theServer.sendToTCP(id.getKey().getID(), auction.getBidRequest(id.getValue()));
+					}
 				}
 			}
 			

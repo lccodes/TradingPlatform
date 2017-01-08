@@ -8,10 +8,11 @@ public interface Auction {
 	public Integer getID();
 	
 	public BundleType getBundleType();
-	public BidRequest getBidRequest();
+	public BidRequest getBidRequest(Integer ID);
 	public boolean isOver();
+	public boolean isPrivate();
 	public void handleBid(Bid bid);
 	public Good getGood();
-	public Integer getWinner();
+	public BidBundle getWinner();
 	public void tick(long time);
 }

@@ -16,7 +16,7 @@ import brown.securities.prediction.structures.PMBackend;
  */
 public final class PredictionTest {
 	
-	private static int countSwitch(List<Boolean> directions) {
+	public static int countSwitch(List<Boolean> directions) {
 		int count = 0;
 		boolean last = directions.get(0);
 		for (boolean b : directions) {
@@ -55,7 +55,7 @@ public final class PredictionTest {
 			
 			List<Boolean> where = new LinkedList<Boolean>();
 			List<Double> path = new LinkedList<Double>();
-			double sumCost = 0;
+			//double sumCost = 0;
 			for (int i = 0; i < values.length; i++) {
 				boolean dir = values[i] > backend.price(true);
 				where.add(dir);
@@ -67,8 +67,8 @@ public final class PredictionTest {
 					continue;
 				}
 				
-				double cost = dir ? backend.cost(shareNum, 0) : backend.cost(0, shareNum);
-				sumCost += cost;
+				//double cost = dir ? backend.cost(shareNum, 0) : backend.cost(0, shareNum);
+				//sumCost += cost;
 				if(dir) {
 					backend.yes(i, shareNum);
 				} else {

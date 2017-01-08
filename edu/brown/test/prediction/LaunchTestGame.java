@@ -1,4 +1,4 @@
-package brown.test;
+package brown.test.prediction;
 
 public final class LaunchTestGame {
 	public static void main(String[] args) {

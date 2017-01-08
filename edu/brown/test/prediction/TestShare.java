@@ -1,4 +1,4 @@
-package brown.test;
+package brown.test.prediction;
 
 import brown.assets.value.Good;
 
@@ -24,6 +24,11 @@ public class TestShare implements Good {
 	@Override
 	public int getCount() {
 		return COUNT.intValue();
+	}
+
+	@Override
+	public void setAgentID(Integer ID) {
+		//Noop
 	}
 
 }

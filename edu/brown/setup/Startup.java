@@ -7,6 +7,9 @@ import java.util.Date;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Transaction;
 import brown.assets.value.Good;
+import brown.auctions.BidBundle;
+import brown.auctions.BundleType;
+import brown.auctions.bundles.SimpleBidBundle;
 import brown.messages.BankUpdate;
 import brown.messages.Message;
 import brown.messages.Registration;
@@ -53,6 +56,9 @@ public final class Startup {
 		kryo.register(PMNo.class);
 		kryo.register(Timestamp.class);
 		kryo.register(Date.class);
+		kryo.register(BidBundle.class);
+		kryo.register(SimpleBidBundle.class);
+		kryo.register(BundleType.class);
 		
 		return true;
 	}

@@ -1,4 +1,4 @@
-package brown.test;
+package brown.test.prediction;
 
 import com.esotericsoftware.kryo.Kryo;
 

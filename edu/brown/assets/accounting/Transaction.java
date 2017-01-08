@@ -45,4 +45,9 @@ public final class Transaction implements Good {
 	public long getTimestamp() {
 		return timestamp;
 	}
+
+	@Override
+	public void setAgentID(Integer ID) {
+		//Noop
+	}
 }
