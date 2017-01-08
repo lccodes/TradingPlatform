@@ -1,9 +1,9 @@
-package brown.messages;
+package brown.messages.trades;
 
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.Share;
+import brown.assets.value.Good;
 
 /*
  * A message sent to the server by an agent
@@ -15,13 +15,13 @@ public class TradeRequest {
 	public final Integer fromID;
 	
 	public final Integer moniesRequested;
-	public final List<Share> sharesRequested;
+	public final List<Good> sharesRequested;
 	
 	public final Integer moniesOffered;
-	public final List<Share> sharesOffered;
+	public final List<Good> sharesOffered;
 	
 	public TradeRequest(Integer toID, Integer fromID, Integer moniesRequested, 
-			List<Share> sharesRequested, Integer moniesOffered, List<Share> sharesOffered) {
+			List<Good> sharesRequested, Integer moniesOffered, List<Good> sharesOffered) {
 		this.toID = toID;
 		this.fromID = fromID;
 		
@@ -46,11 +46,11 @@ public class TradeRequest {
 	 * the assets needed to execute this trade
 	 */
 	public boolean isSatisfied(Account toAccount, Account fromAccount) {
-		if (fromAccount.monies < moniesOffered || !fromAccount.transactions.containsAll(sharesOffered)) {
+		if (fromAccount.monies < moniesOffered || !fromAccount.goods.containsAll(sharesOffered)) {
 			return false;
 		}
 		
-		if (toAccount.monies < moniesRequested || !toAccount.transactions.containsAll(sharesRequested)) {
+		if (toAccount.monies < moniesRequested || !toAccount.goods.containsAll(sharesRequested)) {
 			return false;
 		}
 		

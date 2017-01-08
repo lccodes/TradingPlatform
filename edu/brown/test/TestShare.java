@@ -1,8 +1,8 @@
 package brown.test;
 
-import brown.assets.value.Share;
+import brown.assets.value.Good;
 
-public class TestShare implements Share {
+public class TestShare implements Good {
 	private final Integer ID;
 	private final Integer COUNT;
 	
@@ -17,7 +17,7 @@ public class TestShare implements Share {
 	}
 
 	@Override
-	public Integer getAgentPublicId() {
+	public Integer getAgentID() {
 		return ID;
 	}
 

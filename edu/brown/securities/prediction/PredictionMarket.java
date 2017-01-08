@@ -1,7 +1,7 @@
 package brown.securities.prediction;
 
 import brown.agent.Agent;
-import brown.messages.PurchaseRequest;
+import brown.messages.markets.PurchaseRequest;
 import brown.securities.MarketCreationException;
 import brown.securities.Security;
 import brown.securities.SecurityType;

@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
-import brown.messages.BidRequest;
-import brown.messages.MarketUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
-import brown.messages.TradeRequest;
+import brown.messages.auctions.BidRequest;
+import brown.messages.markets.MarketUpdate;
+import brown.messages.trades.TradeRequest;
 import brown.setup.Startup;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -74,6 +74,9 @@ public abstract class Agent {
 	 */
 	protected abstract void onRejection(Rejection message);
 
+	/*
+	 * Whenever the state changes in a securities market.
+	 */
 	protected abstract void onMarketUpdate(MarketUpdate marketUpdate);
 
 	/*

@@ -75,9 +75,15 @@ public class SimulationResult {
 			builder.append(cost.getKey() + "," + markup.get(cost.getKey()) + "," + cost.getValue() + "\n");
 		}
 		builder.append("\nSelections (A,v,MM):\n");
+		float share = 0;
 		for (Map.Entry<Integer, Integer> select : selections.entrySet()) {
 			builder.append(select.getKey() +","+ values.get(select.getKey())+","+select.getValue() + "\n");
+			share += select.getValue();
 		}
-		return builder.toString();
+		
+		builder.append("\nShare (MM,%)\n");
+		builder.append("0," + (1.0-(share/selections.size())));
+		builder.append("\n1," + (share/selections.size()));
+		return builder.toString() + "\n";
 	}
 }

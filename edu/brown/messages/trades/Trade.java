@@ -1,4 +1,6 @@
-package brown.messages;
+package brown.messages.trades;
+
+import brown.messages.Message;
 
 /**
  * This message provides an avenue for agents to

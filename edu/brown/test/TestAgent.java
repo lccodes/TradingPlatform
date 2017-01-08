@@ -4,10 +4,10 @@ import brown.agent.Agent;
 import brown.assets.accounting.Account;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
-import brown.messages.BidRequest;
-import brown.messages.MarketUpdate;
 import brown.messages.Rejection;
-import brown.messages.TradeRequest;
+import brown.messages.auctions.BidRequest;
+import brown.messages.markets.MarketUpdate;
+import brown.messages.trades.TradeRequest;
 import brown.securities.SecurityWrapper;
 
 public class TestAgent extends Agent {
@@ -24,9 +24,9 @@ public class TestAgent extends Agent {
 		Account account = bankUpdate.newAccount;
 		System.out.println(account.monies == 100.0 || account.monies <= 98.6);
 		if (account.monies == 100.0) {
-			System.out.println(account.transactions.size() == 0);
+			System.out.println(account.goods.size() == 0);
 		} else {
-			System.out.println(account.transactions.size() == 1);
+			System.out.println(account.goods.size() == 1);
 		}
 	}
 

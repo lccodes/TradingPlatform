@@ -1,7 +1,8 @@
-package brown.messages;
+package brown.messages.markets;
 
 import java.util.List;
 
+import brown.messages.Message;
 import brown.securities.SecurityWrapper;
 
 public class MarketUpdate extends Message {

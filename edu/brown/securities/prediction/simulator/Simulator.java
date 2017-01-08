@@ -63,8 +63,8 @@ public class Simulator {
 		double idealShareNum = mm.howMany(agent.value, dir);
 		double idealCost = dir ? mm.cost(idealShareNum, 0) : mm.cost(0, idealShareNum);
 		double shareNum = idealCost > agent.budget ? mm.budgetToShares(agent.budget, dir) : idealShareNum;
-		//System.out.println(mm.alpha + " " + (dir ? mm.cost(shareNum, 0) : mm.cost(0, shareNum)));
 		if (result != null) {
+			//System.out.println(mm.alpha + " " + (dir ? mm.cost(shareNum, 0) : mm.cost(0, shareNum)));
 			result.addCost(mm,dir ? mm.cost(shareNum, 0) : mm.cost(0, shareNum));
 		}
 
@@ -75,8 +75,8 @@ public class Simulator {
 		MarketMakerFactory mmf = new MarketMakerFactory();
 		//mmf.add(new LiquiditySensitive(.1));
 		//mmf.add(new LiquiditySensitive(.2));
-		mmf.add(new LiquiditySensitive(.99));
-		mmf.add(new LiquiditySensitive(1));
+		mmf.add(new LiquiditySensitive(.1));
+		mmf.add(new PMBackend(2));
 		BidderFactory bf = new BidderFactory();
 		int x = 100;
 		while (x-- > 0) {

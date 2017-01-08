@@ -1,5 +1,6 @@
-package brown.messages;
+package brown.messages.markets;
 
+import brown.messages.Message;
 import brown.securities.Security;
 
 public class PurchaseRequest extends Message {

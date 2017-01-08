@@ -26,7 +26,7 @@ public class TestServer extends AgentServer {
 		super.onRegistration(connection, registration);
 		
 		Account oldAccount = bank.get(connections.get(connection));
-		Account newAccount = oldAccount.add(100, null);
+		Account newAccount = oldAccount.addAll(100, null);
 		bank.put(connections.get(connection), newAccount);
 		System.out.println(oldAccount);
 		

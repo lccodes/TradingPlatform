@@ -14,9 +14,9 @@ import setup.GameSetup;
 import messages.Poll;
 import messages.PollMessage;
 import brown.assets.accounting.Account;
-import brown.messages.PurchaseRequest;
 import brown.messages.Registration;
 import brown.messages.Rejection;
+import brown.messages.markets.PurchaseRequest;
 import brown.securities.Security;
 import brown.securities.SecurityFactory;
 import brown.securities.prediction.PMTriple;
@@ -84,7 +84,7 @@ public class PollingServer extends AgentServer {
     Integer ID = this.connections.get(connection);
     Account account = this.bank.get(ID);
     synchronized(account) {
-      Account newAccount = account.add(this.stateToVote.get(this.idToState.get(ID)), null);
+      Account newAccount = account.addAll(this.stateToVote.get(this.idToState.get(ID)), null);
       this.bank.put(ID, newAccount);
       this.sendBankUpdate(ID, account, newAccount);
     }

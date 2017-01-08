@@ -13,14 +13,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Transaction;
+import brown.assets.value.Good;
+import brown.auctions.Auction;
 import brown.messages.BankUpdate;
-import brown.messages.Bid;
-import brown.messages.MarketUpdate;
-import brown.messages.PurchaseRequest;
 import brown.messages.Registration;
 import brown.messages.Rejection;
-import brown.messages.Trade;
-import brown.messages.TradeRequest;
+import brown.messages.auctions.Bid;
+import brown.messages.markets.MarketUpdate;
+import brown.messages.markets.PurchaseRequest;
+import brown.messages.trades.Trade;
+import brown.messages.trades.TradeRequest;
 import brown.securities.Exchange;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
@@ -44,6 +46,7 @@ public abstract class AgentServer {
 	//Consider time limiting these
 	protected List<TradeRequest> pendingTradeRequests;
 	protected Exchange exchange;
+	protected Map<Integer, Auction> auctions;
 	
 	private int agentCount;
 	private final int PORT;
@@ -56,6 +59,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
+		this.auctions = new ConcurrentHashMap<Integer, Auction>();
 		this.exchange = new Exchange();
 		this.privateToPublic.put(-1, -1);
 		
@@ -180,23 +184,23 @@ public abstract class AgentServer {
 				Account fromAccount = bank.get(privateFrom);
 				
 				if (trade.tradeRequest.isSatisfied(toAccount, fromAccount)) {
-					/*Account middleTo = toAccount.remove(trade.tradeRequest.moniesRequested,
+					Account middleTo = toAccount.remove(trade.tradeRequest.moniesRequested,
 							trade.tradeRequest.sharesRequested);
-					Account newTo = middleTo.add(trade.tradeRequest.moniesOffered,
+					Account newTo = middleTo.addAll(trade.tradeRequest.moniesOffered,
 							trade.tradeRequest.sharesOffered);
 					
 					Account middleFrom = fromAccount.remove(trade.tradeRequest.moniesOffered,
 							trade.tradeRequest.sharesOffered);
-					Account newFrom = middleFrom.add(trade.tradeRequest.moniesRequested,
+					Account newFrom = middleFrom.addAll(trade.tradeRequest.moniesRequested,
 							trade.tradeRequest.sharesRequested);
 					
 					bank.put(privateTo, newTo);
 					bank.put(privateFrom, newFrom);
 					
 					List<Integer> ids = new LinkedList<Integer>();
-					ids.add(privateTo);
+					ids.add(privateTo); 
 					ids.add(privateFrom);
-					sendBankUpdates(ids);*/
+					sendBankUpdates(ids);
 				}
 			}
 		}
@@ -220,7 +224,7 @@ public abstract class AgentServer {
 				double cost = market.cost(purchaseRequest.buy,
 						purchaseRequest.sell);
 				if (oldAccount.monies >= cost) {
-					List<Transaction> update = new LinkedList<Transaction>();
+					List<Good> update = new LinkedList<Good>();
 					if (purchaseRequest.buy > 0) {
 						Transaction yes = market.buy(privateID, purchaseRequest.buy);
 						update.add(yes);
@@ -233,7 +237,7 @@ public abstract class AgentServer {
 						ledger.add(no);
 					}
 					
-					Account newAccount = oldAccount.add(0, update);
+					Account newAccount = oldAccount.addAll(0, update);
 					newAccount = newAccount.remove(cost, null);
 					bank.put(privateID, newAccount);
 					BankUpdate bu = new BankUpdate(privateID, oldAccount, newAccount);
@@ -252,7 +256,18 @@ public abstract class AgentServer {
 	 * BidRequest for an auction
 	 */
 	protected void onBid(Connection connection, Integer privateID, Bid bid) {
-		// TODO Auto-generated method stub
+		Auction auction = this.auctions.get(bid.AuctionID);
+		if (auction != null) {
+			synchronized(auction) {
+				Account account = this.bank.get(privateID);
+				if (account.monies >= bid.Bundle.getCost()) {
+					auction.handleBid(bid.safeCopy(privateID));
+				} else {
+					Rejection rej = new Rejection(privateID, bid);
+					this.theServer.sendToTCP(connection.getID(), rej);
+				}
+			}
+		}
 	}
 	
 	/*
@@ -287,6 +302,39 @@ public abstract class AgentServer {
 		theServer.sendToAllTCP(mupdate);
 	}
 	
+	/*
+	 * Sends a auction update to every agent or
+	 * closes out any finished auctions.
+	 * about the state of all the public auctions
+	 */
+	public void updateAllAuctions() {
+		synchronized(auctions) {
+			List<Auction> toRemove = new LinkedList<Auction>();
+			for (Auction auction : auctions.values()) {
+				auction.tick(System.currentTimeMillis());
+				if (auction.isOver()) {
+					toRemove.add(auction);
+					Integer winner = auction.getWinner();
+					Account account = this.bank.get(winner);
+					if (account == null) {
+						continue;
+					}
+					this.bank.put(winner, account.add(0, auction.getGood()));
+				} else {
+					theServer.sendToAllTCP(auction.getBidRequest());
+				}
+			}
+			
+			for (Auction auction : toRemove) {
+				auctions.remove(auction);
+			}
+		}
+	}
+	
+	/*
+	 * Sends a MarketUpdate about this specific market to all agents
+	 * @param Security : the market to update on
+	 */
 	public void sendMarketUpdate(Security market) {
 		List<SecurityWrapper> markets = new LinkedList<SecurityWrapper>();
 		markets.add(market.wrap());

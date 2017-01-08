@@ -1,7 +1,7 @@
 package brown.messages;
 
 public class Message {
-	private final Integer ID;
+	protected final Integer ID;
 	
 	public Message(Integer ID) {
 		this.ID = ID;

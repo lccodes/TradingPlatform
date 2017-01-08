@@ -38,7 +38,7 @@ public class PMLedger extends Ledger {
 		for (Transaction t : this.transactions) {
 			Account account = server.publicToAccount(t.getAgentID());
 			synchronized(account) {
-				Account newAccount = account.add(t.getCount(), null);
+				Account newAccount = account.addAll(t.getCount(), null);
 				server.setAccount(t.getAgentID(), newAccount);
 			}
 			ids.add(account.ID);

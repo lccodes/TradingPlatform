@@ -3,8 +3,8 @@ package testing;
 import messages.PollMessage;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
-import brown.messages.MarketUpdate;
 import brown.messages.Rejection;
+import brown.messages.markets.MarketUpdate;
 import brown.securities.SecurityWrapper;
 import agent.PollAgent;
 

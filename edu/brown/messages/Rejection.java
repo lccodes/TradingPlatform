@@ -1,9 +1,13 @@
 package brown.messages;
 
+import brown.messages.auctions.Bid;
+import brown.messages.markets.PurchaseRequest;
+import brown.messages.trades.TradeRequest;
+
 public class Rejection extends Message {
 	
 	public final PurchaseRequest failedPR;
-	public final BidRequest failedBR;
+	public final Bid failedBR;
 	public final TradeRequest failedTR;
 	
 	public Rejection() {
@@ -20,9 +24,9 @@ public class Rejection extends Message {
 		this.failedTR = null;
 	}
 	
-	public Rejection(Integer ID, BidRequest br) {
+	public Rejection(Integer ID, Bid bid) {
 		super(ID);
-		this.failedBR = br;
+		this.failedBR = bid;
 		this.failedPR = null;
 		this.failedTR = null;
 	}

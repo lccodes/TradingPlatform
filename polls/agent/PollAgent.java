@@ -5,10 +5,10 @@ import messages.PollMessage;
 import brown.agent.Agent;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
-import brown.messages.BidRequest;
-import brown.messages.MarketUpdate;
 import brown.messages.Rejection;
-import brown.messages.TradeRequest;
+import brown.messages.auctions.BidRequest;
+import brown.messages.markets.MarketUpdate;
+import brown.messages.trades.TradeRequest;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;

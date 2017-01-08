@@ -3,10 +3,12 @@ package brown.assets.accounting;
 import java.util.LinkedList;
 import java.util.List;
 
+import brown.assets.value.Good;
+
 public class Account {
 	public final Integer ID;
 	public final double monies;
-	public final List<Transaction> transactions;
+	public final List<Good> goods;
 	
 	/**
 	 * Kryo objects require a blank constructor
@@ -14,36 +16,44 @@ public class Account {
 	public Account() {
 		this.ID = null;
 		this.monies = 0;
-		this.transactions = null;
+		this.goods = null;
 	}
 	
 	public Account(Integer ID) {
 		this.ID = ID;
 		this.monies = new Integer(0);
-		this.transactions = new LinkedList<Transaction>();
+		this.goods = new LinkedList<Good>();
 	}
 	
-	private Account(Integer ID, double monies, List<Transaction> Transactions) {
+	private Account(Integer ID, double monies, List<Good> Transactions) {
 		this.ID = ID;
 		this.monies = monies;
-		this.transactions = Transactions;
+		this.goods = Transactions;
 	}
 	
-	public Account add(double newMonies, List<Transaction> newTransactions) {
+	public Account addAll(double newMonies, List<Good> newTransactions) {
 		if (newTransactions == null) {
-			return new Account(this.ID, newMonies+this.monies, transactions);
+			return new Account(this.ID, newMonies+this.monies, goods);
 		}
 		
-		this.transactions.addAll(newTransactions);
-		return new Account(this.ID, newMonies+this.monies, transactions);
+		this.goods.addAll(newTransactions);
+		return new Account(this.ID, newMonies+this.monies, goods);
 	}
 	
-	public Account remove(double removeMonies, List<Transaction> removeTransactions) {
+	public Account add(double newMonies, Good newGood) {
+		if (newGood == null) {
+			return new Account(this.ID, newMonies+this.monies, goods);
+		}
+		this.goods.add(newGood);
+		return new Account(this.ID, newMonies+this.monies, goods);
+	}
+	
+	public Account remove(double removeMonies, List<Good> removeTransactions) {
 		if (removeTransactions == null) {
-			return new Account(this.ID, this.monies-removeMonies, this.transactions);
+			return new Account(this.ID, this.monies-removeMonies, this.goods);
 		}
 		
-		this.transactions.removeAll(removeTransactions);
-		return new Account(this.ID, this.monies-removeMonies, this.transactions);
+		this.goods.removeAll(removeTransactions);
+		return new Account(this.ID, this.monies-removeMonies, this.goods);
 	}
 }
