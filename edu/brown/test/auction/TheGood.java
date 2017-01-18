@@ -19,7 +19,7 @@ public class TheGood implements Good {
 	}
 
 	@Override
-	public int getCount() {
+	public double getCount() {
 		return 1;
 	}
 

@@ -32,7 +32,7 @@ public class PMYes implements Security {
 	 * Invokes backend cost
 	 */
 	@Override
-	public double cost(int newq1, int newq2) {
+	public double cost(double newq1, double newq2) {
 		return this.backend.cost(newq1, newq2);
 	}
 	
@@ -42,7 +42,7 @@ public class PMYes implements Security {
 	 * @return cost : double
 	 */
 	@Override
-	public double bid(int shareNum) {
+	public double bid(double shareNum) {
 		return cost(shareNum, 0);
 	}
 	
@@ -52,7 +52,7 @@ public class PMYes implements Security {
 	 * @return cost : double
 	 */
 	@Override
-	public double ask(int shareNum) {
+	public double ask(double shareNum) {
 		return cost(-1*shareNum, 0);
 	}
 	
@@ -62,7 +62,7 @@ public class PMYes implements Security {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction buy(Integer agentID, int shareNum) {
+	public Transaction buy(Integer agentID, double shareNum) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(shareNum, 0));
 		backend.yes(agentID, shareNum);
 		return trans;
@@ -74,7 +74,7 @@ public class PMYes implements Security {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction sell(Integer agentID, int shareNum) {
+	public Transaction sell(Integer agentID, double shareNum) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(-1 * shareNum, 0));
 		backend.yes(agentID, -1*shareNum);
 		return trans;

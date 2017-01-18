@@ -54,7 +54,7 @@ market maker.\\
 A \mydef{market maker} $\OptionPrice_\Market$ is a function 
 that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$ 
 and a quantity $\Quantity\in\mathbb{R}_+$ at time $\Time \in [0,\Time_\Option)$ 
-to a price $\OptionPrice(\Option,\Agent,\Quantity, \Time) \in \mathbb{R}_+$. 
+to a price $\OptionPrice(\Option,\Agent,\Quantity,\Time) \in \mathbb{R}_+$. 
 By definition $\OptionPrice(\Option,\Agent, \Time) = \Revealer(\Option_\Event)$ if 
 $\Time \ge \Time_\Option$.
 
@@ -69,7 +69,7 @@ We assume that agents' private beliefs and budgets are not common knowledge
 but are drawn from known distributions $\AgentBelief \sim v(\cdot)$ and
 $\AgentBudget \sim b(\cdot)$.\\
 
-We assume agents are allow to observe the true current price of any option.\\
+We assume agents are allowed to observe the true current price of any option.\\
 
 We assume that the market maker mechanism and all its parameters are common knowledge.\\
 
@@ -108,12 +108,13 @@ We assume that the market maker mechanism and all its parameters are common know
    Given a market maker $\OptionPrice_\Market$ and a set of participating agents
    $\Agents_\Option$, the profit of $\OptionPrice_\Market$ is defined as
      $$ P(\OptionPrice_\Market, \Agents_\Option) = R(\OptionPrice_\Market, \Agents_\Option) 
-     -C(\OptionPrice_\Market, \Agents_\Option)$$
+     - C(\OptionPrice_\Market, \Agents_\Option)$$
   \end{definition}
   
 \begin{definition} (Profit-Maximizing Market Maker).
 \label{def:pmmm}
-Among all Market Makers, find the one that maximizes Profit.
+Among all Market Makers $\MarketMakers$, given a set of participating agents $\Agents_\Option$ find the one that maximizes Profit:
+$$ PM(\MarketMakers, \Agents_\Option) = arg max_{\Agent \in \Agents_\Option} P(\OptionPrice_\Market, \Agents_\Option)$$
 \end{definition}
 
 

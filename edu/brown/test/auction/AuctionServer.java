@@ -5,7 +5,7 @@ import java.util.List;
 
 import brown.assets.accounting.Account;
 import brown.auctions.BidBundle;
-import brown.auctions.mechanisms.EnglishAuction;
+import brown.auctions.mechanisms.OutcryAuction;
 import brown.messages.Registration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
@@ -33,7 +33,7 @@ public class AuctionServer extends AgentServer {
 	}
 	
 	public void runGame() {
-		this.auctions.put(0, new EnglishAuction(0, new TheGood(), true));
+		this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, true));
 		int i = 0;
 		while (i < 10) {
 			try {

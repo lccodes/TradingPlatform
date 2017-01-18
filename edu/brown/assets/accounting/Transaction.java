@@ -5,7 +5,7 @@ import brown.securities.Security;
 
 public final class Transaction implements Good {
 	private final Security security;
-	private final int count;
+	private final double count;
 	private final Integer ID;
 	private final double price;
 	private final long timestamp;
@@ -18,7 +18,7 @@ public final class Transaction implements Good {
 		this.timestamp = 0;
 	}
 	
-	public Transaction(Security security, int count, Integer ID, double price) {
+	public Transaction(Security security, double count, Integer ID, double price) {
 		this.security = security;
 		this.count = count;
 		this.ID = ID;
@@ -30,7 +30,7 @@ public final class Transaction implements Good {
 		return security;
 	}
 	
-	public int getCount() {
+	public double getCount() {
 		return count;
 	}
 	

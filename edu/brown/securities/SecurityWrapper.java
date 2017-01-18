@@ -7,10 +7,10 @@ public interface SecurityWrapper {
 	public Integer getID();
 	public SecurityType getType();
 	
-	public void buy(Agent agent, int shareNum);
-	public void sell(Agent agent, int shareNum);
+	public void buy(Agent agent, double shareNum);
+	public void sell(Agent agent, double shareNum);
 	
-	public double bid(int shareNum);
-	public double ask(int shareNum);
+	public double bid(double shareNum);
+	public double ask(double shareNum);
 
 }

@@ -8,10 +8,12 @@ import brown.auctions.bundles.SimpleBidBundle;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidRequest;
 
-public class EnglishAuction implements Auction {
+public class OutcryAuction implements Auction {
 	private final Integer ID;
 	private final Good GOOD;
 	private final boolean PRIVATE;
+	private final boolean ASCENDING;
+	private final boolean FIRSTPRICE;
 	
 	private Integer winnerID;
 	private double currentPrice;
@@ -19,18 +21,22 @@ public class EnglishAuction implements Auction {
 	private int ticksSince;
 	private int br;
 	
-	public EnglishAuction(Integer id, Good good, boolean priv) {
+	public OutcryAuction(Integer id, Good good, 
+			boolean priv, boolean ascending, boolean firstPrice) {
 		this.ID = id;
 		this.GOOD = good;
 		this.winnerID = null;
 		this.currentPrice = 0;
-		this.currentCost = 0;
+		this.currentCost = ascending ? 0 : Double.MAX_VALUE;
 		this.ticksSince = 0;
 		this.PRIVATE = priv;
 		this.br = 0;
+		this.ASCENDING = ascending;
+		this.FIRSTPRICE = firstPrice;
 	}
 	
-	public EnglishAuction(Integer id, Good good, boolean priv, double reserve) {
+	public OutcryAuction(Integer id, Good good, boolean priv, 
+			double reserve, boolean ascending, boolean firstPrice) {
 		this.ID = id;
 		this.GOOD = good;
 		this.winnerID = null;
@@ -39,6 +45,8 @@ public class EnglishAuction implements Auction {
 		this.currentCost = reserve;
 		this.PRIVATE = priv;
 		this.br = 0;
+		this.ASCENDING = ascending;
+		this.FIRSTPRICE = firstPrice;
 	}
 
 	@Override
@@ -73,9 +81,9 @@ public class EnglishAuction implements Auction {
 		}
 		
 		SimpleBidBundle bb = (SimpleBidBundle) bid.Bundle;
-		if (bb.getCost() > this.currentPrice) {
+		if ((this.ASCENDING && bb.getCost() > this.currentPrice) || bb.getCost() < this.currentPrice) {
 			this.ticksSince = 0;
-			this.currentCost = this.currentPrice;
+			this.currentCost = this.FIRSTPRICE ? bb.getCost() : this.currentPrice;
 			this.currentPrice = bb.getCost();
 			this.winnerID = bid.AgentID;
 		}

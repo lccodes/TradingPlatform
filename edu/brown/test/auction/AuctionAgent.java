@@ -42,7 +42,7 @@ public class AuctionAgent extends Agent {
 
 	@Override
 	protected void onBidRequest(BidRequest bidRequest) {
-		Logging.log("[-] bidRequest " + bidRequest.AuctionID + " w/ hb " + bidRequest.HighBidderID);
+		Logging.log("[-] bidRequest for " + bidRequest.AuctionID + " w/ hb " + bidRequest.HighBidderID);
 		if (bidRequest.CurrentPrice < this.myMax && !bidRequest.HighBidder
 				&& bidRequest.BundleType == BundleType.Simple) {
 			SimpleBidBundle bundle = new SimpleBidBundle(bidRequest.CurrentPrice+1, this.ID);
@@ -53,8 +53,7 @@ public class AuctionAgent extends Agent {
 
 	@Override
 	protected void onTradeRequest(TradeRequest tradeRequest) {
-		// TODO Auto-generated method stub
-		
+		// Noop
 	}
 	
 	public static void main(String[] args) throws AgentCreationException {

@@ -4,14 +4,14 @@ import brown.assets.value.Good;
 
 public class TestShare implements Good {
 	private final Integer ID;
-	private final Integer COUNT;
+	private final double COUNT;
 	
 	public TestShare() {
 		this.ID = null;
-		this.COUNT = null;
+		this.COUNT = 0;
 	}
 	
-	public TestShare(Integer ID, int count) {
+	public TestShare(Integer ID, double count) {
 		this.ID = ID;
 		this.COUNT = count;
 	}
@@ -22,8 +22,8 @@ public class TestShare implements Good {
 	}
 
 	@Override
-	public int getCount() {
-		return COUNT.intValue();
+	public double getCount() {
+		return COUNT;
 	}
 
 	@Override

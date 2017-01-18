@@ -12,12 +12,13 @@ Given N traders and M market makers where M < N, which of our five market makers
 a social planner implement to maximize accuracy.
 
 \section{Market Makers}
-In these experiments we will test the following five market markers.
+In these experiments we will test the following three market markers.
+
 \subsection{Logarithmic Market Scoring Rule}
 LMSR is a strictly proper scoring rule developed by Robert Hanson. LMSR uses a logarithmic cost function: \\
 $C(q_1,q_2) = b\ln(e^{\frac{q_1}{b} + e^{\frac{q_2}{b}}}$ where $q_1$ and $q_2$ represent the number of shares acquired for each of the binary events: 1 and 2. The cost charged to a trader wanting to buy $q_a$ shares on event 1 and $q_b$ shares on event 1 is: $C(q_1 + q_a, q_2 + q_b) - C(q_1,q_2)$. Traders are charged for their movement in the market prediction. $b$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $b\n(2)$. A large b means that it would cost a lot to move the market price while a small b makes large swings relatively inexpensive.\\
 
-The instantaneous price of LMSR market x, which is also the market prediction for x, is quoted with: $p_x = \frac{e^{\frac{q_1}{b}}}{e^{\frac{q_1}{b}} + e^{\frac{q_2}{b}}$. \\
+The instantaneous price of LMSR market x, which is also the market prediction for x, is quoted with: $p_x = \frac{e^{\frac{q_1}{b}}}{e^{\frac{q_1}{b}} + e^{\frac{q_2}{b}}}$. \\
 
 \textbf{Advantages}\\
 \begin{enumerate}
@@ -31,10 +32,29 @@ The instantaneous price of LMSR market x, which is also the market prediction fo
 \item{Guaranteed Loss - the market maker cannot profit and has a guaranteed bounded loss.}
 }
 \end{enumerate}
-\subsection{Luke's Online Budget Weighted Average}
-\subsection{Yiling and Jen's Expert Weighted Majority}
-\subsection{Luke's Weighted Majority}
+
 \subsection{Practical Liquidity Sensitive Market Maker}
+The LSMM uses the underlying LMSR mechanism but invokes a novel
+function for setting the liquidity parameter b. The function is:
+$b(q) = \alpha \sum_{i} q_i$. $q$ represents the quantity vector
+for each option available from the market maker. In a binary
+prediction market, $q$ has two values which represent the quantity
+outstanding for shares of YES and NO.\\
+
+\textbf{Advantages}\\
+\begin{enumerate}
+\item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate [Hanson 2003]}
+\item{Liquidity Sensitive - the market adjusts to periods with low or high activity. The market maker decreasingly subsudizes the market as activity rises.}
+\item{Guaranteed Profit - the market maker has unbounded profit but bounded
+loss at near 0.}
+}
+\end{enumerate}
+
+\textbf{Disadvantages} \\
+\begin{enumerate}
+\item{Translation Variance - all prices sum beyond unity. (No direct mapping to a probability though it does provide a tight range.)}
+
+\subsection{Luke's New MM}
 
 \section{Setup}
 

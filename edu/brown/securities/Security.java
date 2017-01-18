@@ -7,13 +7,13 @@ public interface Security {
 	public Integer getID();
 	public SecurityType getType();
 	
-	public Transaction buy(Integer agentID, int shareNum);
-	public Transaction sell(Integer agentID, int shareNum);
+	public Transaction buy(Integer agentID, double shareNum);
+	public Transaction sell(Integer agentID, double shareNum);
 	
-	public double cost(int newq1, int newq2);
+	public double cost(double newq1, double newq2);
 	
-	public double bid(int shareNum);
-	public double ask(int shareNum);
+	public double bid(double shareNum);
+	public double ask(double shareNum);
 	
 	public SecurityWrapper wrap();
 }

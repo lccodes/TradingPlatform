@@ -65,7 +65,7 @@ public class LiquiditySensitive extends PMBackend {
 	 * Computes b(q)
 	 */
 	private double getB() {
-		return yes + no == 0 ? alpha : alpha * (yes + no);
+		return alpha * (yes + no);
 	}
 	
 	/*

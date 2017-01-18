@@ -30,9 +30,12 @@ public class SimulationResult {
 		this.markup = new HashMap<Integer, Double>();
 	}
 
-	public void addPurchase(PMBackend mm, Bidder agent, double quantity) {
+	public void addPurchase(PMBackend mm, Bidder agent, double quantity, boolean correct) {
 		selections.put(getID(agent), getID(mm));
 		quantities.put(getID(agent), quantity);
+		//System.out.println(quantity);
+		//double penalty = correct == (agent.value > .5) ? -1*quantity : 0;
+		//costs.put(getID(mm), costs.getOrDefault(getID(mm), 0.0) + penalty);
 	}
 
 	public void addMarketmaker(PMBackend mm) {
@@ -77,7 +80,7 @@ public class SimulationResult {
 		builder.append("\nSelections (A,v,MM):\n");
 		float share = 0;
 		for (Map.Entry<Integer, Integer> select : selections.entrySet()) {
-			builder.append(select.getKey() +","+ values.get(select.getKey())+","+select.getValue() + "\n");
+			builder.append(select.getKey() +","+ values.get(select.getKey()) + "," + select.getValue() + "\n");
 			share += select.getValue();
 		}
 		

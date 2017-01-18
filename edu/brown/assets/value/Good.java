@@ -7,5 +7,5 @@ package brown.assets.value;
 public interface Good {
 	Integer getAgentID();
 	void setAgentID(Integer ID);
-	int getCount();
+	double getCount();
 }

@@ -5,8 +5,8 @@ import brown.securities.Security;
 
 public class PurchaseRequest extends Message {
 	public final Security market;
-	public final int buy;
-	public final int sell;
+	public final double buy;
+	public final double sell;
 	
 	public PurchaseRequest() {
 		super(null);
@@ -15,7 +15,7 @@ public class PurchaseRequest extends Message {
 		sell = 0;
 	}
 
-	public PurchaseRequest(int ID, Security predictionmarket, int shareYes, int shareNo) {
+	public PurchaseRequest(int ID, Security predictionmarket, double shareYes, double shareNo) {
 		super(ID);
 		this.market = predictionmarket;
 		this.buy = shareYes;

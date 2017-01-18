@@ -17,7 +17,7 @@ public class Simulator {
 		this.agents = agents;
 	}
 	
-	public SimulationResult simulate(boolean orderedAgents) {
+	public SimulationResult simulate(boolean orderedAgents, boolean correct) {
 		SimulationResult result = new SimulationResult();
 		List<Bidder> theAgents = new LinkedList<Bidder>();
 		theAgents.addAll(agents);
@@ -49,7 +49,7 @@ public class Simulator {
 			} else {
 				bestmm.no(null, quantity);
 			}
-			result.addPurchase(bestmm, agent, quantity);
+			result.addPurchase(bestmm, agent, quantity, correct);
 		}
 		for (PMBackend mm : marketmakers) {
 			result.addMarketmaker(mm);
@@ -64,32 +64,82 @@ public class Simulator {
 		double idealCost = dir ? mm.cost(idealShareNum, 0) : mm.cost(0, idealShareNum);
 		double shareNum = idealCost > agent.budget ? mm.budgetToShares(agent.budget, dir) : idealShareNum;
 		if (result != null) {
-			//System.out.println(mm.alpha + " " + (dir ? mm.cost(shareNum, 0) : mm.cost(0, shareNum)));
+			//System.out.println(mm.alpha + " " + shareNum + " " + (dir ? mm.cost(shareNum, 0) : mm.cost(0, shareNum)));
 			result.addCost(mm,dir ? mm.cost(shareNum, 0) : mm.cost(0, shareNum));
 		}
 
 		return shareNum;
 	}
 	
+	public static double getWinner(double first, double second) {
+		int f = 0, s = 0;
+		for (int i = 0; i < 3; i++) {
+			MarketMakerFactory mmf = new MarketMakerFactory();
+			LiquiditySensitive uno = new LiquiditySensitive(first);
+			LiquiditySensitive dos = new LiquiditySensitive(second);
+			mmf.add(uno);
+			mmf.add(dos);
+			BidderFactory bf = new BidderFactory();
+			int x = 100;
+			while (x-- > 0) {
+				bf.addBidder(Math.random(), 1);
+			}
+			Simulator simulator = new Simulator(mmf.make(), bf.getBidders());
+			SimulationResult sr = simulator.simulate(false, Math.random() > .5);
+			if (sr.getCost(uno) > sr.getCost(dos)) {
+				f += 1;
+			} else {
+				s += 1;
+			}
+		}
+		if (f > s) {
+			return first;
+		} else {
+			return second;
+		}
+	}
+	
+	public static double getWinner(double first) {
+		int f = 0, s = 0;
+		for (int i = 0; i < 3; i++) {
+			MarketMakerFactory mmf = new MarketMakerFactory();
+			LiquiditySensitive uno = new LiquiditySensitive(first);
+			PMBackend pmb = new PMBackend(50);
+			mmf.add(uno);
+			mmf.add(pmb);
+			BidderFactory bf = new BidderFactory();
+			int x = 100;
+			while (x-- > 0) {
+				bf.addBidder(Math.random(), 1);
+			}
+			Simulator simulator = new Simulator(mmf.make(), bf.getBidders());
+			SimulationResult sr = simulator.simulate(false, Math.random() > .5);
+			if (sr.getCost(uno) > sr.getCost(pmb)) {
+				f += 1;
+			} else {
+				s += 1;
+			}
+		}
+		if (f > s) {
+			return first;
+		} else {
+			return -1;
+		}
+	}
+	
 	public static void main(String[] args) {
-		MarketMakerFactory mmf = new MarketMakerFactory();
-		//mmf.add(new LiquiditySensitive(.1));
-		//mmf.add(new LiquiditySensitive(.2));
-		mmf.add(new LiquiditySensitive(.1));
-		mmf.add(new PMBackend(2));
-		BidderFactory bf = new BidderFactory();
-		int x = 100;
-		while (x-- > 0) {
-			bf.addBidder(Math.random(), 2);
+		double start = .9;
+		double fin = .1;
+		for (int i = 0; i < 10; i ++) {
+			double win = Simulator.getWinner(fin);
+			System.out.println(win + " " + (fin == win ? -1 : fin));
+			fin += .1;
 		}
-		System.out.println("Average: " + bf.getAverage());
-		
-		Simulator simulator = new Simulator(mmf.make(), bf.getBidders());
-		SimulationResult sr = simulator.simulate(false);
-		System.out.println(sr);
-		for(PMBackend mm : mmf.make()) {
-			System.out.println(mm.price(true));
-		}
+		//System.out.println(sr);
+		//System.out.println("Average: " + bf.getAverage());
+		//for(PMBackend mm : mmf.make()) {
+		//	System.out.println(mm.price(true));
+		//}
 	}
 
 }
