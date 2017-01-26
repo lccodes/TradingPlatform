@@ -20,6 +20,13 @@ public class SealedBid implements Auction {
 	private double currentCost;
 	private int br;
 	
+	/**
+	 * Sealed bid auction without reserve
+	 * @param ID : auction ID
+	 * @param good : good being auctioned
+	 * @param ascending : is it ascending?
+	 * @param firstPrice : is it first price? otherwise second price
+	 */
 	public SealedBid(Integer ID, Good good, boolean ascending, boolean firstPrice) {
 		this.ID = ID;
 		this.Good = good;
@@ -32,6 +39,14 @@ public class SealedBid implements Auction {
 		this.FIRST = firstPrice;
 	}
 	
+	/**
+	 * Sealed bid auction with reserve
+	 * @param ID : auction ID
+	 * @param good : good being auctioned
+	 * @param ascending : is it ascending?
+	 * @param firstPrice : is it first price? otherwise second price
+	 * @param reserve : reserve price
+	 */
 	public SealedBid(Integer ID, Good good, boolean ascending,
 			boolean firstPrice, double reserve) {
 		this.ID = ID;

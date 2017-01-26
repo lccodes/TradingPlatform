@@ -19,27 +19,50 @@ public class Account {
 		this.goods = null;
 	}
 	
+	/**
+	 * Account with the owner's ID; no balance or goods
+	 * Use this constructor
+	 * @param ID : owner ID
+	 */
 	public Account(Integer ID) {
 		this.ID = ID;
 		this.monies = new Integer(0);
 		this.goods = new LinkedList<Good>();
 	}
 	
-	private Account(Integer ID, double monies, List<Good> Transactions) {
+	/**
+	 * Constructor with starting balance and goods
+	 * @param ID : owner's ID
+	 * @param monies : starting monies
+	 * @param goods : starting goods
+	 */
+	private Account(Integer ID, double monies, List<Good> goods) {
 		this.ID = ID;
 		this.monies = monies;
-		this.goods = Transactions;
+		this.goods = goods;
 	}
 	
-	public Account addAll(double newMonies, List<Good> newTransactions) {
-		if (newTransactions == null) {
+	/**
+	 * Adds monies and goods; leave 0 or null if not using both
+	 * @param newMonies : additional money
+	 * @param newGoods : additional goods 
+	 * @return updated Account
+	 */
+	public Account addAll(double newMonies, List<Good> newGoods) {
+		if (newGoods == null) {
 			return new Account(this.ID, newMonies+this.monies, goods);
 		}
 		
-		this.goods.addAll(newTransactions);
+		this.goods.addAll(newGoods);
 		return new Account(this.ID, newMonies+this.monies, goods);
 	}
 	
+	/**
+	 * Adds monies and goods; leave 0 or null if not using both
+	 * @param newMonies : additional money
+	 * @param newGoods : additional good
+	 * @return updated Account
+	 */
 	public Account add(double newMonies, Good newGood) {
 		if (newGood == null) {
 			return new Account(this.ID, newMonies+this.monies, goods);
@@ -48,12 +71,18 @@ public class Account {
 		return new Account(this.ID, newMonies+this.monies, goods);
 	}
 	
-	public Account remove(double removeMonies, List<Good> removeTransactions) {
-		if (removeTransactions == null) {
+	/**
+	 * Removes monies and goods; leave 0 or null if not using both
+	 * @param newMonies : money to remove
+	 * @param newGoods : goods to remove 
+	 * @return updated Account
+	 */
+	public Account remove(double removeMonies, List<Good> removeGoods) {
+		if (removeGoods == null) {
 			return new Account(this.ID, this.monies-removeMonies, this.goods);
 		}
 		
-		this.goods.removeAll(removeTransactions);
+		this.goods.removeAll(removeGoods);
 		return new Account(this.ID, this.monies-removeMonies, this.goods);
 	}
 }

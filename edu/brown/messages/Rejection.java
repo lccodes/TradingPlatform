@@ -5,11 +5,14 @@ import brown.messages.markets.PurchaseRequest;
 import brown.messages.trades.TradeRequest;
 
 public class Rejection extends Message {
-	
 	public final PurchaseRequest failedPR;
 	public final Bid failedBR;
 	public final TradeRequest failedTR;
 	
+	/**
+	 * Empty for kryo
+	 * DO NOT USE
+	 */
 	public Rejection() {
 		super(null);
 		this.failedBR = null;
@@ -17,6 +20,12 @@ public class Rejection extends Message {
 		this.failedTR = null;
 	}
 
+	/**
+	 * Rejection for a purchase request;
+	 * notifies the agent that they sent an improper request
+	 * @param ID : rejection ID
+	 * @param pr : rejected purchase request
+	 */
 	public Rejection(Integer ID, PurchaseRequest pr) {
 		super(ID);
 		this.failedBR = null;
@@ -24,6 +33,12 @@ public class Rejection extends Message {
 		this.failedTR = null;
 	}
 	
+	/**
+	 * Rejection for a bid;
+	 * notifies the agent that they sent an improper request
+	 * @param ID : rejection ID
+	 * @param bid : rejected bid
+	 */
 	public Rejection(Integer ID, Bid bid) {
 		super(ID);
 		this.failedBR = bid;
@@ -31,6 +46,12 @@ public class Rejection extends Message {
 		this.failedTR = null;
 	}
 	
+	/**
+	 * Rejection for a trade request;
+	 * notifies the agent that they sent an improper request
+	 * @param ID : rejection ID
+	 * @param tr : rejected trade request
+	 */
 	public Rejection(Integer ID, TradeRequest tr) {
 		super(ID);
 		this.failedBR = null;

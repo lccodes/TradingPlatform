@@ -21,6 +21,14 @@ public class OutcryAuction implements Auction {
 	private int ticksSince;
 	private int br;
 	
+	/**
+	 * Outcry auction with no reserve
+	 * @param id : auction ID
+	 * @param good : good being auctioned
+	 * @param priv : is it private?
+	 * @param ascending : is it ascending?
+	 * @param firstPrice : is it first price? otherwise second price
+	 */
 	public OutcryAuction(Integer id, Good good, 
 			boolean priv, boolean ascending, boolean firstPrice) {
 		this.ID = id;
@@ -35,6 +43,15 @@ public class OutcryAuction implements Auction {
 		this.FIRSTPRICE = firstPrice;
 	}
 	
+	/**
+	 * Outcry auction with reserve
+	 * @param id : auction ID
+	 * @param good : good being auctioned
+	 * @param priv : is it private?
+	 * @param reserve : reserve price
+	 * @param ascending : is it ascending?
+	 * @param firstPrice : is it first price? otherwise second price
+	 */
 	public OutcryAuction(Integer id, Good good, boolean priv, 
 			double reserve, boolean ascending, boolean firstPrice) {
 		this.ID = id;

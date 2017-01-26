@@ -6,6 +6,9 @@ public class LiquiditySensitive extends PMBackend {
 	
 	/*
 	 * Alpha can be thought of as the commission of the MM
+	 * Theory via Pennock et al:
+	 * https://www.cs.cmu.edu/~sandholm/liquidity-sensitive%20automated%20market%20maker.teac.pdf
+	 * @alpha : commission of the market maker
 	 */
 	public LiquiditySensitive(double alpha) {
 		this.yes = 1;
@@ -64,7 +67,7 @@ public class LiquiditySensitive extends PMBackend {
 	/*
 	 * Computes b(q)
 	 */
-	private double getB() {
+	protected double getB() {
 		return alpha * (yes + no);
 	}
 	
@@ -125,14 +128,20 @@ public class LiquiditySensitive extends PMBackend {
 	}
 	
 	public static void main(String[] args) {
-		LiquiditySensitive ls = new LiquiditySensitive(.511);
-		LiquiditySensitive ls1 = new LiquiditySensitive(.51);
-		ls.yes(null,ls.budgetToShares(1, true));
-		double y = ls.budgetToShares(2, false);
-		double y1 = ls1.budgetToShares(2, false);
-		//System.out.println(x);
-		System.out.println(y + " " + y1);
-		//ls.no(null, x);
+		LiquiditySensitive luke = new LiquiditySensitive(.2);
+		System.out.println(luke.ask(1));
+		/*luke.no(null, 100);
+		luke.yes(null, 100);
+		*/
+		luke.no(null, 50);
+		luke.yes(null, 50);
+		System.out.println(luke.ask(1));
+		luke.no(null, 50);
+		luke.yes(null, 50);
+		System.out.println(luke.ask(1));
+		luke.no(null, 100);
+		luke.yes(null, 100);
+		System.out.println(luke.ask(1));
 	}
 
 }

@@ -8,6 +8,10 @@ public class AgentCreationException extends Exception {
 
 	private static final long serialVersionUID = -9089084118116290951L;
 	
+	/**
+	 * Message for when the agent fails to init
+	 * @param message
+	 */
 	public AgentCreationException(String message) {
 		super(message);
 	}

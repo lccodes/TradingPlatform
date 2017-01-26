@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import brown.marketmakers.implementations.LiquiditySensitive;
+import brown.marketmakers.implementations.LukeMM;
 import brown.securities.prediction.structures.PMBackend;
 
 public class Simulator {
@@ -76,7 +77,7 @@ public class Simulator {
 		for (int i = 0; i < 3; i++) {
 			MarketMakerFactory mmf = new MarketMakerFactory();
 			LiquiditySensitive uno = new LiquiditySensitive(first);
-			LiquiditySensitive dos = new LiquiditySensitive(second);
+			LukeMM dos = new LukeMM(second);
 			mmf.add(uno);
 			mmf.add(dos);
 			BidderFactory bf = new BidderFactory();
@@ -128,13 +129,17 @@ public class Simulator {
 	}
 	
 	public static void main(String[] args) {
-		double start = .9;
+		/*double start = .9;
 		double fin = .1;
 		for (int i = 0; i < 10; i ++) {
-			double win = Simulator.getWinner(fin);
+			double win = Simulator.getWinner(fin, start);
 			System.out.println(win + " " + (fin == win ? -1 : fin));
 			fin += .1;
-		}
+		}*/
+		double win = Simulator.getWinner(.9, .1);
+		System.out.println(win);
+		win = Simulator.getWinner(.9, .2);
+		System.out.println(win);
 		//System.out.println(sr);
 		//System.out.println("Average: " + bf.getAverage());
 		//for(PMBackend mm : mmf.make()) {

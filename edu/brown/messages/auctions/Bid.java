@@ -8,6 +8,10 @@ public class Bid extends Message {
 	public final Integer AuctionID;
 	public final Integer AgentID;
 	
+	/**
+	 * Empty constructor for kryo
+	 * DO NOT USE
+	 */
 	public Bid() {
 		super(null);
 		this.AgentID = null;
@@ -15,6 +19,13 @@ public class Bid extends Message {
 		this.Bundle = null;
 	}
 
+	/**
+	 * Bid for when an agent wants to bid in an auction
+	 * @param ID : bid ID
+	 * @param bundle : bid bundle; varies by what the auction wants
+	 * @param auctionID : auction's ID
+	 * @param agentID : agent's ID; verified by server
+	 */
 	public Bid(int ID, BidBundle bundle, Integer auctionID, Integer agentID) {
 		super(ID);
 		this.Bundle = bundle;
@@ -22,6 +33,11 @@ public class Bid extends Message {
 		this.AgentID = agentID;
 	}
 	
+	/**
+	 * Safe copy for server during ID verification
+	 * @param agentID : truthful ID
+	 * @return Bid
+	 */
 	public Bid safeCopy(Integer agentID) {
 		return new Bid(this.ID, this.Bundle, this.AuctionID, agentID);
 	}
