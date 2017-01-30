@@ -5,6 +5,7 @@ import brown.auctions.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
+import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidRequest;
@@ -13,13 +14,19 @@ import brown.messages.trades.TradeRequest;
 import brown.setup.Logging;
 
 public class AuctionAgent extends Agent {
-	private final double myMax;
+	private double myMax;
 
 	public AuctionAgent(String host, int port) throws AgentCreationException {
 		super(host, port);
-		this.CLIENT.getKryo().register(TheGood.class);
-		this.myMax = Math.random() * 100;
-		Logging.log("[+] max: " + myMax);
+		GameSetup.setup(this.CLIENT.getKryo());
+	}
+	
+	@Override
+  protected void onRegistration(Registration registration) {
+	  super.onRegistration(registration);
+	  AuctionRegistration auctionRegistration = (AuctionRegistration) registration;
+	  this.myMax = auctionRegistration.getValue();
+	  Logging.log("[+] max: " + this.myMax);
 	}
 
 	@Override

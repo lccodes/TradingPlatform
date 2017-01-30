@@ -112,38 +112,12 @@ public abstract class AgentServer {
 	 * @param registration - details of their game logic agent status
 	 */
 	protected void onRegistration(Connection connection, Registration registration) {
-		if (registration.getID() == null) {
-			return;
-		}
-		
-		Collection<Integer> allIds = connections.values();
-		Integer theID = registration.getID();
-		if (allIds.contains(theID)) {
-			Connection oldConnection = null;
-			for (Connection c : connections.keySet()) {
-				if (connections.get(c).equals(theID)) {
-					oldConnection = c;
-					if (!oldConnection.getRemoteAddressTCP().equals(connection.getRemoteAddressTCP())) {
-						return;
-					}
-					break;
-				}
-			}
-			connections.remove(oldConnection);
-		} else {
-			theID = new Integer((int) (Math.random() * 1000000000));
-			while(allIds.contains(theID)) {
-				theID = new Integer((int) (Math.random() * 1000000000));
-			}
-			
-			privateToPublic.put(theID, agentCount++);
-			bank.put(theID, new Account(theID));
-		}
-		
-		connections.put(connection, theID);
-		theServer.sendToTCP(connection.getID(), new Registration(theID));
-		
-		Logging.log("[-] registered " + theID);
+	  Integer theID = this.defaultRegistration(connection, registration);
+	  if (theID == null) {
+	    //TODO: add rejection
+	    return;
+	  }
+	  theServer.sendToTCP(connection.getID(), new Registration(theID));
 	}
 
 	/*
@@ -423,6 +397,43 @@ public abstract class AgentServer {
 	public void sendBankUpdate(Integer ID, Account oldA, Account newA) {
 	  BankUpdate bu = new BankUpdate(ID, oldA, newA);
 	  theServer.sendToTCP(this.privateToConnection(ID).getID(), bu);
+	}
+	
+	public Integer defaultRegistration(Connection connection, Registration registration) {
+	  if (registration.getID() == null) {
+      return null;
+    }
+    
+    Collection<Integer> allIds = connections.values();
+    Integer theID = registration.getID();
+    if (allIds.contains(theID)) {
+      Connection oldConnection = null;
+      for (Connection c : connections.keySet()) {
+        if (connections.get(c).equals(theID)) {
+          oldConnection = c;
+          if (!oldConnection.getRemoteAddressTCP().equals(connection.getRemoteAddressTCP())) {
+            return null;
+          }
+          break;
+        }
+      }
+      connections.remove(oldConnection);
+      
+      return null;
+    } else {
+      theID = new Integer((int) (Math.random() * 1000000000));
+      while(allIds.contains(theID)) {
+        theID = new Integer((int) (Math.random() * 1000000000));
+      }
+      
+      privateToPublic.put(theID, agentCount++);
+      bank.put(theID, new Account(theID));
+      
+      connections.put(connection, theID);
+      Logging.log("[-] registered " + theID);
+      
+      return theID;
+    }
 	}
 
 }
