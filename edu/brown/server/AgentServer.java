@@ -225,6 +225,8 @@ public abstract class AgentServer {
 				double cost = market.cost(purchaseRequest.buy,
 						purchaseRequest.sell);
 				if (oldAccount.monies >= cost) {
+					//TODO: Update so that purchases can affect multiple agents
+					//using multiple transactions; all safely locked etc
 					List<Good> update = new LinkedList<Good>();
 					if (purchaseRequest.buy > 0) {
 						Transaction yes = market.buy(privateID, purchaseRequest.buy);

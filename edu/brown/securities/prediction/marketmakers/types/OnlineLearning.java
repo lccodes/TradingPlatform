@@ -1,4 +1,4 @@
-package brown.marketmakers.types;
+package brown.securities.prediction.marketmakers.types;
 
 import brown.securities.prediction.structures.PMBackend;
 

@@ -1,4 +1,4 @@
-package brown.marketmakers.types;
+package brown.securities.prediction.marketmakers.types;
 
 import java.util.HashMap;
 import java.util.Map;

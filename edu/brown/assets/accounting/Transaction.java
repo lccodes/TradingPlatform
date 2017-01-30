@@ -3,7 +3,7 @@ package brown.assets.accounting;
 import brown.assets.value.Good;
 import brown.securities.Security;
 
-public final class Transaction implements Good {
+public class Transaction implements Good {
 	private final Security security;
 	private final double count;
 	private final Integer ID;

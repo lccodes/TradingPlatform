@@ -1,10 +1,10 @@
-package brown.marketmakers.implementations;
+package brown.securities.prediction.marketmakers.implementations;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import brown.marketmakers.types.NoRegret;
+import brown.securities.prediction.marketmakers.types.NoRegret;
 
 public class WeightedMajority extends NoRegret {
 	private Map<Integer, Boolean> predictions;
