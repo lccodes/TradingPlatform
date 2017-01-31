@@ -1,11 +1,6 @@
 package brown.securities.prediction;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
-import brown.assets.accounting.Transaction;
 import brown.securities.Security;
 import brown.server.AgentServer;
 
@@ -34,17 +29,7 @@ public class PMLedger extends Ledger {
 			return;
 		}
 		
-		Set<Integer> ids = new HashSet<Integer>();
-		for (Transaction t : this.transactions) {
-			Account account = server.publicToAccount(t.getAgentID());
-			synchronized(account) {
-				Account newAccount = account.addAll(t.getCount(), null);
-				server.setAccount(t.getAgentID(), newAccount);
-			}
-			ids.add(account.ID);
-		}
-		
-		server.sendBankUpdates(ids);
+		server.sendBankUpdates(this.pay(server));
 		if (other != null) {
 			other.close(server, pay);
 		}

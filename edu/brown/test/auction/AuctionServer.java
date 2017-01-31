@@ -16,12 +16,18 @@ public class AuctionServer extends AgentServer {
 
 	public AuctionServer(int port) {
 		super(port);
-		this.theServer.getKryo().register(TheGood.class);
+		GameSetup.setup(this.theServer.getKryo());
 	}
 	
 	@Override
 	protected void onRegistration(Connection connection, Registration registration) {
-		super.onRegistration(connection, registration);
+		Integer theID = this.defaultRegistration(connection, registration);
+		if (theID == null) {
+		  return;
+		}
+		
+		this.theServer.sendToTCP(connection.getID(), 
+		    new AuctionRegistration(theID, Math.random()*100));
 		
 		Account oldAccount = bank.get(connections.get(connection));
 		Account newAccount = oldAccount.addAll(100, null);

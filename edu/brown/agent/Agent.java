@@ -52,8 +52,7 @@ public abstract class Agent {
 			    	   } else if (message instanceof TradeRequest) {
 			    		   agent.onTradeRequest((TradeRequest) message);
 			    	   } else if (message instanceof Registration) {
-			    		   Registration reg = (Registration) message;
-			    		   agent.ID = reg.getID();
+			    	     agent.onRegistration((Registration) message);
 			    	   } else if (message instanceof MarketUpdate) {
 			    		   agent.onMarketUpdate((MarketUpdate) message);
 			    	   } else if (message instanceof Rejection) {
@@ -64,6 +63,10 @@ public abstract class Agent {
 		});
 		
 		CLIENT.sendTCP(new Registration(-1));
+	}
+	
+	protected void onRegistration(Registration registration) {
+	  this.ID = registration.getID();
 	}
 	
 	/*

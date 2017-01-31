@@ -1,7 +1,7 @@
-package brown.marketmakers.implementations;
+package brown.securities.prediction.marketmakers.implementations;
 
-import brown.marketmakers.types.OnlineLearning;
 import brown.securities.prediction.Utilities;
+import brown.securities.prediction.marketmakers.types.OnlineLearning;
 
 public class OnlineWeighedAverage extends OnlineLearning {
 

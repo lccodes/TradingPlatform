@@ -1,8 +1,10 @@
 package brown.assets.accounting;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import brown.securities.Security;
 import brown.server.AgentServer;
@@ -52,5 +54,25 @@ public abstract class Ledger {
 	 * @param pay : whether or not to pay out the security
 	 */
 	public abstract void close(AgentServer server, boolean pay);
+	
+	/**
+	 * Pays out every agent with a transaction and returns their
+	 * IDs for updating
+	 * @param server : AgentServer for the information on agents
+	 * @return set of IDs for paid agents
+	 */
+	protected Set<Integer> pay(AgentServer server) {
+		Set<Integer> ids = new HashSet<Integer>();
+		for (Transaction t : this.transactions) {
+			Account account = server.publicToAccount(t.getAgentID());
+			synchronized(account) {
+				Account newAccount = account.addAll(t.getCount(), null);
+				server.setAccount(t.getAgentID(), newAccount);
+			}
+			ids.add(account.ID);
+		}
+		
+		return ids;
+	}
 
 }
