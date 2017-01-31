@@ -16,6 +16,7 @@ import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidRequest;
+import brown.messages.markets.LimitOrder;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.markets.PurchaseRequest;
 import brown.messages.trades.Trade;
@@ -59,6 +60,7 @@ public final class Startup {
 		kryo.register(BidBundle.class);
 		kryo.register(SimpleBidBundle.class);
 		kryo.register(BundleType.class);
+		kryo.register(LimitOrder.class);
 		
 		return true;
 	}

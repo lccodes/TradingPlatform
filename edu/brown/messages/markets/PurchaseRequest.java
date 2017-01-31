@@ -15,9 +15,9 @@ public class PurchaseRequest extends Message {
 		sell = 0;
 	}
 
-	public PurchaseRequest(int ID, Security predictionmarket, double shareYes, double shareNo) {
+	public PurchaseRequest(int ID, Security predictionMarket, double shareYes, double shareNo) {
 		super(ID);
-		this.market = predictionmarket;
+		this.market = predictionMarket;
 		this.buy = shareYes;
 		this.sell = shareNo;
 	}

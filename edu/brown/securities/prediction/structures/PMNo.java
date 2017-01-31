@@ -62,7 +62,7 @@ public class PMNo implements Security {
 	 * @param shareNum : double
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction buy(Integer agentID, double shareNum) {
+	public Transaction buy(Integer agentID, double shareNum, double price) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, shareNum));
 		backend.no(agentID, shareNum);
 		return trans;
@@ -74,7 +74,7 @@ public class PMNo implements Security {
 	 * @param shareNum : double
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction sell(Integer agentID, double shareNum) {
+	public Transaction sell(Integer agentID, double shareNum, double price) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, -1 * shareNum));
 		backend.no(agentID, -1*shareNum);
 		return trans;

@@ -1,11 +1,13 @@
 package brown.messages;
 
 import brown.messages.auctions.Bid;
+import brown.messages.markets.LimitOrder;
 import brown.messages.markets.PurchaseRequest;
 import brown.messages.trades.TradeRequest;
 
 public class Rejection extends Message {
 	public final PurchaseRequest failedPR;
+	public final LimitOrder failedLO;
 	public final Bid failedBR;
 	public final TradeRequest failedTR;
 	
@@ -18,6 +20,7 @@ public class Rejection extends Message {
 		this.failedBR = null;
 		this.failedPR = null;
 		this.failedTR = null;
+		this.failedLO = null;
 	}
 
 	/**
@@ -31,6 +34,7 @@ public class Rejection extends Message {
 		this.failedBR = null;
 		this.failedPR = pr;
 		this.failedTR = null;
+		this.failedLO = null;
 	}
 	
 	/**
@@ -44,6 +48,7 @@ public class Rejection extends Message {
 		this.failedBR = bid;
 		this.failedPR = null;
 		this.failedTR = null;
+		this.failedLO = null;
 	}
 	
 	/**
@@ -57,6 +62,20 @@ public class Rejection extends Message {
 		this.failedBR = null;
 		this.failedPR = null;
 		this.failedTR = tr;
+		this.failedLO = null;
+	}
+	
+	/**
+	 * For rejected limit orders
+	 * @param ID : rejection ID
+	 * @param lo : rejected limit order
+	 */
+	public Rejection(Integer ID, LimitOrder lo) {
+		super(ID);
+		this.failedLO = lo;
+		this.failedBR = null;
+		this.failedPR = null;
+		this.failedTR = null;
 	}
 
 }

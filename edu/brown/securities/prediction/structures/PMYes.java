@@ -62,7 +62,7 @@ public class PMYes implements Security {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction buy(Integer agentID, double shareNum) {
+	public Transaction buy(Integer agentID, double shareNum, double price) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(shareNum, 0));
 		backend.yes(agentID, shareNum);
 		return trans;
@@ -74,7 +74,7 @@ public class PMYes implements Security {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction sell(Integer agentID, double shareNum) {
+	public Transaction sell(Integer agentID, double shareNum, double price) {
 		Transaction trans = new Transaction(this, shareNum, agentID, cost(-1 * shareNum, 0));
 		backend.yes(agentID, -1*shareNum);
 		return trans;

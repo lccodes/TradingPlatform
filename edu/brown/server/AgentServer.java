@@ -20,6 +20,7 @@ import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.Bid;
+import brown.messages.markets.LimitOrder;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.markets.PurchaseRequest;
 import brown.messages.trades.Trade;
@@ -100,10 +101,41 @@ public abstract class AgentServer {
 	            } else if (message instanceof Trade) {
 	            	Logging.log("[-] trade recieved from " + id);
 	            	aServer.onTrade(connection, (Trade) message);
+	            } else if (message instanceof LimitOrder) {
+	            	Logging.log("[-] limitorder recieved from " + id);
+	            	aServer.onLimitOrder(connection, id, (LimitOrder) message);
 	            }
 	        }
 	    });
 	    Logging.log("[-] server started");
+	}
+
+	/**
+	 * Deals with securities where you must post prices
+	 * @param connection - details of their connection to the server
+	 * @param privateID - (safe) privateID of the requesting agent
+	 * @param message - limit order for a security
+	 */
+	protected void onLimitOrder(Connection connection, Integer privateID, LimitOrder limitorder) {
+		Security market = exchange.getSecurity(limitorder.market.getID());
+		Ledger ledger = exchange.getLedger(limitorder.market.getID());
+		synchronized(market) {
+			if (market == null) {
+				Rejection rej = new Rejection(privateID, limitorder);
+				this.theServer.sendToTCP(connection.getID(), rej);
+				return;
+			}
+			
+			if (limitorder.buyShares > 0) {
+				Transaction yes = market.buy(privateID, limitorder.buyShares, limitorder.price);
+				ledger.add(yes);
+			}
+			
+			if (limitorder.sellShares > 0) {
+				Transaction no = market.sell(privateID, limitorder.sellShares, limitorder.price);
+				ledger.add(no);
+			}
+		}
 	}
 
 	/*
@@ -227,13 +259,13 @@ public abstract class AgentServer {
 				if (oldAccount.monies >= cost) {
 					List<Good> update = new LinkedList<Good>();
 					if (purchaseRequest.buy > 0) {
-						Transaction yes = market.buy(privateID, purchaseRequest.buy);
+						Transaction yes = market.buy(privateID, purchaseRequest.buy, -1);
 						update.add(yes);
 						ledger.add(yes);
 					}
 					
 					if (purchaseRequest.sell > 0) {
-						Transaction no = market.sell(privateID, purchaseRequest.sell);
+						Transaction no = market.sell(privateID, purchaseRequest.sell, -1);
 						update.add(no);
 						ledger.add(no);
 					}

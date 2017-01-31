@@ -7,8 +7,8 @@ public interface Security {
 	public Integer getID();
 	public SecurityType getType();
 	
-	public Transaction buy(Integer agentID, double shareNum);
-	public Transaction sell(Integer agentID, double shareNum);
+	public Transaction buy(Integer agentID, double shareNum, double sharePrice);
+	public Transaction sell(Integer agentID, double shareNum, double sharePrice);
 	
 	public double cost(double newq1, double newq2);
 	
