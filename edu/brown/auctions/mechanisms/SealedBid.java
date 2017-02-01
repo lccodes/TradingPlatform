@@ -1,5 +1,8 @@
 package brown.auctions.mechanisms;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import brown.assets.value.Good;
 import brown.auctions.Auction;
 import brown.auctions.BidBundle;
@@ -13,6 +16,8 @@ public class SealedBid implements Auction {
 	private final Good Good;
 	private final boolean ASCENDING;
 	private final boolean FIRST;
+	private final Set<Integer> alreadyGotten;
+	private final double RESERVE;
 	
 	private double ticksSince;
 	private Integer winnerID;
@@ -34,9 +39,11 @@ public class SealedBid implements Auction {
 		this.winnerID = null;
 		this.currentCost = ascending ? 0 : Double.MAX_VALUE;
 		this.currentPrice = ascending ? 0 : Double.MAX_VALUE;
+		this.RESERVE = ascending ? 0 : Double.MAX_VALUE;
 		this.br = 0;
 		this.ASCENDING = ascending;
 		this.FIRST = firstPrice;
+		this.alreadyGotten = new HashSet<Integer>();
 	}
 	
 	/**
@@ -55,9 +62,11 @@ public class SealedBid implements Auction {
 		this.winnerID = null;
 		this.currentCost = reserve;
 		this.currentPrice = reserve;
+		this.RESERVE = reserve;
 		this.br = 0;
 		this.ASCENDING = ascending;
 		this.FIRST = firstPrice;
+		this.alreadyGotten = new HashSet<Integer>();
 	}
 
 	@Override
@@ -67,16 +76,16 @@ public class SealedBid implements Auction {
 
 	@Override
 	public BundleType getBundleType() {
-		return BundleType.Simple;
+		return BundleType.SimpleSealed;
 	}
 
 	@Override
 	public BidRequest getBidRequest(Integer ID) {
-		if (this.isOver()) {
+		if (this.isOver() || this.alreadyGotten.contains(ID)) {
 			return null;
 		}
 		
-		return new BidRequest(br++,this.ID,this.getBundleType(),this.currentPrice, this.Good,false,null);
+		return new BidRequest(br++,this.ID,this.getBundleType(),this.RESERVE, this.Good,false,null);
 	}
 
 	@Override
@@ -102,6 +111,7 @@ public class SealedBid implements Auction {
 			this.currentPrice = bb.getCost();
 			this.winnerID = bid.AgentID;
 		}
+		this.alreadyGotten.add(bid.AgentID);
 	}
 
 	@Override
