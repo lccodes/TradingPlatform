@@ -76,6 +76,13 @@ We assume that the market maker mechanism and all its parameters are common know
 %The \mydef{market depth} $\MarketDepth$ is the number of \mydef{agents} that have 
 %participated in the prediction market, i.e. $|\Agents_\Option|$.
 
+\subsection{Strategies}
+We will consider two types of agent strategies.\\
+
+$\AgentStrategy^{a}_\Agent(\Time)$ is an informed agent holding exogenous signal $\Agent_\AgentBelief$ who is willing to pay up to $\AgentBudget$ in order to move the $\OptionPrice_\Market$ as close as possible to $\Agent_\AgentBelief$. \\
+
+$\AgentStrategy^{b}_\Agent(\Time)$ is an uninformed agent holding no exogenous signal $\Agent_\AgentBelief$ who who is willing to pay up to $\AgentBudget$ in order to move the $\OptionPrice_\Market$ as close as possible to 1 if at time $\Time$ $\OptionPrice_\Market\Time \ge .5$ otherwise 0. \\
+
 \subsection{Problems}
   
   \begin{definition} (Market Maker Revenue)

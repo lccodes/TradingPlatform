@@ -27,7 +27,7 @@ public class BidderFactory {
 			budgets += bidder.budget;
 		}
 		
-		return avg/budgets;
+		return avg == 0 ? .5 : avg/budgets;
 	}
 	
 	public void shuffle() {

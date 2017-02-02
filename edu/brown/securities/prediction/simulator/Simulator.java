@@ -45,10 +45,18 @@ public class Simulator {
 			PMBackend bestmm = marketmakers.get(0);
 			//System.out.println(bestmm.price(true) + " " + bestmm.price(false));
 			double quantity = getQuantity(result, bestmm, agent);
-			if(agent.value > bestmm.price(true)) {
-				bestmm.yes(null, quantity);
+			if (agent.value == -1) {
+				if (bestmm.price(true) >= .5) {
+					bestmm.yes(null, quantity);
+				} else {
+					bestmm.no(null, quantity);
+				}
 			} else {
-				bestmm.no(null, quantity);
+				if (agent.value > bestmm.price(true)) {
+					bestmm.yes(null, quantity);
+				} else {
+					bestmm.no(null, quantity);
+				}
 			}
 			result.addPurchase(bestmm, agent, quantity, correct);
 		}
@@ -61,7 +69,12 @@ public class Simulator {
 	
 	private static double getQuantity(SimulationResult result, PMBackend mm, Bidder agent) {
 		boolean dir = agent.value > mm.price(true);
-		double idealShareNum = mm.howMany(agent.value, dir);
+		double value = agent.value;
+		if (value == -1) {
+			dir = mm.price(true) >= .5;
+			value = dir ? 1 : 0;
+		}
+		double idealShareNum = mm.howMany(value, dir);
 		double idealCost = dir ? mm.cost(idealShareNum, 0) : mm.cost(0, idealShareNum);
 		double shareNum = idealCost > agent.budget ? mm.budgetToShares(agent.budget, dir) : idealShareNum;
 		if (result != null) {
@@ -128,6 +141,29 @@ public class Simulator {
 		}
 	}
 	
+	public static double getAccuracy(int which, int informed, int uninformed) {
+			MarketMakerFactory mmf = new MarketMakerFactory();
+			PMBackend pmb = null;
+			switch(which) {
+			case 0: pmb = new PMBackend(50);
+			case 1: pmb = new LiquiditySensitive(.2);
+			case 2: pmb = new LukeMM(.2);
+			}
+			mmf.add(pmb);
+			BidderFactory bf = new BidderFactory();
+			while (informed-- > 0) {
+				bf.addBidder(Math.random(), 1);
+			}
+			double truth = bf.getAverage();
+			while(uninformed-- > 0) {
+				bf.addBidder(-1, 1);
+			}
+			Simulator simulator = new Simulator(mmf.make(), bf.getBidders());
+			simulator.simulate(false, truth >= .5);
+			//System.out.println(truth + " " + pmb.price(true));
+			return pmb.price(true) - truth;
+	}
+	
 	public static void main(String[] args) {
 		/*double start = .9;
 		double fin = .1;
@@ -136,10 +172,11 @@ public class Simulator {
 			System.out.println(win + " " + (fin == win ? -1 : fin));
 			fin += .1;
 		}*/
-		double win = Simulator.getWinner(.9, .1);
-		System.out.println(win);
-		win = Simulator.getWinner(.9, .2);
-		System.out.println(win);
+		for (int i = 0; i < 3; i++) {
+			double win = Simulator.getAccuracy(i, 20, 10);
+			double win2 = Simulator.getAccuracy(i, 10, 20);
+			System.out.println((Math.abs(win) < Math.abs(win2)) + " " + Math.abs(win - win2));
+		}
 		//System.out.println(sr);
 		//System.out.println("Average: " + bf.getAverage());
 		//for(PMBackend mm : mmf.make()) {
