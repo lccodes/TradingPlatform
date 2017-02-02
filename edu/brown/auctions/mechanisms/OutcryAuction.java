@@ -73,7 +73,7 @@ public class OutcryAuction implements Auction {
 
 	@Override
 	public BundleType getBundleType() {
-		return BundleType.Simple;
+		return BundleType.SimpleOutcry;
 	}
 
 	@Override

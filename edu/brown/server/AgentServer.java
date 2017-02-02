@@ -20,6 +20,7 @@ import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.Bid;
+import brown.messages.auctions.BidRequest;
 import brown.messages.markets.LimitOrder;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.markets.PurchaseRequest;
@@ -338,7 +339,11 @@ public abstract class AgentServer {
 					this.sendBankUpdate(winner.getAgent(), account, newA);
 				} else {
 					for (Map.Entry<Connection, Integer> id : this.connections.entrySet()) {
-						this.theServer.sendToTCP(id.getKey().getID(), auction.getBidRequest(id.getValue()));
+						BidRequest br = auction.getBidRequest(id.getValue());
+						if (br == null) {
+							continue;
+						}
+						this.theServer.sendToTCP(id.getKey().getID(), br);
 					}
 				}
 			}

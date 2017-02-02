@@ -50,11 +50,16 @@ public class AuctionAgent extends Agent {
 	@Override
 	protected void onBidRequest(BidRequest bidRequest) {
 		Logging.log("[-] bidRequest for " + bidRequest.AuctionID + " w/ hb " + bidRequest.HighBidderID);
-		if (bidRequest.CurrentPrice < this.myMax && !bidRequest.HighBidder
-				&& bidRequest.BundleType == BundleType.Simple) {
-			SimpleBidBundle bundle = new SimpleBidBundle(bidRequest.CurrentPrice+1, this.ID);
-			Bid bid = new Bid(0, bundle, bidRequest.AuctionID, this.ID);
-			this.CLIENT.sendTCP(bid);
+		if (bidRequest.CurrentPrice < this.myMax && !bidRequest.HighBidder) {
+			if (bidRequest.BundleType == BundleType.SimpleOutcry) {
+				SimpleBidBundle bundle = new SimpleBidBundle(bidRequest.CurrentPrice+1, this.ID);
+				Bid bid = new Bid(0, bundle, bidRequest.AuctionID, this.ID);
+				this.CLIENT.sendTCP(bid);
+			} else {
+				SimpleBidBundle bundle = new SimpleBidBundle(this.myMax, this.ID);
+				Bid bid = new Bid(0, bundle, bidRequest.AuctionID, this.ID);
+				this.CLIENT.sendTCP(bid);
+			}
 		}
 	}
 
@@ -64,7 +69,7 @@ public class AuctionAgent extends Agent {
 	}
 	
 	public static void main(String[] args) throws AgentCreationException {
-		new AuctionAgent("localhost", 9898);
+		new AuctionAgent("localhost", 1221);
 		while(true){}
 	}
 

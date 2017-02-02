@@ -6,6 +6,7 @@ import java.util.List;
 import brown.assets.accounting.Account;
 import brown.auctions.BidBundle;
 import brown.auctions.mechanisms.OutcryAuction;
+import brown.auctions.mechanisms.SealedBid;
 import brown.messages.Registration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
@@ -13,6 +14,7 @@ import brown.setup.Logging;
 import com.esotericsoftware.kryonet.Connection;
 
 public class AuctionServer extends AgentServer {
+	public double MAX = 0;
 
 	public AuctionServer(int port) {
 		super(port);
@@ -26,8 +28,10 @@ public class AuctionServer extends AgentServer {
 		  return;
 		}
 		
+		double nextValue = Math.random()*100;
+		this.MAX = Math.max(nextValue, this.MAX);
 		this.theServer.sendToTCP(connection.getID(), 
-		    new AuctionRegistration(theID, Math.random()*100));
+		    new AuctionRegistration(theID, nextValue));
 		
 		Account oldAccount = bank.get(connections.get(connection));
 		Account newAccount = oldAccount.addAll(100, null);
@@ -38,8 +42,12 @@ public class AuctionServer extends AgentServer {
 		this.sendBankUpdates(IDS);
 	}
 	
-	public void runGame() {
-		this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, true));
+	public double runGame(boolean outcry, boolean firstprice) {
+		if (outcry) {
+			this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, firstprice));
+		} else {
+			this.auctions.put(0, new SealedBid(0, new TheGood(), true, firstprice));
+		}
 		int i = 0;
 		while (i < 10) {
 			try {
@@ -61,11 +69,12 @@ public class AuctionServer extends AgentServer {
 		BidBundle bundle = this.auctions.get(0).getWinner();
 		Logging.log("[-] auction over");
 		Logging.log("[-] winner: " + bundle.getAgent() + " for " + bundle.getCost());
+		return bundle.getCost();
 	}
 	
 	public static void main(String[] args) {
-		AuctionServer server = new AuctionServer(9898);
-		server.runGame();
+		AuctionServer server = new AuctionServer(1221);
+		server.runGame(false, true);
 	}
 
 }

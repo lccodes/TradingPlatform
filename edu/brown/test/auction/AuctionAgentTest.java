@@ -1,5 +1,7 @@
 package brown.test.auction;
 
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import brown.exceptions.AgentCreationException;
@@ -20,13 +22,42 @@ public class AuctionAgentTest {
   }
   
   @Test
-  public void simpleAuction() throws AgentCreationException {
+  public void simpleOutcryAuction() throws AgentCreationException {
     AuctionServer theServer = new AuctionServer(9991);
     for (int i = 0; i < 100; i++) {
       new AuctionAgent("localhost", 9991);
     }
     
-    theServer.runGame();
+    double cost = theServer.runGame(true, false);
+    if ((cost - theServer.MAX) > 1) {
+    	fail();
+    }
+  }
+  
+  @Test
+  public void simpleSealedAuction() throws AgentCreationException {
+    AuctionServer theServer = new AuctionServer(9992);
+    for (int i = 0; i < 50; i++) {
+      new AuctionAgent("localhost", 9992);
+    }
+    
+    double cost = theServer.runGame(false, true);
+    if ((cost - theServer.MAX) > 1) {
+    	fail();
+    }
+  }
+  
+  @Test
+  public void simpleSealedSecondPriceAuction() throws AgentCreationException {
+    AuctionServer theServer = new AuctionServer(9993);
+    for (int i = 0; i < 50; i++) {
+      new AuctionAgent("localhost", 9993);
+    }
+    
+    double cost = theServer.runGame(false, false);
+    if ((cost - theServer.MAX) > 1) {
+    	fail();
+    }
   }
 
 }
