@@ -1,5 +1,8 @@
 package brown.securities.prediction.structures;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import brown.assets.accounting.Transaction;
 import brown.securities.MarketCreationException;
 import brown.securities.Security;
@@ -62,10 +65,12 @@ public class PMNo implements Security {
 	 * @param shareNum : double
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction buy(Integer agentID, double shareNum, double price) {
-		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, shareNum));
+	public List<Transaction> buy(Integer agentID, double shareNum, double price) {
+		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, shareNum), true);
 		backend.no(agentID, shareNum);
-		return trans;
+		List<Transaction> ll = new LinkedList<Transaction>();
+		ll.add(trans);
+		return ll;
 	}
 	
 	/*
@@ -74,10 +79,12 @@ public class PMNo implements Security {
 	 * @param shareNum : double
 	 * @return share : share object; extendable in real games
 	 */
-	public Transaction sell(Integer agentID, double shareNum, double price) {
-		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, -1 * shareNum));
+	public List<Transaction> sell(Integer agentID, double shareNum, double price) {
+		Transaction trans = new Transaction(this, shareNum, agentID, cost(0, -1 * shareNum), true);
 		backend.no(agentID, -1*shareNum);
-		return trans;
+		List<Transaction> ll = new LinkedList<Transaction>();
+		ll.add(trans);
+		return ll;
 	}
 	
 	public SecurityWrapper wrap() {

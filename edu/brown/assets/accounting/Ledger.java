@@ -75,4 +75,8 @@ public abstract class Ledger {
 		return ids;
 	}
 
+	public void add(List<Transaction> trans) {
+		this.transactions.addAll(trans);
+	}
+
 }

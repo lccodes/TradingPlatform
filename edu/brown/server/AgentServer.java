@@ -127,14 +127,45 @@ public abstract class AgentServer {
 				return;
 			}
 			
+			List<Transaction> allTrans = new LinkedList<Transaction>();
 			if (limitorder.buyShares > 0) {
-				Transaction yes = market.buy(privateID, limitorder.buyShares, limitorder.price);
-				ledger.add(yes);
+				allTrans.addAll(market.buy(privateID, limitorder.buyShares, limitorder.price));
 			}
 			
 			if (limitorder.sellShares > 0) {
-				Transaction no = market.sell(privateID, limitorder.sellShares, limitorder.price);
-				ledger.add(no);
+				allTrans.addAll(market.sell(privateID, limitorder.sellShares, limitorder.price));
+			}
+			
+			for(Transaction t : allTrans) {
+				if(!t.isPending()) {
+					Account trader = this.bank.get(t.getAgentID());
+					synchronized(trader) {
+						if (t.getCount() > 0 && trader.monies > t.getCount()*t.getTransactedPrice()) {
+							ledger.add(t);
+							this.bank.put(t.getAgentID(), 
+									trader.add(-1*t.getCount()*t.getTransactedPrice(),null));
+							BankUpdate bu = new BankUpdate(t.getAgentID(), trader, this.bank.get(privateID));
+							theServer.sendToTCP(connection.getID(), bu);
+						} else if (t.getCount() < 0) {
+							ledger.add(t);
+							this.bank.put(t.getAgentID(), 
+									trader.add(t.getCount()*t.getTransactedPrice(),null));
+							BankUpdate bu = new BankUpdate(t.getAgentID(), trader, this.bank.get(privateID));
+							theServer.sendToTCP(connection.getID(), bu);
+						} else {
+							//Reject pile
+							//TODO: Stop edge case where spend occurs between pending and complete
+						}
+					}
+				} else {
+					Account trader = this.bank.get(t.getAgentID());
+					synchronized(trader) {
+						Account addedPending = trader.add(0, t);
+						this.bank.put(t.getAgentID(), addedPending);
+						BankUpdate bu = new BankUpdate(t.getAgentID(), trader, addedPending);
+						theServer.sendToTCP(connection.getID(), bu);
+					}
+				}
 			}
 		}
 	}
@@ -236,14 +267,14 @@ public abstract class AgentServer {
 					//using multiple transactions; all safely locked etc
 					List<Good> update = new LinkedList<Good>();
 					if (purchaseRequest.buy > 0) {
-						Transaction yes = market.buy(privateID, purchaseRequest.buy, -1);
-						update.add(yes);
+						List<Transaction> yes = market.buy(privateID, purchaseRequest.buy, -1);
+						update.addAll(yes);
 						ledger.add(yes);
 					}
 					
 					if (purchaseRequest.sell > 0) {
-						Transaction no = market.sell(privateID, purchaseRequest.sell, -1);
-						update.add(no);
+						List<Transaction> no = market.sell(privateID, purchaseRequest.sell, -1);
+						update.addAll(no);
 						ledger.add(no);
 					}
 					

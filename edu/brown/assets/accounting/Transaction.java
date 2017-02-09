@@ -9,6 +9,7 @@ public class Transaction implements Good {
 	private final Integer ID;
 	private final double price;
 	private final long timestamp;
+	private final boolean PENDING;
 	
 	/**
 	 * Empty constructor for kryo; do not use
@@ -19,6 +20,7 @@ public class Transaction implements Good {
 		this.ID = null;
 		this.price = 0;
 		this.timestamp = 0;
+		this.PENDING = true;
 	}
 	
 	/**
@@ -27,12 +29,14 @@ public class Transaction implements Good {
 	 * @param count : number of shares
 	 * @param ID : ID of the agent
 	 * @param price : price that it was transacted at
+	 * @param pending : completed or pending?
 	 */
-	public Transaction(Security security, double count, Integer ID, double price) {
+	public Transaction(Security security, double count, Integer ID, double price, boolean pending) {
 		this.security = security;
 		this.count = count;
 		this.ID = ID;
 		this.price = price;
+		this.PENDING = pending;
 		this.timestamp = System.currentTimeMillis();
 	}
 	
@@ -74,6 +78,13 @@ public class Transaction implements Good {
 	 */
 	public long getTimestamp() {
 		return timestamp;
+	}
+	
+	/**
+	 * Gets pending status
+	 */
+	public boolean isPending() {
+		return this.PENDING;
 	}
 
 	@Override
