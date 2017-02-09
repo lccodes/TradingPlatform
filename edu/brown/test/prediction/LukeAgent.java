@@ -22,8 +22,7 @@ import brown.securities.SecurityWrapper;
 public class LukeAgent extends Agent {
 
 	public LukeAgent(String host, int port) throws AgentCreationException {
-		super(host, port);
-		GameSetup.setup(this.CLIENT.getKryo());
+		super(host, port, new GameSetup());
 	}
 
 	@Override

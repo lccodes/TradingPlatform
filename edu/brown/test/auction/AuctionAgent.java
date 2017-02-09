@@ -17,8 +17,7 @@ public class AuctionAgent extends Agent {
 	private double myMax;
 
 	public AuctionAgent(String host, int port) throws AgentCreationException {
-		super(host, port);
-		GameSetup.setup(this.CLIENT.getKryo());
+		super(host, port, new GameSetup());
 	}
 	
 	@Override
@@ -69,7 +68,7 @@ public class AuctionAgent extends Agent {
 	}
 	
 	public static void main(String[] args) throws AgentCreationException {
-		new AuctionAgent("localhost", 1221);
+		new AuctionAgent("localhost", 2121);
 		while(true){}
 	}
 

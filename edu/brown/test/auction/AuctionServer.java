@@ -17,8 +17,7 @@ public class AuctionServer extends AgentServer {
 	public double MAX = 0;
 
 	public AuctionServer(int port) {
-		super(port);
-		GameSetup.setup(this.theServer.getKryo());
+		super(port, new GameSetup());
 	}
 	
 	@Override
@@ -73,7 +72,7 @@ public class AuctionServer extends AgentServer {
 	}
 	
 	public static void main(String[] args) {
-		AuctionServer server = new AuctionServer(1221);
+		AuctionServer server = new AuctionServer(2121);
 		server.runGame(false, true);
 	}
 

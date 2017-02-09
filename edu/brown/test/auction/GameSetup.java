@@ -1,10 +1,12 @@
 package brown.test.auction;
 
+import brown.setup.Setup;
+
 import com.esotericsoftware.kryo.Kryo;
 
-public final class GameSetup {
+public final class GameSetup implements Setup {
   
-  public static void setup(Kryo kryo) {
+  public void setup(Kryo kryo) {
     kryo.register(TheGood.class);
     kryo.register(AuctionRegistration.class);
   }

@@ -14,8 +14,7 @@ public class TestAgent extends Agent {
 	private boolean first = true;
 
 	public TestAgent(String host, int port) throws AgentCreationException {
-		super(host, port);
-		GameSetup.setup(this.CLIENT.getKryo());
+		super(host, port, new GameSetup());
 	}
 
 	@Override

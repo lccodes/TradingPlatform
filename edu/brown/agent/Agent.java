@@ -9,12 +9,14 @@ import brown.messages.Rejection;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.trades.TradeRequest;
+import brown.setup.Setup;
 import brown.setup.Startup;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.minlog.Log;
 
 /*
  * All bidding agents will implement this class
@@ -27,19 +29,23 @@ public abstract class Agent {
 	/*
 	 * Implementations should always invoke super()
 	 */
-	public Agent(String host, int port) throws AgentCreationException {
+	public Agent(String host, int port, Setup gameSetup) throws AgentCreationException {
 		this.CLIENT = new Client();
 		this.ID = null;
 		
 	    CLIENT.start();
+	    Log.TRACE();
 	    Kryo agentKryo = CLIENT.getKryo();
 		Startup.start(agentKryo);
+		if (gameSetup != null) {
+			gameSetup.setup(agentKryo);
+		}
+		
 	    try {
 			CLIENT.connect(5000, host, port, port);
 		} catch (IOException e) {
 			throw new AgentCreationException("Failed to connect to server");
 		}
-	    
 		
 		final Agent agent = this;
 		CLIENT.addListener(new Listener() {
@@ -65,8 +71,12 @@ public abstract class Agent {
 		CLIENT.sendTCP(new Registration(-1));
 	}
 	
+	/*
+	 * Agents must accept their IDs from the server
+	 * @param registration : includes the agent's new ID
+	 */
 	protected void onRegistration(Registration registration) {
-	  this.ID = registration.getID();
+		this.ID = registration.getID();
 	}
 	
 	/*
@@ -90,7 +100,7 @@ public abstract class Agent {
 	protected abstract void onBankUpdate(BankUpdate bankUpdate);
 	
 	/*
-	 * Whenever an auction is occuring, the server will request a bid
+	 * Whenever an auction is occurring, the server will request a bid
 	 * using this method and provide information about the auction as
 	 * a part of the request
 	 * @param bidRequest - auction metadata
@@ -101,7 +111,7 @@ public abstract class Agent {
 	 * Whenever another agent requests a trade either directly with this
 	 * agent or to all agents, this method is invoked with the details
 	 * of the trade. 
-	 * @param tradeRequest - from fields describe what this agent will recieve
+	 * @param tradeRequest - from fields describe what this agent will receive
 	 * and to fields describe what it will give up
 	 */
 	protected abstract void onTradeRequest(TradeRequest tradeRequest);

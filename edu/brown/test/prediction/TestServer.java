@@ -15,8 +15,7 @@ import com.esotericsoftware.kryonet.Connection;
 public class TestServer extends AgentServer {
 	
 	public TestServer(int port) {
-		super(port);
-		GameSetup.setup(this.theServer.getKryo());
+		super(port, new GameSetup());
 	}
 
 	private final double B = 1.0;

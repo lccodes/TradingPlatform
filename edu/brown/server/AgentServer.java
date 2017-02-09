@@ -30,8 +30,10 @@ import brown.securities.Exchange;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
 import brown.setup.Logging;
+import brown.setup.Setup;
 import brown.setup.Startup;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -55,7 +57,7 @@ public abstract class AgentServer {
 	private final int PORT;
 	protected Server theServer;
 	
-	public AgentServer(int port) {
+	public AgentServer(int port, Setup gameSetup) {
 		this.PORT = port;
 		this.agentCount = 0;
 		this.connections = new ConcurrentHashMap<Connection,Integer>();
@@ -68,7 +70,12 @@ public abstract class AgentServer {
 		
 		theServer = new Server();
 	    theServer.start();
-	    Startup.start(theServer.getKryo());
+	    Kryo serverKryo = theServer.getKryo();
+	    Startup.start(serverKryo);
+	    if (gameSetup != null) {
+	    	gameSetup.setup(serverKryo);
+	    }
+	    
 	    try {
 			theServer.bind(PORT, PORT);
 		} catch (IOException e) {

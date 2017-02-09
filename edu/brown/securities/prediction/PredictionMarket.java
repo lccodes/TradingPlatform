@@ -1,6 +1,9 @@
 package brown.securities.prediction;
 
+import java.util.SortedMap;
+
 import brown.agent.Agent;
+import brown.assets.accounting.Transaction;
 import brown.messages.markets.PurchaseRequest;
 import brown.securities.MarketCreationException;
 import brown.securities.Security;
@@ -72,6 +75,42 @@ public class PredictionMarket implements SecurityWrapper {
 	@Override
 	public SecurityType getType() {
 		return this.pm.getType();
+	}
+
+	@Override
+	public void buy(Agent agent, double shareNum, double sharePrice) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sell(Agent agent, double shareNum, double sharePrice) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double bid(double shareNum, double sharePrice) {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
+	@Override
+	public double ask(double shareNum, double sharePrice) {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
+	@Override
+	public SortedMap<Double, Transaction> getBuyOrders() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SortedMap<Double, Transaction> getSellOrders() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

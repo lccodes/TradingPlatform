@@ -21,8 +21,7 @@ import brown.messages.trades.TradeRequest;
 public class YourAgent extends Agent {
 
 	public YourAgent(String host, int port) throws AgentCreationException {
-		super(host, port);
-		GameSetup.setup(this.CLIENT.getKryo());
+		super(host, port, new GameSetup());
 	}
 
 	@Override
