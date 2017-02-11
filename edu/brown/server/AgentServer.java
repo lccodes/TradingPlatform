@@ -2,6 +2,7 @@ package brown.server;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +14,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Transaction;
-import brown.assets.value.Good;
-import brown.auctions.Auction;
+import brown.assets.value.Tradeable;
 import brown.auctions.BidBundle;
+import brown.auctions.OneSidedAuction;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
@@ -51,7 +52,7 @@ public abstract class AgentServer {
 	//Consider time limiting these
 	protected List<TradeRequest> pendingTradeRequests;
 	protected Exchange exchange;
-	protected Map<Integer, Auction> auctions;
+	protected Map<Integer, OneSidedAuction> auctions;
 	
 	private int agentCount;
 	private final int PORT;
@@ -64,7 +65,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
-		this.auctions = new ConcurrentHashMap<Integer, Auction>();
+		this.auctions = new ConcurrentHashMap<Integer, OneSidedAuction>();
 		this.exchange = new Exchange();
 		this.privateToPublic.put(-1, -1);
 		
@@ -150,13 +151,13 @@ public abstract class AgentServer {
 						if (t.getCount() > 0 && trader.monies > t.getCount()*t.getTransactedPrice()) {
 							ledger.add(t);
 							this.bank.put(t.getAgentID(), 
-									trader.add(-1*t.getCount()*t.getTransactedPrice(),null));
+									trader.add(-1*t.getCount()*t.getTransactedPrice(),new HashSet<Tradeable>()));
 							BankUpdate bu = new BankUpdate(t.getAgentID(), trader, this.bank.get(privateID));
 							theServer.sendToTCP(connection.getID(), bu);
 						} else if (t.getCount() < 0) {
 							ledger.add(t);
 							this.bank.put(t.getAgentID(), 
-									trader.add(t.getCount()*t.getTransactedPrice(),null));
+									trader.add(t.getCount()*t.getTransactedPrice(),new HashSet<Tradeable>()));
 							BankUpdate bu = new BankUpdate(t.getAgentID(), trader, this.bank.get(privateID));
 							theServer.sendToTCP(connection.getID(), bu);
 						} else {
@@ -272,7 +273,7 @@ public abstract class AgentServer {
 				if (oldAccount.monies >= cost) {
 					//TODO: Update so that purchases can affect multiple agents
 					//using multiple transactions; all safely locked etc
-					List<Good> update = new LinkedList<Good>();
+					List<Tradeable> update = new LinkedList<Tradeable>();
 					if (purchaseRequest.buy > 0) {
 						List<Transaction> yes = market.buy(privateID, purchaseRequest.buy, -1);
 						update.addAll(yes);
@@ -304,7 +305,7 @@ public abstract class AgentServer {
 	 * BidRequest for an auction
 	 */
 	protected void onBid(Connection connection, Integer privateID, Bid bid) {
-		Auction auction = this.auctions.get(bid.AuctionID);
+		OneSidedAuction auction = this.auctions.get(bid.AuctionID);
 		if (auction != null) {
 			synchronized(auction) {
 				Account account = this.bank.get(privateID);
@@ -357,36 +358,56 @@ public abstract class AgentServer {
 	 */
 	public void updateAllAuctions() {
 		synchronized(auctions) {
-			List<Auction> toRemove = new LinkedList<Auction>();
-			for (Auction auction : auctions.values()) {
+			List<OneSidedAuction> toRemove = new LinkedList<OneSidedAuction>();
+			for (OneSidedAuction auction : auctions.values()) {
 				auction.tick(System.currentTimeMillis());
-				if (auction.isOver()) {
-					toRemove.add(auction);
+				if (auction.isClosed()) {
+					/*toRemove.add(auction);
 					BidBundle winner = auction.getWinner();
 					if (winner.getAgent() == null) {
 						continue;
 					}
+					
 					Account account = this.bank.get(winner.getAgent());
 					if (account == null) {
 						continue;
 					}
-					Good good = auction.getGood();
+					
+					Tradeable good = auction.getGood();
 					good.setAgentID(winner.getAgent());
 					Account newA = account.add(-1 * winner.getCost(), good);
 					this.bank.put(winner.getAgent(), newA);
-					this.sendBankUpdate(winner.getAgent(), account, newA);
+					this.sendBankUpdate(winner.getAgent(), account, newA);*/
+					toRemove.add(auction);
+					Map<BidBundle, Set<Tradeable>> winners = auction.getWinners();
+					for (BidBundle winner : winners.keySet()) {
+						Account account = this.bank.get(winner.getAgent());
+						if (account == null) {
+							continue;
+						}
+						//TODO: Think about locking w/ account object changes
+						synchronized(account) {
+							for (Tradeable t : winners.get(winner)) {
+								t.setAgentID(winner.getAgent());
+							}
+							Account newA = account.add(-1 * winner.getCost(), winners.get(winner));
+							this.bank.put(winner.getAgent(), newA);
+							this.sendBankUpdate(winner.getAgent(), account, newA);
+						}
+					}
 				} else {
 					for (Map.Entry<Connection, Integer> id : this.connections.entrySet()) {
 						BidRequest br = auction.getBidRequest(id.getValue());
 						if (br == null) {
 							continue;
 						}
+						
 						this.theServer.sendToTCP(id.getKey().getID(), br);
 					}
 				}
 			}
 			
-			for (Auction auction : toRemove) {
+			for (OneSidedAuction auction : toRemove) {
 				auctions.remove(auction);
 			}
 		}

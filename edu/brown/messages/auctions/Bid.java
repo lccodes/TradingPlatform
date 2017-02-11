@@ -1,5 +1,7 @@
 package brown.messages.auctions;
 
+import java.util.Comparator;
+
 import brown.auctions.BidBundle;
 import brown.messages.Message;
 
@@ -40,5 +42,33 @@ public class Bid extends Message {
 	 */
 	public Bid safeCopy(Integer agentID) {
 		return new Bid(this.ID, this.Bundle, this.AuctionID, agentID);
+	}
+	
+	public static class BidComparator implements Comparator<Bid> {
+		private final boolean ASC;
+		
+		public BidComparator(boolean ascending) {
+			this.ASC = ascending;
+		}
+
+		@Override
+		public int compare(Bid o1, Bid o2) {
+			if (this.ASC) {
+				return new Double(o1.Bundle.getCost()).compareTo(new Double(o2.Bundle.getCost()));
+			} else {
+				return new Double(o2.Bundle.getCost()).compareTo(new Double(o1.Bundle.getCost()));
+			}
+		}
+		
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof Bid)) {
+			return false;
+		}
+		
+		Bid o = (Bid) other;
+		return this.ID == o.ID;
 	}
 }

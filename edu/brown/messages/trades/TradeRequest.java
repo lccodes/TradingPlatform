@@ -3,7 +3,7 @@ package brown.messages.trades;
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 
 /*
  * A message sent to the server by an agent
@@ -15,13 +15,13 @@ public class TradeRequest {
 	public final Integer fromID;
 	
 	public final Integer moniesRequested;
-	public final List<Good> sharesRequested;
+	public final List<Tradeable> sharesRequested;
 	
 	public final Integer moniesOffered;
-	public final List<Good> sharesOffered;
+	public final List<Tradeable> sharesOffered;
 	
 	public TradeRequest(Integer toID, Integer fromID, Integer moniesRequested, 
-			List<Good> sharesRequested, Integer moniesOffered, List<Good> sharesOffered) {
+			List<Tradeable> sharesRequested, Integer moniesOffered, List<Tradeable> sharesOffered) {
 		this.toID = toID;
 		this.fromID = fromID;
 		

@@ -1,5 +1,7 @@
 package brown.auctions;
 
+import java.util.Comparator;
+
 public interface BidBundle {
 	
 	/**
@@ -14,4 +16,25 @@ public interface BidBundle {
 	 * @return agent id
 	 */
 	Integer getAgent();
+	
+	/**
+	 * Removes agent ID
+	 * @return BidBundle w/o agent ID
+	 */
+	BidBundle wipeAgent();
+
+	/**
+	 * Identifies the type of the bundle
+	 * @return bundleType
+	 */
+	public BundleType getType();
+	
+	public static class BidBundleComparator implements Comparator<BidBundle> {
+
+		@Override
+		public int compare(BidBundle arg0, BidBundle arg1) {
+			return new Double(arg0.getCost()).compareTo(new Double(arg1.getCost()));
+		}
+		
+	}
 }

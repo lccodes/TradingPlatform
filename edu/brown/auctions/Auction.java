@@ -1,6 +1,6 @@
 package brown.auctions;
 
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidRequest;
 
@@ -48,7 +48,7 @@ public interface Auction {
 	 * What good is being auctioned?
 	 * @return the good being auctioned
 	 */
-	public Good getGood();
+	public Tradeable getGood();
 	
 	/**
 	 * If it's over, who won if anyone?

@@ -1,6 +1,7 @@
 package brown.auctions.bundles;
 
 import brown.auctions.BidBundle;
+import brown.auctions.BundleType;
 
 public class SimpleBidBundle implements BidBundle {
 	private final double Bid;
@@ -33,5 +34,15 @@ public class SimpleBidBundle implements BidBundle {
 	@Override
 	public Integer getAgent() {
 		return this.AgentID;
+	}
+
+	@Override
+	public BundleType getType() {
+		return BundleType.Simple;
+	}
+
+	@Override
+	public BidBundle wipeAgent() {
+		return new SimpleBidBundle(this.Bid, null);
 	}
 }

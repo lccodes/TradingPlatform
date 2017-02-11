@@ -1,6 +1,6 @@
 package brown.auctions.mechanisms;
 
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 import brown.auctions.Auction;
 import brown.auctions.BidBundle;
 import brown.auctions.BundleType;
@@ -10,7 +10,7 @@ import brown.messages.auctions.BidRequest;
 
 public class OutcryAuction implements Auction {
 	private final Integer ID;
-	private final Good GOOD;
+	private final Tradeable GOOD;
 	private final boolean PRIVATE;
 	private final boolean ASCENDING;
 	private final boolean FIRSTPRICE;
@@ -29,7 +29,7 @@ public class OutcryAuction implements Auction {
 	 * @param ascending : is it ascending?
 	 * @param firstPrice : is it first price? otherwise second price
 	 */
-	public OutcryAuction(Integer id, Good good, 
+	public OutcryAuction(Integer id, Tradeable good, 
 			boolean priv, boolean ascending, boolean firstPrice) {
 		this.ID = id;
 		this.GOOD = good;
@@ -52,7 +52,7 @@ public class OutcryAuction implements Auction {
 	 * @param ascending : is it ascending?
 	 * @param firstPrice : is it first price? otherwise second price
 	 */
-	public OutcryAuction(Integer id, Good good, boolean priv, 
+	public OutcryAuction(Integer id, Tradeable good, boolean priv, 
 			double reserve, boolean ascending, boolean firstPrice) {
 		this.ID = id;
 		this.GOOD = good;
@@ -107,7 +107,7 @@ public class OutcryAuction implements Auction {
 	}
 
 	@Override
-	public Good getGood() {
+	public Tradeable getGood() {
 		return this.GOOD;
 	}
 

@@ -6,7 +6,7 @@ import java.util.Date;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Transaction;
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 import brown.auctions.BidBundle;
 import brown.auctions.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
@@ -46,7 +46,7 @@ public final class Startup {
 		kryo.register(PredictionMarket.class);
 		kryo.register(Account.class);
 		kryo.register(java.util.LinkedList.class);
-		kryo.register(Good.class);
+		kryo.register(Tradeable.class);
 		kryo.register(MarketUpdate.class);
 		kryo.register(ArrayList.class);
 		kryo.register(Rejection.class);

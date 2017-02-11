@@ -1,8 +1,8 @@
 package brown.test.prediction;
 
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 
-public class TestShare implements Good {
+public class TestShare implements Tradeable {
 	private final Integer ID;
 	private final double COUNT;
 	

@@ -3,7 +3,7 @@ package brown.auctions.mechanisms;
 import java.util.HashSet;
 import java.util.Set;
 
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 import brown.auctions.Auction;
 import brown.auctions.BidBundle;
 import brown.auctions.BundleType;
@@ -13,7 +13,7 @@ import brown.messages.auctions.BidRequest;
 
 public class SealedBid implements Auction {
 	private final Integer ID;
-	private final Good Good;
+	private final Tradeable Good;
 	private final boolean ASCENDING;
 	private final boolean FIRST;
 	private final Set<Integer> alreadyGotten;
@@ -32,7 +32,7 @@ public class SealedBid implements Auction {
 	 * @param ascending : is it ascending?
 	 * @param firstPrice : is it first price? otherwise second price
 	 */
-	public SealedBid(Integer ID, Good good, boolean ascending, boolean firstPrice) {
+	public SealedBid(Integer ID, Tradeable good, boolean ascending, boolean firstPrice) {
 		this.ID = ID;
 		this.Good = good;
 		this.ticksSince = 0;
@@ -54,7 +54,7 @@ public class SealedBid implements Auction {
 	 * @param firstPrice : is it first price? otherwise second price
 	 * @param reserve : reserve price
 	 */
-	public SealedBid(Integer ID, Good good, boolean ascending,
+	public SealedBid(Integer ID, Tradeable good, boolean ascending,
 			boolean firstPrice, double reserve) {
 		this.ID = ID;
 		this.Good = good;
@@ -115,7 +115,7 @@ public class SealedBid implements Auction {
 	}
 
 	@Override
-	public Good getGood() {
+	public Tradeable getGood() {
 		return this.Good;
 	}
 

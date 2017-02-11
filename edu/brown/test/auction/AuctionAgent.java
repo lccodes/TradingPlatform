@@ -21,7 +21,7 @@ public class AuctionAgent extends Agent {
 	}
 	
 	@Override
-  protected void onRegistration(Registration registration) {
+	protected void onRegistration(Registration registration) {
 	  super.onRegistration(registration);
 	  AuctionRegistration auctionRegistration = (AuctionRegistration) registration;
 	  this.myMax = auctionRegistration.getValue();

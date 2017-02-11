@@ -1,9 +1,9 @@
 package brown.assets.accounting;
 
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 import brown.securities.Security;
 
-public class Transaction implements Good {
+public class Transaction implements Tradeable {
 	private final Security security;
 	private final double count;
 	private final Integer ID;

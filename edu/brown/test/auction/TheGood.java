@@ -1,8 +1,8 @@
 package brown.test.auction;
 
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 
-public class TheGood implements Good {
+public class TheGood implements Tradeable {
 	private Integer agentID;
 	
 	public TheGood() {
