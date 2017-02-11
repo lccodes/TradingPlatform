@@ -1,6 +1,8 @@
 package brown.auctions.arules;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class SealedBidRule implements AllocationRule {
 	private List<Bid> getSorted(Set<Bid> bids, int length) {
 		List<Bid> ordered = new LinkedList<Bid>();
 		ordered.addAll(bids);
-		Collections.sort(ordered, new Bid.BidComparator(this.ASC));
+		Collections.sort(ordered, new Bid.BidComparator(!this.ASC));
 		
 		List<Bid> topBids = new LinkedList<Bid>();
 		for (int i = length-1; i >= 0; i--) {
@@ -53,8 +55,22 @@ public class SealedBidRule implements AllocationRule {
 
 	@Override
 	public Map<Integer, Set<Tradeable>> getAllocations(Set<Bid> bids, Set<Tradeable> items) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Bid> topBids = this.getSorted(bids, 1);
+		BidBundle topBid = this.RESERVE;
+		Map<Integer, Set<Tradeable>> allocations = new HashMap<Integer, Set<Tradeable>>();
+		int i = 0;
+		for (Tradeable t : items) {
+			if (i < topBids.size() && topBids.get(i).Bundle.getCost() >= topBid.getCost()) {
+				Set<Tradeable> theSet = new HashSet<Tradeable>();
+				theSet.add(t);
+				allocations.put(topBids.get(i).AgentID, theSet);
+			} else {
+				break;
+			}
+			i++;
+		}
+		
+		return allocations;
 	}
 
 	@Override
@@ -64,6 +80,7 @@ public class SealedBidRule implements AllocationRule {
 				return null;
 			}
 		}
+		
 		List<Bid> topBids = this.getSorted(bids, 1);
 		BidBundle topBid = this.RESERVE;
 		if (topBids.size() > 0 && topBids.get(0).Bundle.getCost() > topBid.getCost()) {

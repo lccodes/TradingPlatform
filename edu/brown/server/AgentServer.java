@@ -401,7 +401,6 @@ public abstract class AgentServer {
 						if (br == null) {
 							continue;
 						}
-						
 						this.theServer.sendToTCP(id.getKey().getID(), br);
 					}
 				}
@@ -444,8 +443,12 @@ public abstract class AgentServer {
 	 * the agent's private ID
 	 */
 	protected Connection privateToConnection(Integer id) {
+		if (id == null) {
+			return null;
+		}
+		
 		for (Entry<Connection, Integer> ctp : connections.entrySet()) {
-			if (ctp.getValue() == id) {
+			if (ctp.getValue().intValue() == id.intValue()) {
 				return ctp.getKey();
 			}
 		}
@@ -496,9 +499,9 @@ public abstract class AgentServer {
 	}
 	
 	public Integer defaultRegistration(Connection connection, Registration registration) {
-	  if (registration.getID() == null) {
-      return null;
-    }
+		if (registration.getID() == null) {
+		  return null;
+		}
     
     Collection<Integer> allIds = connections.values();
     Integer theID = registration.getID();

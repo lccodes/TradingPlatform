@@ -43,6 +43,9 @@ public class OneSidedAuction implements Market {
 	 */
 	public BidRequest getBidRequest(Integer ID) {
 		BidRequest temp = this.ARULE.getBidRequest(this.BIDS, ID);
+		if (temp == null) {
+			return null;
+		}
 		BidBundle toUse = (ID == temp.Current.getAgent() || !this.isPrivate()) ? 
 				temp.Current : temp.Current.wipeAgent();
 		

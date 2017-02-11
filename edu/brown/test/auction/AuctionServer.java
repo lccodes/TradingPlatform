@@ -1,12 +1,19 @@
 package brown.test.auction;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import brown.assets.accounting.Account;
+import brown.assets.value.Tradeable;
 import brown.auctions.BidBundle;
-import brown.auctions.mechanisms.OutcryAuction;
-import brown.auctions.mechanisms.SealedBid;
+import brown.auctions.BundleType;
+import brown.auctions.OneSidedAuction;
+import brown.auctions.arules.SealedBidRule;
+import brown.auctions.bundles.SimpleBidBundle;
+import brown.auctions.prules.FirstPriceRule;
 import brown.messages.Registration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
@@ -42,11 +49,17 @@ public class AuctionServer extends AgentServer {
 	}
 	
 	public double runGame(boolean outcry, boolean firstprice) {
-		if (outcry) {
-			this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, firstprice));
-		} else {
-			this.auctions.put(0, new SealedBid(0, new TheGood(), true, firstprice));
-		}
+		Set<Tradeable> theSet = new HashSet<Tradeable>();
+		theSet.add(new TheGood());
+		//if (outcry) {
+			//this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, firstprice));
+			this.auctions.put(0, new OneSidedAuction(0, theSet, 
+					new SealedBidRule(BundleType.SimpleSealed, true, 5,
+							new SimpleBidBundle(0,null,BundleType.SimpleSealed)),
+					new FirstPriceRule()));
+		//} else {
+			//this.auctions.put(0, new SealedBid(0, new TheGood(), true, firstprice));
+		//}
 		int i = 0;
 		while (i < 10) {
 			try {
@@ -57,7 +70,7 @@ public class AuctionServer extends AgentServer {
 			}
 		}
 		
-		while(!this.auctions.get(0).isOver()) {
+		while(!this.auctions.get(0).isClosed()) {
 			try {
 				Thread.sleep(2000);
 				this.updateAllAuctions();
@@ -65,10 +78,14 @@ public class AuctionServer extends AgentServer {
 				Logging.log("[+] woken: " + e.getMessage());
 			}
 		}
-		BidBundle bundle = this.auctions.get(0).getWinner();
+		Map<BidBundle, Set<Tradeable>> bundles = this.auctions.get(0).getWinners();
 		Logging.log("[-] auction over");
-		Logging.log("[-] winner: " + bundle.getAgent() + " for " + bundle.getCost());
-		return bundle.getCost();
+		for (BidBundle b : bundles.keySet()) {
+			Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());
+			return b.getCost();
+		}
+		
+		return -1;
 	}
 	
 	public static void main(String[] args) {

@@ -3,6 +3,9 @@ package brown.setup;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Transaction;
@@ -61,6 +64,9 @@ public final class Startup {
 		kryo.register(SimpleBidBundle.class);
 		kryo.register(BundleType.class);
 		kryo.register(LimitOrder.class);
+		kryo.register(Set.class);
+		kryo.register(TreeSet.class);
+		kryo.register(HashSet.class);
 		
 		return true;
 	}

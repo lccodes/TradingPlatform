@@ -6,6 +6,7 @@ import brown.auctions.BundleType;
 public class SimpleBidBundle implements BidBundle {
 	private final double Bid;
 	private final Integer AgentID;
+	private final BundleType BT;
 	
 	/**
 	 * Empty constructor for kryo net
@@ -13,6 +14,7 @@ public class SimpleBidBundle implements BidBundle {
 	public SimpleBidBundle() {
 		this.Bid = 0;
 		this.AgentID = null;
+		this.BT = null;
 	}
 	
 	/**
@@ -21,9 +23,10 @@ public class SimpleBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public SimpleBidBundle(double bid, Integer agent) {
+	public SimpleBidBundle(double bid, Integer agent, BundleType type) {
 		this.Bid = bid;
 		this.AgentID = agent;
+		this.BT = type;
 	}
 
 	@Override
@@ -38,11 +41,11 @@ public class SimpleBidBundle implements BidBundle {
 
 	@Override
 	public BundleType getType() {
-		return BundleType.Simple;
+		return this.BT;
 	}
 
 	@Override
 	public BidBundle wipeAgent() {
-		return new SimpleBidBundle(this.Bid, null);
+		return new SimpleBidBundle(this.Bid, null, this.BT);
 	}
 }
