@@ -8,9 +8,9 @@ import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.MarketUpdate;
-import brown.messages.trades.TradeRequest;
+import brown.messages.trades.NegotiateRequest;
 import brown.setup.Logging;
 
 public class AuctionAgent extends Agent {
@@ -47,7 +47,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	protected void onBidRequest(BidRequest bidRequest) {
+	protected void onTradeRequest(TradeRequest bidRequest) {
 		Logging.log("[-] bidRequest for " + bidRequest.AuctionID + " w/ hb " + bidRequest.Current.getCost());
 		if (bidRequest.Current.getCost() < this.myMax && bidRequest.Current.getAgent() == null) {
 			if (bidRequest.BundleType == BundleType.SimpleOutcry) {
@@ -64,7 +64,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	protected void onTradeRequest(TradeRequest tradeRequest) {
+	protected void onNegotiateRequest(NegotiateRequest negotiateRequest) {
 		// Noop
 	}
 	

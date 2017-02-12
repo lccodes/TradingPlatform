@@ -8,7 +8,7 @@ import brown.assets.value.Tradeable;
 import brown.auctions.rules.AllocationRule;
 import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 
 public class OneSidedAuction implements Market {
 	protected final Integer ID;
@@ -41,15 +41,15 @@ public class OneSidedAuction implements Market {
 	 * @param ID : agent to tailor the request
 	 * @return BidRequest
 	 */
-	public BidRequest getBidRequest(Integer ID) {
-		BidRequest temp = this.ARULE.getBidRequest(this.BIDS, ID);
+	public TradeRequest getBidRequest(Integer ID) {
+		TradeRequest temp = this.ARULE.getBidRequest(this.BIDS, ID);
 		if (temp == null) {
 			return null;
 		}
 		BidBundle toUse = (ID.equals(temp.Current.getAgent()) || !this.isPrivate()) ? 
 				temp.Current : temp.Current.wipeAgent(null);
 		
-		return new BidRequest(temp.getID(), this.ID, temp.BundleType, toUse, this.ITEMS);
+		return new TradeRequest(temp.getID(), this.ID, temp.BundleType, toUse, this.ITEMS);
 	}
 	
 	/**

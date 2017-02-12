@@ -2,7 +2,7 @@ package brown.auctions;
 
 import brown.assets.value.Tradeable;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 
 public interface Auction {
 	/**
@@ -23,7 +23,7 @@ public interface Auction {
 	 * @param ID : agent to tailor the request
 	 * @return BidRequest
 	 */
-	public BidRequest getBidRequest(Integer ID);
+	public TradeRequest getBidRequest(Integer ID);
 	
 	/**
 	 * Is the auction over

@@ -5,9 +5,9 @@ import brown.assets.accounting.Account;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Rejection;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.MarketUpdate;
-import brown.messages.trades.TradeRequest;
+import brown.messages.trades.NegotiateRequest;
 import brown.securities.SecurityWrapper;
 
 public class TestAgent extends Agent {
@@ -30,13 +30,13 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	protected void onBidRequest(BidRequest bidRequest) {
+	protected void onTradeRequest(TradeRequest bidRequest) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onTradeRequest(TradeRequest tradeRequest) {
+	protected void onNegotiateRequest(NegotiateRequest tradeRequest) {
 		// TODO Auto-generated method stub
 		
 	}

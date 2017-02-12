@@ -6,7 +6,7 @@ import java.util.Set;
 import brown.assets.value.Tradeable;
 import brown.auctions.BundleType;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 
 public interface AllocationRule {
 
@@ -14,7 +14,7 @@ public interface AllocationRule {
 
 	Map<Integer, Set<Tradeable>> getAllocations(Set<Bid> bids, Set<Tradeable> items);
 
-	BidRequest getBidRequest(Set<Bid> bids, Integer iD);
+	TradeRequest getBidRequest(Set<Bid> bids, Integer iD);
 
 	boolean isPrivate();
 	

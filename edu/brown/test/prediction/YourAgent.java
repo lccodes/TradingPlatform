@@ -4,9 +4,9 @@ import brown.agent.Agent;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Rejection;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.MarketUpdate;
-import brown.messages.trades.TradeRequest;
+import brown.messages.trades.NegotiateRequest;
 /**
  * 
  * @author <YOUR NAME>
@@ -42,12 +42,12 @@ public class YourAgent extends Agent {
 	}
 
 	@Override
-	protected void onBidRequest(BidRequest bidRequest) {
+	protected void onTradeRequest(TradeRequest bidRequest) {
 		// IGNORE FOR NOW
 	}
 
 	@Override
-	protected void onTradeRequest(TradeRequest tradeRequest) {
+	protected void onNegotiateRequest(NegotiateRequest tradeRequest) {
 		// IGNORE FOR NOW
 	}
 	

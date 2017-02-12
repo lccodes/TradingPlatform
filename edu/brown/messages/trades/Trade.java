@@ -8,10 +8,10 @@ import brown.messages.Message;
  * can also cancel the TR with this method.
  */
 public class Trade extends Message {
-	public final TradeRequest tradeRequest;
+	public final NegotiateRequest tradeRequest;
 	public final boolean accept;
 
-	public Trade(int ID, TradeRequest tradeRequest, boolean accept) {
+	public Trade(int ID, NegotiateRequest tradeRequest, boolean accept) {
 		super(ID);
 		this.tradeRequest = tradeRequest;
 		this.accept = accept;
