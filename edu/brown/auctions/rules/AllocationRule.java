@@ -24,4 +24,6 @@ public interface AllocationRule {
 
 	Set<Bid> withReserve(Set<Bid> bids);
 
+	boolean isValid(Bid bid, Set<Bid> bids);
+
 }

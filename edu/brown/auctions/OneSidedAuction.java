@@ -66,7 +66,9 @@ public class OneSidedAuction implements Market {
 	 * @param bid : bid containing agent and bid
 	 */
 	public void handleBid(Bid bid) {
-		if (bid.Bundle.getType() != this.ARULE.getBundleType() || bid.AuctionID != this.ID) {
+		if (bid.Bundle.getType() != this.ARULE.getBundleType() 
+				|| bid.AuctionID != this.ID
+				|| !this.ARULE.isValid(bid, this.BIDS)) {
 			return;
 		}
 		

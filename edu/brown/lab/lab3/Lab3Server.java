@@ -66,11 +66,11 @@ public class Lab3Server extends AgentServer {
       this.auctions.put(0, new OneSidedAuction(0, theSet, new SealedBidRule(BundleType.SimpleSealed, true, 5, new SimpleBidBundle(reserve, null, BundleType.SimpleSealed)), prule));
     }
     
-    // Gives everyone 10 seconds to join the auction
+    // Gives everyone 20 seconds to join the auction
     int i = 0;
     while (i < 10) {
       try {
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         Logging.log("[-] setup phase " + i++);
       } catch (InterruptedException e) {
         Logging.log("[+] woken: " + e.getMessage());
@@ -80,7 +80,7 @@ public class Lab3Server extends AgentServer {
     // Runs the auction to completion
     while (!this.auctions.get(0).isClosed()) {
       try {
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         this.updateAllAuctions();
       } catch (InterruptedException e) {
         Logging.log("[+] woken: " + e.getMessage());
@@ -93,6 +93,11 @@ public class Lab3Server extends AgentServer {
     for (BidBundle b : bundles.keySet()) {
       Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());
     }
+  }
+  
+  public static void main(String[] args) {
+	  Lab3Server l3s = new Lab3Server(2121);
+	  l3s.runGame(true, true, 0);
   }
 
 }

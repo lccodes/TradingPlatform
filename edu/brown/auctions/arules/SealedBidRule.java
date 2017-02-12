@@ -113,4 +113,9 @@ public class SealedBidRule implements AllocationRule {
 		return bids;
 	}
 
+	@Override
+	public boolean isValid(Bid bid, Set<Bid> bids) {
+		return bid.Bundle != null && bid.Bundle.getCost() > this.RESERVE.getCost();
+	}
+
 }
