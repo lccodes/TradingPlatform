@@ -21,7 +21,7 @@ public interface BidBundle {
 	 * Removes agent ID
 	 * @return BidBundle w/o agent ID
 	 */
-	BidBundle wipeAgent();
+	BidBundle wipeAgent(Integer ID);
 
 	/**
 	 * Identifies the type of the bundle

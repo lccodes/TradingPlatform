@@ -45,7 +45,7 @@ public class SimpleBidBundle implements BidBundle {
 	}
 
 	@Override
-	public BidBundle wipeAgent() {
-		return new SimpleBidBundle(this.Bid, null, this.BT);
+	public BidBundle wipeAgent(Integer ID) {
+		return new SimpleBidBundle(this.Bid, ID, this.BT);
 	}
 }

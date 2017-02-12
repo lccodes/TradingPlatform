@@ -46,8 +46,8 @@ public class OneSidedAuction implements Market {
 		if (temp == null) {
 			return null;
 		}
-		BidBundle toUse = (ID == temp.Current.getAgent() || !this.isPrivate()) ? 
-				temp.Current : temp.Current.wipeAgent();
+		BidBundle toUse = (ID.equals(temp.Current.getAgent()) || !this.isPrivate()) ? 
+				temp.Current : temp.Current.wipeAgent(null);
 		
 		return new BidRequest(temp.getID(), this.ID, temp.BundleType, toUse, this.ITEMS);
 	}
@@ -71,6 +71,7 @@ public class OneSidedAuction implements Market {
 		}
 		
 		this.BIDS.add(bid);
+		this.ARULE.tick(-1);
 	}
 	
 	/**
@@ -78,7 +79,8 @@ public class OneSidedAuction implements Market {
 	 * @return who won
 	 */
 	public Map<BidBundle, Set<Tradeable>> getWinners() {
-		return this.PRULE.getPayments(this.ARULE.getAllocations(this.BIDS, this.ITEMS), this.BIDS);
+		return this.PRULE.getPayments(this.ARULE.getAllocations(this.BIDS, this.ITEMS), 
+				this.ARULE.withReserve(this.BIDS));
 	}
 	
 	/**

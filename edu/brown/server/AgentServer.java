@@ -360,48 +360,37 @@ public abstract class AgentServer {
 		synchronized(auctions) {
 			List<OneSidedAuction> toRemove = new LinkedList<OneSidedAuction>();
 			for (OneSidedAuction auction : auctions.values()) {
-				auction.tick(System.currentTimeMillis());
-				if (auction.isClosed()) {
-					/*toRemove.add(auction);
-					BidBundle winner = auction.getWinner();
-					if (winner.getAgent() == null) {
-						continue;
-					}
-					
-					Account account = this.bank.get(winner.getAgent());
-					if (account == null) {
-						continue;
-					}
-					
-					Tradeable good = auction.getGood();
-					good.setAgentID(winner.getAgent());
-					Account newA = account.add(-1 * winner.getCost(), good);
-					this.bank.put(winner.getAgent(), newA);
-					this.sendBankUpdate(winner.getAgent(), account, newA);*/
-					toRemove.add(auction);
-					Map<BidBundle, Set<Tradeable>> winners = auction.getWinners();
-					for (BidBundle winner : winners.keySet()) {
-						Account account = this.bank.get(winner.getAgent());
-						if (account == null) {
+				synchronized(auction) {
+					auction.tick(System.currentTimeMillis());
+					if (auction.isClosed()) {
+						toRemove.add(auction);
+						Map<BidBundle, Set<Tradeable>> winners = auction.getWinners();
+						if (winners == null) {
 							continue;
 						}
-						//TODO: Think about locking w/ account object changes
-						synchronized(account) {
-							for (Tradeable t : winners.get(winner)) {
-								t.setAgentID(winner.getAgent());
+						for (BidBundle winner : winners.keySet()) {
+							Account account = this.bank.get(winner.getAgent());
+							if (account == null) {
+								continue;
 							}
-							Account newA = account.add(-1 * winner.getCost(), winners.get(winner));
-							this.bank.put(winner.getAgent(), newA);
-							this.sendBankUpdate(winner.getAgent(), account, newA);
+							//TODO: Think about locking w/ account object changes
+							synchronized(account) {
+								for (Tradeable t : winners.get(winner)) {
+									t.setAgentID(winner.getAgent());
+								}
+								Account newA = account.add(-1 * winner.getCost(), winners.get(winner));
+								this.bank.put(winner.getAgent(), newA);
+								this.sendBankUpdate(winner.getAgent(), account, newA);
+							}
 						}
-					}
-				} else {
-					for (Map.Entry<Connection, Integer> id : this.connections.entrySet()) {
-						BidRequest br = auction.getBidRequest(id.getValue());
-						if (br == null) {
-							continue;
+					} else {
+						for (Map.Entry<Connection, Integer> id : this.connections.entrySet()) {
+							BidRequest br = auction.getBidRequest(id.getValue());
+							if (br == null) {
+								continue;
+							}
+							this.theServer.sendToTCP(id.getKey().getID(), br);
 						}
-						this.theServer.sendToTCP(id.getKey().getID(), br);
 					}
 				}
 			}

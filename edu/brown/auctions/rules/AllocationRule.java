@@ -22,4 +22,6 @@ public interface AllocationRule {
 
 	BundleType getBundleType();
 
+	Set<Bid> withReserve(Set<Bid> bids);
+
 }

@@ -11,7 +11,7 @@ import brown.assets.value.Tradeable;
 import brown.auctions.BidBundle;
 import brown.auctions.BundleType;
 import brown.auctions.OneSidedAuction;
-import brown.auctions.arules.SealedBidRule;
+import brown.auctions.arules.OpenOutcryRule;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.prules.FirstPriceRule;
 import brown.messages.Registration;
@@ -54,8 +54,8 @@ public class AuctionServer extends AgentServer {
 		//if (outcry) {
 			//this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, firstprice));
 			this.auctions.put(0, new OneSidedAuction(0, theSet, 
-					new SealedBidRule(BundleType.SimpleSealed, true, 5,
-							new SimpleBidBundle(0,null,BundleType.SimpleSealed)),
+					new OpenOutcryRule(BundleType.SimpleOutcry, true, 5,
+							new SimpleBidBundle(10,null,BundleType.SimpleOutcry)),
 					new FirstPriceRule()));
 		//} else {
 			//this.auctions.put(0, new SealedBid(0, new TheGood(), true, firstprice));

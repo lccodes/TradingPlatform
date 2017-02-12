@@ -16,7 +16,7 @@ public class FirstPriceRule implements PaymentRule {
 		Map<BidBundle, Set<Tradeable>> payments = new HashMap<BidBundle, Set<Tradeable>>();
 		for (Map.Entry<Integer, Set<Tradeable>> entry : allocations.entrySet()) {
 			for (Bid b : bids) {
-				if (b.AgentID == entry.getKey()) {
+				if (b.AgentID != null && b.AgentID.equals(entry.getKey())) {
 					payments.put(b.Bundle, entry.getValue());
 					break;
 				}

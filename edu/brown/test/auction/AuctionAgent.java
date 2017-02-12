@@ -49,7 +49,7 @@ public class AuctionAgent extends Agent {
 	@Override
 	protected void onBidRequest(BidRequest bidRequest) {
 		Logging.log("[-] bidRequest for " + bidRequest.AuctionID + " w/ hb " + bidRequest.Current.getCost());
-		if (bidRequest.Current.getCost() < this.myMax && this.ID != bidRequest.Current.getAgent()) {
+		if (bidRequest.Current.getCost() < this.myMax && bidRequest.Current.getAgent() == null) {
 			if (bidRequest.BundleType == BundleType.SimpleOutcry) {
 				SimpleBidBundle bundle = new SimpleBidBundle(bidRequest.Current.getCost()+1,
 						this.ID,BundleType.SimpleOutcry);

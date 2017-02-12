@@ -15,7 +15,7 @@ import brown.auctions.rules.AllocationRule;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidRequest;
 
-public class SealedBidRule implements AllocationRule {
+public class OpenOutcryRule implements AllocationRule {
 	private final int END;
 	private final BundleType BT;
 	private final boolean ASC;
@@ -23,7 +23,7 @@ public class SealedBidRule implements AllocationRule {
 	
 	private int ticks;
 	
-	public SealedBidRule(BundleType bundleType, boolean ascending,
+	public OpenOutcryRule(BundleType bundleType, boolean ascending,
 			int secondsToWait, BidBundle reserve) {
 		this.END = secondsToWait;
 		this.ticks = 0;
@@ -34,7 +34,11 @@ public class SealedBidRule implements AllocationRule {
 
 	@Override
 	public void tick(long time) {
-		this.ticks++;
+		if (time == -1) {
+			this.ticks = 0;
+		} else {
+			this.ticks++;
+		}
 	}
 	
 	private List<Bid> getSorted(Set<Bid> bids, int length) {
@@ -74,13 +78,7 @@ public class SealedBidRule implements AllocationRule {
 	}
 
 	@Override
-	public BidRequest getBidRequest(Set<Bid> bids, Integer ID) {
-		for (Bid b : bids) {
-			if (b.AgentID == null || b.AgentID.equals(ID)) {
-				return null;
-			}
-		}
-		
+	public BidRequest getBidRequest(Set<Bid> bids, Integer ID) {		
 		synchronized(bids) {
 			List<Bid> topBids = this.getSorted(bids, 1);
 			BidBundle topBid = this.RESERVE;
@@ -112,5 +110,4 @@ public class SealedBidRule implements AllocationRule {
 		bids.add(new Bid(0,this.RESERVE,null,null));
 		return bids;
 	}
-
 }
