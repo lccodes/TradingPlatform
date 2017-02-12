@@ -1,15 +1,18 @@
 package brown.lab.lab3;
 
 import brown.agent.Agent;
+import brown.auctions.bundles.SimpleBidBundle;
 import brown.exceptions.AgentCreationException;
+import brown.lab.GameSetup;
 import brown.lab.ValuationRegistration;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
+import brown.messages.auctions.Bid;
+import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.trades.NegotiateRequest;
 import brown.setup.Logging;
-import brown.test.auction.GameSetup;
 
 public abstract class Lab3Agent extends Agent{
   
@@ -48,6 +51,14 @@ public abstract class Lab3Agent extends Agent{
   @Override
   protected void onNegotiateRequest(NegotiateRequest tradeRequest) {
     //Noop
+  }
+  
+  /**
+   * Sends a bid to the server
+   * @param bid
+   */
+  protected void bid(double bid, TradeRequest tr) {
+    this.CLIENT.sendTCP(new Bid(0, new SimpleBidBundle(bid, this.ID, tr.BundleType), tr.AuctionID, this.ID));
   }
 
 }
