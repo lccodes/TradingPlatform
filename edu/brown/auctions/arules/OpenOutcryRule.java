@@ -110,4 +110,13 @@ public class OpenOutcryRule implements AllocationRule {
 		bids.add(new Bid(0,this.RESERVE,null,null));
 		return bids;
 	}
+
+	@Override
+	public boolean isValid(Bid bid, Set<Bid> bids) {
+		List<Bid> ordered = new LinkedList<Bid>();
+		ordered.addAll(bids);
+		Collections.sort(ordered, new Bid.BidComparator(!this.ASC));
+		
+		return bid.Bundle != null && (ordered.size() == 0 || bid.Bundle.getCost() > ordered.get(0).Bundle.getCost());
+	}
 }
