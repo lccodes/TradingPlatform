@@ -15,18 +15,18 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Transaction;
 import brown.assets.value.Tradeable;
-import brown.auctions.BidBundle;
 import brown.auctions.OneSidedAuction;
+import brown.auctions.bundles.BidBundle;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.LimitOrder;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.markets.PurchaseRequest;
 import brown.messages.trades.Trade;
-import brown.messages.trades.TradeRequest;
+import brown.messages.trades.NegotiateRequest;
 import brown.securities.Exchange;
 import brown.securities.Security;
 import brown.securities.SecurityWrapper;
@@ -50,7 +50,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Integer> privateToPublic;
 	protected Map<Integer, Account> bank;
 	//Consider time limiting these
-	protected List<TradeRequest> pendingTradeRequests;
+	protected List<NegotiateRequest> pendingTradeRequests;
 	protected Exchange exchange;
 	protected Map<Integer, OneSidedAuction> auctions;
 	
@@ -64,7 +64,7 @@ public abstract class AgentServer {
 		this.connections = new ConcurrentHashMap<Connection,Integer>();
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
-		this.pendingTradeRequests = new CopyOnWriteArrayList<TradeRequest>();
+		this.pendingTradeRequests = new CopyOnWriteArrayList<NegotiateRequest>();
 		this.auctions = new ConcurrentHashMap<Integer, OneSidedAuction>();
 		this.exchange = new Exchange();
 		this.privateToPublic.put(-1, -1);
@@ -104,9 +104,9 @@ public abstract class AgentServer {
 	            } else if (message instanceof PurchaseRequest) {
 	            	Logging.log("[-] purchaserequest recieved from " + id);
 	            	aServer.onPurchaseRequest(connection, id, (PurchaseRequest) message);
-	            } else if (message instanceof TradeRequest) {
+	            } else if (message instanceof NegotiateRequest) {
 	            	Logging.log("[-] traderequest recieved from " + id);
-	            	aServer.onTradeRequest(connection, id, (TradeRequest) message);
+	            	aServer.onTradeRequest(connection, id, (NegotiateRequest) message);
 	            } else if (message instanceof Trade) {
 	            	Logging.log("[-] trade recieved from " + id);
 	            	aServer.onTrade(connection, (Trade) message);
@@ -198,8 +198,8 @@ public abstract class AgentServer {
 	 * @param privateID - (safe) privateID of the requesting agent
 	 * @param tradeRequest - the trade request
 	 */
-	protected void onTradeRequest(Connection connection, Integer privateID, TradeRequest tradeRequest) {
-		TradeRequest tr = tradeRequest.safeCopy(privateToPublic.get(privateID));
+	protected void onTradeRequest(Connection connection, Integer privateID, NegotiateRequest tradeRequest) {
+		NegotiateRequest tr = tradeRequest.safeCopy(privateToPublic.get(privateID));
 		if (privateID != -1) {
 			theServer.sendToAllTCP(tr);
 		} else {
@@ -268,20 +268,20 @@ public abstract class AgentServer {
 					return;
 				}
 				
-				double cost = market.cost(purchaseRequest.buy,
-						purchaseRequest.sell);
+				double cost = market.cost(purchaseRequest.buyQuantity,
+						purchaseRequest.sellQuantity);
 				if (oldAccount.monies >= cost) {
 					//TODO: Update so that purchases can affect multiple agents
 					//using multiple transactions; all safely locked etc
 					List<Tradeable> update = new LinkedList<Tradeable>();
-					if (purchaseRequest.buy > 0) {
-						List<Transaction> yes = market.buy(privateID, purchaseRequest.buy, -1);
+					if (purchaseRequest.buyQuantity > 0) {
+						List<Transaction> yes = market.buy(privateID, purchaseRequest.buyQuantity, -1);
 						update.addAll(yes);
 						ledger.add(yes);
 					}
 					
-					if (purchaseRequest.sell > 0) {
-						List<Transaction> no = market.sell(privateID, purchaseRequest.sell, -1);
+					if (purchaseRequest.sellQuantity > 0) {
+						List<Transaction> no = market.sell(privateID, purchaseRequest.sellQuantity, -1);
 						update.addAll(no);
 						ledger.add(no);
 					}
@@ -385,8 +385,8 @@ public abstract class AgentServer {
 						}
 					} else {
 						for (Map.Entry<Connection, Integer> id : this.connections.entrySet()) {
-							BidRequest br = auction.getBidRequest(id.getValue());
-							if (br == null) { // || id.getKey().equals(br.Bundle.getAgent())
+							TradeRequest br = auction.getBidRequest(id.getValue());
+							if (br == null) {
 								continue;
 							}
 							this.theServer.sendToTCP(id.getKey().getID(), br);

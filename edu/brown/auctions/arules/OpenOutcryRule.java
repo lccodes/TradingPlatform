@@ -9,11 +9,11 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.value.Tradeable;
-import brown.auctions.BidBundle;
-import brown.auctions.BundleType;
+import brown.auctions.bundles.BidBundle;
+import brown.auctions.bundles.BundleType;
 import brown.auctions.rules.AllocationRule;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 
 public class OpenOutcryRule implements AllocationRule {
 	private final int END;
@@ -78,7 +78,7 @@ public class OpenOutcryRule implements AllocationRule {
 	}
 
 	@Override
-	public BidRequest getBidRequest(Set<Bid> bids, Integer ID) {		
+	public TradeRequest getBidRequest(Set<Bid> bids, Integer ID) {		
 		synchronized(bids) {
 			List<Bid> topBids = this.getSorted(bids, 1);
 			BidBundle topBid = this.RESERVE;
@@ -86,7 +86,7 @@ public class OpenOutcryRule implements AllocationRule {
 				topBid = topBids.get(0).Bundle;
 			}
 			
-			return new BidRequest(1, null, this.BT, topBid,null);
+			return new TradeRequest(1, null, this.BT, topBid,null);
 		}
 	}
 
@@ -109,5 +109,19 @@ public class OpenOutcryRule implements AllocationRule {
 	public Set<Bid> withReserve(Set<Bid> bids) {
 		bids.add(new Bid(0,this.RESERVE,null,null));
 		return bids;
+	}
+
+	@Override
+	public boolean isValid(Bid bid, Set<Bid> bids) {
+		List<Bid> ordered = new LinkedList<Bid>();
+		ordered.addAll(bids);
+		Collections.sort(ordered, new Bid.BidComparator(!this.ASC));
+		
+		return bid.Bundle != null && (ordered.size() == 0 || bid.Bundle.getCost() > ordered.get(0).Bundle.getCost());
+	}
+
+	@Override
+	public AllocationType getAllocationType() {
+		return AllocationType.OpenOutcry;
 	}
 }

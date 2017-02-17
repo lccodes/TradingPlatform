@@ -1,5 +1,7 @@
 package brown.auctions;
 
+import brown.auctions.arules.AllocationType;
+
 public interface Market {
 	/**
 	 * Gets the ID of the auction
@@ -12,5 +14,11 @@ public interface Market {
 	 * @return true if ended
 	 */
 	public boolean isClosed();
+	
+	/**
+	 * What type of allocation mechanism does it use?
+	 * @return AllocationType
+	 */
+	public AllocationType getMechanismType();
 
 }

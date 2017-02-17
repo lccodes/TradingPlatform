@@ -3,86 +3,60 @@ package brown.securities.mechanisms.cda;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.accounting.Transaction;
-import brown.messages.markets.LimitOrder;
+import brown.assets.accounting.SecurityTwo;
+import brown.auctions.TwoSidedWrapper;
+import brown.messages.markets.PurchaseRequest;
 import brown.securities.SecurityType;
-import brown.securities.SecurityWrapper;
 
-public class CDAWrapper implements SecurityWrapper {
-	private final Integer ID;
+public class CDAWrapper implements TwoSidedWrapper {
 	private final ContinuousDoubleAuction CDA;
-	private final SortedMap<Double,Transaction> toBuy;
-	private final SortedMap<Double, Transaction> toSell;
 	
-	public CDAWrapper(Integer ID, ContinuousDoubleAuction cda,
-			SortedMap<Double, Transaction> toBuy, SortedMap<Double, Transaction> toSell) {
-		this.ID = ID;
-		this.toBuy = toBuy;
-		this.toSell = toSell;
-		this.CDA = cda;
-		//TODO: Strip info from these
+	public CDAWrapper() {
+		this.CDA = null;
+	}
+	
+	public CDAWrapper(ContinuousDoubleAuction CDA) {
+		this.CDA = CDA;
 	}
 
 	@Override
 	public Integer getID() {
-		return this.ID;
+		return CDA.getID();
 	}
 
 	@Override
 	public SecurityType getType() {
-		return SecurityType.CDA;
+		return CDA.getType();
 	}
 
 	@Override
 	public void buy(Agent agent, double shareNum, double sharePrice) {
-		agent.CLIENT.sendTCP(new LimitOrder(0, this.CDA, shareNum, 0, sharePrice));
+		agent.CLIENT.sendTCP(new PurchaseRequest(0,this.CDA, shareNum, sharePrice));
 	}
 
 	@Override
 	public void sell(Agent agent, double shareNum, double sharePrice) {
-		agent.CLIENT.sendTCP(new LimitOrder(0, this.CDA, 0, -1 *shareNum, sharePrice));
-	}
-
-	@Override
-	public double bid(double shareNum) {
-		return this.CDA.bid(shareNum);
-	}
-
-	@Override
-	public double ask(double shareNum) {
-		return this.CDA.ask(shareNum);
-	}
-
-	@Override
-	public void buy(Agent agent, double shareNum) {
-		agent.CLIENT.sendTCP(new LimitOrder(0, this.CDA, shareNum, 0, Double.MAX_VALUE));
-	}
-
-	@Override
-	public void sell(Agent agent, double shareNum) {
-		agent.CLIENT.sendTCP(new LimitOrder(0, this.CDA, 0, -1 *shareNum, Double.MIN_VALUE));
+		agent.CLIENT.sendTCP(new PurchaseRequest(this.CDA, shareNum, sharePrice, 0));
 	}
 
 	@Override
 	public double bid(double shareNum, double sharePrice) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.CDA.bid(shareNum, sharePrice);
 	}
 
 	@Override
 	public double ask(double shareNum, double sharePrice) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.CDA.ask(shareNum, sharePrice);
 	}
 
 	@Override
-	public SortedMap<Double, Transaction> getBuyOrders() {
-		return this.toBuy;
+	public SortedMap<Double, SecurityTwo> getBuyBook() {
+		return this.CDA.getBuyBook();
 	}
 
 	@Override
-	public SortedMap<Double, Transaction> getSellOrders() {
-		return this.toSell;
+	public SortedMap<Double, SecurityTwo> getSellBook() {
+		return this.CDA.getSellBook();
 	}
 
 }

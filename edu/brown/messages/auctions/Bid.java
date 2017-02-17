@@ -2,7 +2,7 @@ package brown.messages.auctions;
 
 import java.util.Comparator;
 
-import brown.auctions.BidBundle;
+import brown.auctions.bundles.BidBundle;
 import brown.messages.Message;
 
 public class Bid extends Message {

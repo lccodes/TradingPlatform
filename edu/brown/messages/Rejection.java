@@ -3,13 +3,13 @@ package brown.messages;
 import brown.messages.auctions.Bid;
 import brown.messages.markets.LimitOrder;
 import brown.messages.markets.PurchaseRequest;
-import brown.messages.trades.TradeRequest;
+import brown.messages.trades.NegotiateRequest;
 
 public class Rejection extends Message {
 	public final PurchaseRequest failedPR;
 	public final LimitOrder failedLO;
 	public final Bid failedBR;
-	public final TradeRequest failedTR;
+	public final NegotiateRequest failedTR;
 	
 	/**
 	 * Empty for kryo
@@ -57,7 +57,7 @@ public class Rejection extends Message {
 	 * @param ID : rejection ID
 	 * @param tr : rejected trade request
 	 */
-	public Rejection(Integer ID, TradeRequest tr) {
+	public Rejection(Integer ID, NegotiateRequest tr) {
 		super(ID);
 		this.failedBR = null;
 		this.failedPR = null;

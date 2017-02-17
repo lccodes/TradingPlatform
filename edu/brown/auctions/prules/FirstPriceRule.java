@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.value.Tradeable;
-import brown.auctions.BidBundle;
+import brown.auctions.bundles.BidBundle;
 import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
 

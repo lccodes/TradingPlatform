@@ -6,22 +6,39 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import brown.assets.accounting.Transaction;
-import brown.securities.Security;
+import brown.assets.accounting.SecurityTwo;
+import brown.auctions.TwoSidedAuction;
+import brown.auctions.TwoSidedWrapper;
+import brown.auctions.arules.AllocationType;
 import brown.securities.SecurityType;
-import brown.securities.SecurityWrapper;
 
-public class ContinuousDoubleAuction implements Security {
+public class ContinuousDoubleAuction implements TwoSidedAuction {
 	private final Integer ID;
 	private final SecurityType TYPE;
-	private final SortedMap<Double, Transaction> pendingBuy;
-	private final SortedMap<Double, Transaction> pendingSell;
+	private final SortedMap<Double, SecurityTwo> pendingBuy;
+	private final SortedMap<Double, SecurityTwo> pendingSell;
 	
+	/**
+	 * For kryonet
+	 * DO NOT USE
+	 */
+	public ContinuousDoubleAuction() {
+		this.ID = null;
+		this.TYPE = null;
+		this.pendingBuy = null;
+		this.pendingSell = null;
+	}
+	
+	/**
+	 * Constructor
+	 * @param ID : auction ID
+	 * @param type : SecurityType
+	 */
 	public ContinuousDoubleAuction(Integer ID, SecurityType type) {
 		this.ID = ID;
 		this.TYPE = type;
-		this.pendingBuy = new TreeMap<Double, Transaction>(Collections.reverseOrder());
-		this.pendingSell = new TreeMap<Double, Transaction>();
+		this.pendingBuy = new TreeMap<Double, SecurityTwo>(Collections.reverseOrder());
+		this.pendingSell = new TreeMap<Double, SecurityTwo>();
 	}
 
 	@Override
@@ -35,19 +52,19 @@ public class ContinuousDoubleAuction implements Security {
 	}
 
 	@Override
-	public List<Transaction> buy(Integer agentID, double shareNum, double sharePrice) {
-		List<Transaction> completed = new LinkedList<Transaction>();
+	public List<SecurityTwo> buy(Integer agentID, double shareNum, double sharePrice) {
+		List<SecurityTwo> completed = new LinkedList<SecurityTwo>();
 		for (double amount : this.pendingSell.keySet()) {
 			if (shareNum <= 0) {
 				break;
 			}
 			
-			Transaction opp = this.pendingSell.get(amount);
+			SecurityTwo opp = this.pendingSell.get(amount);
 			if (opp.getTransactedPrice() <= sharePrice) {
 				shareNum += opp.getCount();
-				completed.add(new Transaction(this, opp.getCount(), 
+				completed.add(new SecurityTwo(this, opp.getCount(), 
 						opp.getAgentID(), opp.getTransactedPrice(), true));
-				completed.add(new Transaction(this, Math.abs(opp.getCount()), 
+				completed.add(new SecurityTwo(this, Math.abs(opp.getCount()), 
 						agentID, opp.getTransactedPrice(), true));
 			} else {
 				break;
@@ -55,7 +72,7 @@ public class ContinuousDoubleAuction implements Security {
 		}
 		
 		if (shareNum > 0) {
-			Transaction pending = new Transaction(this, shareNum, agentID, sharePrice, false);
+			SecurityTwo pending = new SecurityTwo(this, shareNum, agentID, sharePrice, false);
 			this.pendingBuy.put(sharePrice, pending);
 			completed.add(pending);
 		}
@@ -64,19 +81,19 @@ public class ContinuousDoubleAuction implements Security {
 	}
 
 	@Override
-	public List<Transaction> sell(Integer agentID, double shareNum, double sharePrice) {
-		List<Transaction> completed = new LinkedList<Transaction>();
+	public List<SecurityTwo> sell(Integer agentID, double shareNum, double sharePrice) {
+		List<SecurityTwo> completed = new LinkedList<SecurityTwo>();
 		for (double amount : this.pendingBuy.keySet()) {
 			if (shareNum <= 0) {
 				break;
 			}
 			
-			Transaction opp = this.pendingBuy.get(amount);
+			SecurityTwo opp = this.pendingBuy.get(amount);
 			if (opp.getTransactedPrice() >= sharePrice) {
 				shareNum -= opp.getCount();
-				completed.add(new Transaction(this, opp.getCount(), 
+				completed.add(new SecurityTwo(this, opp.getCount(), 
 						opp.getAgentID(), opp.getTransactedPrice(), true));
-				completed.add(new Transaction(this, -1 * opp.getCount(), 
+				completed.add(new SecurityTwo(this, -1 * opp.getCount(), 
 						agentID, opp.getTransactedPrice(), true));
 			} else {
 				break;
@@ -84,7 +101,7 @@ public class ContinuousDoubleAuction implements Security {
 		}
 		
 		if (shareNum > 0) {
-			Transaction pending = new Transaction(this, -1 * shareNum, agentID, sharePrice, false);
+			SecurityTwo pending = new SecurityTwo(this, -1 * shareNum, agentID, sharePrice, false);
 			this.pendingBuy.put(sharePrice, pending);
 			completed.add(pending);
 		}
@@ -92,44 +109,68 @@ public class ContinuousDoubleAuction implements Security {
 		return completed;
 	}
 
-	@Override
-	public double cost(double newq1, double newq2) {
+	/**
+	 * TODO: Include sharePrice
+	 * @param buyQ
+	 * @param sellQ
+	 * @return
+	 */
+	public double cost(double buyQ, double sellQ) {
 		double cost = 0;
 		for (double amount : this.pendingSell.keySet()) {
-			if (newq1 <= 0) {
+			if (buyQ <= 0) {
 				break;
 			}
 			
-			cost += this.pendingSell.get(amount).getTransactedPrice() * newq1;
-			newq1 += this.pendingSell.get(amount).getCount();
+			cost += this.pendingSell.get(amount).getTransactedPrice() * buyQ;
+			buyQ += this.pendingSell.get(amount).getCount();
 		}
 		
 		for (double amount : this.pendingBuy.keySet()) {
-			if (newq2 <= 0) {
+			if (sellQ <= 0) {
 				break;
 			}
 			
-			cost += this.pendingBuy.get(amount).getTransactedPrice() * newq2;
-			newq1 -= this.pendingBuy.get(amount).getCount();
+			cost += this.pendingBuy.get(amount).getTransactedPrice() * sellQ;
+			buyQ -= this.pendingBuy.get(amount).getCount();
 		}
 		
 		return cost == 0 ? Double.MAX_VALUE : cost;
 	}
 
 	@Override
-	public double bid(double shareNum) {
+	public double bid(double shareNum, double sharePrice) {
 		return this.cost(shareNum, 0);
 	}
 
 	@Override
-	public double ask(double shareNum) {
+	public double ask(double shareNum, double sharePrice) {
 		return this.cost(0, shareNum);
 	}
 
 	@Override
-	public SecurityWrapper wrap() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean isClosed() {
+		return false;
+	}
+
+	@Override
+	public AllocationType getMechanismType() {
+		return AllocationType.ContinuousDoubleAuction;
+	}
+
+	@Override
+	public SortedMap<Double, SecurityTwo> getBuyBook() {
+		return this.pendingBuy;
+	}
+
+	@Override
+	public SortedMap<Double, SecurityTwo> getSellBook() {
+		return this.pendingSell;
+	}
+
+	@Override
+	public TwoSidedWrapper wrap() {
+		return new CDAWrapper(this);
 	}
 
 }

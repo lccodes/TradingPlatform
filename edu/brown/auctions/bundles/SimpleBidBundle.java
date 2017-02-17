@@ -1,7 +1,5 @@
 package brown.auctions.bundles;
 
-import brown.auctions.BidBundle;
-import brown.auctions.BundleType;
 
 public class SimpleBidBundle implements BidBundle {
 	private final double Bid;

@@ -8,10 +8,10 @@ import java.util.Set;
 
 import brown.assets.accounting.Account;
 import brown.assets.value.Tradeable;
-import brown.auctions.BidBundle;
-import brown.auctions.BundleType;
 import brown.auctions.OneSidedAuction;
 import brown.auctions.arules.OpenOutcryRule;
+import brown.auctions.bundles.BidBundle;
+import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.prules.FirstPriceRule;
 import brown.messages.Registration;

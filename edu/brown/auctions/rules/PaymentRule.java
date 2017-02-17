@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.value.Tradeable;
-import brown.auctions.BidBundle;
+import brown.auctions.bundles.BidBundle;
 import brown.messages.auctions.Bid;
 
 public interface PaymentRule {

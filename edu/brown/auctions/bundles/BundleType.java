@@ -1,4 +1,4 @@
-package brown.auctions;
+package brown.auctions.bundles;
 
 public enum BundleType {
 	SimpleOutcry,

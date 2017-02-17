@@ -1,8 +1,10 @@
 package brown.auctions;
 
 import brown.assets.value.Tradeable;
+import brown.auctions.bundles.BidBundle;
+import brown.auctions.bundles.BundleType;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidRequest;
+import brown.messages.auctions.TradeRequest;
 
 public interface Auction {
 	/**
@@ -23,7 +25,7 @@ public interface Auction {
 	 * @param ID : agent to tailor the request
 	 * @return BidRequest
 	 */
-	public BidRequest getBidRequest(Integer ID);
+	public TradeRequest getTradeRequest(Integer ID);
 	
 	/**
 	 * Is the auction over
@@ -33,7 +35,7 @@ public interface Auction {
 	
 	/**
 	 * Is the auction private? i.e. will other agents know who the
-	 * high bidder is.
+	 * high bidder is (true=yes,false=no).
 	 * @return true if private
 	 */
 	public boolean isPrivate();
