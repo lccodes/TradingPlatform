@@ -386,7 +386,7 @@ public abstract class AgentServer {
 					} else {
 						for (Map.Entry<Connection, Integer> id : this.connections.entrySet()) {
 							BidRequest br = auction.getBidRequest(id.getValue());
-							if (br == null) {
+							if (br == null) { // || id.getKey().equals(br.Bundle.getAgent())
 								continue;
 							}
 							this.theServer.sendToTCP(id.getKey().getID(), br);
