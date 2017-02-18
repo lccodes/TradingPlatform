@@ -2,15 +2,15 @@ package brown.securities;
 
 import java.util.List;
 
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.TransactionOld;
 
-public interface Security {
+public interface SecurityOld {
 	
 	public Integer getID();
 	public SecurityType getType();
 	
-	public List<Transaction> buy(Integer agentID, double shareNum, double sharePrice);
-	public List<Transaction> sell(Integer agentID, double shareNum, double sharePrice);
+	public List<TransactionOld> buy(Integer agentID, double shareNum, double sharePrice);
+	public List<TransactionOld> sell(Integer agentID, double shareNum, double sharePrice);
 	
 	public double cost(double newq1, double newq2);
 	

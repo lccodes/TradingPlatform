@@ -2,10 +2,10 @@ package brown.messages.markets;
 
 import brown.auctions.TwoSidedAuction;
 import brown.messages.Message;
-import brown.securities.Security;
+import brown.securities.SecurityOld;
 
 public class PurchaseRequest extends Message {
-	public final Security market;  //TODO: Delete
+	public final SecurityOld market;  //TODO: Delete
 	
 	public final Integer auctionID;
 	public final double buyQuantity;
@@ -25,7 +25,7 @@ public class PurchaseRequest extends Message {
 	}
 
 	//TODO: Delete
-	public PurchaseRequest(int ID, Security predictionMarket, double shareYes, double shareNo) {
+	public PurchaseRequest(int ID, SecurityOld predictionMarket, double shareYes, double shareNo) {
 		super(ID);
 		this.market = predictionMarket;
 		this.buyQuantity = shareYes;

@@ -1,9 +1,11 @@
 package brown.auctions;
 
+import java.util.Set;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.accounting.SecurityTwo;
+import brown.assets.accounting.Transaction;
+import brown.assets.value.Tradeable;
 import brown.securities.SecurityType;
 
 public interface TwoSidedWrapper {
@@ -20,6 +22,6 @@ public interface TwoSidedWrapper {
 	public double bid(double shareNum, double sharePrice);
 	public double ask(double shareNum, double sharePrice);
 	
-	public SortedMap<Double, SecurityTwo> getBuyBook();
-	public SortedMap<Double, SecurityTwo> getSellBook();
+	public SortedMap<Double, Set<Transaction>> getBuyBook();
+	public SortedMap<Double, Set<Tradeable>> getSellBook();
 }

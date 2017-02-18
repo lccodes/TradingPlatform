@@ -12,10 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.accounting.Account;
+import brown.assets.accounting.Exchange;
 import brown.assets.accounting.Ledger;
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.TransactionOld;
 import brown.assets.value.Tradeable;
 import brown.auctions.OneSidedAuction;
+import brown.auctions.TwoSidedAuction;
 import brown.auctions.bundles.BidBundle;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
@@ -25,10 +27,9 @@ import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.LimitOrder;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.markets.PurchaseRequest;
-import brown.messages.trades.Trade;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.Exchange;
-import brown.securities.Security;
+import brown.messages.trades.Trade;
+import brown.securities.SecurityOld;
 import brown.securities.SecurityWrapper;
 import brown.setup.Logging;
 import brown.setup.Setup;
@@ -126,16 +127,27 @@ public abstract class AgentServer {
 	 * @param message - limit order for a security
 	 */
 	protected void onLimitOrder(Connection connection, Integer privateID, LimitOrder limitorder) {
-		Security market = exchange.getSecurity(limitorder.market.getID());
-		Ledger ledger = exchange.getLedger(limitorder.market.getID());
+		TwoSidedAuction market = exchange.getTwoSidedAuction(limitorder.market.getID());
 		synchronized(market) {
+			Ledger ledger = exchange.getLedger(limitorder.market.getID());
 			if (market == null) {
 				Rejection rej = new Rejection(privateID, limitorder);
 				this.theServer.sendToTCP(connection.getID(), rej);
 				return;
 			}
 			
-			List<Transaction> allTrans = new LinkedList<Transaction>();
+			if (limitorder.buyShares > 0) {
+				
+			}
+			
+			//CASE 1: Buy with right quantity
+			//CASE 2: Buy + overflow of tradeable remains with seller
+			//CASE 3: Sell with right quantity
+			//CASE 4: SELL WITH OVERFLOW TO SELLER
+			//NOTE: Sales always need to fix the order book
+			//NOTE: Ledger must always contain only one instance of tradeable w/ accounting for splits
+			
+			/*List<Tradeable> allTrans = new LinkedList<Transaction>();
 			if (limitorder.buyShares > 0) {
 				allTrans.addAll(market.buy(privateID, limitorder.buyShares, limitorder.price));
 			}
@@ -174,7 +186,7 @@ public abstract class AgentServer {
 						theServer.sendToTCP(connection.getID(), bu);
 					}
 				}
-			}
+			}*/
 		}
 	}
 
@@ -257,7 +269,7 @@ public abstract class AgentServer {
 	 * This will handle the logic for requests to purchase from public markets
 	 */
 	protected void onPurchaseRequest(Connection connection, Integer privateID, PurchaseRequest purchaseRequest) {
-		Security market = exchange.getSecurity(purchaseRequest.market.getID());
+		TwoSidedAuction market = exchange.getTwoSidedAuction(purchaseRequest.market.getID());
 		Ledger ledger = exchange.getLedger(purchaseRequest.market.getID());
 		Account oldAccount = bank.get(privateID);
 		synchronized(market) {
@@ -268,7 +280,9 @@ public abstract class AgentServer {
 					return;
 				}
 				
-				double cost = market.cost(purchaseRequest.buyQuantity,
+				
+				
+				/*double cost = market.cost(purchaseRequest.buyQuantity,
 						purchaseRequest.sellQuantity);
 				if (oldAccount.monies >= cost) {
 					//TODO: Update so that purchases can affect multiple agents
@@ -295,7 +309,7 @@ public abstract class AgentServer {
 				} else {
 					Rejection rej = new Rejection(privateID, purchaseRequest);
 					theServer.sendToTCP(connection.getID(), rej);
-				}
+				}*/
 			}
 		}
 	}
@@ -342,9 +356,9 @@ public abstract class AgentServer {
 	 * 
 	 * NOTE: No need for sync since this is access only
 	 */
-	public void sendAllMarketUpdates(List<Security> securities) {
+	public void sendAllMarketUpdates(List<SecurityOld> securities) {
 		List<SecurityWrapper> markets = new LinkedList<SecurityWrapper>();
-		for (Security sec : securities) {
+		for (SecurityOld sec : securities) {
 			markets.add(sec.wrap());
 		}
 		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
@@ -405,7 +419,7 @@ public abstract class AgentServer {
 	 * Sends a MarketUpdate about this specific market to all agents
 	 * @param Security : the market to update on
 	 */
-	public void sendMarketUpdate(Security market) {
+	public void sendMarketUpdate(SecurityOld market) {
 		List<SecurityWrapper> markets = new LinkedList<SecurityWrapper>();
 		markets.add(market.wrap());
 		MarketUpdate mupdate = new MarketUpdate(new Integer(0), markets);
@@ -453,10 +467,19 @@ public abstract class AgentServer {
 	}
 	
 	/*
+	 * Retrieves an agent's bank account from its private ID
+	 */
+	public Account privateToAccount(Integer id) {
+		return bank.get(id);
+	}
+	
+	/*
 	 * Sets an agent's bank account from its public ID
 	 */
 	public void setAccount(Integer id, Account account) {
-		bank.put(publicToPrivate(id), account);
+		synchronized(id) {
+			bank.put(publicToPrivate(id), account);
+		}
 	}
 
 	/*

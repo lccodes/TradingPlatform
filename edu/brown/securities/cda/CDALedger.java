@@ -4,17 +4,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import brown.assets.accounting.Ledger;
-import brown.assets.accounting.Transaction;
-import brown.securities.Security;
+import brown.assets.accounting.TransactionOld;
+import brown.securities.SecurityOld;
 import brown.server.AgentServer;
 
 public class CDALedger extends Ledger {
-	protected List<Transaction> pendingTransactions;
+	protected List<TransactionOld> pendingTransactions;
 	protected boolean closed;
 
-	public CDALedger(Security security) {
+	public CDALedger(SecurityOld security) {
 		super(security);
-		this.pendingTransactions = new LinkedList<Transaction>();
+		this.pendingTransactions = new LinkedList<TransactionOld>();
 		this.closed = false;
 	}
 

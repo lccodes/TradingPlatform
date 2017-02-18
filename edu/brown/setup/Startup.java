@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import brown.assets.accounting.Account;
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.TransactionOld;
 import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
@@ -24,7 +24,7 @@ import brown.messages.markets.MarketUpdate;
 import brown.messages.markets.PurchaseRequest;
 import brown.messages.trades.Trade;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.Security;
+import brown.securities.SecurityOld;
 import brown.securities.SecurityWrapper;
 import brown.securities.prediction.PredictionMarket;
 import brown.securities.prediction.structures.PMBackend;
@@ -45,7 +45,7 @@ public final class Startup {
 		kryo.register(Registration.class);
 		kryo.register(Trade.class);
 		kryo.register(NegotiateRequest.class);
-		kryo.register(Security.class);
+		kryo.register(SecurityOld.class);
 		kryo.register(PredictionMarket.class);
 		kryo.register(Account.class);
 		kryo.register(java.util.LinkedList.class);
@@ -55,7 +55,7 @@ public final class Startup {
 		kryo.register(Rejection.class);
 		kryo.register(SecurityWrapper.class);
 		kryo.register(PMYes.class);
-		kryo.register(Transaction.class);
+		kryo.register(TransactionOld.class);
 		kryo.register(PMBackend.class);
 		kryo.register(PMNo.class);
 		kryo.register(Timestamp.class);

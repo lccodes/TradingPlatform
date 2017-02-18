@@ -100,4 +100,13 @@ public class Account {
 		this.goods.removeAll(removeGoods);
 		return new Account(this.ID, this.monies-removeMonies, this.goods);
 	}
+
+	public Account remove(int removeMonies, Tradeable t) {
+		if (t == null) {
+			return new Account(this.ID, this.monies-removeMonies, this.goods);
+		}
+		
+		this.goods.remove(t);
+		return new Account(this.ID, this.monies-removeMonies, this.goods);
+	}
 }

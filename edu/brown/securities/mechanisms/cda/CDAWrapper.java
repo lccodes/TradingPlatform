@@ -1,9 +1,11 @@
 package brown.securities.mechanisms.cda;
 
+import java.util.Set;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.accounting.SecurityTwo;
+import brown.assets.accounting.Transaction;
+import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedWrapper;
 import brown.messages.markets.PurchaseRequest;
 import brown.securities.SecurityType;
@@ -41,21 +43,21 @@ public class CDAWrapper implements TwoSidedWrapper {
 
 	@Override
 	public double bid(double shareNum, double sharePrice) {
-		return this.CDA.bid(shareNum, sharePrice);
+		return this.CDA.quoteBid(shareNum, sharePrice);
 	}
 
 	@Override
 	public double ask(double shareNum, double sharePrice) {
-		return this.CDA.ask(shareNum, sharePrice);
+		return this.CDA.quoteAsk(shareNum, sharePrice);
 	}
 
 	@Override
-	public SortedMap<Double, SecurityTwo> getBuyBook() {
+	public SortedMap<Double, Set<Transaction>> getBuyBook() {
 		return this.CDA.getBuyBook();
 	}
 
 	@Override
-	public SortedMap<Double, SecurityTwo> getSellBook() {
+	public SortedMap<Double, Set<Tradeable>> getSellBook() {
 		return this.CDA.getSellBook();
 	}
 

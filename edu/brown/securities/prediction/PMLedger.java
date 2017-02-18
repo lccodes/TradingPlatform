@@ -1,14 +1,14 @@
 package brown.securities.prediction;
 
 import brown.assets.accounting.Ledger;
-import brown.securities.Security;
+import brown.securities.SecurityOld;
 import brown.server.AgentServer;
 
 public class PMLedger extends Ledger {
 	private boolean closed;
 	private PMLedger other;
 	
-	public PMLedger(Security security, PMLedger other) {
+	public PMLedger(SecurityOld security, PMLedger other) {
 		super(security);
 		this.closed = false;
 		this.other = other;

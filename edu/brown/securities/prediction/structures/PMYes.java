@@ -3,9 +3,9 @@ package brown.securities.prediction.structures;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.TransactionOld;
 import brown.securities.MarketCreationException;
-import brown.securities.Security;
+import brown.securities.SecurityOld;
 import brown.securities.SecurityType;
 import brown.securities.SecurityWrapper;
 import brown.securities.prediction.PredictionMarket;
@@ -17,7 +17,7 @@ import brown.securities.prediction.PredictionMarket;
  * @author lcamery
  *
  */
-public class PMYes implements Security {
+public class PMYes implements SecurityOld {
 	protected final PMBackend backend;
 	protected final Integer ID;
 	
@@ -65,11 +65,11 @@ public class PMYes implements Security {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public List<Transaction> buy(Integer agentID, double shareNum, double price) {
-		Transaction trans = new Transaction(this, shareNum, agentID, cost(shareNum, 0), true);
+	public List<TransactionOld> buy(Integer agentID, double shareNum, double price) {
+		TransactionOld trans = new TransactionOld(this, shareNum, agentID, cost(shareNum, 0), true);
 		backend.yes(agentID, shareNum);
 		
-		List<Transaction> ll = new LinkedList<Transaction>();
+		List<TransactionOld> ll = new LinkedList<TransactionOld>();
 		ll.add(trans);
 		return ll;
 	}
@@ -80,11 +80,11 @@ public class PMYes implements Security {
 	 * @param shareNum : int
 	 * @return share : share object; extendable in real games
 	 */
-	public List<Transaction> sell(Integer agentID, double shareNum, double price) {
-		Transaction trans = new Transaction(this, shareNum, agentID, cost(-1 * shareNum, 0), true);
+	public List<TransactionOld> sell(Integer agentID, double shareNum, double price) {
+		TransactionOld trans = new TransactionOld(this, shareNum, agentID, cost(-1 * shareNum, 0), true);
 		backend.yes(agentID, -1*shareNum);
 		
-		List<Transaction> ll = new LinkedList<Transaction>();
+		List<TransactionOld> ll = new LinkedList<TransactionOld>();
 		ll.add(trans);
 		return ll;
 	}

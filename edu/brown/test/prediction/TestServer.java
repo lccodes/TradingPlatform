@@ -5,7 +5,7 @@ import java.util.List;
 
 import brown.assets.accounting.Account;
 import brown.messages.Registration;
-import brown.securities.Security;
+import brown.securities.SecurityOld;
 import brown.securities.SecurityFactory;
 import brown.securities.prediction.PMTriple;
 import brown.server.AgentServer;
@@ -33,7 +33,7 @@ public class TestServer extends AgentServer {
 		IDS.add(connections.get(connection));
 		this.sendBankUpdates(IDS);
 		
-		List<Security> ms = new LinkedList<Security>();
+		List<SecurityOld> ms = new LinkedList<SecurityOld>();
 		ms.add(this.exchange.getSecurity(1));
 		ms.add(this.exchange.getSecurity(2));
 		this.sendAllMarketUpdates(ms);

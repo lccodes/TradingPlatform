@@ -1,82 +1,51 @@
 package brown.assets.accounting;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import brown.securities.Security;
-import brown.server.AgentServer;
+import brown.assets.value.Tradeable;
+import brown.auctions.TwoSidedAuction;
 
-public abstract class Ledger {
-	protected List<Transaction> transactions;
-	protected final Security security;
+public class Ledger {
+	protected List<Tradeable> Tradeables;
+	protected final TwoSidedAuction tsa;
 	
 	/**
 	 * Constructs a ledger for the given security
-	 * @param security : security that all transactions will refer to
+	 * @param security : security that all Tradeables will refer to
 	 */
-	public Ledger(Security security) {
-		this.security = security;
-		this.transactions = new LinkedList<Transaction>();
+	public Ledger(TwoSidedAuction tsa) {
+		this.tsa = tsa;
+		this.Tradeables = new LinkedList<Tradeable>();
 	}
 	
 	/**
-	 * Add a transaction
-	 * @param t : transaction to add
+	 * Add a Tradeable
+	 * @param t : Tradeable to add
 	 */
-	public void add(Transaction t) {
-		this.transactions.add(t);
+	public void add(Tradeable t) {
+		this.Tradeables.add(t);
 	}
 	
 	/**
-	 * Gets a transaction
-	 * @param i : the index of the transaction to get
-	 * @return transaction i
+	 * Gets a Tradeable
+	 * @param i : the index of the Tradeable to get
+	 * @return Tradeable i
 	 */
-	public Transaction get(int i) {
-		return transactions.get(i);
+	public Tradeable get(int i) {
+		return Tradeables.get(i);
 	}
 	
 	/**
-	 * Constructs an iterator over the transactions
+	 * Constructs an iterator over the Tradeables
 	 * @return iterator
 	 */
-	public Iterator<Transaction> iterator() {
-		return transactions.iterator();
-	}
-	
-	/**
-	 * Specifies the closure process and resolution for every
-	 * transaction depending on how the security operates
-	 * @param server : the agentServer
-	 * @param pay : whether or not to pay out the security
-	 */
-	public abstract void close(AgentServer server, boolean pay);
-	
-	/**
-	 * Pays out every agent with a transaction and returns their
-	 * IDs for updating
-	 * @param server : AgentServer for the information on agents
-	 * @return set of IDs for paid agents
-	 */
-	protected Set<Integer> pay(AgentServer server) {
-		Set<Integer> ids = new HashSet<Integer>();
-		for (Transaction t : this.transactions) {
-			Account account = server.publicToAccount(t.getAgentID());
-			synchronized(account) {
-				Account newAccount = account.addAll(t.getCount(), null);
-				server.setAccount(t.getAgentID(), newAccount);
-			}
-			ids.add(account.ID);
-		}
-		
-		return ids;
+	public List<Tradeable> getList() {
+		return this.Tradeables;
 	}
 
-	public void add(List<Transaction> trans) {
-		this.transactions.addAll(trans);
+	public void add(List<Tradeable> trans) {
+		this.Tradeables.addAll(trans);
 	}
 
 }

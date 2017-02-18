@@ -1,7 +1,7 @@
 package brown.securities.cda;
 
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.TransactionOld;
 
-public class PendingTransaction extends Transaction {
+public class PendingTransaction extends TransactionOld {
 
 }

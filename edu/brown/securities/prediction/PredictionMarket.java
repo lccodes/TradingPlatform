@@ -3,10 +3,10 @@ package brown.securities.prediction;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.TransactionOld;
 import brown.messages.markets.PurchaseRequest;
 import brown.securities.MarketCreationException;
-import brown.securities.Security;
+import brown.securities.SecurityOld;
 import brown.securities.SecurityType;
 import brown.securities.SecurityWrapper;
 
@@ -16,13 +16,13 @@ import brown.securities.SecurityWrapper;
  *
  */
 public class PredictionMarket implements SecurityWrapper {
-	protected final Security pm;
+	protected final SecurityOld pm;
 	
 	public PredictionMarket() {
 		this.pm = null;
 	}
 	
-	public PredictionMarket(Security internal) throws MarketCreationException {
+	public PredictionMarket(SecurityOld internal) throws MarketCreationException {
 		if (internal == null) {
 			throw new MarketCreationException("Null PM");
 		}
@@ -102,13 +102,13 @@ public class PredictionMarket implements SecurityWrapper {
 	}
 
 	@Override
-	public SortedMap<Double, Transaction> getBuyOrders() {
+	public SortedMap<Double, TransactionOld> getBuyOrders() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SortedMap<Double, Transaction> getSellOrders() {
+	public SortedMap<Double, TransactionOld> getSellOrders() {
 		// TODO Auto-generated method stub
 		return null;
 	}
