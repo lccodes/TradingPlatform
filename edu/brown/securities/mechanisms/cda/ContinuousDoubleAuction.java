@@ -10,20 +10,16 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import brown.assets.accounting.Account;
-import brown.assets.accounting.Precleared;
 import brown.assets.accounting.Transaction;
 import brown.assets.value.Tradeable;
-import brown.assets.value.TradeableManager;
 import brown.auctions.TwoSidedAuction;
 import brown.auctions.TwoSidedWrapper;
 import brown.auctions.arules.AllocationType;
 import brown.securities.SecurityType;
-import brown.setup.Logging;
 
 public class ContinuousDoubleAuction implements TwoSidedAuction {
 	private final Integer ID;
-	private final TradeableManager MANAGER;
+	private final SecurityType TYPE;
 	private final SortedMap<Double, Set<Transaction>> pendingBuy;
 	private final SortedMap<Double, Set<Tradeable>> pendingSell;
 	
@@ -33,7 +29,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	 */
 	public ContinuousDoubleAuction() {
 		this.ID = null;
-		this.MANAGER = null;
+		this.TYPE = null;
 		this.pendingBuy = null;
 		this.pendingSell = null;
 	}
@@ -43,9 +39,9 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	 * @param ID : auction ID
 	 * @param type : SecurityType
 	 */
-	public ContinuousDoubleAuction(Integer ID, TradeableManager manager) {
+	public ContinuousDoubleAuction(Integer ID, SecurityType type) {
 		this.ID = ID;
-		this.MANAGER = manager;
+		this.TYPE = type;
 		this.pendingBuy = new TreeMap<Double, Set<Transaction>>(Collections.reverseOrder());
 		this.pendingSell = new TreeMap<Double, Set<Tradeable>>();
 	}
@@ -57,7 +53,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 
 	@Override
 	public SecurityType getType() {
-		return this.MANAGER.getType();
+		return this.TYPE;
 	}
 
 	@Override
@@ -70,11 +66,19 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 			
 			Set<Tradeable> opps = postedSell.getValue();
 			if (postedSell.getKey() <= sharePrice && shareNum > 0) {
+				Set<Tradeable> toRemove = new HashSet<Tradeable>();
 				for (Tradeable opp : opps) {
+					if (shareNum <= 0) {
+						break;
+					}
 					double quantity = Math.min(shareNum, opp.getCount());
 					completed.add(new Transaction(agentID, opp.getAgentID(), postedSell.getKey()*quantity, quantity, opp));
 					shareNum-=quantity;
+					if (quantity == opp.getCount()) {
+						toRemove.add(opp);
+					}
 				}
+				opps.removeAll(toRemove);
 			} else {
 				break;
 			}
@@ -93,8 +97,9 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public List<Transaction> ask(Integer agentID, double shareNum, double sharePrice) {
+	public List<Transaction> ask(Integer agentID, Tradeable opp, double sharePrice) {
 		List<Transaction> completed = new LinkedList<Transaction>();
+		double shareNum = opp.getCount();
 		for (Entry<Double, Set<Transaction>> wanted : this.pendingBuy.entrySet()) {
 			if (shareNum <= 0) {
 				break;
@@ -102,11 +107,22 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 			
 			Set<Transaction> want = wanted.getValue();
 			if (wanted.getKey() >= sharePrice && shareNum > 0) {
+				Set<Transaction> toRemove = new HashSet<Transaction>();
 				for (Transaction buy : want) {
-					double quantity = Math.min(shareNum, buy.QUANTITY);
-					completed.add(new Transaction(buy.FROM, agentID, sharePrice*quantity, quantity, null));
-					shareNum-=quantity;
+					if (shareNum <= 0) {
+						break;
+					}
+					double quantity = Math.min(opp.getCount(), buy.QUANTITY);
+					Tradeable toGive = quantity == opp.getCount() ? opp : opp.split(quantity);
+					completed.add(new Transaction(buy.FROM, agentID, sharePrice*quantity, quantity, toGive));
+					if (quantity == buy.QUANTITY) {
+						toRemove.add(buy);
+					} else {
+						buy.updateQuantity(buy.QUANTITY - quantity);
+					}
+					shareNum -= quantity;
 				}
+				want.removeAll(toRemove);
 			} else {
 				break;
 			}
@@ -117,8 +133,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 			if (wanted == null) {
 				wanted = new HashSet<Tradeable>();
 			}
-			wanted.add(new Precleared(agentID, shareNum, sharePrice, this.MANAGER.getType()));
-			completed.add(new Transaction(null, agentID, sharePrice, shareNum, null));
+			wanted.add(opp);
 			this.pendingSell.put(sharePrice, wanted);
 		}
 		
@@ -209,33 +224,4 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	public void tick(double time) {
 		// Noop
 	}
-
-	@Override
-	public Account close(Tradeable t) {
-		return this.MANAGER.close(t);
-	}
-
-	@Override
-	public void fixSellBook(Transaction former, Tradeable toreplace) {
-		Set<Tradeable> wanted = this.pendingSell.get(former.COST);
-		if (wanted == null) {
-			wanted = new HashSet<Tradeable>();
-		} else {
-			Tradeable getRid = null;
-			for (Tradeable t : wanted) {
-				if (t.getAgentID().equals(toreplace.getAgentID()) && t.getCount() == toreplace.getCount()) {
-					getRid = t;
-					break;
-				}
-			}
-			if (getRid != null) {
-				wanted.remove(getRid);
-			} else {
-				Logging.log("[X] missing precleared record " + former.FROM);
-			}
-		}
-		wanted.add(toreplace);
-		this.pendingSell.put(former.COST, wanted);
-	}
-
 }

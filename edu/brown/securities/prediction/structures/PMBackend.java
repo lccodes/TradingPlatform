@@ -61,7 +61,7 @@ public class PMBackend {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double bid(int shareNum) {
+	public double bid(double shareNum) {
 		return cost(shareNum, 0);
 	}
 	
@@ -70,7 +70,7 @@ public class PMBackend {
 	 * @param shareNum : int
 	 * @return cost : double
 	 */
-	public double ask(int shareNum) {
+	public double ask(double shareNum) {
 		return cost(0, shareNum);
 	}
 	

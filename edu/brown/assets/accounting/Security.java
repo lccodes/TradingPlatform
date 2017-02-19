@@ -1,51 +1,48 @@
 package brown.assets.accounting;
 
+import java.util.function.Function;
+
+import brown.assets.value.State;
 import brown.assets.value.Tradeable;
-import brown.auctions.TwoSidedAuction;
+import brown.securities.SecurityType;
 
 public class Security implements Tradeable {
-	private final TwoSidedAuction TSA;
-	private final double count;
+	private double count;
 	private Integer agentID;
-	private final double price;
-	private final long timestamp;
-	private final boolean CONVERTABLE;
+	
+	private final long TIMESTAMP;
+	private final SecurityType TYPE;
+	private final Function<State, Account> CLOSURE;
+	
 	
 	/**
 	 * Empty constructor for kryo; do not use
 	 */
 	public Security() {
-		this.TSA = null;
 		this.count = 0;
 		this.agentID = null;
-		this.price = 0;
-		this.timestamp = 0;
-		this.CONVERTABLE = true;
+		this.TIMESTAMP = 0;
+		this.TYPE = null;
+		this.CLOSURE = null;
 	}
 	
 	/**
-	 * Constructor for transaction
-	 * @param TSA : which TSA this transaction pertains to
-	 * @param count : number of shares
-	 * @param ID : ID of the agent
-	 * @param price : price that it was transacted at
-	 * @param pending : completed or pending?
+	 * Security constructor.
+	 * @param agentID : owner
+	 * @param count : amount
+	 * @param type : type
+	 * @param closure : what to do when it is closed; nullable
 	 */
-	public Security(TwoSidedAuction TSA, double count, Integer ID, double price, boolean convertable) {
-		this.TSA = TSA;
+	public Security(Integer agentID, double count, SecurityType type, Function<State,Account> closure) {
+		this.agentID = agentID;
 		this.count = count;
-		this.agentID = ID;
-		this.price = price;
-		this.CONVERTABLE = convertable;
-		this.timestamp = System.currentTimeMillis();
-	}
-	
-	/**
-	 * Gets the TSA
-	 * @return TSA
-	 */
-	public TwoSidedAuction getAuction() {
-		return TSA;
+		this.TIMESTAMP = System.currentTimeMillis();
+		this.TYPE = type;
+		if (closure == null) {
+			this.CLOSURE = state -> null;
+		} else {
+			this.CLOSURE = closure;
+		}
 	}
 	
 	/**
@@ -65,30 +62,36 @@ public class Security implements Tradeable {
 	}
 	
 	/**
-	 * Gets the price transacted at
-	 * @return price
-	 */
-	public double getTransactedPrice() {
-		return price;
-	}
-	
-	/**
 	 * Gets the time transacted at
 	 * @return time
 	 */
 	public long getTimestamp() {
-		return timestamp;
-	}
-	
-	/**
-	 * Gets pending status
-	 */
-	public boolean isPending() {
-		return this.CONVERTABLE;
+		return this.TIMESTAMP;
 	}
 
 	@Override
 	public void setAgentID(Integer ID) {
 		this.agentID = ID;
+	}
+
+	@Override
+	public void setCount(double count) {
+		this.count = count;
+	}
+
+	@Override
+	public Account close(State closingState) {
+		return this.CLOSURE.apply(closingState);
+	}
+
+	@Override
+	public Tradeable split(double newCount) {
+		this.count = this.count - newCount;
+		return new Security(this.agentID, newCount, this.TYPE, this.CLOSURE);
+	}
+
+	@Override
+	public SecurityType getType() {
+		return this.TYPE;
 	}
 }

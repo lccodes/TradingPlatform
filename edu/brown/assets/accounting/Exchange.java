@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import brown.assets.value.State;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
 import brown.server.AgentServer;
@@ -18,12 +19,16 @@ public class Exchange {
 		this.tsauctions = new ConcurrentHashMap<Integer, TwoSidedAuction>();
 	}
 	
-	public void close(AgentServer server, TwoSidedAuction tsa) {
+	public void close(AgentServer server, TwoSidedAuction tsa, State closingState) {
 		synchronized(tsa){
-			for (Tradeable t : this.ledgers.get(tsa).getList()) {
-				Account toReplace = tsa.close(t);
-				if (toReplace == null || toReplace.ID == null) {
+			for (Tradeable t : this.ledgers.get(tsa).getSet()) {
+				Account toReplace = t.close(closingState);
+				if (toReplace == null) {
 					continue;
+				}
+				Integer toReplaceID = toReplace.ID;
+				if (toReplaceID == null) {
+					toReplaceID = t.getAgentID();
 				}
 				
 				synchronized(t.getAgentID()) {
@@ -35,13 +40,13 @@ public class Exchange {
 					server.setAccount(t.getAgentID(), oldAccount.remove(0, t));
 				}
 				
-				synchronized(toReplace.ID) {
-					Account oldAccount = server.publicToAccount(toReplace.ID);
+				synchronized(toReplaceID) {
+					Account oldAccount = server.publicToAccount(toReplaceID);
 					if (oldAccount == null) {
-						Logging.log("[X] agent without account " + toReplace.ID);
+						Logging.log("[X] agent without account " + toReplaceID);
 						continue;
 					}
-					server.setAccount(toReplace.ID, oldAccount.add(toReplace.monies, new HashSet<Tradeable>(toReplace.goods)));
+					server.setAccount(toReplaceID, oldAccount.add(toReplace.monies, new HashSet<Tradeable>(toReplace.goods)));
 				}
 				
 				//TODO: Where to update?
@@ -53,9 +58,9 @@ public class Exchange {
 		}
 	}
 	
-	public void close(AgentServer server, Integer ID) {
+	public void close(AgentServer server, Integer ID, State closingState) {
 		TwoSidedAuction tsa = tsauctions.get(ID);
-		close(server, tsa);
+		close(server, tsa, closingState);
 	}
 	
 	public boolean open(TwoSidedAuction tsa) {

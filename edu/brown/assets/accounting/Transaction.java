@@ -7,7 +7,7 @@ public class Transaction {
 	public final Tradeable GOOD;
 	public final Integer FROM;
 	public final double COST;
-	public final double QUANTITY;
+	public double QUANTITY;
 	
 	public Transaction(Integer to, Integer from, double cost, double quantity, Tradeable good) {
 		this.TO = to;
@@ -15,6 +15,10 @@ public class Transaction {
 		this.COST = cost;
 		this.QUANTITY = quantity;
 		this.GOOD = good;
+	}
+	
+	public void updateQuantity(double quantity) {
+		this.QUANTITY = quantity;
 	}
 
 }

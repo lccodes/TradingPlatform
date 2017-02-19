@@ -101,12 +101,16 @@ public class Account {
 		return new Account(this.ID, this.monies-removeMonies, this.goods);
 	}
 
-	public Account remove(int removeMonies, Tradeable t) {
+	public Account remove(double removeMonies, Tradeable t) {
 		if (t == null) {
 			return new Account(this.ID, this.monies-removeMonies, this.goods);
 		}
 		
 		this.goods.remove(t);
 		return new Account(this.ID, this.monies-removeMonies, this.goods);
+	}
+
+	public Account add(double add) {
+		return new Account(this.ID, this.monies+add, this.goods);
 	}
 }

@@ -1,13 +1,14 @@
 package brown.assets.accounting;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
 
 public class Ledger {
-	protected List<Tradeable> Tradeables;
+	protected Set<Tradeable> Tradeables;
 	protected final TwoSidedAuction tsa;
 	
 	/**
@@ -16,7 +17,7 @@ public class Ledger {
 	 */
 	public Ledger(TwoSidedAuction tsa) {
 		this.tsa = tsa;
-		this.Tradeables = new LinkedList<Tradeable>();
+		this.Tradeables = new HashSet<Tradeable>();
 	}
 	
 	/**
@@ -28,19 +29,10 @@ public class Ledger {
 	}
 	
 	/**
-	 * Gets a Tradeable
-	 * @param i : the index of the Tradeable to get
-	 * @return Tradeable i
+	 * Constructs a set of the Tradeables
+	 * @return set
 	 */
-	public Tradeable get(int i) {
-		return Tradeables.get(i);
-	}
-	
-	/**
-	 * Constructs an iterator over the Tradeables
-	 * @return iterator
-	 */
-	public List<Tradeable> getList() {
+	public Set<Tradeable> getSet() {
 		return this.Tradeables;
 	}
 
