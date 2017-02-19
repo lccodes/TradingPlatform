@@ -182,12 +182,13 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 			}
 		}
 		
-		return cost == 0 ? Double.MAX_VALUE : cost;
+		return cost;
 	}
 
 	@Override
 	public double quoteBid(double shareNum, double sharePrice) {
-		return this.cost(shareNum, 0);
+		double cost = this.cost(shareNum, 0);
+		return cost == 0 ? shareNum*sharePrice : cost;
 	}
 
 	@Override

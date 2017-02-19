@@ -137,50 +137,58 @@ public abstract class AgentServer {
 			}
 			
 			if (limitorder.buyShares > 0) {
-				//TODO: Check that agent can afford first
-				List<Transaction> trans = market.bid(privateID, limitorder.buyShares, limitorder.price);
-				for (Transaction t : trans) {
-					Tradeable split = null;
-					if (t.GOOD.getCount() > t.QUANTITY) {
-						split = t.GOOD.split(t.QUANTITY);
-						ledger.add(split);
+				synchronized(privateID) {
+					Account account = this.bank.get(privateID);
+					if (account.monies < market.quoteBid(limitorder.buyShares, limitorder.price)) {
+						Rejection rej = new Rejection(privateID, limitorder);
+						this.theServer.sendToTCP(connection.getID(), rej);
+						return;
 					}
 					
-					if (t.FROM != null) {
-						synchronized(t.FROM) {
-							Account fromBank = this.bank.get(t.FROM);
-							if (!fromBank.goods.contains(t.GOOD)) {
-								//TODO: Deal with this case
-							}
-							Account finalUpdatedFrom = fromBank.add(t.COST, new HashSet<Tradeable>());
-							if (split == null) {
-								finalUpdatedFrom = finalUpdatedFrom.remove(0, t.GOOD);
-							}
-							this.bank.put(t.FROM, finalUpdatedFrom);
-							//TODO: Send bank update
+					List<Transaction> trans = market.bid(privateID, limitorder.buyShares, limitorder.price);
+					for (Transaction t : trans) {
+						Tradeable split = null;
+						if (t.GOOD.getCount() > t.QUANTITY) {
+							split = t.GOOD.split(t.QUANTITY);
+							ledger.add(split);
 						}
-					}
-					
-					if (t.TO != null) {
-						synchronized(t.TO) {
-							Account toBank = this.bank.get(t.TO);
-							if (toBank.monies >= t.COST) {
-								if (split == null) {
-									t.GOOD.setAgentID(t.TO);
-									toBank = toBank.add(-1 * t.COST, t.GOOD);
-								} else {
-									split.setAgentID(t.TO);
-									toBank = toBank.add(-1 * t.COST, split);
+						
+						if (t.FROM != null) {
+							synchronized(t.FROM) {
+								Account fromBank = this.bank.get(t.FROM);
+								if (!fromBank.goods.contains(t.GOOD)) {
+									//TODO: Deal with this case
 								}
-								this.bank.put(t.TO, toBank);
+								Account finalUpdatedFrom = fromBank.add(t.COST, new HashSet<Tradeable>());
+								if (split == null) {
+									finalUpdatedFrom = finalUpdatedFrom.remove(0, t.GOOD);
+								}
+								this.bank.put(t.FROM, finalUpdatedFrom);
 								//TODO: Send bank update
-							} else {
-								//TODO: Could not afford
 							}
 						}
+						
+						if (t.TO != null) {
+							synchronized(t.TO) {
+								Account toBank = this.bank.get(t.TO);
+								if (toBank.monies >= t.COST) {
+									if (split == null) {
+										t.GOOD.setAgentID(t.TO);
+										toBank = toBank.add(-1 * t.COST, t.GOOD);
+									} else {
+										split.setAgentID(t.TO);
+										toBank = toBank.add(-1 * t.COST, split);
+									}
+									this.bank.put(t.TO, toBank);
+									//TODO: Send bank update
+								} else {
+									//TODO: Could not afford
+								}
+							}
+						}
+						
+						ledger.add(t.GOOD);
 					}
-					
-					ledger.add(t.GOOD);
 				}
 			} else if (limitorder.sellShares > 0) {
 				synchronized(privateID) {

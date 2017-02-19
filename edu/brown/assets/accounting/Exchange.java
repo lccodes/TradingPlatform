@@ -22,15 +22,6 @@ public class Exchange {
 	public void close(AgentServer server, TwoSidedAuction tsa, State closingState) {
 		synchronized(tsa){
 			for (Tradeable t : this.ledgers.get(tsa).getSet()) {
-				Account toReplace = t.close(closingState);
-				if (toReplace == null) {
-					continue;
-				}
-				Integer toReplaceID = toReplace.ID;
-				if (toReplaceID == null) {
-					toReplaceID = t.getAgentID();
-				}
-				
 				synchronized(t.getAgentID()) {
 					Account oldAccount = server.publicToAccount(t.getAgentID());
 					if (oldAccount == null) {
@@ -40,16 +31,24 @@ public class Exchange {
 					server.setAccount(t.getAgentID(), oldAccount.remove(0, t));
 				}
 				
-				synchronized(toReplaceID) {
-					Account oldAccount = server.publicToAccount(toReplaceID);
-					if (oldAccount == null) {
-						Logging.log("[X] agent without account " + toReplaceID);
-						continue;
+				Account toReplace = t.close(closingState);
+				if (toReplace != null) {
+					Integer toReplaceID = toReplace.ID;
+					if (toReplaceID == null) {
+						toReplaceID = t.getAgentID();
 					}
-					server.setAccount(toReplaceID, oldAccount.add(toReplace.monies, new HashSet<Tradeable>(toReplace.goods)));
+					
+					synchronized(toReplaceID) {
+						Account oldAccount = server.publicToAccount(toReplaceID);
+						if (oldAccount == null) {
+							Logging.log("[X] agent without account " + toReplaceID);
+							continue;
+						}
+						server.setAccount(toReplaceID, oldAccount.add(toReplace.monies, new HashSet<Tradeable>(toReplace.goods)));
+					}
 				}
 				
-				//TODO: Where to update?
+				//TODO: Send bank update
 			}
 			
 			
