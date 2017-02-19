@@ -1,4 +1,4 @@
-package brown.securities.prediction.structures;
+package brown.securities.mechanisms.lmsr;
 
 /**
  * Private backend prediction market implementation

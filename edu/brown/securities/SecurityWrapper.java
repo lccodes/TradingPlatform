@@ -4,6 +4,7 @@ import java.util.SortedMap;
 
 import brown.agent.Agent;
 import brown.assets.accounting.TransactionOld;
+import brown.assets.value.SecurityType;
 
 public interface SecurityWrapper {
 	

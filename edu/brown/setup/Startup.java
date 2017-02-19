@@ -26,8 +26,8 @@ import brown.messages.trades.Trade;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.SecurityOld;
 import brown.securities.SecurityWrapper;
+import brown.securities.mechanisms.lmsr.PMBackend;
 import brown.securities.prediction.PredictionMarket;
-import brown.securities.prediction.structures.PMBackend;
 import brown.securities.prediction.structures.PMNo;
 import brown.securities.prediction.structures.PMYes;
 

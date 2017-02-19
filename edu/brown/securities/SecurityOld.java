@@ -3,6 +3,7 @@ package brown.securities;
 import java.util.List;
 
 import brown.assets.accounting.TransactionOld;
+import brown.assets.value.SecurityType;
 
 public interface SecurityOld {
 	

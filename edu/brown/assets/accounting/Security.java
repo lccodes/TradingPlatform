@@ -1,17 +1,18 @@
 package brown.assets.accounting;
 
+import java.util.Map;
 import java.util.function.Function;
 
+import brown.assets.value.SecurityType;
 import brown.assets.value.State;
 import brown.assets.value.Tradeable;
-import brown.securities.SecurityType;
 
 public class Security implements Tradeable {
 	private double count;
 	private Integer agentID;
 	
 	private final long TIMESTAMP;
-	private final SecurityType TYPE;
+	private final Map.Entry<SecurityType, Integer> TYPE;
 	private final Function<State, Account> CLOSURE;
 	
 	
@@ -33,7 +34,8 @@ public class Security implements Tradeable {
 	 * @param type : type
 	 * @param closure : what to do when it is closed; nullable
 	 */
-	public Security(Integer agentID, double count, SecurityType type, Function<State,Account> closure) {
+	public Security(Integer agentID, double count, Map.Entry<SecurityType, Integer> type,
+			Function<State,Account> closure) {
 		this.agentID = agentID;
 		this.count = count;
 		this.TIMESTAMP = System.currentTimeMillis();
@@ -91,7 +93,7 @@ public class Security implements Tradeable {
 	}
 
 	@Override
-	public SecurityType getType() {
+	public Map.Entry<SecurityType, Integer> getType() {
 		return this.TYPE;
 	}
 }

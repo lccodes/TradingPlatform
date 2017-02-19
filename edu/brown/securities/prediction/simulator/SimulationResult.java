@@ -3,7 +3,7 @@ package brown.securities.prediction.simulator;
 import java.util.HashMap;
 import java.util.Map;
 
-import brown.securities.prediction.structures.PMBackend;
+import brown.securities.mechanisms.lmsr.PMBackend;
 
 public class SimulationResult {
 	private Map<PMBackend, Integer> marketmakerID;

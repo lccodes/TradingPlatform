@@ -198,6 +198,7 @@ public abstract class AgentServer {
 						if (qToSell <= 0) {
 							break;
 						}
+						
 						if (tradeable.getType().equals(market.getType())) {
 							Tradeable toSell = tradeable;
 							if (tradeable.getCount() > qToSell) {

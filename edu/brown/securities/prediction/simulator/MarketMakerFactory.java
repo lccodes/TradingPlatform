@@ -3,7 +3,7 @@ package brown.securities.prediction.simulator;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.securities.prediction.structures.PMBackend;
+import brown.securities.mechanisms.lmsr.PMBackend;
 
 public class MarketMakerFactory {
 	private List<PMBackend> marketMakers;

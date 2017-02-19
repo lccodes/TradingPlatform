@@ -1,6 +1,6 @@
 package brown.securities.prediction;
 
-import brown.securities.prediction.structures.PMBackend;
+import brown.securities.mechanisms.lmsr.PMBackend;
 import brown.securities.prediction.structures.PMNo;
 import brown.securities.prediction.structures.PMYes;
 

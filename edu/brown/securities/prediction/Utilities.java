@@ -2,7 +2,7 @@ package brown.securities.prediction;
 
 import java.util.Arrays;
 
-import brown.securities.prediction.structures.PMBackend;
+import brown.securities.mechanisms.lmsr.PMBackend;
 
 public final class Utilities {
 	

@@ -1,37 +1,41 @@
 package brown.securities.mechanisms.lmsr;
 
+import java.util.AbstractMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Security;
 import brown.assets.accounting.Transaction;
+import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
 import brown.auctions.TwoSidedWrapper;
 import brown.auctions.arules.AllocationType;
-import brown.securities.SecurityType;
-import brown.securities.prediction.structures.PMBackend;
 
 public class LMSRYes implements TwoSidedAuction {
-	private final Integer ID;
+	private final Integer MARKETID;
 	private final PMBackend BACKEND;
+	private final Map.Entry<SecurityType, Integer> TYPE;
 	
 	public LMSRYes() {
-		this.ID = null;
+		this.MARKETID = null;
 		this.BACKEND = null;
+		this.TYPE = null;
 	}
 	
-	public LMSRYes(Integer ID, PMBackend backend) {
-		this.ID = ID;
+	public LMSRYes(Integer marketID, PMBackend backend, Integer securityID) {
+		this.MARKETID = marketID;
 		this.BACKEND = backend;
+		this.TYPE = new AbstractMap.SimpleEntry<SecurityType, Integer>(SecurityType.PredictionYes, securityID);
 	}
 
 	@Override
 	public Integer getID() {
-		return this.ID;
+		return this.MARKETID;
 	}
 
 	@Override
@@ -45,8 +49,8 @@ public class LMSRYes implements TwoSidedAuction {
 	}
 
 	@Override
-	public SecurityType getType() {
-		return SecurityType.PredictionYes;
+	public Map.Entry<SecurityType, Integer> getType() {
+		return this.TYPE;
 	}
 
 	@Override
@@ -54,7 +58,7 @@ public class LMSRYes implements TwoSidedAuction {
 		double cost = this.BACKEND.bid(shareNum);
 		this.BACKEND.yes(null, shareNum);
 		List<Transaction> trans = new LinkedList<Transaction>();
-		Security newSec = new Security(agentID, shareNum, SecurityType.PredictionYes, 
+		Security newSec = new Security(agentID, shareNum, this.TYPE,
 				state -> state.getState() == 1 ? new Account(null).add(1) : null);
 		trans.add(new Transaction(agentID, null, cost, shareNum, newSec));
 		return trans;

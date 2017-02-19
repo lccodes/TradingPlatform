@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 import brown.securities.SecurityFactory;
+import brown.securities.mechanisms.lmsr.PMBackend;
 import brown.securities.prediction.PMTriple;
-import brown.securities.prediction.structures.PMBackend;
 
 /*
  * It appears that for all bidders and all budgets and all orderings there exists

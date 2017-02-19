@@ -2,9 +2,9 @@ package brown.securities;
 
 import java.lang.reflect.InvocationTargetException;
 
+import brown.securities.mechanisms.lmsr.PMBackend;
 import brown.securities.prediction.PMLedger;
 import brown.securities.prediction.PMTriple;
-import brown.securities.prediction.structures.PMBackend;
 import brown.securities.prediction.structures.PMNo;
 import brown.securities.prediction.structures.PMYes;
 

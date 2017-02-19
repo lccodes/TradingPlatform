@@ -1,7 +1,8 @@
 package brown.assets.value;
 
+import java.util.Map;
+
 import brown.assets.accounting.Account;
-import brown.securities.SecurityType;
 
 /**
  * All non-cash assets will extend this class
@@ -12,7 +13,7 @@ public interface Tradeable {
 	void setAgentID(Integer ID);
 	double getCount();
 	void setCount(double count);
-	SecurityType getType();
+	Map.Entry<SecurityType, Integer> getType();
 	
 	Account close(State closingState);
 	Tradeable split(double newCount);

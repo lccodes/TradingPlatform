@@ -3,7 +3,7 @@ package brown.securities.prediction.marketmakers.types;
 import java.util.HashMap;
 import java.util.Map;
 
-import brown.securities.prediction.structures.PMBackend;
+import brown.securities.mechanisms.lmsr.PMBackend;
 
 public abstract class NoRegret extends PMBackend {
 	protected Map<Integer, Double> weights;

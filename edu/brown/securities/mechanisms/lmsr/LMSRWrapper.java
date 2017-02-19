@@ -1,15 +1,13 @@
 package brown.securities.mechanisms.lmsr;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.accounting.Transaction;
-import brown.assets.value.Tradeable;
+import brown.assets.value.SecurityType;
 import brown.auctions.TwoSidedAuction;
 import brown.auctions.TwoSidedWrapper;
 import brown.messages.markets.LimitOrder;
-import brown.securities.SecurityType;
 
 public class LMSRWrapper implements TwoSidedWrapper {
 	private final TwoSidedAuction LMSR;
@@ -32,7 +30,7 @@ public class LMSRWrapper implements TwoSidedWrapper {
 	}
 
 	@Override
-	public SecurityType getType() {
+	public Map.Entry<SecurityType, Integer> getType() {
 		return this.LMSR.getType();
 	}
 
@@ -57,12 +55,12 @@ public class LMSRWrapper implements TwoSidedWrapper {
 	}
 
 	@Override
-	public SortedMap<Double, Set<Transaction>> getBuyBook() {
+	public SortedMap<Double, Double> getBuyBook() {
 		return null;
 	}
 
 	@Override
-	public SortedMap<Double, Set<Tradeable>> getSellBook() {
+	public SortedMap<Double, Double> getSellBook() {
 		return null;
 	}
 

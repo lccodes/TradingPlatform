@@ -1,6 +1,6 @@
 package brown.securities.prediction.marketmakers.types;
 
-import brown.securities.prediction.structures.PMBackend;
+import brown.securities.mechanisms.lmsr.PMBackend;
 
 public abstract class OnlineLearning extends PMBackend {
 	protected double pastWeight;

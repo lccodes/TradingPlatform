@@ -1,32 +1,37 @@
 package brown.securities.mechanisms.lmsr;
 
+import java.util.AbstractMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Security;
 import brown.assets.accounting.Transaction;
+import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
 import brown.auctions.TwoSidedWrapper;
 import brown.auctions.arules.AllocationType;
-import brown.securities.SecurityType;
-import brown.securities.prediction.structures.PMBackend;
 
 public class LMSRNo implements TwoSidedAuction {
 	private final Integer ID;
 	private final PMBackend BACKEND;
+	private final Map.Entry<SecurityType, Integer> TYPE;
 	
 	public LMSRNo() {
 		this.ID = null;
 		this.BACKEND = null;
+		this.TYPE = null;
 	}
 	
-	public LMSRNo(Integer ID, PMBackend backend) {
+	public LMSRNo(Integer ID, PMBackend backend, int securityID) {
 		this.ID = ID;
 		this.BACKEND = backend;
+		this.TYPE = new AbstractMap.SimpleEntry<SecurityType, Integer>(SecurityType.PredicitonNo, 
+				securityID);
 	}
 
 	@Override
@@ -45,8 +50,8 @@ public class LMSRNo implements TwoSidedAuction {
 	}
 
 	@Override
-	public SecurityType getType() {
-		return SecurityType.PredicitonNo;
+	public Map.Entry<SecurityType, Integer> getType() {
+		return this.TYPE;
 	}
 
 	@Override
@@ -54,7 +59,7 @@ public class LMSRNo implements TwoSidedAuction {
 		double cost = this.BACKEND.ask(shareNum);
 		this.BACKEND.no(null, shareNum);
 		List<Transaction> trans = new LinkedList<Transaction>();
-		Security newSec = new Security(agentID, shareNum, SecurityType.PredicitonNo, 
+		Security newSec = new Security(agentID, shareNum, this.TYPE,
 				state -> state.getState() == 0 ? new Account(null).add(1) : null);
 		trans.add(new Transaction(agentID, null, cost, shareNum, newSec));
 		return trans;

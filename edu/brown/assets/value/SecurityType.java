@@ -1,7 +1,7 @@
-package brown.securities;
+package brown.assets.value;
 
 public enum SecurityType {
 	PredictionYes,
 	PredicitonNo,
-	CDA
+	CDA;
 }

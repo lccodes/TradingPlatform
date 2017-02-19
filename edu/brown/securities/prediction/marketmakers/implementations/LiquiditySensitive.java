@@ -1,6 +1,6 @@
 package brown.securities.prediction.marketmakers.implementations;
 
-import brown.securities.prediction.structures.PMBackend;
+import brown.securities.mechanisms.lmsr.PMBackend;
 
 public class LiquiditySensitive extends PMBackend {
 	

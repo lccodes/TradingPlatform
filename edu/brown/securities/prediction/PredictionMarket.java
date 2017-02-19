@@ -4,10 +4,10 @@ import java.util.SortedMap;
 
 import brown.agent.Agent;
 import brown.assets.accounting.TransactionOld;
+import brown.assets.value.SecurityType;
 import brown.messages.markets.PurchaseRequest;
 import brown.securities.MarketCreationException;
 import brown.securities.SecurityOld;
-import brown.securities.SecurityType;
 import brown.securities.SecurityWrapper;
 
 /**
