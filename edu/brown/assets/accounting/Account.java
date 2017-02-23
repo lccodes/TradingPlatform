@@ -113,4 +113,13 @@ public class Account {
 	public Account add(double add) {
 		return new Account(this.ID, this.monies+add, this.goods);
 	}
+	
+	public Account toAgent() {
+		List<Tradeable> forAgent = new LinkedList<Tradeable>();
+		for (Tradeable t : this.goods) {
+			forAgent.add(t.toAgent());
+		}
+		
+		return new Account(this.ID,this.monies, forAgent);
+	}
 }

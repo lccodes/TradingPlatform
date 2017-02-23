@@ -1,10 +1,8 @@
-package brown.assets.accounting;
+package brown.assets.value;
 
 import java.util.function.Function;
 
-import brown.assets.value.FullType;
-import brown.assets.value.State;
-import brown.assets.value.Tradeable;
+import brown.assets.accounting.Account;
 
 public class Security implements Tradeable {
 	private double count;
@@ -94,5 +92,10 @@ public class Security implements Tradeable {
 	@Override
 	public FullType getType() {
 		return this.TYPE;
+	}
+
+	@Override
+	public Tradeable toAgent() {
+		return new AgentSecurity(this);
 	}
 }

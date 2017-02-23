@@ -98,10 +98,9 @@ public abstract class Agent {
 			MarketUpdate mu = (MarketUpdate) message;
 			switch(mu.MECHANISM) {
 			case ContinuousDoubleAuction:
-				this.onContinuousDoubleAuction(mu.TMARKET.wrap());
+				this.onContinuousDoubleAuction(mu.TMARKET);
 			case LMSR:
-				System.out.println(mu.TMARKET);
-				this.onLMSR(mu.TMARKET.wrap());
+				this.onLMSR(mu.TMARKET);
 			case OpenOutcry:
 				this.onOpenOutcry(mu.OMARKET);
 			case SealedBid:

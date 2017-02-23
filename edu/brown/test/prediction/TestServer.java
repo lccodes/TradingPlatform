@@ -6,7 +6,6 @@ import java.util.List;
 import brown.assets.accounting.Account;
 import brown.auctions.TwoSidedAuction;
 import brown.messages.Registration;
-import brown.messages.markets.MarketUpdate;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
 import brown.securities.mechanisms.lmsr.LMSRNo;
 import brown.securities.mechanisms.lmsr.LMSRYes;
@@ -43,15 +42,11 @@ public class TestServer extends AgentServer {
 		this.exchange.close(this, 1, new TestState(yes));
 		this.exchange.close(this, 2, new TestState(yes));
 	}
-
-	public void startGame() {
-		this.exchange.open(new LMSRYes(1, BACKEND));
-		this.exchange.open(new LMSRNo(2, BACKEND));
-		System.out.println("[-] markets added");
-		
+	
+	private void delay(int amt) {
 		// Gives everyone 20 seconds to join the auction
 	    int i = 0;
-	    while (i < 3) {
+	    while (i < amt) {
 	      try {
 	        Thread.sleep(1000);
 	        Logging.log("[-] setup phase " + i++);
@@ -59,15 +54,25 @@ public class TestServer extends AgentServer {
 	        Logging.log("[+] woken: " + e.getMessage());
 	      }
 	    }
+	}
+
+	public void startGame() {
+		this.exchange.open(new LMSRYes(1, BACKEND));
+		this.exchange.open(new LMSRNo(2, BACKEND));
+		System.out.println("[-] markets added");
+		
+		delay(2);
 	    
 	    Logging.log("Start!");
-	    //for (TwoSidedAuction market : this.exchange.getAuctions()) {
-	    	//this.sendMarketUpdate(market);
-	    TwoSidedAuction market = this.exchange.getTwoSidedAuction(1);
-	    this.theServer.sendToAllTCP(new MarketUpdate(0, market, market.getMechanismType()));
-	    //}
+	    for (TwoSidedAuction market : this.exchange.getAuctions()) {
+	    	this.sendMarketUpdate(market);
+	    	//this.theServer.sendToAllTCP(new MarketUpdate(0, market, market.getMechanismType()));
+	    }
 	    
-	    //TODO: Scan to close markets
+	    delay(3);
+	    TestState endState = new TestState(false);
+	    this.exchange.close(this, 1, endState);
+	    this.exchange.close(this, 2, endState);
 	}
 
 }

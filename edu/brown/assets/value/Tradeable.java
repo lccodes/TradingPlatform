@@ -15,4 +15,5 @@ public interface Tradeable {
 	
 	Account close(State closingState);
 	Tradeable split(double newCount);
+	Tradeable toAgent();
 }

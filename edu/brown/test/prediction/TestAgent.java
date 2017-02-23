@@ -45,10 +45,10 @@ public class TestAgent extends Agent {
 	@Override
 	protected void onLMSR(TwoSidedWrapper market) {
 		Logging.log("cost " + market.quoteBid(1, 0));
-		if (!this.done) {
+		if (!this.done && Math.random() < .5) {
 			this.done = true;
 			market.buy(this, 1, 0);
-			Logging.log("bought 1");
+			Logging.log("bought 1 " + market.getType().TYPE);
 		}
 	}
 

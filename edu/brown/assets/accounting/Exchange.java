@@ -20,19 +20,31 @@ public class Exchange {
 		this.tsauctions = new ConcurrentHashMap<Integer, TwoSidedAuction>();
 	}
 	
+	/**
+	 * Closes a market
+	 * TODO: Close pair markets together i.e. PMs
+	 * @param server
+	 * @param tsa
+	 * @param closingState
+	 */
 	public void close(AgentServer server, TwoSidedAuction tsa, State closingState) {
 		synchronized(tsa){
 			for (Tradeable t : this.ledgers.get(tsa).getSet()) {
+				Account toReplace = t.close(closingState);
 				synchronized(t.getAgentID()) {
-					Account oldAccount = server.publicToAccount(t.getAgentID());
+					Account oldAccount = server.privateToAccount(t.getAgentID());
 					if (oldAccount == null) {
 						Logging.log("[X] agent without account " + t.getAgentID());
 						continue;
 					}
-					server.setAccount(t.getAgentID(), oldAccount.remove(0, t));
+					
+					Account newAccount = oldAccount.remove(0, t);
+					server.setAccount(t.getAgentID(), newAccount);
+					if (toReplace != null && toReplace.ID != null && !toReplace.ID.equals(t.getAgentID())) {
+						server.sendBankUpdate(t.getAgentID(), oldAccount, newAccount);
+					}
 				}
 				
-				Account toReplace = t.close(closingState);
 				if (toReplace != null) {
 					Integer toReplaceID = toReplace.ID;
 					if (toReplaceID == null) {
@@ -40,16 +52,17 @@ public class Exchange {
 					}
 					
 					synchronized(toReplaceID) {
-						Account oldAccount = server.publicToAccount(toReplaceID);
+						Account oldAccount = server.privateToAccount(toReplaceID);
 						if (oldAccount == null) {
 							Logging.log("[X] agent without account " + toReplaceID);
 							continue;
 						}
-						server.setAccount(toReplaceID, oldAccount.add(toReplace.monies, new HashSet<Tradeable>(toReplace.goods)));
+						
+						Account newAccount = oldAccount.add(toReplace.monies, new HashSet<Tradeable>(toReplace.goods));
+						server.setAccount(toReplaceID, newAccount);
+						server.sendBankUpdate(toReplaceID, oldAccount, newAccount);
 					}
 				}
-				
-				//TODO: Send bank update
 			}
 			
 			

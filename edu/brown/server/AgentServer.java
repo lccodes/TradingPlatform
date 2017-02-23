@@ -431,7 +431,11 @@ public abstract class AgentServer {
 				if (connection == null) {
 					continue;
 				}
-				BankUpdate bu = new BankUpdate(ID, null, bank.get(ID));
+				Account account = this.bank.get(ID);
+				if (account == null) {
+					continue;
+				}
+				BankUpdate bu = new BankUpdate(ID, null, account.toAgent());
 				theServer.sendToTCP(connection.getID(), bu);
 			}
 		}
@@ -567,11 +571,11 @@ public abstract class AgentServer {
 	}
 
 	/*
-	 * Sets an agent's bank account from its public ID
+	 * Sets an agent's bank account from its private ID
 	 */
 	public void setAccount(Integer id, Account account) {
 		synchronized (id) {
-			bank.put(publicToPrivate(id), account);
+			bank.put(id, account);
 		}
 	}
 
@@ -601,7 +605,7 @@ public abstract class AgentServer {
 	 * @param newA
 	 */
 	public void sendBankUpdate(Integer ID, Account oldA, Account newA) {
-		BankUpdate bu = new BankUpdate(ID, oldA, newA);
+		BankUpdate bu = new BankUpdate(ID, oldA.toAgent(), newA.toAgent());
 		theServer.sendToTCP(this.privateToConnection(ID).getID(), bu);
 	}
 

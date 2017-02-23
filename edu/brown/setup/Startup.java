@@ -9,9 +9,10 @@ import java.util.TreeSet;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Account;
-import brown.assets.accounting.Security;
 import brown.assets.accounting.TransactionOld;
+import brown.assets.value.AgentSecurity;
 import brown.assets.value.FullType;
+import brown.assets.value.Security;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
@@ -92,6 +93,7 @@ public final class Startup {
 		kryo.register(SecurityType.class);
 		kryo.register(FullType.class);
 		kryo.register(Security.class);
+		kryo.register(AgentSecurity.class);
 		
 		return true;
 	}

@@ -6,9 +6,9 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
-import brown.assets.accounting.Security;
 import brown.assets.accounting.Transaction;
 import brown.assets.value.FullType;
+import brown.assets.value.Security;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
