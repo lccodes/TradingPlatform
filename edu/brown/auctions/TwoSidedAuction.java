@@ -1,16 +1,15 @@
 package brown.auctions;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Transaction;
-import brown.assets.value.SecurityType;
+import brown.assets.value.FullType;
 import brown.assets.value.Tradeable;
 
 public interface TwoSidedAuction extends Market {
-	public Map.Entry<SecurityType, Integer> getType();
+	public FullType getType();
 	
 	public List<Transaction> bid(Integer agentID, double shareNum, double sharePrice);
 	public List<Transaction> ask(Integer agentID, Tradeable opp, double sharePrice);

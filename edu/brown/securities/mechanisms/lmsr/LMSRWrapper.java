@@ -1,10 +1,9 @@
 package brown.securities.mechanisms.lmsr;
 
-import java.util.Map;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.value.SecurityType;
+import brown.assets.value.FullType;
 import brown.auctions.TwoSidedAuction;
 import brown.auctions.TwoSidedWrapper;
 import brown.messages.markets.LimitOrder;
@@ -30,7 +29,7 @@ public class LMSRWrapper implements TwoSidedWrapper {
 	}
 
 	@Override
-	public Map.Entry<SecurityType, Integer> getType() {
+	public FullType getType() {
 		return this.LMSR.getType();
 	}
 
@@ -45,12 +44,12 @@ public class LMSRWrapper implements TwoSidedWrapper {
 	}
 
 	@Override
-	public double bid(double shareNum, double sharePrice) {
+	public double quoteBid(double shareNum, double sharePrice) {
 		return this.LMSR.quoteBid(shareNum, sharePrice);
 	}
 
 	@Override
-	public double ask(double shareNum, double sharePrice) {
+	public double quoteAsk(double shareNum, double sharePrice) {
 		return this.LMSR.quoteAsk(shareNum, sharePrice);
 	}
 

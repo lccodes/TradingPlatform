@@ -1,6 +1,5 @@
 package brown.securities.mechanisms.cda;
 
-import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,6 +11,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import brown.assets.accounting.Transaction;
+import brown.assets.value.FullType;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
@@ -20,7 +20,7 @@ import brown.auctions.arules.AllocationType;
 
 public class ContinuousDoubleAuction implements TwoSidedAuction {
 	private final Integer ID;
-	private final Map.Entry<SecurityType, Integer> TYPE;
+	private final FullType TYPE;
 	private final SortedMap<Double, Set<Transaction>> pendingBuy;
 	private final SortedMap<Double, Set<Tradeable>> pendingSell;
 	
@@ -42,7 +42,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	 */
 	public ContinuousDoubleAuction(Integer ID, SecurityType type) {
 		this.ID = ID;
-		this.TYPE = new AbstractMap.SimpleEntry<SecurityType, Integer>(type, null);
+		this.TYPE = new FullType(type, null);
 		this.pendingBuy = new TreeMap<Double, Set<Transaction>>(Collections.reverseOrder());
 		this.pendingSell = new TreeMap<Double, Set<Tradeable>>();
 	}
@@ -52,7 +52,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	 * @param ID : auction ID
 	 * @param type : <SecurityType,Integer>
 	 */
-	public ContinuousDoubleAuction(Integer ID, Map.Entry<SecurityType, Integer> type) {
+	public ContinuousDoubleAuction(Integer ID, FullType type) {
 		this.ID = ID;
 		this.TYPE = type;
 		this.pendingBuy = new TreeMap<Double, Set<Transaction>>(Collections.reverseOrder());
@@ -65,7 +65,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public Map.Entry<SecurityType, Integer> getType() {
+	public FullType getType() {
 		return this.TYPE;
 	}
 

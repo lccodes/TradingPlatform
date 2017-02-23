@@ -1,8 +1,8 @@
 package brown.securities.prediction.marketmakers.implementations;
 
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 
-public class LiquiditySensitive extends PMBackend {
+public class LiquiditySensitive extends LMSRBackend {
 	
 	/*
 	 * Alpha can be thought of as the commission of the MM

@@ -1,15 +1,14 @@
 package brown.securities.mechanisms.lmsr;
 
-import java.util.AbstractMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Security;
 import brown.assets.accounting.Transaction;
+import brown.assets.value.FullType;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
@@ -18,8 +17,8 @@ import brown.auctions.arules.AllocationType;
 
 public class LMSRYes implements TwoSidedAuction {
 	private final Integer MARKETID;
-	private final PMBackend BACKEND;
-	private final Map.Entry<SecurityType, Integer> TYPE;
+	private final LMSRBackend BACKEND;
+	private final FullType TYPE;
 	
 	public LMSRYes() {
 		this.MARKETID = null;
@@ -27,10 +26,10 @@ public class LMSRYes implements TwoSidedAuction {
 		this.TYPE = null;
 	}
 	
-	public LMSRYes(Integer marketID, PMBackend backend, Integer securityID) {
+	public LMSRYes(Integer marketID, LMSRBackend backend) {
 		this.MARKETID = marketID;
 		this.BACKEND = backend;
-		this.TYPE = new AbstractMap.SimpleEntry<SecurityType, Integer>(SecurityType.PredictionYes, securityID);
+		this.TYPE = new FullType(SecurityType.PredictionYes, backend.getId());
 	}
 
 	@Override
@@ -49,7 +48,7 @@ public class LMSRYes implements TwoSidedAuction {
 	}
 
 	@Override
-	public Map.Entry<SecurityType, Integer> getType() {
+	public FullType getType() {
 		return this.TYPE;
 	}
 
@@ -102,8 +101,7 @@ public class LMSRYes implements TwoSidedAuction {
 
 	@Override
 	public TwoSidedWrapper wrap() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LMSRWrapper(this);
 	}
 
 }

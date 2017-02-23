@@ -2,7 +2,7 @@ package brown.securities.prediction;
 
 import java.util.Arrays;
 
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 
 public final class Utilities {
 	
@@ -13,7 +13,7 @@ public final class Utilities {
 		}
 		
 		double b = .001;
-		PMBackend backend = newBackend(b, yes, no);
+		LMSRBackend backend = newBackend(b, yes, no);
 		double p = simulate(backend, values, budgets).price(true);
 		while((p > weightedAverage + .0001 || p < weightedAverage - .0001) && b < 10000) {
 			b += .001;
@@ -38,7 +38,7 @@ public final class Utilities {
 		return findBWeighted(values, budgets, weightedAverage, 0,0);
 	}
 	
-	private static PMBackend simulate(PMBackend backend, Double[] values, Double[] budgets) {
+	private static LMSRBackend simulate(LMSRBackend backend, Double[] values, Double[] budgets) {
 		for (int i = 0; i < values.length; i++) {
 			boolean dir = values[i] > backend.price(true);
 			double idealShareNum = backend.howMany(values[i], dir);
@@ -54,8 +54,8 @@ public final class Utilities {
 		return backend;
 	}
 	
-	private static PMBackend newBackend(double B, double yes, double no) {
-		return new PMBackend(B,yes,no);
+	private static LMSRBackend newBackend(double B, double yes, double no) {
+		return new LMSRBackend(B,yes,no);
 	}
 	
 	public static void main(String[] args) {

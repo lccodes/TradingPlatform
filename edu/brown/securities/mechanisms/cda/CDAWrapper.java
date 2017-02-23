@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Transaction;
-import brown.assets.value.SecurityType;
+import brown.assets.value.FullType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedWrapper;
 import brown.messages.markets.PurchaseRequest;
@@ -50,7 +50,7 @@ public class CDAWrapper implements TwoSidedWrapper {
 	}
 
 	@Override
-	public Map.Entry<SecurityType, Integer> getType() {
+	public FullType getType() {
 		return CDA.getType();
 	}
 
@@ -65,12 +65,12 @@ public class CDAWrapper implements TwoSidedWrapper {
 	}
 
 	@Override
-	public double bid(double shareNum, double sharePrice) {
+	public double quoteBid(double shareNum, double sharePrice) {
 		return this.CDA.quoteBid(shareNum, sharePrice);
 	}
 
 	@Override
-	public double ask(double shareNum, double sharePrice) {
+	public double quoteAsk(double shareNum, double sharePrice) {
 		return this.CDA.quoteAsk(shareNum, sharePrice);
 	}
 

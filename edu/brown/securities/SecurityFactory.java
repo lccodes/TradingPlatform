@@ -2,7 +2,7 @@ package brown.securities;
 
 import java.lang.reflect.InvocationTargetException;
 
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 import brown.securities.prediction.PMLedger;
 import brown.securities.prediction.PMTriple;
 import brown.securities.prediction.structures.PMNo;
@@ -11,7 +11,7 @@ import brown.securities.prediction.structures.PMYes;
 public final class SecurityFactory {
 
 	public static PMTriple makePM(Integer yesID, Integer noID, double b) {
-		PMBackend backend = new PMBackend(b);
+		LMSRBackend backend = new LMSRBackend(b);
 		PMYes yes = new PMYes(yesID, backend);
 		PMNo no = new PMNo(noID, backend);
 		
@@ -22,9 +22,9 @@ public final class SecurityFactory {
 		return new PMTriple(backend, yes, no, ledgerYes, ledgerNo);
 	}
 	
-	public static PMTriple makeMarketMaker(Class<? extends PMBackend> backendClass, Integer yesID, 
+	public static PMTriple makeMarketMaker(Class<? extends LMSRBackend> backendClass, Integer yesID, 
 			Integer noID, double b) {
-		PMBackend backend;
+		LMSRBackend backend;
 		try {
 			backend = backendClass.getConstructor().newInstance(b);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException

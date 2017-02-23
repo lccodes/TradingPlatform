@@ -1,7 +1,5 @@
 package brown.assets.value;
 
-import java.util.Map;
-
 import brown.assets.accounting.Account;
 
 /**
@@ -13,7 +11,7 @@ public interface Tradeable {
 	void setAgentID(Integer ID);
 	double getCount();
 	void setCount(double count);
-	Map.Entry<SecurityType, Integer> getType();
+	FullType getType();
 	
 	Account close(State closingState);
 	Tradeable split(double newCount);

@@ -1,5 +1,6 @@
 package brown.assets.accounting;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -78,6 +79,10 @@ public class Exchange {
 	
 	public TwoSidedAuction getTwoSidedAuction(Integer ID) {
 		return tsauctions.get(ID);
+	}
+	
+	public Collection<TwoSidedAuction> getAuctions() {
+		return this.tsauctions.values();
 	}
 
 }

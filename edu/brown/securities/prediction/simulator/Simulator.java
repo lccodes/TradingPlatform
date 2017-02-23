@@ -5,15 +5,15 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 import brown.securities.prediction.marketmakers.implementations.LiquiditySensitive;
 import brown.securities.prediction.marketmakers.implementations.LukeMM;
 
 public class Simulator {
-	private final List<PMBackend> marketmakers;
+	private final List<LMSRBackend> marketmakers;
 	private final List<Bidder> agents;
 	
-	public Simulator(List<PMBackend> marketmakers, List<Bidder> agents) {
+	public Simulator(List<LMSRBackend> marketmakers, List<Bidder> agents) {
 		this.marketmakers = marketmakers;
 		this.agents = agents;
 	}
@@ -27,9 +27,9 @@ public class Simulator {
 		}
 		
 		for (Bidder agent : theAgents) {
-			Comparator<PMBackend> mostGains = new Comparator<PMBackend>() {
+			Comparator<LMSRBackend> mostGains = new Comparator<LMSRBackend>() {
 				@Override
-				public int compare(PMBackend mm1, PMBackend mm2) {
+				public int compare(LMSRBackend mm1, LMSRBackend mm2) {
 					double q1 = getQuantity(null, mm1, agent);
 					double q2 = getQuantity(null, mm2, agent);
 					if (q1 > q2) {
@@ -42,7 +42,7 @@ public class Simulator {
 			};
 			
 			Collections.sort(marketmakers, mostGains);
-			PMBackend bestmm = marketmakers.get(0);
+			LMSRBackend bestmm = marketmakers.get(0);
 			//System.out.println(bestmm.price(true) + " " + bestmm.price(false));
 			double quantity = getQuantity(result, bestmm, agent);
 			if (agent.value == -1) {
@@ -60,14 +60,14 @@ public class Simulator {
 			}
 			result.addPurchase(bestmm, agent, quantity, correct);
 		}
-		for (PMBackend mm : marketmakers) {
+		for (LMSRBackend mm : marketmakers) {
 			result.addMarketmaker(mm);
 		}
 		
 		return result;
 	}
 	
-	private static double getQuantity(SimulationResult result, PMBackend mm, Bidder agent) {
+	private static double getQuantity(SimulationResult result, LMSRBackend mm, Bidder agent) {
 		boolean dir = agent.value > mm.price(true);
 		double value = agent.value;
 		if (value == -1) {
@@ -118,7 +118,7 @@ public class Simulator {
 		for (int i = 0; i < 3; i++) {
 			MarketMakerFactory mmf = new MarketMakerFactory();
 			LiquiditySensitive uno = new LiquiditySensitive(first);
-			PMBackend pmb = new PMBackend(50);
+			LMSRBackend pmb = new LMSRBackend(50);
 			mmf.add(uno);
 			mmf.add(pmb);
 			BidderFactory bf = new BidderFactory();
@@ -143,9 +143,9 @@ public class Simulator {
 	
 	public static double getAccuracy(int which, int informed, int uninformed) {
 			MarketMakerFactory mmf = new MarketMakerFactory();
-			PMBackend pmb = null;
+			LMSRBackend pmb = null;
 			switch(which) {
-			case 0: pmb = new PMBackend(50);
+			case 0: pmb = new LMSRBackend(50);
 			case 1: pmb = new LiquiditySensitive(.2);
 			case 2: pmb = new LukeMM(.2);
 			}

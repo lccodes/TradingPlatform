@@ -8,7 +8,7 @@ import brown.assets.value.SecurityType;
 import brown.securities.MarketCreationException;
 import brown.securities.SecurityOld;
 import brown.securities.SecurityWrapper;
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 import brown.securities.prediction.PredictionMarket;
 
 /**
@@ -19,7 +19,7 @@ import brown.securities.prediction.PredictionMarket;
  *
  */
 public class PMNo implements SecurityOld {
-	protected final PMBackend backend;
+	protected final LMSRBackend backend;
 	protected final Integer ID;
 	
 	public PMNo() {
@@ -27,7 +27,7 @@ public class PMNo implements SecurityOld {
 		this.backend = null;
 	}
 	
-	public PMNo(Integer id, PMBackend backend) {
+	public PMNo(Integer id, LMSRBackend backend) {
 		this.ID = id;
 		this.backend = backend;
 	}

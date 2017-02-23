@@ -1,15 +1,14 @@
 package brown.securities.mechanisms.lmsr;
 
-import java.util.AbstractMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Security;
 import brown.assets.accounting.Transaction;
+import brown.assets.value.FullType;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.TwoSidedAuction;
@@ -18,8 +17,8 @@ import brown.auctions.arules.AllocationType;
 
 public class LMSRNo implements TwoSidedAuction {
 	private final Integer ID;
-	private final PMBackend BACKEND;
-	private final Map.Entry<SecurityType, Integer> TYPE;
+	private final LMSRBackend BACKEND;
+	private final FullType TYPE;
 	
 	public LMSRNo() {
 		this.ID = null;
@@ -27,11 +26,10 @@ public class LMSRNo implements TwoSidedAuction {
 		this.TYPE = null;
 	}
 	
-	public LMSRNo(Integer ID, PMBackend backend, int securityID) {
+	public LMSRNo(Integer ID, LMSRBackend backend) {
 		this.ID = ID;
 		this.BACKEND = backend;
-		this.TYPE = new AbstractMap.SimpleEntry<SecurityType, Integer>(SecurityType.PredicitonNo, 
-				securityID);
+		this.TYPE = new FullType(SecurityType.PredicitonNo, backend.getId());
 	}
 
 	@Override
@@ -50,7 +48,7 @@ public class LMSRNo implements TwoSidedAuction {
 	}
 
 	@Override
-	public Map.Entry<SecurityType, Integer> getType() {
+	public FullType getType() {
 		return this.TYPE;
 	}
 

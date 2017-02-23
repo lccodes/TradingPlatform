@@ -3,21 +3,21 @@ package brown.securities.prediction.simulator;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 
 public class MarketMakerFactory {
-	private List<PMBackend> marketMakers;
+	private List<LMSRBackend> marketMakers;
 	
 	public MarketMakerFactory() {
-		this.marketMakers = new LinkedList<PMBackend>();
+		this.marketMakers = new LinkedList<LMSRBackend>();
 	}
 	
-	public MarketMakerFactory add(PMBackend marketmaker) {
+	public MarketMakerFactory add(LMSRBackend marketmaker) {
 		this.marketMakers.add(marketmaker);
 		return this;
 	}
 	
-	public List<PMBackend> make() {
+	public List<LMSRBackend> make() {
 		return this.marketMakers;
 	}
 

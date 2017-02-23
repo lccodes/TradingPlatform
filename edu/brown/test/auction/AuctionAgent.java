@@ -1,6 +1,8 @@
 package brown.test.auction;
 
 import brown.agent.Agent;
+import brown.auctions.OneSidedWrapper;
+import brown.auctions.TwoSidedWrapper;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.exceptions.AgentCreationException;
@@ -71,6 +73,30 @@ public class AuctionAgent extends Agent {
 	public static void main(String[] args) throws AgentCreationException {
 		new AuctionAgent("localhost", 2121);
 		while(true){}
+	}
+
+	@Override
+	protected void onSealedBid(OneSidedWrapper market) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onOpenOutcry(OneSidedWrapper market) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onLMSR(TwoSidedWrapper market) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onContinuousDoubleAuction(TwoSidedWrapper market) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

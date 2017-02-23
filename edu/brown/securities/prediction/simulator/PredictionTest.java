@@ -1,4 +1,4 @@
-package brown.test.prediction;
+package brown.securities.prediction.simulator;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import brown.securities.SecurityFactory;
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 import brown.securities.prediction.PMTriple;
 
 /*
@@ -47,7 +47,7 @@ public final class PredictionTest {
 		avg/= values.length;
 		while(x < 10) {
 			PMTriple triple = SecurityFactory.makePM(1, 2, B);
-			PMBackend backend = triple.backend;
+			LMSRBackend backend = triple.backend;
 			List<Double> list = Arrays.asList(values);
 			Collections.shuffle(list);
 			values = (Double[]) list.toArray();

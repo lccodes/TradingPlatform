@@ -3,10 +3,10 @@ package brown.securities.prediction.simulator;
 import java.util.HashMap;
 import java.util.Map;
 
-import brown.securities.mechanisms.lmsr.PMBackend;
+import brown.securities.mechanisms.lmsr.LMSRBackend;
 
 public class SimulationResult {
-	private Map<PMBackend, Integer> marketmakerID;
+	private Map<LMSRBackend, Integer> marketmakerID;
 	private Map<Bidder, Integer> agentID;
 	
 	public final Map<Integer, Double> prices;
@@ -20,7 +20,7 @@ public class SimulationResult {
 	private int mmCount = 0;
 	
 	public SimulationResult() {
-		this.marketmakerID = new HashMap<PMBackend, Integer>();
+		this.marketmakerID = new HashMap<LMSRBackend, Integer>();
 		this.agentID = new HashMap<Bidder, Integer>();
 		this.prices = new HashMap<Integer, Double>();
 		this.values = new HashMap<Integer, Double>();
@@ -30,7 +30,7 @@ public class SimulationResult {
 		this.markup = new HashMap<Integer, Double>();
 	}
 
-	public void addPurchase(PMBackend mm, Bidder agent, double quantity, boolean correct) {
+	public void addPurchase(LMSRBackend mm, Bidder agent, double quantity, boolean correct) {
 		selections.put(getID(agent), getID(mm));
 		quantities.put(getID(agent), quantity);
 		//System.out.println(quantity);
@@ -38,19 +38,19 @@ public class SimulationResult {
 		//costs.put(getID(mm), costs.getOrDefault(getID(mm), 0.0) + penalty);
 	}
 
-	public void addMarketmaker(PMBackend mm) {
+	public void addMarketmaker(LMSRBackend mm) {
 		prices.put(getID(mm), mm.price(true));
 	}
 	
-	public void addCost(PMBackend mm, double cost) {
+	public void addCost(LMSRBackend mm, double cost) {
 		costs.put(getID(mm), costs.getOrDefault(getID(mm), 0.0) + cost);
 	}
 	
-	public double getCost(PMBackend mm) {
+	public double getCost(LMSRBackend mm) {
 		return costs.get(getID(mm));
 	}
 	
-	public int getID(PMBackend mm) {
+	public int getID(LMSRBackend mm) {
 		Integer id = marketmakerID.get(mm);
 		if (id == null) {
 			id = new Integer(mmCount++);

@@ -7,31 +7,35 @@ package brown.securities.mechanisms.lmsr;
  * @author lcamery
  *
  */
-public class PMBackend {
+public class LMSRBackend {
+	private final int ID;
 	public double yes;
 	public double no;
 	public double b;
 	public double alpha;
 	
-	public PMBackend() {
+	public LMSRBackend() {
 		this.yes = 0;
 		this.no = 0;
 		this.b = 1;
 		this.alpha = 0;
+		this.ID = -1;
 	}
 	
-	public PMBackend(double b) {
+	public LMSRBackend(int ID, double b) {
 		this.yes = 0;
 		this.no = 0;
 		this.b = b;
 		this.alpha = 0;
+		this.ID = ID;
 	}
 	
-	public PMBackend(double b, double yes, double no) {
+	public LMSRBackend(int ID, double b, double yes, double no) {
 		this.b = b;
 		this.yes = yes;
 		this.no = no;
 		this.alpha = 0;
+		this.ID = ID;
 	}
 	
 	/*
@@ -120,6 +124,14 @@ public class PMBackend {
 	 */
 	public void setB(double b) {
 		this.b = b;
+	}
+
+	/**
+	 * ID corresponds to type of PM this is; ie. what is this the question
+	 * @return ID
+	 */
+	public Integer getId() {
+		return this.ID;
 	}
 	
 }
