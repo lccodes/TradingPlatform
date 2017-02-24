@@ -1,10 +1,11 @@
-package brown.auctions;
+package brown.auctions.onesided;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import brown.assets.value.Tradeable;
+import brown.auctions.Market;
 import brown.auctions.arules.AllocationType;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;

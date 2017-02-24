@@ -4,11 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.auctions.TwoSidedAuction;
+import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.Registration;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
-import brown.securities.mechanisms.lmsr.LMSRNo;
-import brown.securities.mechanisms.lmsr.LMSRYes;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
@@ -49,7 +48,7 @@ public class TestServer extends AgentServer {
 	    while (i < amt) {
 	      try {
 	        Thread.sleep(1000);
-	        Logging.log("[-] setup phase " + i++);
+	        Logging.log("[-] pause phase " + i++);
 	      } catch (InterruptedException e) {
 	        Logging.log("[+] woken: " + e.getMessage());
 	      }
@@ -57,8 +56,8 @@ public class TestServer extends AgentServer {
 	}
 
 	public void startGame() {
-		this.exchange.open(new LMSRYes(1, BACKEND));
-		this.exchange.open(new LMSRNo(2, BACKEND));
+		this.exchange.open(new LMSR(1, true, BACKEND));
+		this.exchange.open(new LMSR(2, false, BACKEND));
 		System.out.println("[-] markets added");
 		
 		delay(2);

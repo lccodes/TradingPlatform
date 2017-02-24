@@ -1,14 +1,15 @@
 package brown.test.prediction;
 
 import brown.agent.Agent;
-import brown.auctions.OneSidedWrapper;
-import brown.auctions.TwoSidedWrapper;
+import brown.auctions.onesided.OneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Rejection;
 import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.trades.NegotiateRequest;
+import brown.securities.mechanisms.cda.CDAWrapper;
+import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Logging;
 /**
  * 
@@ -31,7 +32,6 @@ public class TestAgent extends Agent {
 	@Override
 	protected void onSealedBid(OneSidedWrapper market) {
 		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -43,20 +43,19 @@ public class TestAgent extends Agent {
 
 
 	@Override
-	protected void onLMSR(TwoSidedWrapper market) {
-		Logging.log("cost " + market.quoteBid(1, 0));
-		if (!this.done && Math.random() < .5) {
+	protected void onLMSR(LMSRWrapper market) {
+		Logging.log("cost " + market.quoteBid(1));
+		if (!this.done && Math.random() < .25) {
 			this.done = true;
-			market.buy(this, 1, 0);
+			market.buy(this, 1, .6);
 			Logging.log("bought 1 " + market.getType().TYPE);
 		}
 	}
 
 
 	@Override
-	protected void onContinuousDoubleAuction(TwoSidedWrapper market) {
+	protected void onContinuousDoubleAuction(CDAWrapper market) {
 		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -76,7 +75,7 @@ public class TestAgent extends Agent {
 
 	@Override
 	protected void onBankUpdate(BankUpdate bankUpdate) {
-		Logging.log("cash: "+ bankUpdate.newAccount.monies);
+		Logging.log("cash: "+ bankUpdate.newAccount.monies + " tradeables " + bankUpdate.newAccount.goods);
 	}
 
 

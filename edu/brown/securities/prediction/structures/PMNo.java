@@ -104,7 +104,7 @@ public class PMNo implements SecurityOld {
 
 	@Override
 	public SecurityType getType() {
-		return SecurityType.PredicitonNo;
+		return SecurityType.PredictionNo;
 	}
 	
 }

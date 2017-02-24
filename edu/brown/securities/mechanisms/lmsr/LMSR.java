@@ -1,4 +1,4 @@
-package brown.securities.mechanisms.cda;
+package brown.securities.mechanisms.lmsr;
 
 import java.util.List;
 import java.util.Set;
@@ -9,52 +9,43 @@ import brown.assets.value.FullType;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
 import brown.auctions.arules.AllocationType;
+import brown.auctions.crules.LMSRNoClearing;
+import brown.auctions.crules.LMSRYesClearing;
 import brown.auctions.rules.ClearingRule;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.auctions.twosided.TwoSidedWrapper;
 
-public class ContinuousDoubleAuction implements TwoSidedAuction {
+public class LMSR implements TwoSidedAuction {
 	private final Integer ID;
-	private final FullType TYPE;
 	private final ClearingRule RULE;
+	private final FullType TYPE;
 	
-	/**
-	 * For kryonet
-	 * DO NOT USE
-	 */
-	public ContinuousDoubleAuction() {
+	public LMSR() {
 		this.ID = null;
-		this.TYPE = null;
 		this.RULE = null;
+		this.TYPE = null;
 	}
 	
-	/**
-	 * Constructor
-	 * @param ID : auction ID
-	 * @param type : SecurityType
-	 * @param rule : ClearingRule
-	 */
-	public ContinuousDoubleAuction(Integer ID, SecurityType type, ClearingRule rule) {
+	public LMSR(Integer ID, boolean dir, LMSRBackend backend) {
 		this.ID = ID;
-		this.TYPE = new FullType(type, null);
-		this.RULE = rule;
-	}
-	
-	/**
-	 * Constructor
-	 * @param ID : auction ID
-	 * @param type : <SecurityType,Integer>
-	 * @param rule : ClearingRule
-	 */
-	public ContinuousDoubleAuction(Integer ID, FullType type, ClearingRule rule) {
-		this.ID = ID;
-		this.TYPE = type;
-		this.RULE = rule;
+		this.RULE = dir ? new LMSRYesClearing(backend) : new LMSRNoClearing(backend);
+		this.TYPE = new FullType(dir ? SecurityType.PredictionYes : SecurityType.PredictionNo, 
+				backend.getId());
 	}
 
 	@Override
 	public Integer getID() {
 		return this.ID;
+	}
+
+	@Override
+	public boolean isClosed() {
+		return false;
+	}
+
+	@Override
+	public AllocationType getMechanismType() {
+		return AllocationType.LMSR;
 	}
 
 	@Override
@@ -83,32 +74,25 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public boolean isClosed() {
-		return false;
-	}
-
-	@Override
-	public AllocationType getMechanismType() {
-		return AllocationType.ContinuousDoubleAuction;
-	}
-
-	@Override
 	public SortedMap<Double, Set<Order>> getBuyBook() {
-		return this.getBuyBook();
+		// Noop
+		return null;
 	}
 
 	@Override
 	public SortedMap<Double, Set<Order>> getSellBook() {
-		return this.getSellBook();
-	}
-
-	@Override
-	public TwoSidedWrapper wrap() {
-		return new CDAWrapper(this);
+		// Noop
+		return null;
 	}
 
 	@Override
 	public void tick(double time) {
 		// Noop
 	}
+
+	@Override
+	public TwoSidedWrapper wrap() {
+		return new LMSRWrapper(this);
+	}
+
 }

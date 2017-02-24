@@ -14,11 +14,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Exchange;
 import brown.assets.accounting.Ledger;
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.Order;
 import brown.assets.value.Tradeable;
-import brown.auctions.OneSidedAuction;
-import brown.auctions.TwoSidedAuction;
 import brown.auctions.bundles.BidBundle;
+import brown.auctions.onesided.OneSidedAuction;
+import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
@@ -153,9 +153,9 @@ public abstract class AgentServer {
 						return;
 					}
 
-					List<Transaction> trans = market.bid(privateID,
+					List<Order> trans = market.buy(privateID,
 							limitorder.buyShares, limitorder.price);
-					for (Transaction t : trans) {
+					for (Order t : trans) {
 						Tradeable split = null;
 						if (t.GOOD.getCount() > t.QUANTITY) {
 							split = t.GOOD.split(t.QUANTITY);
@@ -221,9 +221,9 @@ public abstract class AgentServer {
 							}
 							qToSell -= toSell.getCount();
 
-							List<Transaction> trans = market.ask(privateID,
+							List<Order> trans = market.sell(privateID,
 									toSell, limitorder.price);
-							for (Transaction t : trans) {
+							for (Order t : trans) {
 								if (t.FROM != null) {
 									synchronized (t.FROM) {
 										Account fromBank = this.bank

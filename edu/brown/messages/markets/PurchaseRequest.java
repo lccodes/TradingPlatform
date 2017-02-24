@@ -1,6 +1,6 @@
 package brown.messages.markets;
 
-import brown.auctions.TwoSidedAuction;
+import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.Message;
 import brown.securities.SecurityOld;
 

@@ -1,8 +1,8 @@
 package brown.messages.markets;
 
-import brown.auctions.OneSidedWrapper;
-import brown.auctions.TwoSidedWrapper;
 import brown.auctions.arules.AllocationType;
+import brown.auctions.onesided.OneSidedWrapper;
+import brown.auctions.twosided.TwoSidedWrapper;
 import brown.messages.Message;
 
 public class MarketUpdate extends Message {

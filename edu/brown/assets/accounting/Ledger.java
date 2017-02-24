@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import brown.assets.value.Tradeable;
-import brown.auctions.TwoSidedAuction;
+import brown.auctions.twosided.TwoSidedAuction;
 
 public class Ledger {
 	protected Set<Tradeable> Tradeables;

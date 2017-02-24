@@ -2,8 +2,7 @@ package brown.agent;
 
 import java.io.IOException;
 
-import brown.auctions.OneSidedWrapper;
-import brown.auctions.TwoSidedWrapper;
+import brown.auctions.onesided.OneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
@@ -11,6 +10,8 @@ import brown.messages.Rejection;
 import brown.messages.auctions.TradeRequest;
 import brown.messages.markets.MarketUpdate;
 import brown.messages.trades.NegotiateRequest;
+import brown.securities.mechanisms.cda.CDAWrapper;
+import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Setup;
 import brown.setup.Startup;
 
@@ -98,9 +99,9 @@ public abstract class Agent {
 			MarketUpdate mu = (MarketUpdate) message;
 			switch(mu.MECHANISM) {
 			case ContinuousDoubleAuction:
-				this.onContinuousDoubleAuction(mu.TMARKET);
+				this.onContinuousDoubleAuction((CDAWrapper) mu.TMARKET);
 			case LMSR:
-				this.onLMSR(mu.TMARKET);
+				this.onLMSR((LMSRWrapper) mu.TMARKET);
 			case OpenOutcry:
 				this.onOpenOutcry(mu.OMARKET);
 			case SealedBid:
@@ -129,13 +130,13 @@ public abstract class Agent {
 	 * Provides agent response to LMSR
 	 * @param LMSR wrapper
 	 */
-	protected abstract void onLMSR(TwoSidedWrapper market);
+	protected abstract void onLMSR(LMSRWrapper market);
 
 	/**
 	 * Provides agent response to CDAs
 	 * @param market : CDA wrapper
 	 */
-	protected abstract void onContinuousDoubleAuction(TwoSidedWrapper market);
+	protected abstract void onContinuousDoubleAuction(CDAWrapper market);
 
 	/**
 	 * Agents must accept their IDs from the server

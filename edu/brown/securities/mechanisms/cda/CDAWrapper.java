@@ -6,13 +6,13 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import brown.agent.Agent;
-import brown.assets.accounting.Transaction;
+import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.Tradeable;
-import brown.auctions.TwoSidedWrapper;
+import brown.auctions.twosided.TwoSidedPriceSetter;
+import brown.auctions.twosided.TwoSidedWrapper;
 import brown.messages.markets.PurchaseRequest;
 
-public class CDAWrapper implements TwoSidedWrapper {
+public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
 	private final ContinuousDoubleAuction CDA;
 	private final SortedMap<Double, Double> BUYBOOK;
 	private final SortedMap<Double, Double> SELLBOOK;
@@ -27,18 +27,18 @@ public class CDAWrapper implements TwoSidedWrapper {
 		this.CDA = CDA;
 		this.BUYBOOK = new TreeMap<Double, Double>();
 		this.SELLBOOK = new TreeMap<Double, Double>();
-		for (Map.Entry<Double, Set<Transaction>> entry : this.CDA.getBuyBook().entrySet()) {
+		for (Map.Entry<Double, Set<Order>> entry : this.CDA.getBuyBook().entrySet()) {
 			double count = 0;
-			for (Transaction t : entry.getValue()) {
+			for (Order t : entry.getValue()) {
 				count += t.QUANTITY;
 			}
 			this.BUYBOOK.put(entry.getKey(), count);
 		}
 		
-		for (Map.Entry<Double, Set<Tradeable>> entry : this.CDA.getSellBook().entrySet()) {
+		for (Map.Entry<Double, Set<Order>> entry : this.CDA.getSellBook().entrySet()) {
 			double count = 0;
-			for (Tradeable t : entry.getValue()) {
-				count += t.getCount();
+			for (Order t : entry.getValue()) {
+				count += t.GOOD.getCount();
 			}
 			this.SELLBOOK.put(entry.getKey(), count);
 		}

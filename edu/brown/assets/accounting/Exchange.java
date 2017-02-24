@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import brown.assets.value.State;
 import brown.assets.value.Tradeable;
-import brown.auctions.TwoSidedAuction;
+import brown.auctions.twosided.TwoSidedAuction;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
@@ -40,7 +40,7 @@ public class Exchange {
 					
 					Account newAccount = oldAccount.remove(0, t);
 					server.setAccount(t.getAgentID(), newAccount);
-					if (toReplace != null && toReplace.ID != null && !toReplace.ID.equals(t.getAgentID())) {
+					if (toReplace == null || (toReplace.ID != null && !toReplace.ID.equals(t.getAgentID()))) {
 						server.sendBankUpdate(t.getAgentID(), oldAccount, newAccount);
 					}
 				}

@@ -1,4 +1,4 @@
-package brown.auctions;
+package brown.auctions.onesided;
 
 import brown.auctions.prules.PaymentType;
 

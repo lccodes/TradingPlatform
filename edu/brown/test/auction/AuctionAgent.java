@@ -1,10 +1,10 @@
 package brown.test.auction;
 
 import brown.agent.Agent;
-import brown.auctions.OneSidedWrapper;
-import brown.auctions.TwoSidedWrapper;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
+import brown.auctions.onesided.OneSidedWrapper;
+import brown.auctions.twosided.TwoSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
@@ -83,18 +83,6 @@ public class AuctionAgent extends Agent {
 
 	@Override
 	protected void onOpenOutcry(OneSidedWrapper market) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void onLMSR(TwoSidedWrapper market) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void onContinuousDoubleAuction(TwoSidedWrapper market) {
 		// TODO Auto-generated method stub
 		
 	}

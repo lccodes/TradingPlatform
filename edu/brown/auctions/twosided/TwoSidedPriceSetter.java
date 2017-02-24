@@ -1,18 +1,10 @@
-package brown.auctions;
+package brown.auctions.twosided;
 
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.value.FullType;
 
-public interface TwoSidedWrapper {
-	/**
-	 * Gets the ID of the auction
-	 * @return id
-	 */
-	public Integer getID();
-	public FullType getType();
-	
+public interface TwoSidedPriceSetter {
 	public void buy(Agent agent, double shareNum, double sharePrice);
 	public void sell(Agent agent, double shareNum, double sharePrice);
 	
