@@ -3,13 +3,13 @@ package brown.messages.markets;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.Message;
 
-public class LimitOrder extends Message {
+public class MarketOrder extends Message {
 	public final TwoSidedAuction market;
 	public final double buyShares;
 	public final double sellShares;
 	public final double price;
 
-	public LimitOrder() {
+	public MarketOrder() {
 		super(null);
 		this.market = null;
 		this.buyShares = 0;
@@ -17,7 +17,7 @@ public class LimitOrder extends Message {
 		this.price = 0;
 	}
 	
-	public LimitOrder(Integer ID, TwoSidedAuction market, double buyShares, double sellShares, double price) {
+	public MarketOrder(Integer ID, TwoSidedAuction market, double buyShares, double sellShares, double price) {
 		super(ID);
 		this.market = market;
 		this.buyShares = buyShares;

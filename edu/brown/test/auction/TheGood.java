@@ -1,9 +1,7 @@
 package brown.test.auction;
 
-import java.util.Map.Entry;
-
 import brown.assets.accounting.Account;
-import brown.assets.value.SecurityType;
+import brown.assets.value.FullType;
 import brown.assets.value.State;
 import brown.assets.value.Tradeable;
 
@@ -35,14 +33,7 @@ public class TheGood implements Tradeable {
 
 	@Override
 	public void setCount(double count) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Entry<SecurityType, Integer> getType() {
-		// TODO Auto-generated method stub
-		return null;
+		//Noop
 	}
 
 	@Override
@@ -53,6 +44,18 @@ public class TheGood implements Tradeable {
 
 	@Override
 	public Tradeable split(double newCount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public FullType getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Tradeable toAgent() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,6 +1,6 @@
 package brown.auctions;
 
-import brown.auctions.arules.AllocationType;
+import brown.auctions.arules.MechanismType;
 
 public interface Market {
 	/**
@@ -19,6 +19,6 @@ public interface Market {
 	 * What type of allocation mechanism does it use?
 	 * @return AllocationType
 	 */
-	public AllocationType getMechanismType();
+	public MechanismType getMechanismType();
 
 }

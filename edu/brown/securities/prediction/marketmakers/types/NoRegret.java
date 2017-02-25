@@ -8,8 +8,8 @@ import brown.securities.mechanisms.lmsr.LMSRBackend;
 public abstract class NoRegret extends LMSRBackend {
 	protected Map<Integer, Double> weights;
 	
-	public NoRegret(double b, NoRegretMemory memory) {
-		super(b);
+	public NoRegret(Integer ID, double b, NoRegretMemory memory) {
+		super(ID, b);
 		this.weights = memory.WEIGHTS;
 		if (this.weights == null) {
 			this.weights = new HashMap<Integer, Double>();

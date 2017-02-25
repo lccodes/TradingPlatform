@@ -6,13 +6,15 @@ import java.util.Set;
 
 import brown.assets.value.Tradeable;
 import brown.auctions.Market;
-import brown.auctions.arules.AllocationType;
+import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
+import brown.auctions.prules.PaymentType;
 import brown.auctions.rules.AllocationRule;
 import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.TradeRequest;
+import brown.messages.auctions.BidReqeust;
+import brown.messages.markets.TradeRequest;
 
 public class OneSidedAuction implements Market {
 	protected final Integer ID;
@@ -43,17 +45,27 @@ public class OneSidedAuction implements Market {
 	 * Gets the BidRequest; this specifies what
 	 * agents need to respond to in order to bid
 	 * @param ID : agent to tailor the request
-	 * @return BidRequest
+	 * @return TradeRequest
 	 */
-	public TradeRequest getBidRequest(Integer ID) {
-		TradeRequest temp = this.ARULE.getBidRequest(this.BIDS, ID);
+	public TradeRequest wrap(Integer ID) {
+		BidReqeust temp = this.ARULE.getBidRequest(this.BIDS, ID);
 		if (temp == null) {
 			return null;
 		}
 		BidBundle toUse = (ID.equals(temp.Current.getAgent()) || !this.isPrivate()) ? 
 				temp.Current : temp.Current.wipeAgent(null);
 		
-		return new TradeRequest(temp.getID(), this.ID, temp.BundleType, toUse, this.ITEMS);
+		BidReqeust br = new BidReqeust(temp.getID(), this.ID, temp.TYPE, toUse, this.ITEMS);
+		OneSidedWrapper wrapper = null;
+		switch(br.TYPE) {
+		case Simple:
+			wrapper = new SimpleOneSidedWrapper(this.PRULE.getPaymentType(), br);
+			break;
+		default:
+			break;
+		}
+		
+		return new TradeRequest(0, wrapper, this.ARULE.getAllocationType());
 	}
 	
 	/**
@@ -116,7 +128,11 @@ public class OneSidedAuction implements Market {
 	}
 
 	@Override
-	public AllocationType getMechanismType() {
+	public MechanismType getMechanismType() {
 		return this.ARULE.getAllocationType();
+	}
+	
+	public PaymentType getPaymentType() {
+		return this.PRULE.getPaymentType();
 	}
 }

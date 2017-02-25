@@ -5,8 +5,8 @@ import brown.securities.mechanisms.lmsr.LMSRBackend;
 public abstract class OnlineLearning extends LMSRBackend {
 	protected double pastWeight;
 	
-	public OnlineLearning(double b, double yes, double no) {
-		super(b,yes,no);
+	public OnlineLearning(Integer ID, double b, double yes, double no) {
+		super(ID, b,yes,no);
 		this.pastWeight = 0;
 	}
 	

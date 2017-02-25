@@ -26,4 +26,9 @@ public class FirstPriceRule implements PaymentRule {
 		return payments;
 	}
 
+	@Override
+	public PaymentType getPaymentType() {
+		return PaymentType.FirstPrice;
+	}
+
 }

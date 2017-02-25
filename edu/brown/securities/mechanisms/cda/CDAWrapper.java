@@ -10,7 +10,7 @@ import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.auctions.twosided.TwoSidedPriceSetter;
 import brown.auctions.twosided.TwoSidedWrapper;
-import brown.messages.markets.PurchaseRequest;
+import brown.messages.markets.MarketOrder;
 
 public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
 	private final ContinuousDoubleAuction CDA;
@@ -56,12 +56,12 @@ public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
 
 	@Override
 	public void buy(Agent agent, double shareNum, double sharePrice) {
-		agent.CLIENT.sendTCP(new PurchaseRequest(0,this.CDA, shareNum, sharePrice));
+		agent.CLIENT.sendTCP(new MarketOrder(0,this.CDA, shareNum, 0, sharePrice));
 	}
 
 	@Override
 	public void sell(Agent agent, double shareNum, double sharePrice) {
-		agent.CLIENT.sendTCP(new PurchaseRequest(this.CDA, shareNum, sharePrice, 0));
+		agent.CLIENT.sendTCP(new MarketOrder(0, this.CDA, 0, shareNum, sharePrice));
 	}
 
 	@Override

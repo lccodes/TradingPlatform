@@ -5,7 +5,7 @@ import brown.assets.value.FullType;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.auctions.twosided.TwoSidedPriceTaker;
 import brown.auctions.twosided.TwoSidedWrapper;
-import brown.messages.markets.LimitOrder;
+import brown.messages.markets.MarketOrder;
 
 public class LMSRWrapper implements TwoSidedWrapper, TwoSidedPriceTaker {
 	private final TwoSidedAuction LMSR;
@@ -30,12 +30,12 @@ public class LMSRWrapper implements TwoSidedWrapper, TwoSidedPriceTaker {
 
 	@Override
 	public void buy(Agent agent, double shareNum, double maxPrice) {
-		agent.CLIENT.sendTCP(new LimitOrder(0, this.LMSR, shareNum,0.0,maxPrice));
+		agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, shareNum,0.0,maxPrice));
 	}
 
 	@Override
 	public void sell(Agent agent, double shareNum, double maxPrice) {
-		agent.CLIENT.sendTCP(new LimitOrder(0, this.LMSR, 0,shareNum,maxPrice));
+		agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, 0,shareNum,maxPrice));
 	}
 
 	@Override

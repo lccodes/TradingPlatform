@@ -40,7 +40,7 @@ public class Exchange {
 					
 					Account newAccount = oldAccount.remove(0, t);
 					server.setAccount(t.getAgentID(), newAccount);
-					if (toReplace == null || (toReplace.ID != null && !toReplace.ID.equals(t.getAgentID()))) {
+					if (toReplace == null) {
 						server.sendBankUpdate(t.getAgentID(), oldAccount, newAccount);
 					}
 				}

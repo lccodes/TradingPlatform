@@ -23,10 +23,8 @@ import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.TradeRequest;
-import brown.messages.markets.LimitOrder;
-import brown.messages.markets.MarketUpdate;
-import brown.messages.markets.PurchaseRequest;
+import brown.messages.markets.MarketOrder;
+import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
 import brown.messages.trades.Trade;
 import brown.setup.Logging;
@@ -101,10 +99,6 @@ public abstract class AgentServer {
 				if (message instanceof Bid) {
 					Logging.log("[-] bid recieved from " + id);
 					aServer.onBid(connection, id, (Bid) message);
-				} else if (message instanceof PurchaseRequest) {
-					Logging.log("[-] purchaserequest recieved from " + id);
-					aServer.onPurchaseRequest(connection, id,
-							(PurchaseRequest) message);
 				} else if (message instanceof NegotiateRequest) {
 					Logging.log("[-] traderequest recieved from " + id);
 					aServer.onTradeRequest(connection, id,
@@ -112,9 +106,9 @@ public abstract class AgentServer {
 				} else if (message instanceof Trade) {
 					Logging.log("[-] trade recieved from " + id);
 					aServer.onTrade(connection, (Trade) message);
-				} else if (message instanceof LimitOrder) {
+				} else if (message instanceof MarketOrder) {
 					Logging.log("[-] limitorder recieved from " + id);
-					aServer.onLimitOrder(connection, id, (LimitOrder) message);
+					aServer.onLimitOrder(connection, id, (MarketOrder) message);
 				}
 			}
 		});
@@ -132,7 +126,7 @@ public abstract class AgentServer {
 	 *            - limit order for a security
 	 */
 	protected void onLimitOrder(Connection connection, Integer privateID,
-			LimitOrder limitorder) {
+			MarketOrder limitorder) {
 		TwoSidedAuction market = exchange.getTwoSidedAuction(limitorder.market
 				.getID());
 		synchronized (market) {
@@ -231,7 +225,8 @@ public abstract class AgentServer {
 										if (!fromBank.goods.contains(t.GOOD)) {
 											// TODO: Deal with this case
 										}
-										Account finalUpdatedFrom = fromBank
+										Account taken = fromBank.remove(0, t.GOOD);
+										Account finalUpdatedFrom = taken
 												.add(t.COST,
 														new HashSet<Tradeable>());
 										this.bank.put(t.FROM, finalUpdatedFrom);
@@ -357,50 +352,6 @@ public abstract class AgentServer {
 	}
 
 	/*
-	 * This will handle the logic for requests to purchase from public markets
-	 */
-	protected void onPurchaseRequest(Connection connection, Integer privateID,
-			PurchaseRequest purchaseRequest) {
-		TwoSidedAuction market = exchange
-				.getTwoSidedAuction(purchaseRequest.market.getID());
-		Ledger ledger = exchange.getLedger(purchaseRequest.market.getID());
-		Account oldAccount = bank.get(privateID);
-		synchronized (market) {
-			synchronized (oldAccount) {
-				if (market == null) {
-					Rejection rej = new Rejection(privateID, purchaseRequest);
-					this.theServer.sendToTCP(connection.getID(), rej);
-					return;
-				}
-
-				/*
-				 * double cost = market.cost(purchaseRequest.buyQuantity,
-				 * purchaseRequest.sellQuantity); if (oldAccount.monies >= cost)
-				 * { //TODO: Update so that purchases can affect multiple agents
-				 * //using multiple transactions; all safely locked etc
-				 * List<Tradeable> update = new LinkedList<Tradeable>(); if
-				 * (purchaseRequest.buyQuantity > 0) { List<Transaction> yes =
-				 * market.buy(privateID, purchaseRequest.buyQuantity, -1);
-				 * update.addAll(yes); ledger.add(yes); }
-				 * 
-				 * if (purchaseRequest.sellQuantity > 0) { List<Transaction> no
-				 * = market.sell(privateID, purchaseRequest.sellQuantity, -1);
-				 * update.addAll(no); ledger.add(no); }
-				 * 
-				 * Account newAccount = oldAccount.addAll(0, update); newAccount
-				 * = newAccount.remove(cost, null); bank.put(privateID,
-				 * newAccount); BankUpdate bu = new BankUpdate(privateID,
-				 * oldAccount, newAccount);
-				 * theServer.sendToTCP(connection.getID(), bu);
-				 * //this.sendMarketUpdate(market); } else { Rejection rej = new
-				 * Rejection(privateID, purchaseRequest);
-				 * theServer.sendToTCP(connection.getID(), rej); }
-				 */
-			}
-		}
-	}
-
-	/*
 	 * This will handle what happens when an agent sends in a bid in response to
 	 * a BidRequest for an auction
 	 */
@@ -450,7 +401,7 @@ public abstract class AgentServer {
 	public void sendAllMarketUpdates(List<TwoSidedAuction> tsas) {
 		int i = 0;
 		for (TwoSidedAuction sec : tsas) {
-			MarketUpdate mupdate = new MarketUpdate(i++, sec.wrap(),
+			TradeRequest mupdate = new TradeRequest(i++, sec.wrap(),
 					sec.getMechanismType());
 			theServer.sendToAllTCP(mupdate);
 		}
@@ -495,12 +446,12 @@ public abstract class AgentServer {
 					} else {
 						for (Map.Entry<Connection, Integer> id : this.connections
 								.entrySet()) {
-							TradeRequest br = auction.getBidRequest(id
+							TradeRequest tr = auction.wrap(id
 									.getValue());
-							if (br == null) {
+							if (tr == null) {
 								continue;
 							}
-							this.theServer.sendToTCP(id.getKey().getID(), br);
+							this.theServer.sendToTCP(id.getKey().getID(), tr);
 						}
 					}
 				}
@@ -518,7 +469,7 @@ public abstract class AgentServer {
 	 * @param Security : the market to update on
 	 */
 	public void sendMarketUpdate(TwoSidedAuction market) {
-		MarketUpdate mupdate = new MarketUpdate(0, market.wrap(),
+		TradeRequest mupdate = new TradeRequest(0, market.wrap(),
 				market.getMechanismType());
 		theServer.sendToAllTCP(mupdate);
 	}

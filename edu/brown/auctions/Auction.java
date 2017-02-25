@@ -4,7 +4,7 @@ import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.TradeRequest;
+import brown.messages.auctions.BidReqeust;
 
 public interface Auction {
 	/**
@@ -25,7 +25,7 @@ public interface Auction {
 	 * @param ID : agent to tailor the request
 	 * @return BidRequest
 	 */
-	public TradeRequest getTradeRequest(Integer ID);
+	public BidReqeust getTradeRequest(Integer ID);
 	
 	/**
 	 * Is the auction over

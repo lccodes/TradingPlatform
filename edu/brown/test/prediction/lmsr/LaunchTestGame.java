@@ -1,4 +1,4 @@
-package brown.test.prediction;
+package brown.test.prediction.lmsr;
 
 import brown.exceptions.AgentCreationException;
 

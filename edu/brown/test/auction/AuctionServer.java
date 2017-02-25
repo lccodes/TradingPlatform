@@ -54,14 +54,14 @@ public class AuctionServer extends AgentServer {
 		//if (outcry) {
 			//this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, firstprice));
 			this.auctions.put(0, new OneSidedAuction(0, theSet, 
-					new OpenOutcryRule(BundleType.SimpleOutcry, true, 5,
-							new SimpleBidBundle(10,null,BundleType.SimpleOutcry)),
+					new OpenOutcryRule(BundleType.Simple, true, 5,
+							new SimpleBidBundle(10,null,BundleType.Simple)),
 					new FirstPriceRule()));
 		//} else {
 			//this.auctions.put(0, new SealedBid(0, new TheGood(), true, firstprice));
 		//}
 		int i = 0;
-		while (i < 10) {
+		while (i < 2) {
 			try {
 				Thread.sleep(2000);
 				Logging.log("[-] setup phase " + i++);

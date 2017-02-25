@@ -1,18 +1,16 @@
 package brown.test.auction;
 
 import brown.agent.Agent;
-import brown.auctions.bundles.BundleType;
-import brown.auctions.bundles.SimpleBidBundle;
-import brown.auctions.onesided.OneSidedWrapper;
-import brown.auctions.twosided.TwoSidedWrapper;
+import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
-import brown.messages.auctions.Bid;
-import brown.messages.auctions.TradeRequest;
-import brown.messages.markets.MarketUpdate;
+import brown.messages.auctions.BidReqeust;
+import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
+import brown.securities.mechanisms.cda.CDAWrapper;
+import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Logging;
 
 public class AuctionAgent extends Agent {
@@ -36,7 +34,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	protected void onMarketUpdate(MarketUpdate marketUpdate) {
+	protected void onMarketUpdate(TradeRequest marketUpdate) {
 		//Noop
 	}
 
@@ -49,20 +47,8 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	protected void onTradeRequest(TradeRequest bidRequest) {
+	protected void onTradeRequest(BidReqeust bidRequest) {
 		Logging.log("[-] bidRequest for " + bidRequest.AuctionID + " w/ hb " + bidRequest.Current.getCost());
-		if (bidRequest.Current.getCost() < this.myMax && bidRequest.Current.getAgent() == null) {
-			if (bidRequest.BundleType == BundleType.SimpleOutcry) {
-				SimpleBidBundle bundle = new SimpleBidBundle(bidRequest.Current.getCost()+1,
-						this.ID,BundleType.SimpleOutcry);
-				Bid bid = new Bid(0, bundle, bidRequest.AuctionID, this.ID);
-				this.CLIENT.sendTCP(bid);
-			} else if (bidRequest.BundleType == BundleType.SimpleSealed){
-				SimpleBidBundle bundle = new SimpleBidBundle(this.myMax, this.ID, BundleType.SimpleSealed);
-				Bid bid = new Bid(0, bundle, bidRequest.AuctionID, this.ID);
-				this.CLIENT.sendTCP(bid);
-			}
-		}
 	}
 
 	@Override
@@ -76,15 +62,29 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	protected void onSealedBid(OneSidedWrapper market) {
+	protected void onLMSR(LMSRWrapper market) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onOpenOutcry(OneSidedWrapper market) {
+	protected void onContinuousDoubleAuction(CDAWrapper market) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void onSimpleSealed(SimpleOneSidedWrapper market) {
+		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote().getCost());
+		market.bid(this, this.myMax);
+	}
+
+	@Override
+	protected void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
+		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote().getCost());
+		if (market.getQuote().getAgent() == null && market.getQuote().getCost() < this.myMax) {
+			market.bid(this, market.getQuote().getCost()+1);
+		}
 	}
 
 }

@@ -1,12 +1,12 @@
-package brown.test.prediction;
+package brown.test.prediction.lmsr;
 
 import brown.agent.Agent;
-import brown.auctions.onesided.OneSidedWrapper;
+import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Rejection;
-import brown.messages.auctions.TradeRequest;
-import brown.messages.markets.MarketUpdate;
+import brown.messages.auctions.BidReqeust;
+import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -28,19 +28,6 @@ public class TestAgent extends Agent {
 	public TestAgent(String host, int port) throws AgentCreationException {
 		super(host, port, new GameSetup());
 	}
-
-	@Override
-	protected void onSealedBid(OneSidedWrapper market) {
-		// TODO Auto-generated method stub
-	}
-
-
-	@Override
-	protected void onOpenOutcry(OneSidedWrapper market) {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	@Override
 	protected void onLMSR(LMSRWrapper market) {
@@ -67,7 +54,7 @@ public class TestAgent extends Agent {
 
 
 	@Override
-	protected void onMarketUpdate(MarketUpdate marketUpdate) {
+	protected void onMarketUpdate(TradeRequest marketUpdate) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -80,7 +67,7 @@ public class TestAgent extends Agent {
 
 
 	@Override
-	protected void onTradeRequest(TradeRequest bidRequest) {
+	protected void onTradeRequest(BidReqeust bidRequest) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -95,6 +82,18 @@ public class TestAgent extends Agent {
 	public static void main(String[] args) throws AgentCreationException {
 		new TestAgent("localhost", 9922);
 		while(true) {}
+	}
+
+	@Override
+	protected void onSimpleSealed(SimpleOneSidedWrapper market) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

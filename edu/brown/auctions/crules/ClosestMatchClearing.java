@@ -163,12 +163,12 @@ public class ClosestMatchClearing implements ClearingRule {
 
 	@Override
 	public SortedMap<Double, Set<Order>> getBuyBook() {
-		return this.getBuyBook();
+		return this.buyOrderBook;
 	}
 
 	@Override
 	public SortedMap<Double, Set<Order>> getSellBook() {
-		return this.getSellBook();
+		return this.sellOrderBook;
 	}
 
 	@Override

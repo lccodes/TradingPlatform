@@ -61,9 +61,9 @@ public class Lab3Server extends AgentServer {
     theSet.add(new Lab3Good());
     PaymentRule prule = firstprice ? new FirstPriceRule() : new SecondPriceRule();
     if (outcry) {
-      this.auctions.put(0, new OneSidedAuction(0, theSet, new OpenOutcryRule(BundleType.SimpleOutcry, true, 5, new SimpleBidBundle(reserve, null, BundleType.SimpleOutcry)), prule));
+      this.auctions.put(0, new OneSidedAuction(0, theSet, new OpenOutcryRule(BundleType.Simple, true, 5, new SimpleBidBundle(reserve, null, BundleType.Simple)), prule));
     } else {
-      this.auctions.put(0, new OneSidedAuction(0, theSet, new SealedBidRule(BundleType.SimpleSealed, true, 5, new SimpleBidBundle(reserve, null, BundleType.SimpleSealed)), prule));
+      this.auctions.put(0, new OneSidedAuction(0, theSet, new SealedBidRule(BundleType.Simple, true, 5, new SimpleBidBundle(reserve, null, BundleType.Simple)), prule));
     }
     
     // Gives everyone 20 seconds to join the auction

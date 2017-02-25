@@ -12,21 +12,21 @@ import brown.messages.Message;
  * 
  * @author lcamery
  */
-public class TradeRequest extends Message {
+public class BidReqeust extends Message {
   public final Integer AuctionID;
-  public final BundleType BundleType;
   public final Set<Tradeable> Goods;
   public final BidBundle Current;
+  public final BundleType TYPE;
 
   /**
    * Kryo requires empty constructor DO NOT USE
    */
-  public TradeRequest() {
+  public BidReqeust() {
     super(null);
     this.AuctionID = null;
-    this.BundleType = null;
     this.Current = null;
     this.Goods = null;
+    this.TYPE = null;
   }
 
   /**
@@ -38,12 +38,12 @@ public class TradeRequest extends Message {
    * @param bundle
    * @param goods
    */
-  public TradeRequest(int ID, Integer auctionID, BundleType bundleType, BidBundle bundle, Set<Tradeable> goods) {
+  public BidReqeust(int ID, Integer auctionID, BundleType type, BidBundle bundle, Set<Tradeable> goods) {
     super(ID);
     this.AuctionID = auctionID;
-    this.BundleType = bundleType;
     this.Current = bundle;
     this.Goods = goods;
+    this.TYPE = type;
   }
 
 }

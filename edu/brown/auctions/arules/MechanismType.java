@@ -1,6 +1,6 @@
 package brown.auctions.arules;
 
-public enum AllocationType {
+public enum MechanismType {
 	OpenOutcry,
 	SealedBid,
 	LMSR,

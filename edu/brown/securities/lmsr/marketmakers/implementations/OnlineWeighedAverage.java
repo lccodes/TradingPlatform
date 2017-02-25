@@ -1,12 +1,13 @@
-package brown.securities.prediction.marketmakers.implementations;
+package brown.securities.lmsr.marketmakers.implementations;
 
-import brown.securities.prediction.Utilities;
+import javax.swing.text.Utilities;
+
 import brown.securities.prediction.marketmakers.types.OnlineLearning;
 
 public class OnlineWeighedAverage extends OnlineLearning {
 
-	public OnlineWeighedAverage(double b, double yes, double no) {
-		super(b, yes, no);
+	public OnlineWeighedAverage(Integer ID, double b, double yes, double no) {
+		super(ID, b, yes, no);
 		// TODO Auto-generated constructor stub
 	}
 	

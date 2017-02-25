@@ -37,4 +37,9 @@ public class SecondPriceRule implements PaymentRule {
 		return payments;
 	}
 
+	@Override
+	public PaymentType getPaymentType() {
+		return PaymentType.SecondPrice;
+	}
+
 }

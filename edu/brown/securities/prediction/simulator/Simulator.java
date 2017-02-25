@@ -5,9 +5,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import brown.securities.lmsr.marketmakers.implementations.LiquiditySensitive;
+import brown.securities.lmsr.marketmakers.implementations.LukeMM;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
-import brown.securities.prediction.marketmakers.implementations.LiquiditySensitive;
-import brown.securities.prediction.marketmakers.implementations.LukeMM;
 
 public class Simulator {
 	private final List<LMSRBackend> marketmakers;

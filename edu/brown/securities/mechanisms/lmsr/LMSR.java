@@ -8,7 +8,7 @@ import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
-import brown.auctions.arules.AllocationType;
+import brown.auctions.arules.MechanismType;
 import brown.auctions.crules.LMSRNoClearing;
 import brown.auctions.crules.LMSRYesClearing;
 import brown.auctions.rules.ClearingRule;
@@ -44,8 +44,8 @@ public class LMSR implements TwoSidedAuction {
 	}
 
 	@Override
-	public AllocationType getMechanismType() {
-		return AllocationType.LMSR;
+	public MechanismType getMechanismType() {
+		return MechanismType.LMSR;
 	}
 
 	@Override

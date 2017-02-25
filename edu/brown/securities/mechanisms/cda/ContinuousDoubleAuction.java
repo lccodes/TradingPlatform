@@ -8,7 +8,7 @@ import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.SecurityType;
 import brown.assets.value.Tradeable;
-import brown.auctions.arules.AllocationType;
+import brown.auctions.arules.MechanismType;
 import brown.auctions.rules.ClearingRule;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.auctions.twosided.TwoSidedWrapper;
@@ -88,18 +88,18 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public AllocationType getMechanismType() {
-		return AllocationType.ContinuousDoubleAuction;
+	public MechanismType getMechanismType() {
+		return MechanismType.ContinuousDoubleAuction;
 	}
 
 	@Override
 	public SortedMap<Double, Set<Order>> getBuyBook() {
-		return this.getBuyBook();
+		return this.RULE.getBuyBook();
 	}
 
 	@Override
 	public SortedMap<Double, Set<Order>> getSellBook() {
-		return this.getSellBook();
+		return this.RULE.getSellBook();
 	}
 
 	@Override

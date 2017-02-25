@@ -1,4 +1,4 @@
-package brown.securities.prediction.marketmakers.implementations;
+package brown.securities.lmsr.marketmakers.implementations;
 
 public class LukeMM extends LiquiditySensitive {
 	private int count;

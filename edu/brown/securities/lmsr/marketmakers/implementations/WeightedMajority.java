@@ -1,4 +1,4 @@
-package brown.securities.prediction.marketmakers.implementations;
+package brown.securities.lmsr.marketmakers.implementations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +12,8 @@ public class WeightedMajority extends NoRegret {
 	private final double LEARNING;
 	private final double FAILURE;
 
-	public WeightedMajority(double b, NoRegretMemory memory) {
-		super(b, memory);
+	public WeightedMajority(Integer ID, double b, NoRegretMemory memory) {
+		super(ID, b, memory);
 		this.T = memory.T;
 		this.LEARNING = Math.sqrt(Math.log(memory.WEIGHTS.size())/T);
 		this.predictions = new HashMap<Integer, Boolean>();

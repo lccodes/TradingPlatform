@@ -13,7 +13,7 @@ import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.rules.AllocationRule;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.TradeRequest;
+import brown.messages.auctions.BidReqeust;
 
 public class OpenOutcryRule implements AllocationRule {
 	private final int END;
@@ -78,7 +78,7 @@ public class OpenOutcryRule implements AllocationRule {
 	}
 
 	@Override
-	public TradeRequest getBidRequest(Set<Bid> bids, Integer ID) {		
+	public BidReqeust getBidRequest(Set<Bid> bids, Integer ID) {		
 		synchronized(bids) {
 			List<Bid> topBids = this.getSorted(bids, 1);
 			BidBundle topBid = this.RESERVE;
@@ -86,7 +86,7 @@ public class OpenOutcryRule implements AllocationRule {
 				topBid = topBids.get(0).Bundle;
 			}
 			
-			return new TradeRequest(1, null, this.BT, topBid,null);
+			return new BidReqeust(1, null, this.BT, topBid,null);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class OpenOutcryRule implements AllocationRule {
 	}
 
 	@Override
-	public AllocationType getAllocationType() {
-		return AllocationType.OpenOutcry;
+	public MechanismType getAllocationType() {
+		return MechanismType.OpenOutcry;
 	}
 }

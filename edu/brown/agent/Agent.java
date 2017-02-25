@@ -2,13 +2,13 @@ package brown.agent;
 
 import java.io.IOException;
 
-import brown.auctions.onesided.OneSidedWrapper;
+import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.Rejection;
-import brown.messages.auctions.TradeRequest;
-import brown.messages.markets.MarketUpdate;
+import brown.messages.auctions.BidReqeust;
+import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -89,23 +89,33 @@ public abstract class Agent {
 	protected void onMessage(Connection connection, Object message) {
 		if (message instanceof BankUpdate) {
 			this.onBankUpdate((BankUpdate) message);
-		} else if (message instanceof TradeRequest) {
-			this.onTradeRequest((TradeRequest) message);
 		} else if (message instanceof NegotiateRequest) {
 			this.onNegotiateRequest((NegotiateRequest) message);
 		} else if (message instanceof Registration) {
 			this.onRegistration((Registration) message);
-		} else if (message instanceof MarketUpdate) {
-			MarketUpdate mu = (MarketUpdate) message;
+		} else if (message instanceof TradeRequest) {
+			TradeRequest mu = (TradeRequest) message;
 			switch(mu.MECHANISM) {
 			case ContinuousDoubleAuction:
 				this.onContinuousDoubleAuction((CDAWrapper) mu.TMARKET);
+				break;
 			case LMSR:
 				this.onLMSR((LMSRWrapper) mu.TMARKET);
+				break;
 			case OpenOutcry:
-				this.onOpenOutcry(mu.OMARKET);
+				switch(mu.OMARKET.getBundleType()) {
+				case Simple:
+					this.onSimpleOpenOutcry((SimpleOneSidedWrapper) mu.OMARKET);
+					break;
+				}
+				break;
 			case SealedBid:
-				this.onSealedBid(mu.OMARKET);
+				switch(mu.OMARKET.getBundleType()) {
+				case Simple:
+					this.onSimpleSealed((SimpleOneSidedWrapper) mu.OMARKET);
+					break;
+				}
+				break;
 			default:
 				this.onMarketUpdate(mu);
 			}
@@ -118,13 +128,13 @@ public abstract class Agent {
 	 * Provides response to sealed bid auction
 	 * @param SealedBid wrapper
 	 */
-	protected abstract void onSealedBid(OneSidedWrapper market);
+	protected abstract void onSimpleSealed(SimpleOneSidedWrapper market);
 
 	/**
 	 * Provides agent response to OpenOutcry auction
 	 * @param OpenOutcry wrapper
 	 */
-	protected abstract void onOpenOutcry(OneSidedWrapper market);
+	protected abstract void onSimpleOpenOutcry(SimpleOneSidedWrapper market);
 
 	/**
 	 * Provides agent response to LMSR
@@ -161,7 +171,7 @@ public abstract class Agent {
 	 * Whenever an unknown market changes state
 	 * @param marketUpdate
 	 */
-	protected abstract void onMarketUpdate(MarketUpdate marketUpdate);
+	protected abstract void onMarketUpdate(TradeRequest marketUpdate);
 
 	/**
 	 * Whenever an agent's bank changes, the server sends a bank update
@@ -180,7 +190,7 @@ public abstract class Agent {
 	 * @param bidRequest
 	 *            - auction metadata
 	 */
-	protected abstract void onTradeRequest(TradeRequest bidRequest);
+	protected abstract void onTradeRequest(BidReqeust bidRequest);
 
 	/**
 	 * Whenever another agent requests a trade either directly with this agent

@@ -8,7 +8,7 @@ import brown.assets.value.Tradeable;
 import brown.auctions.twosided.TwoSidedAuction;
 
 public class Ledger {
-	protected Set<Tradeable> Tradeables;
+	protected final Set<Tradeable> tradeables;
 	protected final TwoSidedAuction tsa;
 	
 	/**
@@ -17,7 +17,7 @@ public class Ledger {
 	 */
 	public Ledger(TwoSidedAuction tsa) {
 		this.tsa = tsa;
-		this.Tradeables = new HashSet<Tradeable>();
+		this.tradeables = new HashSet<Tradeable>();
 	}
 	
 	/**
@@ -25,7 +25,7 @@ public class Ledger {
 	 * @param t : Tradeable to add
 	 */
 	public void add(Tradeable t) {
-		this.Tradeables.add(t);
+		this.tradeables.add(t);
 	}
 	
 	/**
@@ -33,11 +33,15 @@ public class Ledger {
 	 * @return set
 	 */
 	public Set<Tradeable> getSet() {
-		return this.Tradeables;
+		return this.tradeables;
 	}
 
+	/**
+	 * Adds a list of tradeables
+	 * @param trans
+	 */
 	public void add(List<Tradeable> trans) {
-		this.Tradeables.addAll(trans);
+		this.tradeables.addAll(trans);
 	}
 
 }

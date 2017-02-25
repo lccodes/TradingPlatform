@@ -1,4 +1,4 @@
-package brown.test.prediction;
+package brown.test.prediction.lmsr;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +43,6 @@ public class TestServer extends AgentServer {
 	}
 	
 	private void delay(int amt) {
-		// Gives everyone 20 seconds to join the auction
 	    int i = 0;
 	    while (i < amt) {
 	      try {
