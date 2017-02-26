@@ -6,6 +6,7 @@ import brown.assets.value.Tradeable;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
+import brown.messages.Registration;
 import brown.messages.Rejection;
 import brown.messages.auctions.BidReqeust;
 import brown.messages.markets.TradeRequest;
@@ -16,10 +17,12 @@ import brown.setup.Logging;
 
 public class TestAgent extends Agent {
 	private int ME;
+	protected boolean myCoin;
 
 	public TestAgent(String host, int port) throws AgentCreationException {
 		super(host, port, new GameSetup());
 		this.ME = 2;
+		this.myCoin = false;
 	}
 
 	@Override
@@ -78,6 +81,14 @@ public class TestAgent extends Agent {
 			}
 		}
 		Logging.log("[" + this.ID + "] cash: "+ bankUpdate.newAccount.monies + " tradeables " + bankUpdate.newAccount.goods);
+	}
+	
+	@Override
+	protected void onRegistration(Registration registration) {
+		super.onRegistration(registration);
+		PMRegistration reg = (PMRegistration) registration;
+		this.myCoin = reg.COIN;
+		Logging.log("[+] my coin: " + this.myCoin);
 	}
 
 	@Override
