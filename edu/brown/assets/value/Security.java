@@ -10,7 +10,7 @@ public class Security implements Tradeable {
 	
 	private final long TIMESTAMP;
 	private final FullType TYPE;
-	private final Function<State, Account> CLOSURE;
+	private Function<State, Account> CLOSURE;
 	
 	
 	/**
@@ -81,6 +81,10 @@ public class Security implements Tradeable {
 	@Override
 	public Account close(State closingState) {
 		return this.CLOSURE.apply(closingState);
+	}
+	
+	public void setClosure(Function<State, Account> close) {
+		this.CLOSURE = close;
 	}
 
 	@Override

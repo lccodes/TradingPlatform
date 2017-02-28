@@ -1,8 +1,7 @@
 package brown.securities.lmsr.marketmakers.implementations;
 
-import javax.swing.text.Utilities;
-
 import brown.securities.prediction.marketmakers.types.OnlineLearning;
+import brown.securities.prediction.simulator.Utilities;
 
 public class OnlineWeighedAverage extends OnlineLearning {
 

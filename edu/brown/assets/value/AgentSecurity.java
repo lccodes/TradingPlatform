@@ -58,5 +58,10 @@ public class AgentSecurity implements Tradeable {
 	public Tradeable toAgent() {
 		return this;
 	}
+	
+	@Override
+	public String toString() {
+		return "<" + this.TYPE.TYPE + " " + COUNT + ">";
+	}
 
 }

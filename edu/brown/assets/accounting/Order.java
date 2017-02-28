@@ -9,6 +9,25 @@ public class Order {
 	public final double COST;
 	public double QUANTITY;
 	
+	/**
+	 * For Kryo do not use
+	 */
+	public Order() {
+		this.TO = null;
+		this.FROM = null;
+		this.COST = -1;
+		this.QUANTITY = -1;
+		this.GOOD = null;
+	}
+	
+	/**
+	 * Actual order constructor
+	 * @param to
+	 * @param from
+	 * @param cost
+	 * @param quantity
+	 * @param good
+	 */
 	public Order(Integer to, Integer from, double cost, double quantity, Tradeable good) {
 		this.TO = to;
 		this.FROM = from;

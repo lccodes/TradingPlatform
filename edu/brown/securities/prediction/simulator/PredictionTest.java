@@ -6,9 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import brown.securities.SecurityFactory;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
-import brown.securities.prediction.PMTriple;
 
 /*
  * It appears that for all bidders and all budgets and all orderings there exists
@@ -46,8 +44,7 @@ public final class PredictionTest {
 		}
 		avg/= values.length;
 		while(x < 10) {
-			PMTriple triple = SecurityFactory.makePM(1, 2, B);
-			LMSRBackend backend = triple.backend;
+			LMSRBackend backend = new LMSRBackend(0,B);
 			List<Double> list = Arrays.asList(values);
 			Collections.shuffle(list);
 			values = (Double[]) list.toArray();

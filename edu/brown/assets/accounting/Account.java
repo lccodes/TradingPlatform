@@ -1,5 +1,6 @@
 package brown.assets.accounting;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -82,8 +83,12 @@ public class Account {
 		if (newGoods == null) {
 			return new Account(this.ID, newMonies+this.monies, goods);
 		}
-		this.goods.addAll(newGoods);
-		return new Account(this.ID, newMonies+this.monies, goods);
+		Set<Tradeable> goods = new HashSet<Tradeable>();
+		goods.addAll(this.goods);
+		goods.addAll(newGoods);
+		List<Tradeable> unique = new LinkedList<Tradeable>();
+		unique.addAll(goods);
+		return new Account(this.ID, newMonies+this.monies, unique);
 	}
 	
 	/**
@@ -106,8 +111,13 @@ public class Account {
 			return new Account(this.ID, this.monies-removeMonies, this.goods);
 		}
 		
-		this.goods.remove(t);
-		return new Account(this.ID, this.monies-removeMonies, this.goods);
+		List<Tradeable> unique = new LinkedList<Tradeable>();
+		for (Tradeable o : this.goods) {
+			if (!o.equals(t)) {
+				unique.add(o);
+			}
+		}
+		return new Account(this.ID, this.monies-removeMonies, unique);
 	}
 
 	public Account add(double add) {

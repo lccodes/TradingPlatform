@@ -13,21 +13,25 @@ import brown.auctions.twosided.TwoSidedWrapper;
 import brown.messages.markets.MarketOrder;
 
 public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
-	private final ContinuousDoubleAuction CDA;
+	private final Integer MARKETID;
+	private final FullType TYPE;
 	private final SortedMap<Double, Double> BUYBOOK;
 	private final SortedMap<Double, Double> SELLBOOK;
 	
 	public CDAWrapper() {
-		this.CDA = null;
+		this.TYPE = null;
+		this.MARKETID = null;
 		this.BUYBOOK = null;
 		this.SELLBOOK = null;
 	}
 	
 	public CDAWrapper(ContinuousDoubleAuction CDA) {
-		this.CDA = CDA;
 		this.BUYBOOK = new TreeMap<Double, Double>();
 		this.SELLBOOK = new TreeMap<Double, Double>();
-		for (Map.Entry<Double, Set<Order>> entry : this.CDA.getBuyBook().entrySet()) {
+		
+		this.MARKETID = CDA.getID();
+		this.TYPE = CDA.getType();
+		for (Map.Entry<Double, Set<Order>> entry : CDA.getBuyBook().entrySet()) {
 			double count = 0;
 			for (Order t : entry.getValue()) {
 				count += t.QUANTITY;
@@ -35,7 +39,7 @@ public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
 			this.BUYBOOK.put(entry.getKey(), count);
 		}
 		
-		for (Map.Entry<Double, Set<Order>> entry : this.CDA.getSellBook().entrySet()) {
+		for (Map.Entry<Double, Set<Order>> entry : CDA.getSellBook().entrySet()) {
 			double count = 0;
 			for (Order t : entry.getValue()) {
 				count += t.GOOD.getCount();
@@ -46,32 +50,34 @@ public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
 
 	@Override
 	public Integer getID() {
-		return CDA.getID();
+		return this.MARKETID;
 	}
 
 	@Override
 	public FullType getType() {
-		return CDA.getType();
+		return this.TYPE;
 	}
 
 	@Override
 	public void buy(Agent agent, double shareNum, double sharePrice) {
-		agent.CLIENT.sendTCP(new MarketOrder(0,this.CDA, shareNum, 0, sharePrice));
+		agent.CLIENT.sendTCP(new MarketOrder(0,this.MARKETID, shareNum, 0, sharePrice));
 	}
 
 	@Override
 	public void sell(Agent agent, double shareNum, double sharePrice) {
-		agent.CLIENT.sendTCP(new MarketOrder(0, this.CDA, 0, shareNum, sharePrice));
+		agent.CLIENT.sendTCP(new MarketOrder(0, this.MARKETID, 0, shareNum, sharePrice));
 	}
 
 	@Override
 	public double quoteBid(double shareNum, double sharePrice) {
-		return this.CDA.quoteBid(shareNum, sharePrice);
+		//TODO: Fix
+		return -1;
 	}
 
 	@Override
 	public double quoteAsk(double shareNum, double sharePrice) {
-		return this.CDA.quoteAsk(shareNum, sharePrice);
+		//TODO: Fix
+		return -1;
 	}
 
 	@Override

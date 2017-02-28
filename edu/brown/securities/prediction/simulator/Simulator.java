@@ -118,7 +118,7 @@ public class Simulator {
 		for (int i = 0; i < 3; i++) {
 			MarketMakerFactory mmf = new MarketMakerFactory();
 			LiquiditySensitive uno = new LiquiditySensitive(first);
-			LMSRBackend pmb = new LMSRBackend(50);
+			LMSRBackend pmb = new LMSRBackend(0, 50);
 			mmf.add(uno);
 			mmf.add(pmb);
 			BidderFactory bf = new BidderFactory();
@@ -145,7 +145,7 @@ public class Simulator {
 			MarketMakerFactory mmf = new MarketMakerFactory();
 			LMSRBackend pmb = null;
 			switch(which) {
-			case 0: pmb = new LMSRBackend(50);
+			case 0: pmb = new LMSRBackend(0,50);
 			case 1: pmb = new LiquiditySensitive(.2);
 			case 2: pmb = new LukeMM(.2);
 			}

@@ -127,10 +127,10 @@ public abstract class AgentServer {
 	 */
 	protected void onLimitOrder(Connection connection, Integer privateID,
 			MarketOrder limitorder) {
-		TwoSidedAuction market = exchange.getTwoSidedAuction(limitorder.market
-				.getID());
+		TwoSidedAuction market = exchange
+				.getTwoSidedAuction(limitorder.marketID);
 		synchronized (market) {
-			Ledger ledger = exchange.getLedger(limitorder.market.getID());
+			Ledger ledger = exchange.getLedger(limitorder.marketID);
 			if (market == null) {
 				Rejection rej = new Rejection(privateID, limitorder);
 				this.theServer.sendToTCP(connection.getID(), rej);
@@ -198,61 +198,68 @@ public abstract class AgentServer {
 						ledger.add(t.GOOD);
 					}
 				}
-
 			} else if (limitorder.sellShares > 0) {
 				synchronized (privateID) {
 					Account sellerAccount = this.bank.get(privateID);
 					double qToSell = limitorder.sellShares;
-					for (Tradeable tradeable : sellerAccount.goods) {
-						if (qToSell <= 0) {
-							break;
-						}
-
-						if (tradeable.getType().equals(market.getType())) {
-							Tradeable toSell = tradeable;
-							if (tradeable.getCount() > qToSell) {
-								toSell = tradeable.split(qToSell);
+					synchronized (sellerAccount.goods) {
+						List<Tradeable> justAList = new LinkedList<Tradeable>(sellerAccount.goods);
+						for (Tradeable tradeable : justAList) {
+							if (qToSell <= 0) {
+								break;
 							}
-							qToSell -= toSell.getCount();
 
-							List<Order> trans = market.sell(privateID,
-									toSell, limitorder.price);
-							for (Order t : trans) {
-								if (t.FROM != null) {
-									synchronized (t.FROM) {
-										Account fromBank = this.bank
-												.get(t.FROM);
-										if (!fromBank.goods.contains(t.GOOD)) {
-											// TODO: Deal with this case
-										}
-										Account taken = fromBank.remove(0, t.GOOD);
-										Account finalUpdatedFrom = taken
-												.add(t.COST,
-														new HashSet<Tradeable>());
-										this.bank.put(t.FROM, finalUpdatedFrom);
-										this.sendBankUpdate(t.FROM, fromBank,
-												finalUpdatedFrom);
-									}
+							if (tradeable.getType().equals(market.getType())) {
+								Tradeable toSell = tradeable;
+								if (tradeable.getCount() > qToSell) {
+									toSell = tradeable.split(qToSell);
 								}
+								qToSell -= toSell.getCount();
 
-								if (t.TO != null) {
-									synchronized (t.TO) {
-										Account toBank = this.bank.get(t.TO);
-										Account oldBank = toBank;
-										if (toBank.monies >= t.COST) {
-											t.GOOD.setAgentID(t.TO);
-											toBank = toBank.add(-1 * t.COST,
-													t.GOOD);
-											this.bank.put(t.TO, toBank);
-											this.sendBankUpdate(t.TO, oldBank,
-													toBank);
-										} else {
-											// TODO: Could not afford
+								List<Order> trans = market.sell(privateID,
+										toSell, limitorder.price);
+								for (Order t : trans) {
+									if (t.FROM != null) {
+										synchronized (t.FROM) {
+											Account fromBank = this.bank
+													.get(t.FROM);
+											if (fromBank.goods.contains(t.GOOD)) {
+												Account taken = fromBank
+														.remove(0, t.GOOD);
+												Account finalUpdatedFrom = taken
+														.add(t.COST,
+																new HashSet<Tradeable>());
+												this.bank.put(t.FROM,
+														finalUpdatedFrom);
+												this.sendBankUpdate(t.FROM,
+														fromBank,
+														finalUpdatedFrom);
+											} else {
+												// TODO: Deal with this case
+											}
 										}
 									}
-								}
 
-								ledger.add(t.GOOD);
+									if (t.TO != null) {
+										synchronized (t.TO) {
+											Account toBank = this.bank
+													.get(t.TO);
+											Account oldBank = toBank;
+											if (toBank.monies >= t.COST) {
+												t.GOOD.setAgentID(t.TO);
+												toBank = toBank.add(
+														-1 * t.COST, t.GOOD);
+												this.bank.put(t.TO, toBank);
+												this.sendBankUpdate(t.TO,
+														oldBank, toBank);
+											} else {
+												// TODO: Could not afford
+											}
+										}
+									}
+
+									ledger.add(t.GOOD);
+								}
 							}
 						}
 					}
@@ -446,8 +453,7 @@ public abstract class AgentServer {
 					} else {
 						for (Map.Entry<Connection, Integer> id : this.connections
 								.entrySet()) {
-							TradeRequest tr = auction.wrap(id
-									.getValue());
+							TradeRequest tr = auction.wrap(id.getValue());
 							if (tr == null) {
 								continue;
 							}
@@ -562,8 +568,11 @@ public abstract class AgentServer {
 
 	/**
 	 * Default registration; allows modified reg message
-	 * @param connection : new connection
-	 * @param registration : new registration
+	 * 
+	 * @param connection
+	 *            : new connection
+	 * @param registration
+	 *            : new registration
 	 * @return safe privateID mapped to connection
 	 */
 	public Integer defaultRegistration(Connection connection,
