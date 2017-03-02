@@ -111,4 +111,9 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	public void tick(double time) {
 		// Noop
 	}
+
+	@Override
+	public boolean permitShort() {
+		return this.RULE.isShort();
+	}
 }

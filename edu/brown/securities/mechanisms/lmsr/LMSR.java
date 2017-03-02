@@ -26,9 +26,9 @@ public class LMSR implements TwoSidedAuction {
 		this.TYPE = null;
 	}
 	
-	public LMSR(Integer ID, boolean dir, LMSRBackend backend) {
+	public LMSR(Integer ID, boolean dir, LMSRBackend backend, boolean shortSelling) {
 		this.ID = ID;
-		this.RULE = dir ? new LMSRYesClearing(backend) : new LMSRNoClearing(backend);
+		this.RULE = dir ? new LMSRYesClearing(backend, shortSelling) : new LMSRNoClearing(backend, shortSelling);
 		this.TYPE = new FullType(dir ? SecurityType.PredictionYes : SecurityType.PredictionNo, 
 				backend.getId());
 	}
@@ -93,6 +93,11 @@ public class LMSR implements TwoSidedAuction {
 	@Override
 	public TwoSidedWrapper wrap() {
 		return new LMSRWrapper(this);
+	}
+
+	@Override
+	public boolean permitShort() {
+		return this.RULE.isShort();
 	}
 
 }

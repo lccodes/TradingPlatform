@@ -15,6 +15,7 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Exchange;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
+import brown.assets.value.ShortShare;
 import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.onesided.OneSidedAuction;
@@ -140,7 +141,7 @@ public abstract class AgentServer {
 			if (limitorder.buyShares > 0) {
 				synchronized (privateID) {
 					Account account = this.bank.get(privateID);
-					if (account.monies < market.quoteBid(limitorder.buyShares,
+					if (!market.permitShort() && account.monies < market.quoteBid(limitorder.buyShares,
 							limitorder.price)) {
 						Rejection rej = new Rejection(privateID, limitorder);
 						this.theServer.sendToTCP(connection.getID(), rej);
@@ -159,7 +160,7 @@ public abstract class AgentServer {
 						if (t.FROM != null) {
 							synchronized (t.FROM) {
 								Account fromBank = this.bank.get(t.FROM);
-								if (!fromBank.goods.contains(t.GOOD)) {
+								if (!market.permitShort() && !fromBank.goods.contains(t.GOOD)) {
 									// TODO: Deal with this case
 								}
 								Account finalUpdatedFrom = fromBank.add(t.COST,
@@ -178,7 +179,7 @@ public abstract class AgentServer {
 							synchronized (t.TO) {
 								Account toBank = this.bank.get(t.TO);
 								Account oldbank = toBank;
-								if (toBank.monies >= t.COST) {
+								if (market.permitShort() || toBank.monies >= t.COST) {
 									if (split == null) {
 										t.GOOD.setAgentID(t.TO);
 										toBank = toBank
@@ -204,6 +205,19 @@ public abstract class AgentServer {
 					double qToSell = limitorder.sellShares;
 					synchronized (sellerAccount.goods) {
 						List<Tradeable> justAList = new LinkedList<Tradeable>(sellerAccount.goods);
+						//Short sale check
+						if (market.permitShort()) {
+							double toShort = limitorder.sellShares;
+							for (Tradeable t : justAList) {
+								if (t.getType().equals(market.getType())) {
+									toShort -= t.getCount();
+								}
+							}
+							if (toShort > 0) {
+								justAList.add(new ShortShare(toShort, market.getType()));
+							}
+						}
+						
 						for (Tradeable tradeable : justAList) {
 							if (qToSell <= 0) {
 								break;
@@ -223,7 +237,7 @@ public abstract class AgentServer {
 										synchronized (t.FROM) {
 											Account fromBank = this.bank
 													.get(t.FROM);
-											if (fromBank.goods.contains(t.GOOD)) {
+											if (market.permitShort() || fromBank.goods.contains(t.GOOD)) {
 												Account taken = fromBank
 														.remove(0, t.GOOD);
 												Account finalUpdatedFrom = taken
@@ -245,7 +259,7 @@ public abstract class AgentServer {
 											Account toBank = this.bank
 													.get(t.TO);
 											Account oldBank = toBank;
-											if (toBank.monies >= t.COST) {
+											if (market.permitShort() || toBank.monies >= t.COST) {
 												t.GOOD.setAgentID(t.TO);
 												toBank = toBank.add(
 														-1 * t.COST, t.GOOD);

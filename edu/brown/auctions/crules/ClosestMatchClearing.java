@@ -5,10 +5,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
+import java.util.function.Function;
 
 import brown.assets.accounting.Order;
 import brown.assets.value.Tradeable;
@@ -18,9 +19,21 @@ public class ClosestMatchClearing implements ClearingRule {
 	private final SortedMap<Double, Set<Order>> buyOrderBook;
 	private final SortedMap<Double, Set<Order>> sellOrderBook;
 	
+	private final boolean SHORT;
+	private final Function<Double, Tradeable> SHORTER;
+	
 	public ClosestMatchClearing() {
 		this.buyOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
 		this.sellOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
+		this.SHORT = false;
+		this.SHORTER = null;
+	}
+	
+	public ClosestMatchClearing(Function<Double, Tradeable> shorter) {
+		this.buyOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
+		this.sellOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
+		this.SHORT = true;
+		this.SHORTER = shorter;
 	}
 
 	@Override
@@ -37,7 +50,8 @@ public class ClosestMatchClearing implements ClearingRule {
 				for (Order opp : opps) {
 					if (shareNum <= 0) {
 						break;
-					} else if (!opp.GOOD.getAgentID().equals(opp.FROM)) {
+					} else if (!opp.GOOD.getAgentID().equals(opp.FROM) || agentID.equals(opp.FROM)) {
+						//TODO: Think about this case
 						toRemove.add(opp);
 						continue;
 					}
@@ -71,6 +85,13 @@ public class ClosestMatchClearing implements ClearingRule {
 	public List<Order> sell(Integer agentID, Tradeable opp, double sharePrice) {
 		List<Order> completed = new LinkedList<Order>();
 		double shareNum = opp.getCount();
+		if (this.SHORT && opp.getAgentID() == null) {
+			opp = this.SHORTER.apply(opp.getCount());
+			opp.setAgentID(agentID);
+		} else if (opp.getAgentID() == null) {
+			return completed;
+		}
+		
 		for (Entry<Double, Set<Order>> wanted : this.buyOrderBook.entrySet()) {
 			if (shareNum <= 0) {
 				break;
@@ -82,6 +103,9 @@ public class ClosestMatchClearing implements ClearingRule {
 				for (Order buy : want) {
 					if (shareNum <= 0) {
 						break;
+					} else if (buy.FROM.equals(agentID)) {
+						toRemove.add(buy);
+						continue;
 					}
 					
 					double quantity = Math.min(opp.getCount(), buy.QUANTITY);
@@ -174,6 +198,11 @@ public class ClosestMatchClearing implements ClearingRule {
 	@Override
 	public void tick(double time) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean isShort() {
+		return this.SHORT;
 	}
 
 }

@@ -55,8 +55,8 @@ public class TestServer extends AgentServer {
 	}
 
 	public void startGame() {
-		this.exchange.open(new LMSR(1, true, BACKEND));
-		this.exchange.open(new LMSR(2, false, BACKEND));
+		this.exchange.open(new LMSR(1, true, BACKEND, true));
+		this.exchange.open(new LMSR(2, false, BACKEND, true));
 		System.out.println("[-] markets added");
 		
 		delay(2);

@@ -80,7 +80,14 @@ public class TestServer extends AgentServer {
 		// this.exchange.open(new ContinuousDoubleAuction(0, TYPENO, new
 		// ClosestMatchClearing()));
 		this.exchange.open(new ContinuousDoubleAuction(1, TYPEYES,
-				new ClosestMatchClearing()));
+				new ClosestMatchClearing((Double d) -> {
+					Security newSec = new Security(null, 1, TYPEYES,
+							state -> state.getState() == 1 ? new Account(null).add(100)
+									: null);
+					newSec.setClosure(state -> state.getState() == 1 ? new Account(null)
+							.add(newSec.getCount() * 100) : null);
+					return newSec;
+				})));
 		Logging.log("[-] markets open");
 		delay(1, false);
 

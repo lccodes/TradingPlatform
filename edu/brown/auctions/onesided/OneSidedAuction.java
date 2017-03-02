@@ -135,4 +135,9 @@ public class OneSidedAuction implements Market {
 	public PaymentType getPaymentType() {
 		return this.PRULE.getPaymentType();
 	}
+
+	@Override
+	public boolean permitShort() {
+		return false;
+	}
 }

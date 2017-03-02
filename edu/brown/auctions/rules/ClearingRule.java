@@ -18,4 +18,5 @@ public interface ClearingRule {
 	public SortedMap<Double, Set<Order>> getSellBook();
 	
 	public void tick(double time);
+	public boolean isShort();
 }

@@ -20,5 +20,11 @@ public interface Market {
 	 * @return AllocationType
 	 */
 	public MechanismType getMechanismType();
+	
+	/**
+	 * Is shortselling permitted?
+	 * @return true if shortable
+	 */
+	public boolean permitShort();
 
 }
