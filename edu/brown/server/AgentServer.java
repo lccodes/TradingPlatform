@@ -12,12 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.accounting.Account;
-import brown.assets.accounting.Exchange;
+import brown.assets.accounting.Settle;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
-import brown.assets.value.ShortShare;
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
+import brown.auctions.crules.ShortShare;
 import brown.auctions.onesided.OneSidedAuction;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.BankUpdate;
@@ -49,7 +49,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	// Consider time limiting these
 	protected List<NegotiateRequest> pendingTradeRequests;
-	protected Exchange exchange;
+	protected Settle exchange;
 	protected Map<Integer, OneSidedAuction> auctions;
 
 	private int agentCount;
@@ -64,7 +64,7 @@ public abstract class AgentServer {
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<NegotiateRequest>();
 		this.auctions = new ConcurrentHashMap<Integer, OneSidedAuction>();
-		this.exchange = new Exchange();
+		this.exchange = new Settle();
 		this.privateToPublic.put(-1, -1);
 
 		theServer = new Server();
@@ -151,7 +151,7 @@ public abstract class AgentServer {
 					List<Order> trans = market.buy(privateID,
 							limitorder.buyShares, limitorder.price);
 					for (Order t : trans) {
-						Tradeable split = null;
+						ITradeable split = null;
 						if (t.GOOD.getCount() > t.QUANTITY) {
 							split = t.GOOD.split(t.QUANTITY);
 							ledger.add(split);
@@ -164,7 +164,7 @@ public abstract class AgentServer {
 									// TODO: Deal with this case
 								}
 								Account finalUpdatedFrom = fromBank.add(t.COST,
-										new HashSet<Tradeable>());
+										new HashSet<ITradeable>());
 								if (split == null) {
 									finalUpdatedFrom = finalUpdatedFrom.remove(
 											0, t.GOOD);
@@ -204,11 +204,11 @@ public abstract class AgentServer {
 					Account sellerAccount = this.bank.get(privateID);
 					double qToSell = limitorder.sellShares;
 					synchronized (sellerAccount.goods) {
-						List<Tradeable> justAList = new LinkedList<Tradeable>(sellerAccount.goods);
+						List<ITradeable> justAList = new LinkedList<ITradeable>(sellerAccount.goods);
 						//Short sale check
 						if (market.permitShort()) {
 							double toShort = limitorder.sellShares;
-							for (Tradeable t : justAList) {
+							for (ITradeable t : justAList) {
 								if (t.getType().equals(market.getType())) {
 									toShort -= t.getCount();
 								}
@@ -218,13 +218,13 @@ public abstract class AgentServer {
 							}
 						}
 						
-						for (Tradeable tradeable : justAList) {
+						for (ITradeable tradeable : justAList) {
 							if (qToSell <= 0) {
 								break;
 							}
 
 							if (tradeable.getType().equals(market.getType())) {
-								Tradeable toSell = tradeable;
+								ITradeable toSell = tradeable;
 								if (tradeable.getCount() > qToSell) {
 									toSell = tradeable.split(qToSell);
 								}
@@ -242,7 +242,7 @@ public abstract class AgentServer {
 														.remove(0, t.GOOD);
 												Account finalUpdatedFrom = taken
 														.add(t.COST,
-																new HashSet<Tradeable>());
+																new HashSet<ITradeable>());
 												this.bank.put(t.FROM,
 														finalUpdatedFrom);
 												this.sendBankUpdate(t.FROM,
@@ -440,7 +440,7 @@ public abstract class AgentServer {
 					auction.tick(System.currentTimeMillis());
 					if (auction.isClosed()) {
 						toRemove.add(auction);
-						Map<BidBundle, Set<Tradeable>> winners = auction
+						Map<BidBundle, Set<ITradeable>> winners = auction
 								.getWinners();
 						if (winners == null) {
 							continue;
@@ -453,7 +453,7 @@ public abstract class AgentServer {
 							// TODO: Think about locking w/ account object
 							// changes
 							synchronized (account) {
-								for (Tradeable t : winners.get(winner)) {
+								for (ITradeable t : winners.get(winner)) {
 									t.setAgentID(winner.getAgent());
 								}
 								Account newA = account.add(

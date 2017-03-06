@@ -2,15 +2,15 @@ package brown.lab.lab3;
 
 import brown.assets.accounting.Account;
 import brown.assets.value.FullType;
-import brown.assets.value.State;
-import brown.assets.value.Tradeable;
+import brown.assets.value.StateOfTheWorld;
+import brown.assets.value.ITradeable;
 
 /**
  * Implementation of a good for Lab3.
  * 
  * @author lcamery
  */
-public class Lab3Good implements Tradeable {
+public class Lab3Good implements ITradeable {
 
   /**
    * Id of the agent that currently owns the good.
@@ -61,19 +61,19 @@ public FullType getType() {
 }
 
 @Override
-public Account close(State closingState) {
+public Account close(StateOfTheWorld closingState) {
 	// TODO Auto-generated method stub
 	return null;
 }
 
 @Override
-public Tradeable split(double newCount) {
+public ITradeable split(double newCount) {
 	// TODO Auto-generated method stub
 	return null;
 }
 
 @Override
-public Tradeable toAgent() {
+public ITradeable toAgent() {
 	// TODO Auto-generated method stub
 	return null;
 }

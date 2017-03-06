@@ -5,17 +5,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import brown.assets.value.State;
-import brown.assets.value.Tradeable;
+import brown.assets.value.StateOfTheWorld;
+import brown.assets.value.ITradeable;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
-public class Exchange {
+public class Settle {
 	private Map<TwoSidedAuction, Ledger> ledgers;
 	private Map<Integer, TwoSidedAuction> tsauctions;
 
-	public Exchange() {
+	public Settle() {
 		this.ledgers = new ConcurrentHashMap<TwoSidedAuction, Ledger>();
 		this.tsauctions = new ConcurrentHashMap<Integer, TwoSidedAuction>();
 	}
@@ -27,12 +27,12 @@ public class Exchange {
 	 * @param tsa
 	 * @param closingState
 	 */
-	public void close(AgentServer server, TwoSidedAuction tsa,
-			State closingState) {
+	public void convert(AgentServer server, TwoSidedAuction tsa,
+			StateOfTheWorld closingState) {
 		synchronized (tsa) {
 			Ledger ledger = this.ledgers.get(tsa);
 			synchronized (ledger) {
-				for (Tradeable t : ledger.getSet()) {
+				for (ITradeable t : ledger.getSet()) {
 					Account toReplace = t.close(closingState);
 					synchronized (t.getAgentID()) {
 						Account oldAccount = server.privateToAccount(t
@@ -67,7 +67,7 @@ public class Exchange {
 							}
 
 							Account newAccount = oldAccount.add(
-									toReplace.monies, new HashSet<Tradeable>(
+									toReplace.monies, new HashSet<ITradeable>(
 											toReplace.goods));
 							server.setAccount(toReplaceID, newAccount);
 							server.sendBankUpdate(toReplaceID, oldAccount,
@@ -82,9 +82,9 @@ public class Exchange {
 		}
 	}
 
-	public void close(AgentServer server, Integer ID, State closingState) {
+	public void close(AgentServer server, Integer ID, StateOfTheWorld closingState) {
 		TwoSidedAuction tsa = tsauctions.get(ID);
-		close(server, tsa, closingState);
+		convert(server, tsa, closingState);
 	}
 
 	public boolean open(TwoSidedAuction tsa) {
@@ -97,7 +97,7 @@ public class Exchange {
 		return true;
 	}
 	
-	public boolean register(Integer ID, Tradeable t) {
+	public boolean register(Integer ID, ITradeable t) {
 		TwoSidedAuction tsa = tsauctions.get(ID);
 		if (tsa == null) {
 			return false;

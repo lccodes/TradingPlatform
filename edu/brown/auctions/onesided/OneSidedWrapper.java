@@ -2,7 +2,7 @@ package brown.auctions.onesided;
 
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.prules.PaymentType;
 import brown.messages.auctions.BidReqeust;
@@ -25,7 +25,7 @@ public abstract class OneSidedWrapper {
 		return this.PTYPE;
 	}
 	
-	public Set<Tradeable> getTradeables() {
+	public Set<ITradeable> getTradeables() {
 		return this.BR.Goods;
 	}
 	

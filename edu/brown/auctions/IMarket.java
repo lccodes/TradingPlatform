@@ -2,7 +2,7 @@ package brown.auctions;
 
 import brown.auctions.arules.MechanismType;
 
-public interface Market {
+public interface IMarket {
 	/**
 	 * Gets the ID of the auction
 	 * @return id

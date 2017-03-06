@@ -2,11 +2,11 @@ package brown.messages.markets;
 
 import brown.auctions.arules.MechanismType;
 import brown.auctions.onesided.OneSidedWrapper;
-import brown.auctions.twosided.TwoSidedWrapper;
+import brown.auctions.twosided.ITwoSidedWrapper;
 import brown.messages.Message;
 
 public class TradeRequest extends Message {
-	public final TwoSidedWrapper TMARKET;
+	public final ITwoSidedWrapper TMARKET;
 	public final OneSidedWrapper OMARKET;
 	public final MechanismType MECHANISM;
 	
@@ -17,7 +17,7 @@ public class TradeRequest extends Message {
 		MECHANISM = null;
 	}
 
-	public TradeRequest(Integer ID, TwoSidedWrapper market, MechanismType mechanism) {
+	public TradeRequest(Integer ID, ITwoSidedWrapper market, MechanismType mechanism) {
 		super(ID);
 		this.TMARKET = market;
 		this.OMARKET = null;

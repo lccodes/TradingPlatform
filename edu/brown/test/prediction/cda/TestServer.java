@@ -1,8 +1,8 @@
 package brown.test.prediction.cda;
 
 import brown.assets.accounting.Account;
+import brown.assets.value.Contract;
 import brown.assets.value.FullType;
-import brown.assets.value.Security;
 import brown.assets.value.SecurityType;
 import brown.auctions.crules.ClosestMatchClearing;
 import brown.auctions.twosided.TwoSidedAuction;
@@ -41,7 +41,7 @@ public class TestServer extends AgentServer {
 				Math.random() > .5 ? C : D));
 
 		Account oldAccount = bank.get(connections.get(connection));
-		Security newSec = new Security(oldAccount.ID, 1, TYPEYES,
+		Contract newSec = new Contract(oldAccount.ID, 1, TYPEYES,
 				state -> state.getState() == 1 ? new Account(null).add(100)
 						: null);
 		newSec.setClosure(state -> state.getState() == 1 ? new Account(null)
@@ -81,7 +81,7 @@ public class TestServer extends AgentServer {
 		// ClosestMatchClearing()));
 		this.exchange.open(new ContinuousDoubleAuction(1, TYPEYES,
 				new ClosestMatchClearing((Double d) -> {
-					Security newSec = new Security(null, 1, TYPEYES,
+					Contract newSec = new Contract(null, 1, TYPEYES,
 							state -> state.getState() == 1 ? new Account(null).add(100)
 									: null);
 					newSec.setClosure(state -> state.getState() == 1 ? new Account(null)

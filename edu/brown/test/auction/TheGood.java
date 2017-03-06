@@ -2,10 +2,10 @@ package brown.test.auction;
 
 import brown.assets.accounting.Account;
 import brown.assets.value.FullType;
-import brown.assets.value.State;
-import brown.assets.value.Tradeable;
+import brown.assets.value.StateOfTheWorld;
+import brown.assets.value.ITradeable;
 
-public class TheGood implements Tradeable {
+public class TheGood implements ITradeable {
 	private Integer agentID;
 	
 	public TheGood() {
@@ -37,13 +37,13 @@ public class TheGood implements Tradeable {
 	}
 
 	@Override
-	public Account close(State closingState) {
+	public Account close(StateOfTheWorld closingState) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Tradeable split(double newCount) {
+	public ITradeable split(double newCount) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -55,7 +55,7 @@ public class TheGood implements Tradeable {
 	}
 
 	@Override
-	public Tradeable toAgent() {
+	public ITradeable toAgent() {
 		// TODO Auto-generated method stub
 		return null;
 	}

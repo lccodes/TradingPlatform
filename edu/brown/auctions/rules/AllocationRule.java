@@ -3,7 +3,7 @@ package brown.auctions.rules;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.BundleType;
 import brown.messages.auctions.Bid;
@@ -13,7 +13,7 @@ public interface AllocationRule {
 
 	void tick(long time);
 
-	Map<Integer, Set<Tradeable>> getAllocations(Set<Bid> bids, Set<Tradeable> items);
+	Map<Integer, Set<ITradeable>> getAllocations(Set<Bid> bids, Set<ITradeable> items);
 
 	BidReqeust getBidRequest(Set<Bid> bids, Integer iD);
 

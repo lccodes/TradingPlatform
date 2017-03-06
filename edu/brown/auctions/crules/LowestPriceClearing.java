@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.rules.ClearingRule;
 
 public class LowestPriceClearing implements ClearingRule {
@@ -20,7 +20,7 @@ public class LowestPriceClearing implements ClearingRule {
 	private final SortedMap<Double, Set<Order>> sellOrderBook;
 	
 	private final boolean SHORT;
-	private final Function<Double, Tradeable> SHORTER;
+	private final Function<Double, ITradeable> SHORTER;
 	
 	public LowestPriceClearing() {
 		this.buyOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
@@ -29,7 +29,7 @@ public class LowestPriceClearing implements ClearingRule {
 		this.SHORTER = null;
 	}
 	
-	public LowestPriceClearing(Function<Double, Tradeable> shorter) {
+	public LowestPriceClearing(Function<Double, ITradeable> shorter) {
 		this.buyOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
 		this.sellOrderBook = new TreeMap<Double, Set<Order>>();
 		this.SHORT = true;
@@ -81,7 +81,7 @@ public class LowestPriceClearing implements ClearingRule {
 	}
 
 	@Override
-	public List<Order> sell(Integer agentID, Tradeable opp, double sharePrice) {
+	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice) {
 		List<Order> completed = new LinkedList<Order>();
 		double shareNum = opp.getCount();
 		if (this.SHORT && opp.getAgentID() == null) {
@@ -104,7 +104,7 @@ public class LowestPriceClearing implements ClearingRule {
 					}
 					
 					double quantity = Math.min(opp.getCount(), buy.QUANTITY);
-					Tradeable toGive = quantity == opp.getCount() ? opp : opp.split(quantity);
+					ITradeable toGive = quantity == opp.getCount() ? opp : opp.split(quantity);
 					completed.add(new Order(buy.FROM, agentID, sharePrice*quantity, quantity, toGive));
 					if (quantity == buy.QUANTITY) {
 						toRemove.add(buy);

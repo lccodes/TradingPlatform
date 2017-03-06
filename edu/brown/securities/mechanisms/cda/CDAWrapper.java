@@ -8,11 +8,11 @@ import java.util.TreeMap;
 import brown.agent.Agent;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.auctions.twosided.TwoSidedPriceSetter;
-import brown.auctions.twosided.TwoSidedWrapper;
+import brown.auctions.twosided.ITwoSidedPriceSetter;
+import brown.auctions.twosided.ITwoSidedWrapper;
 import brown.messages.markets.MarketOrder;
 
-public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
+public class CDAWrapper implements ITwoSidedWrapper, ITwoSidedPriceSetter {
 	private final Integer MARKETID;
 	private final FullType TYPE;
 	private final SortedMap<Double, Double> BUYBOOK;
@@ -88,6 +88,15 @@ public class CDAWrapper implements TwoSidedWrapper, TwoSidedPriceSetter {
 	@Override
 	public SortedMap<Double, Double> getSellBook() {
 		return this.SELLBOOK;
+	}
+
+	@Override
+	public void cancel(Agent agent, boolean buy, double shareNum, double sharePrice) {
+		if (buy) {
+			this.sell(agent, shareNum, sharePrice);
+		} else {
+			this.buy(agent, shareNum, sharePrice);
+		}
 	}
 
 }

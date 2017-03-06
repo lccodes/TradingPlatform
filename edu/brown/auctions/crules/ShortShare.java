@@ -1,8 +1,11 @@
-package brown.assets.value;
+package brown.auctions.crules;
 
 import brown.assets.accounting.Account;
+import brown.assets.value.FullType;
+import brown.assets.value.ITradeable;
+import brown.assets.value.StateOfTheWorld;
 
-public class ShortShare implements Tradeable {
+public class ShortShare implements ITradeable {
 	private final double COUNT;
 	private final FullType TYPE;
 	
@@ -37,17 +40,17 @@ public class ShortShare implements Tradeable {
 	}
 
 	@Override
-	public Account close(State closingState) {
+	public Account close(StateOfTheWorld closingState) {
 		return null;
 	}
 
 	@Override
-	public Tradeable split(double newCount) {
+	public ITradeable split(double newCount) {
 		return null;
 	}
 
 	@Override
-	public Tradeable toAgent() {
+	public ITradeable toAgent() {
 		return null;
 	}
 

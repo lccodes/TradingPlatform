@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.twosided.TwoSidedAuction;
 
 public class Ledger {
-	protected final Set<Tradeable> tradeables;
+	protected final Set<ITradeable> tradeables;
 	protected final TwoSidedAuction tsa;
 	
 	/**
@@ -17,14 +17,14 @@ public class Ledger {
 	 */
 	public Ledger(TwoSidedAuction tsa) {
 		this.tsa = tsa;
-		this.tradeables = new HashSet<Tradeable>();
+		this.tradeables = new HashSet<ITradeable>();
 	}
 	
 	/**
 	 * Add a Tradeable
 	 * @param t : Tradeable to add
 	 */
-	public void add(Tradeable t) {
+	public void add(ITradeable t) {
 		this.tradeables.add(t);
 	}
 	
@@ -32,7 +32,7 @@ public class Ledger {
 	 * Constructs a set of the Tradeables
 	 * @return set
 	 */
-	public Set<Tradeable> getSet() {
+	public Set<ITradeable> getSet() {
 		return this.tradeables;
 	}
 
@@ -40,7 +40,7 @@ public class Ledger {
 	 * Adds a list of tradeables
 	 * @param trans
 	 */
-	public void add(List<Tradeable> trans) {
+	public void add(List<ITradeable> trans) {
 		this.tradeables.addAll(trans);
 	}
 

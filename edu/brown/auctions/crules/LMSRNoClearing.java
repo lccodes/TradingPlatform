@@ -7,10 +7,10 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
+import brown.assets.value.Contract;
 import brown.assets.value.FullType;
-import brown.assets.value.Security;
 import brown.assets.value.SecurityType;
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.rules.ClearingRule;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
 
@@ -36,7 +36,7 @@ public class LMSRNoClearing implements ClearingRule {
 		double cost = this.BACKEND.ask(shareNum);
 		this.BACKEND.no(null, shareNum);
 		List<Order> trans = new LinkedList<Order>();
-		Security newSec = new Security(agentID, shareNum, this.TYPE,
+		Contract newSec = new Contract(agentID, shareNum, this.TYPE,
 				state -> state.getState() == 0 ? new Account(null).add(1) : null);
 		newSec.setClosure(state -> state.getState() == 0 ? new Account(null).add(newSec.getCount()) : null);
 		trans.add(new Order(agentID, null, cost, shareNum, newSec));
@@ -44,10 +44,10 @@ public class LMSRNoClearing implements ClearingRule {
 	}
 
 	@Override
-	public List<Order> sell(Integer agentID, Tradeable opp, double sharePrice) {
+	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice) {
 		List<Order> trans = new LinkedList<Order>();
 		if (this.SHORT && opp.getAgentID() == null) {
-			Security newSec = new Security(agentID, opp.getCount(), this.TYPE,
+			Contract newSec = new Contract(agentID, opp.getCount(), this.TYPE,
 					state -> state.getState() == 0 ? new Account(null).add(1) : null);
 			newSec.setClosure(state -> state.getState() == 0 ? new Account(null).add(newSec.getCount()) : null);
 			opp = newSec;

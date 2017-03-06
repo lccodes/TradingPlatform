@@ -3,7 +3,7 @@ package brown.messages.trades;
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 
 /**
  * A message sent to the server by an agent when it wants to initiate a trade note: -1 indicates offer to all agents
@@ -15,10 +15,10 @@ public class NegotiateRequest {
   public final Integer fromID;
 
   public final Integer moniesRequested;
-  public final List<Tradeable> sharesRequested;
+  public final List<ITradeable> sharesRequested;
 
   public final Integer moniesOffered;
-  public final List<Tradeable> sharesOffered;
+  public final List<ITradeable> sharesOffered;
 
   /**
    * Constructor.
@@ -30,7 +30,7 @@ public class NegotiateRequest {
    * @param moniesOffered
    * @param sharesOffered
    */
-  public NegotiateRequest(Integer toID, Integer fromID, Integer moniesRequested, List<Tradeable> sharesRequested, Integer moniesOffered, List<Tradeable> sharesOffered) {
+  public NegotiateRequest(Integer toID, Integer fromID, Integer moniesRequested, List<ITradeable> sharesRequested, Integer moniesOffered, List<ITradeable> sharesOffered) {
     this.toID = toID;
     this.fromID = fromID;
 

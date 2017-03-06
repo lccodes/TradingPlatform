@@ -4,13 +4,12 @@ import java.util.function.Function;
 
 import brown.assets.accounting.Account;
 
-public class Security implements Tradeable {
-	private double count;
-	private Integer agentID;
+public class Security implements ITradeable {
+	protected double count;
+	protected Integer agentID;
 	
-	private final long TIMESTAMP;
-	private final FullType TYPE;
-	private Function<State, Account> CLOSURE;
+	protected final long TIMESTAMP;
+	protected final FullType TYPE;
 	
 	
 	/**
@@ -21,7 +20,6 @@ public class Security implements Tradeable {
 		this.agentID = null;
 		this.TIMESTAMP = 0;
 		this.TYPE = null;
-		this.CLOSURE = null;
 	}
 	
 	/**
@@ -31,17 +29,11 @@ public class Security implements Tradeable {
 	 * @param type : type
 	 * @param closure : what to do when it is closed; nullable
 	 */
-	public Security(Integer agentID, double count, FullType type,
-			Function<State,Account> closure) {
+	public Security(Integer agentID, double count, FullType type) {
 		this.agentID = agentID;
 		this.count = count;
 		this.TIMESTAMP = System.currentTimeMillis();
 		this.TYPE = type;
-		if (closure == null) {
-			this.CLOSURE = state -> null;
-		} else {
-			this.CLOSURE = closure;
-		}
 	}
 	
 	/**
@@ -79,18 +71,18 @@ public class Security implements Tradeable {
 	}
 
 	@Override
-	public Account close(State closingState) {
-		return this.CLOSURE.apply(closingState);
+	public Account close(StateOfTheWorld closingState) {
+		return null;
 	}
 	
-	public void setClosure(Function<State, Account> close) {
-		this.CLOSURE = close;
+	public void setClosure(Function<StateOfTheWorld, Account> close) {
+		//Noop
 	}
 
 	@Override
-	public Tradeable split(double newCount) {
+	public ITradeable split(double newCount) {
 		this.count = this.count - newCount;
-		return new Security(this.agentID, newCount, this.TYPE, this.CLOSURE);
+		return new Security(this.agentID, newCount, this.TYPE);
 	}
 
 	@Override
@@ -99,7 +91,7 @@ public class Security implements Tradeable {
 	}
 
 	@Override
-	public Tradeable toAgent() {
+	public ITradeable toAgent() {
 		return new AgentSecurity(this);
 	}
 }

@@ -5,12 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 
 public class Account {
 	public final Integer ID;
 	public final double monies;
-	public final List<Tradeable> goods;
+	public final List<ITradeable> goods;
 	
 	/**
 	 * Kryo objects require a blank constructor
@@ -29,7 +29,7 @@ public class Account {
 	public Account(Integer ID) {
 		this.ID = ID;
 		this.monies = new Integer(0);
-		this.goods = new LinkedList<Tradeable>();
+		this.goods = new LinkedList<ITradeable>();
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class Account {
 	 * @param monies : starting monies
 	 * @param goods : starting goods
 	 */
-	private Account(Integer ID, double monies, List<Tradeable> goods) {
+	private Account(Integer ID, double monies, List<ITradeable> goods) {
 		this.ID = ID;
 		this.monies = monies;
 		this.goods = goods;
@@ -50,7 +50,7 @@ public class Account {
 	 * @param newGoods : additional goods 
 	 * @return updated Account
 	 */
-	public Account addAll(double newMonies, List<Tradeable> newGoods) {
+	public Account addAll(double newMonies, List<ITradeable> newGoods) {
 		if (newGoods == null) {
 			return new Account(this.ID, newMonies+this.monies, goods);
 		}
@@ -65,7 +65,7 @@ public class Account {
 	 * @param newGoods : additional good
 	 * @return updated Account
 	 */
-	public Account add(double newMonies, Tradeable newGood) {
+	public Account add(double newMonies, ITradeable newGood) {
 		if (newGood == null) {
 			return new Account(this.ID, newMonies+this.monies, goods);
 		}
@@ -79,14 +79,14 @@ public class Account {
 	 * @param newGoods : additional good
 	 * @return updated Account
 	 */
-	public Account add(double newMonies, Set<Tradeable> newGoods) {
+	public Account add(double newMonies, Set<ITradeable> newGoods) {
 		if (newGoods == null) {
 			return new Account(this.ID, newMonies+this.monies, goods);
 		}
-		Set<Tradeable> goods = new HashSet<Tradeable>();
+		Set<ITradeable> goods = new HashSet<ITradeable>();
 		goods.addAll(this.goods);
 		goods.addAll(newGoods);
-		List<Tradeable> unique = new LinkedList<Tradeable>();
+		List<ITradeable> unique = new LinkedList<ITradeable>();
 		unique.addAll(goods);
 		return new Account(this.ID, newMonies+this.monies, unique);
 	}
@@ -97,7 +97,7 @@ public class Account {
 	 * @param newGoods : goods to remove 
 	 * @return updated Account
 	 */
-	public Account remove(double removeMonies, List<Tradeable> removeGoods) {
+	public Account remove(double removeMonies, List<ITradeable> removeGoods) {
 		if (removeGoods == null) {
 			return new Account(this.ID, this.monies-removeMonies, this.goods);
 		}
@@ -106,13 +106,13 @@ public class Account {
 		return new Account(this.ID, this.monies-removeMonies, this.goods);
 	}
 
-	public Account remove(double removeMonies, Tradeable t) {
+	public Account remove(double removeMonies, ITradeable t) {
 		if (t == null) {
 			return new Account(this.ID, this.monies-removeMonies, this.goods);
 		}
 		
-		List<Tradeable> unique = new LinkedList<Tradeable>();
-		for (Tradeable o : this.goods) {
+		List<ITradeable> unique = new LinkedList<ITradeable>();
+		for (ITradeable o : this.goods) {
 			if (!o.equals(t)) {
 				unique.add(o);
 			}
@@ -125,11 +125,11 @@ public class Account {
 	}
 	
 	public Account toAgent() {
-		List<Tradeable> forAgent = new LinkedList<Tradeable>();
-		for (Tradeable t : this.goods) {
+		List<ITradeable> forAgent = new LinkedList<ITradeable>();
+		for (ITradeable t : this.goods) {
 			forAgent.add(t.toAgent());
 		}
 		
-		return new Account(this.ID,this.monies, forAgent);
+		return new Account(this.ID, this.monies, forAgent);
 	}
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
@@ -15,13 +15,13 @@ import brown.messages.auctions.Bid;
 public class SecondPriceRule implements PaymentRule {
 
 	@Override
-	public Map<BidBundle, Set<Tradeable>> getPayments(Map<Integer, Set<Tradeable>> allocations, Set<Bid> bids) {
-		Map<BidBundle, Set<Tradeable>> payments = new HashMap<BidBundle, Set<Tradeable>>();
+	public Map<BidBundle, Set<ITradeable>> getPayments(Map<Integer, Set<ITradeable>> allocations, Set<Bid> bids) {
+		Map<BidBundle, Set<ITradeable>> payments = new HashMap<BidBundle, Set<ITradeable>>();
 		List<Bid> ordered = new LinkedList<Bid>();
 		ordered.addAll(bids);
 		Collections.sort(ordered, new Bid.BidComparator(false));
 		
-		for (Map.Entry<Integer, Set<Tradeable>> entry : allocations.entrySet()) {
+		for (Map.Entry<Integer, Set<ITradeable>> entry : allocations.entrySet()) {
 			boolean next = false;
 			for (Bid b : ordered) {
 				if (next) {

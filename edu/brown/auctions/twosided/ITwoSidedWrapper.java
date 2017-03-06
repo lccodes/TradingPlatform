@@ -2,7 +2,7 @@ package brown.auctions.twosided;
 
 import brown.assets.value.FullType;
 
-public interface TwoSidedWrapper {
+public interface ITwoSidedWrapper {
 	/**
 	 * Gets the ID of the auction
 	 * @return id

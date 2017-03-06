@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
-import brown.auctions.Market;
+import brown.assets.value.ITradeable;
+import brown.auctions.IMarket;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
@@ -16,14 +16,14 @@ import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidReqeust;
 import brown.messages.markets.TradeRequest;
 
-public class OneSidedAuction implements Market {
+public class OneSidedAuction implements IMarket {
 	protected final Integer ID;
 	protected final AllocationRule ARULE;
 	protected final PaymentRule PRULE;
 	protected final Set<Bid> BIDS;
-	protected final Set<Tradeable> ITEMS;
+	protected final Set<ITradeable> ITEMS;
 	
-	public OneSidedAuction(Integer ID,Set<Tradeable> tradeables, 
+	public OneSidedAuction(Integer ID,Set<ITradeable> tradeables, 
 			AllocationRule allocationRule, PaymentRule paymentRule) {
 		//TODO: Confirm allocation and payment rules use same bundle
 		this.ID = ID;
@@ -96,7 +96,7 @@ public class OneSidedAuction implements Market {
 	 * If it's over, who won if anyone?
 	 * @return who won
 	 */
-	public Map<BidBundle, Set<Tradeable>> getWinners() {
+	public Map<BidBundle, Set<ITradeable>> getWinners() {
 		return this.PRULE.getPayments(this.ARULE.getAllocations(this.BIDS, this.ITEMS), 
 				this.ARULE.withReserve(this.BIDS));
 	}

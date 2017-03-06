@@ -2,41 +2,41 @@ package brown.assets.value;
 
 import brown.assets.accounting.Account;
 
-public class AgentSecurity implements ITradeable {
-	private Integer AGENTID;
-	private FullType TYPE;
-	private double COUNT;
+public class Good implements ITradeable {
+	private Integer agentID;
+	private double count;
+	private final FullType TYPE;
 	
-	public AgentSecurity() {
-		this.AGENTID = null;
+	public Good() {
+		this.agentID = null;
+		this.count = 0;
 		this.TYPE = null;
-		this.COUNT = -1;
 	}
 	
-	public AgentSecurity(Security security) {
-		this.AGENTID = security.getAgentID();
-		this.TYPE = security.getType();
-		this.COUNT = security.getCount();
+	public Good(Integer agentID, double count, Integer goodID) {
+		this.agentID = agentID;
+		this.count = count;
+		this.TYPE = new FullType(SecurityType.Good, goodID);
 	}
 
 	@Override
 	public Integer getAgentID() {
-		return this.AGENTID;
+		return this.agentID;
 	}
 
 	@Override
 	public void setAgentID(Integer ID) {
-		//Noop
+		this.agentID = ID;
 	}
 
 	@Override
 	public double getCount() {
-		return this.COUNT;
+		return this.count;
 	}
 
 	@Override
 	public void setCount(double count) {
-		//Noop
+		this.count = count;
 	}
 
 	@Override
@@ -51,17 +51,13 @@ public class AgentSecurity implements ITradeable {
 
 	@Override
 	public ITradeable split(double newCount) {
-		return null;
+		this.count -= newCount;
+		return new Good(this.agentID, newCount, this.TYPE.ID);
 	}
 
 	@Override
 	public ITradeable toAgent() {
 		return this;
-	}
-	
-	@Override
-	public String toString() {
-		return "<" + this.TYPE.TYPE + " " + COUNT + ">";
 	}
 
 }

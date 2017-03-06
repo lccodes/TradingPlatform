@@ -3,11 +3,11 @@ package brown.securities.mechanisms.lmsr;
 import brown.agent.Agent;
 import brown.assets.value.FullType;
 import brown.auctions.twosided.TwoSidedAuction;
-import brown.auctions.twosided.TwoSidedPriceTaker;
-import brown.auctions.twosided.TwoSidedWrapper;
+import brown.auctions.twosided.ITwoSidedPriceTaker;
+import brown.auctions.twosided.ITwoSidedWrapper;
 import brown.messages.markets.MarketOrder;
 
-public class LMSRWrapper implements TwoSidedWrapper, TwoSidedPriceTaker {
+public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	private final TwoSidedAuction LMSR;
 	
 	public LMSRWrapper() {

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.arules.OpenOutcryRule;
 import brown.auctions.arules.SealedBidRule;
 import brown.auctions.bundles.BidBundle;
@@ -57,7 +57,7 @@ public class Lab3Server extends AgentServer {
 
   public void runGame(boolean outcry, boolean firstprice, double reserve) {
     // Constructs auction according to rules
-    Set<Tradeable> theSet = new HashSet<Tradeable>();
+    Set<ITradeable> theSet = new HashSet<ITradeable>();
     theSet.add(new Lab3Good());
     PaymentRule prule = firstprice ? new FirstPriceRule() : new SecondPriceRule();
     if (outcry) {
@@ -88,7 +88,7 @@ public class Lab3Server extends AgentServer {
     }
     
     // Logs the winner and price
-    Map<BidBundle, Set<Tradeable>> bundles = this.auctions.get(0).getWinners();
+    Map<BidBundle, Set<ITradeable>> bundles = this.auctions.get(0).getWinners();
     Logging.log("[-] auction over");
     for (BidBundle b : bundles.keySet()) {
       Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());

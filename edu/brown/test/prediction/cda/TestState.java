@@ -1,8 +1,8 @@
 package brown.test.prediction.cda;
 
-import brown.assets.value.State;
+import brown.assets.value.StateOfTheWorld;
 
-public class TestState implements State {
+public class TestState implements StateOfTheWorld {
 	private int STATE;
 	
 	public TestState(boolean heads) {

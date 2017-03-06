@@ -1,5 +1,5 @@
 package brown.assets.value;
 
-public interface State {
+public interface StateOfTheWorld {
 	public int getState();
 }

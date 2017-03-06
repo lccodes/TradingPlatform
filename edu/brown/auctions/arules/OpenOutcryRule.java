@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.rules.AllocationRule;
@@ -58,14 +58,14 @@ public class OpenOutcryRule implements AllocationRule {
 	}
 
 	@Override
-	public Map<Integer, Set<Tradeable>> getAllocations(Set<Bid> bids, Set<Tradeable> items) {
+	public Map<Integer, Set<ITradeable>> getAllocations(Set<Bid> bids, Set<ITradeable> items) {
 		List<Bid> topBids = this.getSorted(bids, 1);
 		BidBundle topBid = this.RESERVE;
-		Map<Integer, Set<Tradeable>> allocations = new HashMap<Integer, Set<Tradeable>>();
+		Map<Integer, Set<ITradeable>> allocations = new HashMap<Integer, Set<ITradeable>>();
 		int i = 0;
-		for (Tradeable t : items) {
+		for (ITradeable t : items) {
 			if (i < topBids.size() && topBids.get(i).Bundle.getCost() >= topBid.getCost()) {
-				Set<Tradeable> theSet = new HashSet<Tradeable>();
+				Set<ITradeable> theSet = new HashSet<ITradeable>();
 				theSet.add(t);
 				allocations.put(topBids.get(i).AgentID, theSet);
 			} else {

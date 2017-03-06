@@ -2,7 +2,7 @@ package brown.test.prediction.cda;
 
 import brown.agent.Agent;
 import brown.assets.value.SecurityType;
-import brown.assets.value.Tradeable;
+import brown.assets.value.ITradeable;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
@@ -73,7 +73,7 @@ public class TestAgent extends Agent {
 	
 	@Override
 	protected void onBankUpdate(BankUpdate bankUpdate) {
-		for (Tradeable t : bankUpdate.newAccount.goods) {
+		for (ITradeable t : bankUpdate.newAccount.goods) {
 			if (t.getType().TYPE.equals(SecurityType.PredictionYes)) {
 				this.ME = 0;
 			} else {
