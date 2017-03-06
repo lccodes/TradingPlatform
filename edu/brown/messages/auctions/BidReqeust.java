@@ -2,6 +2,7 @@ package brown.messages.auctions;
 
 import java.util.Set;
 
+import brown.agent.Agent;
 import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
@@ -45,5 +46,10 @@ public class BidReqeust extends Message {
     this.Goods = goods;
     this.TYPE = type;
   }
+
+@Override
+public void dispatch(Agent agent) {
+	//Noop
+}
 
 }

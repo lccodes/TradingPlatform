@@ -2,15 +2,17 @@ package brown.messages.trades;
 
 import java.util.List;
 
+import brown.agent.Agent;
 import brown.assets.accounting.Account;
 import brown.assets.value.ITradeable;
+import brown.messages.Message;
 
 /**
  * A message sent to the server by an agent when it wants to initiate a trade note: -1 indicates offer to all agents
  * 
  * @author lcamery
  */
-public class NegotiateRequest {
+public class NegotiateRequest extends Message {
   public final Integer toID;
   public final Integer fromID;
 
@@ -31,7 +33,8 @@ public class NegotiateRequest {
    * @param sharesOffered
    */
   public NegotiateRequest(Integer toID, Integer fromID, Integer moniesRequested, List<ITradeable> sharesRequested, Integer moniesOffered, List<ITradeable> sharesOffered) {
-    this.toID = toID;
+    super(null);
+	this.toID = toID;
     this.fromID = fromID;
 
     this.moniesRequested = moniesRequested;
@@ -59,15 +62,20 @@ public class NegotiateRequest {
    * @return
    */
   public boolean isSatisfied(Account toAccount, Account fromAccount) {
-    if (fromAccount.monies < moniesOffered || !fromAccount.goods.containsAll(sharesOffered)) {
+    if (fromAccount.monies < moniesOffered || !fromAccount.tradeables.containsAll(sharesOffered)) {
       return false;
     }
 
-    if (toAccount.monies < moniesRequested || !toAccount.goods.containsAll(sharesRequested)) {
+    if (toAccount.monies < moniesRequested || !toAccount.tradeables.containsAll(sharesRequested)) {
       return false;
     }
 
     return true;
   }
+
+@Override
+public void dispatch(Agent agent) {
+	agent.onNegotiateRequest(this);
+}
 
 }

@@ -3,9 +3,9 @@ package brown.test.prediction.cda;
 import brown.assets.accounting.Account;
 import brown.assets.value.Contract;
 import brown.assets.value.FullType;
-import brown.assets.value.SecurityType;
+import brown.assets.value.TradeableType;
+import brown.auctions.IMarket;
 import brown.auctions.crules.ClosestMatchClearing;
-import brown.auctions.twosided.TwoSidedAuction;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Registration;
 import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
@@ -18,7 +18,7 @@ public class TestServer extends AgentServer {
 	private final int ID = 1;
 	// private final FullType TYPENO = new FullType(SecurityType.PredictionNo,
 	// ID);
-	private final FullType TYPEYES = new FullType(SecurityType.PredictionYes,
+	private final FullType TYPEYES = new FullType(TradeableType.PredictionYes,
 			ID);
 	// private boolean yes, no = false;
 
@@ -64,7 +64,7 @@ public class TestServer extends AgentServer {
 		while (i < amt) {
 			try {
 				if (update) {
-					for (TwoSidedAuction market : this.exchange.getAuctions()) {
+					for (IMarket market : this.exchange.getAuctions()) {
 						this.sendMarketUpdate(market);
 					}
 				}
@@ -92,7 +92,7 @@ public class TestServer extends AgentServer {
 		delay(1, false);
 
 		Logging.log("[-] sent market updates");
-		for (TwoSidedAuction market : this.exchange.getAuctions()) {
+		for (IMarket market : this.exchange.getAuctions()) {
 			this.sendMarketUpdate(market);
 		}
 

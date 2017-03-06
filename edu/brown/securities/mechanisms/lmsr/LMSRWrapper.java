@@ -19,7 +19,7 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	}
 
 	@Override
-	public Integer getID() {
+	public Integer getAuctionID() {
 		return this.LMSR.getID();
 	}
 
@@ -46,5 +46,10 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	@Override
 	public double quoteAsk(double shareNum) {
 		return this.LMSR.quoteAsk(shareNum, -1);
+	}
+
+	@Override
+	public void dispatchMessage(Agent agent) {
+		agent.onLMSR(this);
 	}
 }

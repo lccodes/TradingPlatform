@@ -71,7 +71,7 @@ public class Security implements ITradeable {
 	}
 
 	@Override
-	public Account close(StateOfTheWorld closingState) {
+	public Account convert(StateOfTheWorld closingState) {
 		return null;
 	}
 	

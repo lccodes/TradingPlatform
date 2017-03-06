@@ -12,17 +12,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.accounting.Account;
-import brown.assets.accounting.Settle;
+import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.assets.value.ITradeable;
+import brown.auctions.IMarket;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.crules.ShortShare;
 import brown.auctions.onesided.OneSidedAuction;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.Rejection;
+import brown.messages.Ack;
 import brown.messages.auctions.Bid;
 import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
@@ -49,7 +50,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	// Consider time limiting these
 	protected List<NegotiateRequest> pendingTradeRequests;
-	protected Settle exchange;
+	protected MarketManager exchange;
 	protected Map<Integer, OneSidedAuction> auctions;
 
 	private int agentCount;
@@ -64,7 +65,7 @@ public abstract class AgentServer {
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<NegotiateRequest>();
 		this.auctions = new ConcurrentHashMap<Integer, OneSidedAuction>();
-		this.exchange = new Settle();
+		this.exchange = new MarketManager();
 		this.privateToPublic.put(-1, -1);
 
 		theServer = new Server();
@@ -128,12 +129,13 @@ public abstract class AgentServer {
 	 */
 	protected void onLimitOrder(Connection connection, Integer privateID,
 			MarketOrder limitorder) {
-		TwoSidedAuction market = exchange
-				.getTwoSidedAuction(limitorder.marketID);
+		//TODO: Improve
+		TwoSidedAuction market = (TwoSidedAuction) exchange
+				.getIMarket(limitorder.marketID);
 		synchronized (market) {
 			Ledger ledger = exchange.getLedger(limitorder.marketID);
 			if (market == null) {
-				Rejection rej = new Rejection(privateID, limitorder);
+				Ack rej = new Ack(privateID, limitorder, true);
 				this.theServer.sendToTCP(connection.getID(), rej);
 				return;
 			}
@@ -143,7 +145,7 @@ public abstract class AgentServer {
 					Account account = this.bank.get(privateID);
 					if (!market.permitShort() && account.monies < market.quoteBid(limitorder.buyShares,
 							limitorder.price)) {
-						Rejection rej = new Rejection(privateID, limitorder);
+						Ack rej = new Ack(privateID, limitorder, true);
 						this.theServer.sendToTCP(connection.getID(), rej);
 						return;
 					}
@@ -160,7 +162,7 @@ public abstract class AgentServer {
 						if (t.FROM != null) {
 							synchronized (t.FROM) {
 								Account fromBank = this.bank.get(t.FROM);
-								if (!market.permitShort() && !fromBank.goods.contains(t.GOOD)) {
+								if (!market.permitShort() && !fromBank.tradeables.contains(t.GOOD)) {
 									// TODO: Deal with this case
 								}
 								Account finalUpdatedFrom = fromBank.add(t.COST,
@@ -203,8 +205,8 @@ public abstract class AgentServer {
 				synchronized (privateID) {
 					Account sellerAccount = this.bank.get(privateID);
 					double qToSell = limitorder.sellShares;
-					synchronized (sellerAccount.goods) {
-						List<ITradeable> justAList = new LinkedList<ITradeable>(sellerAccount.goods);
+					synchronized (sellerAccount.tradeables) {
+						List<ITradeable> justAList = new LinkedList<ITradeable>(sellerAccount.tradeables);
 						//Short sale check
 						if (market.permitShort()) {
 							double toShort = limitorder.sellShares;
@@ -237,7 +239,7 @@ public abstract class AgentServer {
 										synchronized (t.FROM) {
 											Account fromBank = this.bank
 													.get(t.FROM);
-											if (market.permitShort() || fromBank.goods.contains(t.GOOD)) {
+											if (market.permitShort() || fromBank.tradeables.contains(t.GOOD)) {
 												Account taken = fromBank
 														.remove(0, t.GOOD);
 												Account finalUpdatedFrom = taken
@@ -381,10 +383,10 @@ public abstract class AgentServer {
 		if (auction != null) {
 			synchronized (auction) {
 				Account account = this.bank.get(privateID);
-				if (account.monies >= bid.Bundle.getCost()) {
+				if (auction.permitShort() || account.monies >= bid.Bundle.getCost()) {
 					auction.handleBid(bid.safeCopy(privateID));
 				} else {
-					Rejection rej = new Rejection(privateID, bid);
+					Ack rej = new Ack(privateID, bid, true);
 					this.theServer.sendToTCP(connection.getID(), rej);
 				}
 			}
@@ -450,9 +452,7 @@ public abstract class AgentServer {
 							if (account == null) {
 								continue;
 							}
-							// TODO: Think about locking w/ account object
-							// changes
-							synchronized (account) {
+							synchronized (account.ID) {
 								for (ITradeable t : winners.get(winner)) {
 									t.setAgentID(winner.getAgent());
 								}
@@ -488,7 +488,7 @@ public abstract class AgentServer {
 	 * 
 	 * @param Security : the market to update on
 	 */
-	public void sendMarketUpdate(TwoSidedAuction market) {
+	public void sendMarketUpdate(IMarket market) {
 		TradeRequest mupdate = new TradeRequest(0, market.wrap(),
 				market.getMechanismType());
 		theServer.sendToAllTCP(mupdate);

@@ -1,5 +1,6 @@
 package brown.messages.trades;
 
+import brown.agent.Agent;
 import brown.messages.Message;
 
 /**
@@ -15,6 +16,11 @@ public class Trade extends Message {
 		super(ID);
 		this.tradeRequest = tradeRequest;
 		this.accept = accept;
+	}
+
+	@Override
+	public void dispatch(Agent agent) {
+		//Noop
 	}
 
 }

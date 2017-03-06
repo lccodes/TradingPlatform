@@ -1,7 +1,7 @@
 package brown.assets.value;
 
 public class FullType {
-	public final SecurityType TYPE;
+	public final TradeableType TYPE;
 	public final Integer ID;
 	
 	public FullType() {
@@ -9,7 +9,7 @@ public class FullType {
 		this.ID = null;
 	}
 	
-	public FullType(SecurityType type, Integer ID) {
+	public FullType(TradeableType type, Integer ID) {
 		this.TYPE = type;
 		this.ID = ID;
 	}

@@ -4,7 +4,7 @@ import brown.agent.Agent;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
-import brown.messages.Rejection;
+import brown.messages.Ack;
 import brown.messages.auctions.BidReqeust;
 import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
@@ -30,7 +30,7 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	protected void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSRWrapper market) {
 		Logging.log("cost " + market.quoteBid(1));
 		if (!this.done && Math.random() < .25) {
 			this.done = true;
@@ -41,40 +41,40 @@ public class TestAgent extends Agent {
 
 
 	@Override
-	protected void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(CDAWrapper market) {
 		// TODO Auto-generated method stub
 	}
 
 
 	@Override
-	protected void onRejection(Rejection message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	protected void onMarketUpdate(TradeRequest marketUpdate) {
+	public void onAck(Ack message) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	protected void onBankUpdate(BankUpdate bankUpdate) {
-		Logging.log("cash: "+ bankUpdate.newAccount.monies + " tradeables " + bankUpdate.newAccount.goods);
-	}
-
-
-	@Override
-	protected void onTradeRequest(BidReqeust bidRequest) {
+	public void onMarketUpdate(TradeRequest marketUpdate) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	protected void onNegotiateRequest(NegotiateRequest tradeRequest) {
+	public void onBankUpdate(BankUpdate bankUpdate) {
+		Logging.log("cash: "+ bankUpdate.newAccount.monies + " tradeables " + bankUpdate.newAccount.tradeables);
+	}
+
+
+	@Override
+	public void onTradeRequest(BidReqeust bidRequest) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onNegotiateRequest(NegotiateRequest tradeRequest) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -85,13 +85,13 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	protected void onSimpleSealed(SimpleOneSidedWrapper market) {
+	public void onSimpleSealed(SimpleOneSidedWrapper market) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
+	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
 		// TODO Auto-generated method stub
 		
 	}

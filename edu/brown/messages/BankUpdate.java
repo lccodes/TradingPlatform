@@ -1,5 +1,6 @@
 package brown.messages;
 
+import brown.agent.Agent;
 import brown.assets.accounting.Account;
 
 /**
@@ -29,6 +30,11 @@ public class BankUpdate extends Message {
 		super(ID);
 		this.oldAccount = oldAccount;
 		this.newAccount = newAccount;
+	}
+
+	@Override
+	public void dispatch(Agent agent) {
+		agent.onBankUpdate(this);
 	}
 
 }

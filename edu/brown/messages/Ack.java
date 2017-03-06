@@ -1,23 +1,26 @@
 package brown.messages;
 
+import brown.agent.Agent;
 import brown.messages.auctions.Bid;
 import brown.messages.markets.MarketOrder;
 import brown.messages.trades.NegotiateRequest;
 
-public class Rejection extends Message {
+public class Ack extends Message {
 	public final MarketOrder failedLO;
 	public final Bid failedBR;
 	public final NegotiateRequest failedTR;
+	public final boolean REJECTED;
 	
 	/**
 	 * Empty for kryo
 	 * DO NOT USE
 	 */
-	public Rejection() {
+	public Ack() {
 		super(null);
 		this.failedBR = null;
 		this.failedTR = null;
 		this.failedLO = null;
+		this.REJECTED = true;
 	}
 	
 	/**
@@ -26,11 +29,12 @@ public class Rejection extends Message {
 	 * @param ID : rejection ID
 	 * @param bid : rejected bid
 	 */
-	public Rejection(Integer ID, Bid bid) {
+	public Ack(Integer ID, Bid bid, boolean rejected) {
 		super(ID);
 		this.failedBR = bid;
 		this.failedTR = null;
 		this.failedLO = null;
+		this.REJECTED = rejected;
 	}
 	
 	/**
@@ -39,11 +43,12 @@ public class Rejection extends Message {
 	 * @param ID : rejection ID
 	 * @param tr : rejected trade request
 	 */
-	public Rejection(Integer ID, NegotiateRequest tr) {
+	public Ack(Integer ID, NegotiateRequest tr, boolean rejected) {
 		super(ID);
 		this.failedBR = null;
 		this.failedTR = tr;
 		this.failedLO = null;
+		this.REJECTED = rejected;
 	}
 	
 	/**
@@ -51,11 +56,17 @@ public class Rejection extends Message {
 	 * @param ID : rejection ID
 	 * @param lo : rejected limit order
 	 */
-	public Rejection(Integer ID, MarketOrder lo) {
+	public Ack(Integer ID, MarketOrder lo, boolean rejected) {
 		super(ID);
 		this.failedLO = lo;
 		this.failedBR = null;
 		this.failedTR = null;
+		this.REJECTED = rejected;
+	}
+	
+	@Override
+	public void dispatch(Agent agent) {
+		agent.onAck(this);
 	}
 
 }

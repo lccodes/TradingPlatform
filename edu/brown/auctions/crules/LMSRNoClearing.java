@@ -9,7 +9,7 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
 import brown.assets.value.Contract;
 import brown.assets.value.FullType;
-import brown.assets.value.SecurityType;
+import brown.assets.value.TradeableType;
 import brown.assets.value.ITradeable;
 import brown.auctions.rules.ClearingRule;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
@@ -27,7 +27,7 @@ public class LMSRNoClearing implements ClearingRule {
 	
 	public LMSRNoClearing(LMSRBackend backend, boolean shortSelling) {
 		this.BACKEND = backend;
-		this.TYPE = new FullType(SecurityType.PredictionNo, backend.getId());
+		this.TYPE = new FullType(TradeableType.PredictionNo, backend.getId());
 		this.SHORT = shortSelling;
 	}
 

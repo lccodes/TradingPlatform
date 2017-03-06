@@ -61,7 +61,7 @@ public FullType getType() {
 }
 
 @Override
-public Account close(StateOfTheWorld closingState) {
+public Account convert(StateOfTheWorld closingState) {
 	// TODO Auto-generated method stub
 	return null;
 }

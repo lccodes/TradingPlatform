@@ -49,7 +49,7 @@ public class CDAWrapper implements ITwoSidedWrapper, ITwoSidedPriceSetter {
 	}
 
 	@Override
-	public Integer getID() {
+	public Integer getAuctionID() {
 		return this.MARKETID;
 	}
 
@@ -97,6 +97,11 @@ public class CDAWrapper implements ITwoSidedWrapper, ITwoSidedPriceSetter {
 		} else {
 			this.buy(agent, shareNum, sharePrice);
 		}
+	}
+
+	@Override
+	public void dispatchMessage(Agent agent) {
+		agent.onContinuousDoubleAuction(this);
 	}
 
 }

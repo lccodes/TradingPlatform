@@ -1,6 +1,8 @@
 package brown.messages;
 
-public class Message {
+import brown.agent.Agent;
+
+public abstract class Message {
 	protected final Integer ID;
 	
 	/**
@@ -18,4 +20,10 @@ public class Message {
 	public Integer getID() {
 		return this.ID;
 	}
+	
+	/**
+	 * Tells agent what type of message we are
+	 * @param agent
+	 */
+	public abstract void dispatch(Agent agent);
 }

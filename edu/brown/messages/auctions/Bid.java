@@ -2,6 +2,7 @@ package brown.messages.auctions;
 
 import java.util.Comparator;
 
+import brown.agent.Agent;
 import brown.auctions.bundles.BidBundle;
 import brown.messages.Message;
 
@@ -70,5 +71,10 @@ public class Bid extends Message {
 		
 		Bid o = (Bid) other;
 		return this.ID == o.ID;
+	}
+
+	@Override
+	public void dispatch(Agent agent) {
+		//Noop
 	}
 }

@@ -5,35 +5,35 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import brown.assets.value.StateOfTheWorld;
 import brown.assets.value.ITradeable;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.assets.value.StateOfTheWorld;
+import brown.auctions.IMarket;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
-public class Settle {
-	private Map<TwoSidedAuction, Ledger> ledgers;
-	private Map<Integer, TwoSidedAuction> tsauctions;
+public class MarketManager {
+	private Map<IMarket, Ledger> ledgers;
+	private Map<Integer, IMarket> tsauctions;
 
-	public Settle() {
-		this.ledgers = new ConcurrentHashMap<TwoSidedAuction, Ledger>();
-		this.tsauctions = new ConcurrentHashMap<Integer, TwoSidedAuction>();
+	public MarketManager() {
+		this.ledgers = new ConcurrentHashMap<IMarket, Ledger>();
+		this.tsauctions = new ConcurrentHashMap<Integer, IMarket>();
 	}
 
 	/**
 	 * Closes a market TODO: Close pair markets together i.e. PMs
 	 * 
 	 * @param server
-	 * @param tsa
+	 * @param market
 	 * @param closingState
 	 */
-	public void convert(AgentServer server, TwoSidedAuction tsa,
+	public void convert(AgentServer server, IMarket market,
 			StateOfTheWorld closingState) {
-		synchronized (tsa) {
-			Ledger ledger = this.ledgers.get(tsa);
+		synchronized (market) {
+			Ledger ledger = this.ledgers.get(market);
 			synchronized (ledger) {
 				for (ITradeable t : ledger.getSet()) {
-					Account toReplace = t.close(closingState);
+					Account toReplace = t.convert(closingState);
 					synchronized (t.getAgentID()) {
 						Account oldAccount = server.privateToAccount(t
 								.getAgentID());
@@ -68,7 +68,7 @@ public class Settle {
 
 							Account newAccount = oldAccount.add(
 									toReplace.monies, new HashSet<ITradeable>(
-											toReplace.goods));
+											toReplace.tradeables));
 							server.setAccount(toReplaceID, newAccount);
 							server.sendBankUpdate(toReplaceID, oldAccount,
 									newAccount);
@@ -76,36 +76,48 @@ public class Settle {
 					}
 				}
 
-				ledgers.remove(tsa);
-				tsauctions.remove(tsa.getID());
+				ledgers.remove(market);
+				tsauctions.remove(market.getID());
 			}
 		}
 	}
 
+	/**
+	 * Closes a market and tells it to convert if applicable
+	 * @param server
+	 * @param ID
+	 * @param closingState
+	 */
 	public void close(AgentServer server, Integer ID, StateOfTheWorld closingState) {
-		TwoSidedAuction tsa = tsauctions.get(ID);
-		convert(server, tsa, closingState);
+		IMarket market = tsauctions.get(ID);
+		//TODO market.close()
+		convert(server, market, closingState);
 	}
 
-	public boolean open(TwoSidedAuction tsa) {
-		if (ledgers.containsKey(tsa)) {
+	/**
+	 * Opens a market
+	 * @param market
+	 * @return
+	 */
+	public boolean open(IMarket market) {
+		if (ledgers.containsKey(market)) {
 			return false;
 		}
-		this.ledgers.put(tsa, new Ledger(tsa));
-		this.tsauctions.put(tsa.getID(), tsa);
+		this.ledgers.put(market, new Ledger(market));
+		this.tsauctions.put(market.getID(), market);
 
 		return true;
 	}
 	
 	public boolean register(Integer ID, ITradeable t) {
-		TwoSidedAuction tsa = tsauctions.get(ID);
+		IMarket tsa = tsauctions.get(ID);
 		if (tsa == null) {
 			return false;
 		}
 		synchronized(tsa) {
-			if (!tsa.getType().equals(t.getType())) {
-				return false;
-			}
+			//if (!tsa.getType().equals(t.getType())) {
+			//	return false;
+			//}
 			
 			Ledger ledger = this.ledgers.get(tsa);
 			synchronized (ledger) {
@@ -120,11 +132,11 @@ public class Settle {
 		return ledgers.get(tsauctions.get(ID));
 	}
 
-	public TwoSidedAuction getTwoSidedAuction(Integer ID) {
+	public IMarket getIMarket(Integer ID) {
 		return tsauctions.get(ID);
 	}
 
-	public Collection<TwoSidedAuction> getAuctions() {
+	public Collection<IMarket> getAuctions() {
 		return this.tsauctions.values();
 	}
 

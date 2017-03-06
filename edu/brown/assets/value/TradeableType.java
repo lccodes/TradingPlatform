@@ -1,6 +1,6 @@
 package brown.assets.value;
 
-public enum SecurityType {
+public enum TradeableType {
 	PredictionYes,
 	PredictionNo,
 	Custom, Good;

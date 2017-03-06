@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Set;
 
 import brown.assets.value.ITradeable;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.auctions.IMarket;
 
 public class Ledger {
 	protected final Set<ITradeable> tradeables;
-	protected final TwoSidedAuction tsa;
+	protected final IMarket tsa;
 	
 	/**
 	 * Constructs a ledger for the given security
 	 * @param security : security that all Tradeables will refer to
 	 */
-	public Ledger(TwoSidedAuction tsa) {
+	public Ledger(IMarket tsa) {
 		this.tsa = tsa;
 		this.tradeables = new HashSet<ITradeable>();
 	}

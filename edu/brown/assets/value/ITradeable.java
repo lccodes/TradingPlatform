@@ -13,7 +13,7 @@ public interface ITradeable {
 	void setCount(double count);
 	FullType getType();
 	
-	Account close(StateOfTheWorld closingState);
+	Account convert(StateOfTheWorld closingState);
 	ITradeable split(double newCount);
 	ITradeable toAgent();
 }

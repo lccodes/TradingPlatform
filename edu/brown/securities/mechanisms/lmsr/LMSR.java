@@ -6,7 +6,7 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.SecurityType;
+import brown.assets.value.TradeableType;
 import brown.assets.value.ITradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.crules.LMSRNoClearing;
@@ -29,7 +29,7 @@ public class LMSR implements TwoSidedAuction {
 	public LMSR(Integer ID, boolean dir, LMSRBackend backend, boolean shortSelling) {
 		this.ID = ID;
 		this.RULE = dir ? new LMSRYesClearing(backend, shortSelling) : new LMSRNoClearing(backend, shortSelling);
-		this.TYPE = new FullType(dir ? SecurityType.PredictionYes : SecurityType.PredictionNo, 
+		this.TYPE = new FullType(dir ? TradeableType.PredictionYes : TradeableType.PredictionNo, 
 				backend.getId());
 	}
 

@@ -5,11 +5,11 @@ import java.util.function.Function;
 import brown.assets.accounting.Account;
 
 public class Contract extends Security {
-	private Function<StateOfTheWorld, Account> CLOSURE;
+	private Function<StateOfTheWorld, Account> CONVERTER;
 	
 	public Contract() {
 		super(null,0,null);
-		this.CLOSURE = null;
+		this.CONVERTER = null;
 	}
 	
 	/**
@@ -23,28 +23,28 @@ public class Contract extends Security {
 			Function<StateOfTheWorld,Account> closure) {
 		super(agentID, count, type);
 		if (closure == null) {
-			this.CLOSURE = state -> null;
+			this.CONVERTER = state -> null;
 		} else {
-			this.CLOSURE = closure;
+			this.CONVERTER = closure;
 		}
 	}
 	
 	@Override
-	public Account close(StateOfTheWorld closingState) {
-		return this.CLOSURE.apply(closingState);
+	public Account convert(StateOfTheWorld closingState) {
+		return this.CONVERTER.apply(closingState);
 	}
 	
 	/**
 	 * Set the closure function
 	 */
 	public void setClosure(Function<StateOfTheWorld, Account> close) {
-		this.CLOSURE = close;
+		this.CONVERTER = close;
 	}
 	
 	@Override
 	public ITradeable split(double newCount) {
 		this.count = this.count - newCount;
-		return new Contract(this.agentID, newCount, this.TYPE, this.CLOSURE);
+		return new Contract(this.agentID, newCount, this.TYPE, this.CONVERTER);
 	}
 
 }

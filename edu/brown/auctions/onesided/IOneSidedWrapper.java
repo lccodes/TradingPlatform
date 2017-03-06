@@ -3,20 +3,21 @@ package brown.auctions.onesided;
 import java.util.Set;
 
 import brown.assets.value.ITradeable;
+import brown.auctions.IMarketWrapper;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.prules.PaymentType;
 import brown.messages.auctions.BidReqeust;
 
-public abstract class OneSidedWrapper {
+public abstract class IOneSidedWrapper implements IMarketWrapper {
 	protected final PaymentType PTYPE;
 	protected final BidReqeust BR;
 	
-	public OneSidedWrapper() {
+	public IOneSidedWrapper() {
 		this.PTYPE = null;
 		this.BR = null;
 	}
 	
-	public OneSidedWrapper(PaymentType type, BidReqeust br) {
+	public IOneSidedWrapper(PaymentType type, BidReqeust br) {
 		this.PTYPE = type;
 		this.BR = br;
 	}

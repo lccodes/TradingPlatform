@@ -7,7 +7,7 @@ import brown.auctions.prules.PaymentType;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidReqeust;
 
-public class SimpleOneSidedWrapper extends OneSidedWrapper {
+public class SimpleOneSidedWrapper extends IOneSidedWrapper {
 	
 	public SimpleOneSidedWrapper() {
 		super(null, null);
@@ -29,5 +29,10 @@ public class SimpleOneSidedWrapper extends OneSidedWrapper {
 	
 	public SimpleBidBundle getQuote() {
 		return (SimpleBidBundle) this.BR.Current;
+	}
+
+	@Override
+	public void dispatchMessage(Agent agent) {
+		agent.onSimpleSealed(this);
 	}
 }

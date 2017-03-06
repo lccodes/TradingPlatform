@@ -11,7 +11,7 @@ public class LukeAgent extends Lab4Agent {
 	}
 
 	@Override
-	protected void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(CDAWrapper market) {
 		//if (this.myCoin && !this.once) {
 			market.buy(this, .5, 10);
 		//	this.once = true;

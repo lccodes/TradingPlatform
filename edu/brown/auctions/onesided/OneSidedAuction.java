@@ -6,6 +6,7 @@ import java.util.Set;
 
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
+import brown.auctions.IMarketWrapper;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
@@ -56,7 +57,7 @@ public class OneSidedAuction implements IMarket {
 				temp.Current : temp.Current.wipeAgent(null);
 		
 		BidReqeust br = new BidReqeust(temp.getID(), this.ID, temp.TYPE, toUse, this.ITEMS);
-		OneSidedWrapper wrapper = null;
+		IOneSidedWrapper wrapper = null;
 		switch(br.TYPE) {
 		case Simple:
 			wrapper = new SimpleOneSidedWrapper(this.PRULE.getPaymentType(), br);
@@ -139,5 +140,11 @@ public class OneSidedAuction implements IMarket {
 	@Override
 	public boolean permitShort() {
 		return false;
+	}
+
+	@Override
+	public IMarketWrapper wrap() {
+		// TODO
+		return null;
 	}
 }

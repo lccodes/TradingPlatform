@@ -6,7 +6,7 @@ import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.Rejection;
+import brown.messages.Ack;
 import brown.messages.auctions.BidReqeust;
 import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
@@ -14,8 +14,8 @@ import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Logging;
 
 public abstract class Lab4Agent extends Agent {
-	protected boolean myCoin;
-	protected Account myBalance;
+	public boolean myCoin;
+	public Account myBalance;
 	
 	public Lab4Agent(String host, int port)
 			throws AgentCreationException {
@@ -25,55 +25,55 @@ public abstract class Lab4Agent extends Agent {
 	}
 
 	@Override
-	protected void onSimpleSealed(SimpleOneSidedWrapper market) {
+	public void onSimpleSealed(SimpleOneSidedWrapper market) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
+	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSRWrapper market) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void onRejection(Rejection message) {
+	public void onAck(Ack message) {
 		Logging.log("Order rejected " + message.failedLO);
 	}
 
 	@Override
-	protected void onMarketUpdate(TradeRequest marketUpdate) {
+	public void onMarketUpdate(TradeRequest marketUpdate) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void onBankUpdate(BankUpdate bankUpdate) {
+	public void onBankUpdate(BankUpdate bankUpdate) {
 		Logging.log("Current Bank: ");
-		Logging.log("Monies = " + bankUpdate.newAccount.monies + " || Tradeables = " + bankUpdate.newAccount.goods);
+		Logging.log("Monies = " + bankUpdate.newAccount.monies + " || Tradeables = " + bankUpdate.newAccount.tradeables);
 		this.myBalance = bankUpdate.newAccount;
 	}
 
 	@Override
-	protected void onTradeRequest(BidReqeust bidRequest) {
+	public void onTradeRequest(BidReqeust bidRequest) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void onNegotiateRequest(NegotiateRequest tradeRequest) {
+	public void onNegotiateRequest(NegotiateRequest tradeRequest) {
 		// TODO Auto-generated method stub
 
 	}
 	
 	@Override
-	protected void onRegistration(Registration registration) {
+	public void onRegistration(Registration registration) {
 		super.onRegistration(registration);
 		PMRegistration reg = (PMRegistration) registration;
 		this.myCoin = reg.COIN;

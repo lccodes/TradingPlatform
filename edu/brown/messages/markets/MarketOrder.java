@@ -1,5 +1,6 @@
 package brown.messages.markets;
 
+import brown.agent.Agent;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.Message;
 
@@ -31,6 +32,11 @@ public class MarketOrder extends Message {
 		this.buyShares = buyShares;
 		this.sellShares = sellShares;
 		this.price = price;
+	}
+
+	@Override
+	public void dispatch(Agent agent) {
+		//Noop
 	}
 
 }

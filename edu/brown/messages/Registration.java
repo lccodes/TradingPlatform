@@ -1,5 +1,7 @@
 package brown.messages;
 
+import brown.agent.Agent;
+
 public class Registration extends Message {
 	
 	/**
@@ -17,5 +19,10 @@ public class Registration extends Message {
 	 */
 	public Registration(Integer ID) {
 		super(ID);
+	}
+
+	@Override
+	public void dispatch(Agent agent) {
+		agent.onRegistration(this);
 	}
 }

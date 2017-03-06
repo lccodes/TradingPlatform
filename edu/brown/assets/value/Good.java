@@ -16,7 +16,7 @@ public class Good implements ITradeable {
 	public Good(Integer agentID, double count, Integer goodID) {
 		this.agentID = agentID;
 		this.count = count;
-		this.TYPE = new FullType(SecurityType.Good, goodID);
+		this.TYPE = new FullType(TradeableType.Good, goodID);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class Good implements ITradeable {
 	}
 
 	@Override
-	public Account close(StateOfTheWorld closingState) {
+	public Account convert(StateOfTheWorld closingState) {
 		return null;
 	}
 

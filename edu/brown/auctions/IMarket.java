@@ -27,4 +27,10 @@ public interface IMarket {
 	 */
 	public boolean permitShort();
 
+	/**
+	 * Get wrapper
+	 * @return
+	 */
+	public IMarketWrapper wrap();
+
 }

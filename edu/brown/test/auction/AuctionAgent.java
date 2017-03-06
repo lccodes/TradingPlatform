@@ -5,7 +5,7 @@ import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.Rejection;
+import brown.messages.Ack;
 import brown.messages.auctions.BidReqeust;
 import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
@@ -21,7 +21,7 @@ public class AuctionAgent extends Agent {
 	}
 	
 	@Override
-	protected void onRegistration(Registration registration) {
+	public void onRegistration(Registration registration) {
 	  super.onRegistration(registration);
 	  AuctionRegistration auctionRegistration = (AuctionRegistration) registration;
 	  this.myMax = auctionRegistration.getValue();
@@ -29,30 +29,30 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	protected void onRejection(Rejection message) {
+	public void onAck(Ack message) {
 		Logging.log("[x] rejected: " + message.failedBR);
 	}
 
 	@Override
-	protected void onMarketUpdate(TradeRequest marketUpdate) {
+	public void onMarketUpdate(TradeRequest marketUpdate) {
 		//Noop
 	}
 
 	@Override
-	protected void onBankUpdate(BankUpdate bankUpdate) {
+	public void onBankUpdate(BankUpdate bankUpdate) {
 		Logging.log("[-] bank " + bankUpdate.newAccount.monies);
-		if (bankUpdate.newAccount.goods.size() > 0) {
+		if (bankUpdate.newAccount.tradeables.size() > 0) {
 			Logging.log("[+] victory!");
 		}
 	}
 
 	@Override
-	protected void onTradeRequest(BidReqeust bidRequest) {
+	public void onTradeRequest(BidReqeust bidRequest) {
 		Logging.log("[-] bidRequest for " + bidRequest.AuctionID + " w/ hb " + bidRequest.Current.getCost());
 	}
 
 	@Override
-	protected void onNegotiateRequest(NegotiateRequest negotiateRequest) {
+	public void onNegotiateRequest(NegotiateRequest negotiateRequest) {
 		// Noop
 	}
 	
@@ -62,25 +62,25 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	protected void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSRWrapper market) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(CDAWrapper market) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onSimpleSealed(SimpleOneSidedWrapper market) {
+	public void onSimpleSealed(SimpleOneSidedWrapper market) {
 		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote().getCost());
 		market.bid(this, this.myMax);
 	}
 
 	@Override
-	protected void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
+	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
 		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote().getCost());
 		if (market.getQuote().getAgent() == null && market.getQuote().getCost() < this.myMax) {
 			market.bid(this, market.getQuote().getCost()+1);

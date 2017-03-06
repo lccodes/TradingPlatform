@@ -6,7 +6,7 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.SecurityType;
+import brown.assets.value.TradeableType;
 import brown.assets.value.ITradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.rules.ClearingRule;
@@ -34,7 +34,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	 * @param type : SecurityType
 	 * @param rule : ClearingRule
 	 */
-	public ContinuousDoubleAuction(Integer ID, SecurityType type, ClearingRule rule) {
+	public ContinuousDoubleAuction(Integer ID, TradeableType type, ClearingRule rule) {
 		this.ID = ID;
 		this.TYPE = new FullType(type, null);
 		this.RULE = rule;

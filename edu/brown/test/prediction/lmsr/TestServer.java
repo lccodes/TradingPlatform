@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.auctions.IMarket;
 import brown.messages.Registration;
 import brown.securities.mechanisms.lmsr.LMSR;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
@@ -62,7 +62,7 @@ public class TestServer extends AgentServer {
 		delay(2);
 	    
 	    Logging.log("Start!");
-	    for (TwoSidedAuction market : this.exchange.getAuctions()) {
+	    for (IMarket market : this.exchange.getAuctions()) {
 	    	this.sendMarketUpdate(market);
 	    	//this.theServer.sendToAllTCP(new MarketUpdate(0, market, market.getMechanismType()));
 	    }
