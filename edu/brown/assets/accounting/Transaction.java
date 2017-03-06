@@ -4,10 +4,12 @@ import brown.assets.value.ITradeable;
 
 public class Transaction {
 	public final Integer TO;
-	public final ITradeable GOOD;
+	public final ITradeable TRADEABLE;
 	public final Integer FROM;
-	public final double COST;
-	public double QUANTITY;
+	public final double PRICE;
+	public final double QUANTITY;
+	
+	public final long TIMESTAMP;
 	
 	/**
 	 * For Kryo do not use
@@ -15,29 +17,27 @@ public class Transaction {
 	public Transaction() {
 		this.TO = null;
 		this.FROM = null;
-		this.COST = -1;
+		this.PRICE = -1;
 		this.QUANTITY = -1;
-		this.GOOD = null;
+		this.TIMESTAMP = 0;
+		this.TRADEABLE = null;
 	}
 	
 	/**
-	 * Actual order constructor
+	 * Actual transaction constructor
 	 * @param to
 	 * @param from
 	 * @param cost
 	 * @param quantity
-	 * @param good
+	 * @param TRADEABLE
 	 */
-	public Transaction(Integer to, Integer from, double cost, double quantity, ITradeable good) {
+	public Transaction(Integer to, Integer from, double price, double quantity, ITradeable TRADEABLE) {
 		this.TO = to;
 		this.FROM = from;
-		this.COST = cost;
+		this.PRICE = price;
 		this.QUANTITY = quantity;
-		this.GOOD = good;
-	}
-	
-	public void updateQuantity(double quantity) {
-		this.QUANTITY = quantity;
+		this.TRADEABLE = TRADEABLE;
+		this.TIMESTAMP = System.currentTimeMillis();
 	}
 
 }

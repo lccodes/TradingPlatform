@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.accounting.Account;
-import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Ledger;
+import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Order;
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
@@ -21,9 +21,9 @@ import brown.auctions.bundles.BidBundle;
 import brown.auctions.crules.ShortShare;
 import brown.auctions.onesided.OneSidedAuction;
 import brown.auctions.twosided.TwoSidedAuction;
+import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.Ack;
 import brown.messages.auctions.Bid;
 import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
@@ -156,7 +156,7 @@ public abstract class AgentServer {
 						ITradeable split = null;
 						if (t.GOOD.getCount() > t.QUANTITY) {
 							split = t.GOOD.split(t.QUANTITY);
-							ledger.add(split);
+							ledger.add(t.toTransaction());
 						}
 
 						if (t.FROM != null) {
@@ -198,7 +198,7 @@ public abstract class AgentServer {
 							}
 						}
 
-						ledger.add(t.GOOD);
+						ledger.add(t.toTransaction());
 					}
 				}
 			} else if (limitorder.sellShares > 0) {
@@ -274,7 +274,7 @@ public abstract class AgentServer {
 										}
 									}
 
-									ledger.add(t.GOOD);
+									ledger.add(t.toTransaction());
 								}
 							}
 						}

@@ -40,4 +40,8 @@ public class Order {
 		this.QUANTITY = quantity;
 	}
 
+	public Transaction toTransaction() {
+		return new Transaction(this.TO,this.FROM,this.COST/this.QUANTITY,this.QUANTITY,this.GOOD);
+	}
+
 }

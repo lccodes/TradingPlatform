@@ -32,21 +32,21 @@ public class MarketManager {
 		synchronized (market) {
 			Ledger ledger = this.ledgers.get(market);
 			synchronized (ledger) {
-				for (ITradeable t : ledger.getSet()) {
-					Account toReplace = t.convert(closingState);
-					synchronized (t.getAgentID()) {
+				for (Transaction t : ledger.getLatest()) {
+					Account toReplace = t.TRADEABLE.convert(closingState);
+					synchronized (t.TRADEABLE.getAgentID()) {
 						Account oldAccount = server.privateToAccount(t
-								.getAgentID());
+								.TRADEABLE.getAgentID());
 						if (oldAccount == null) {
 							Logging.log("[X] agent without account "
-									+ t.getAgentID());
+									+ t.TRADEABLE.getAgentID());
 							continue;
 						}
 
-						Account newAccount = oldAccount.remove(0, t);
-						server.setAccount(t.getAgentID(), newAccount);
+						Account newAccount = oldAccount.remove(0, t.TRADEABLE);
+						server.setAccount(t.TRADEABLE.getAgentID(), newAccount);
 						if (toReplace == null) {
-							server.sendBankUpdate(t.getAgentID(), oldAccount,
+							server.sendBankUpdate(t.TRADEABLE.getAgentID(), oldAccount,
 									newAccount);
 						}
 					}
@@ -54,7 +54,7 @@ public class MarketManager {
 					if (toReplace != null) {
 						Integer toReplaceID = toReplace.ID;
 						if (toReplaceID == null) {
-							toReplaceID = t.getAgentID();
+							toReplaceID = t.TRADEABLE.getAgentID();
 						}
 
 						synchronized (toReplaceID) {
@@ -121,7 +121,7 @@ public class MarketManager {
 			
 			Ledger ledger = this.ledgers.get(tsa);
 			synchronized (ledger) {
-				ledger.add(t);
+				ledger.add(new Transaction(t.getAgentID(), null, 0,0,t));
 			}
 		}
 	
