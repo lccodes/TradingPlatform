@@ -594,6 +594,8 @@ public abstract class AgentServer {
 		if (registration.getID() == null) {
 			return null;
 		}
+		
+		this.theServer.sendToTCP(connection.getID(), new Ack(registration, false));
 
 		Collection<Integer> allIds = connections.values();
 		Integer theID = registration.getID();

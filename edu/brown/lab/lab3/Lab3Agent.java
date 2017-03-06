@@ -4,11 +4,10 @@ import brown.agent.Agent;
 import brown.exceptions.AgentCreationException;
 import brown.lab.GameSetup;
 import brown.lab.ValuationRegistration;
+import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.Ack;
 import brown.messages.auctions.BidReqeust;
-import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -32,12 +31,7 @@ public abstract class Lab3Agent extends Agent {
 
 	@Override
 	public void onAck(Ack message) {
-		Logging.log("[x] rejected: " + message.failedBR);
-	}
-
-	@Override
-	public void onMarketUpdate(TradeRequest marketUpdate) {
-		// Noop
+		Logging.log("[x] ack: " + message.failedLO + " " + message.REJECTED);
 	}
 
 	@Override

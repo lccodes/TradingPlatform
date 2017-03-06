@@ -3,10 +3,10 @@ package brown.test.prediction.lmsr;
 import brown.agent.Agent;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
-import brown.messages.BankUpdate;
 import brown.messages.Ack;
+import brown.messages.BankUpdate;
 import brown.messages.auctions.BidReqeust;
-import brown.messages.markets.TradeRequest;
+import brown.messages.markets.MarketUpdate;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -52,14 +52,6 @@ public class TestAgent extends Agent {
 		
 	}
 
-
-	@Override
-	public void onMarketUpdate(TradeRequest marketUpdate) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 	@Override
 	public void onBankUpdate(BankUpdate bankUpdate) {
 		Logging.log("cash: "+ bankUpdate.newAccount.monies + " tradeables " + bankUpdate.newAccount.tradeables);
@@ -92,6 +84,12 @@ public class TestAgent extends Agent {
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMarketUpdate(MarketUpdate marketUpdate) {
 		// TODO Auto-generated method stub
 		
 	}

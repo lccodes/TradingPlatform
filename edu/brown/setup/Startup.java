@@ -37,6 +37,7 @@ import brown.messages.Ack;
 import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidReqeust;
 import brown.messages.markets.MarketOrder;
+import brown.messages.markets.MarketUpdate;
 import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
 import brown.messages.trades.Trade;
@@ -63,6 +64,7 @@ public final class Startup {
 		kryo.register(Agent.class);
 		kryo.register(Message.class);
 		kryo.register(BankUpdate.class);
+		kryo.register(MarketUpdate.class);
 		kryo.register(Bid.class);
 		kryo.register(BidReqeust.class);
 		kryo.register(Registration.class);

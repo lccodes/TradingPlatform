@@ -10,6 +10,8 @@ import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
 
 public class Ledger {
+	//TODO: Naive way first
+	//TODO: Make it a list
 	protected final Set<Transaction> transactions;
 	protected final Map<ITradeable, Transaction> latest;
 	protected final IMarket market;

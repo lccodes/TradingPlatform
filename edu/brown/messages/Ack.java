@@ -24,6 +24,19 @@ public class Ack extends Message {
 	}
 	
 	/**
+	 * Constructor for registration
+	 * @param registration 
+	 * @param b : accepted/rejected
+	 */
+	public Ack(Registration registration, boolean b) {
+		super(null);
+		this.failedBR = null;
+		this.failedTR = null;
+		this.failedLO = null;
+		this.REJECTED = true;
+	}
+	
+	/**
 	 * Rejection for a bid;
 	 * notifies the agent that they sent an improper request
 	 * @param ID : rejection ID

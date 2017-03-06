@@ -9,7 +9,7 @@ import brown.messages.BankUpdate;
 import brown.messages.Message;
 import brown.messages.Registration;
 import brown.messages.auctions.BidReqeust;
-import brown.messages.markets.TradeRequest;
+import brown.messages.markets.MarketUpdate;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -125,10 +125,10 @@ public abstract class Agent {
 	public abstract void onAck(Ack message);
 
 	/**
-	 * Whenever an unknown market changes state
+	 * Whenever you get a report
 	 * @param marketUpdate
 	 */
-	public abstract void onMarketUpdate(TradeRequest marketUpdate);
+	public abstract void onMarketUpdate(MarketUpdate marketUpdate);
 
 	/**
 	 * Whenever an agent's bank changes, the server sends a bank update

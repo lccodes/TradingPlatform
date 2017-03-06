@@ -1,20 +1,22 @@
-package brown.test.prediction.cda;
+package brown.lab.lab4;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Account;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
+import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.Ack;
 import brown.messages.auctions.BidReqeust;
-import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Logging;
+import brown.test.prediction.cda.GameSetup;
+import brown.test.prediction.cda.PMRegistration;
 
 public abstract class Lab4Agent extends Agent {
 	public boolean myCoin;
+	public int myNumDecoys;
 	public Account myBalance;
 	
 	public Lab4Agent(String host, int port)
@@ -48,12 +50,6 @@ public abstract class Lab4Agent extends Agent {
 	}
 
 	@Override
-	public void onMarketUpdate(TradeRequest marketUpdate) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onBankUpdate(BankUpdate bankUpdate) {
 		Logging.log("Current Bank: ");
 		Logging.log("Monies = " + bankUpdate.newAccount.monies + " || Tradeables = " + bankUpdate.newAccount.tradeables);
@@ -77,6 +73,7 @@ public abstract class Lab4Agent extends Agent {
 		super.onRegistration(registration);
 		PMRegistration reg = (PMRegistration) registration;
 		this.myCoin = reg.COIN;
+		this.myNumDecoys = reg.DECOYCOUNT;
 		Logging.log("[+] my coin: " + this.myCoin);
 	}
 

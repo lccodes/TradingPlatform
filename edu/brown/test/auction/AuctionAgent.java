@@ -3,11 +3,11 @@ package brown.test.auction;
 import brown.agent.Agent;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
+import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.Ack;
 import brown.messages.auctions.BidReqeust;
-import brown.messages.markets.TradeRequest;
+import brown.messages.markets.MarketUpdate;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -34,7 +34,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	public void onMarketUpdate(TradeRequest marketUpdate) {
+	public void onMarketUpdate(MarketUpdate marketUpdate) {
 		//Noop
 	}
 
