@@ -6,7 +6,7 @@ import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.auctions.BidReqeust;
-import brown.messages.markets.MarketUpdate;
+import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -35,7 +35,7 @@ public class TestAgent extends Agent {
 		if (!this.done && Math.random() < .25) {
 			this.done = true;
 			market.buy(this, 1, .6);
-			Logging.log("bought 1 " + market.getType().TYPE);
+			Logging.log("bought 1 " + market.getTradeable().getType());
 		}
 	}
 
@@ -89,7 +89,7 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	public void onMarketUpdate(MarketUpdate marketUpdate) {
+	public void onMarketUpdate(GameReport marketUpdate) {
 		// TODO Auto-generated method stub
 		
 	}

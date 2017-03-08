@@ -5,12 +5,11 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
 
 public interface TwoSidedAuction extends IMarket {
-	public FullType getType();
+	public ITradeable getTradeable();
 	
 	public List<Order> buy(Integer agentID, double shareNum, double sharePrice);
 	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice);

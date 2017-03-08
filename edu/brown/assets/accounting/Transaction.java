@@ -40,4 +40,10 @@ public class Transaction {
 		this.TIMESTAMP = System.currentTimeMillis();
 	}
 
+	public Transaction sanitize(Integer ID) {
+		return new Transaction(ID.equals(TO) ? TO : null,
+				ID.equals(FROM) ? FROM : null,
+				PRICE,QUANTITY,TRADEABLE.toAgent(ID));
+	}
+
 }

@@ -73,9 +73,8 @@ public ITradeable split(double newCount) {
 }
 
 @Override
-public ITradeable toAgent() {
-	// TODO Auto-generated method stub
-	return null;
+public ITradeable toAgent(Integer ID) {
+	return this;
 }
 
 }

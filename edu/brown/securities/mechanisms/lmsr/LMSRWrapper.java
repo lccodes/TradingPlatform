@@ -1,10 +1,10 @@
 package brown.securities.mechanisms.lmsr;
 
 import brown.agent.Agent;
-import brown.assets.value.FullType;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.assets.value.ITradeable;
 import brown.auctions.twosided.ITwoSidedPriceTaker;
 import brown.auctions.twosided.ITwoSidedWrapper;
+import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.markets.MarketOrder;
 
 public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
@@ -24,8 +24,8 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	}
 
 	@Override
-	public FullType getType() {
-		return this.LMSR.getType();
+	public ITradeable getTradeable() {
+		return this.LMSR.getTradeable();
 	}
 
 	@Override

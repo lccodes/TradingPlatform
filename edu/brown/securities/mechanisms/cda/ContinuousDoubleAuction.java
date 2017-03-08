@@ -5,17 +5,15 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
-import brown.assets.value.TradeableType;
 import brown.assets.value.ITradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.rules.ClearingRule;
-import brown.auctions.twosided.TwoSidedAuction;
 import brown.auctions.twosided.ITwoSidedWrapper;
+import brown.auctions.twosided.TwoSidedAuction;
 
 public class ContinuousDoubleAuction implements TwoSidedAuction {
 	private final Integer ID;
-	private final FullType TYPE;
+	private final ITradeable TYPE;
 	private final ClearingRule RULE;
 	
 	/**
@@ -34,19 +32,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	 * @param type : SecurityType
 	 * @param rule : ClearingRule
 	 */
-	public ContinuousDoubleAuction(Integer ID, TradeableType type, ClearingRule rule) {
-		this.ID = ID;
-		this.TYPE = new FullType(type, null);
-		this.RULE = rule;
-	}
-	
-	/**
-	 * Constructor
-	 * @param ID : auction ID
-	 * @param type : <SecurityType,Integer>
-	 * @param rule : ClearingRule
-	 */
-	public ContinuousDoubleAuction(Integer ID, FullType type, ClearingRule rule) {
+	public ContinuousDoubleAuction(Integer ID, ITradeable type, ClearingRule rule) {
 		this.ID = ID;
 		this.TYPE = type;
 		this.RULE = rule;
@@ -58,7 +44,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public FullType getType() {
+	public ITradeable getTradeable() {
 		return this.TYPE;
 	}
 

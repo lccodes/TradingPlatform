@@ -7,7 +7,7 @@ import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.auctions.BidReqeust;
-import brown.messages.markets.MarketUpdate;
+import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -34,7 +34,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	public void onMarketUpdate(MarketUpdate marketUpdate) {
+	public void onMarketUpdate(GameReport marketUpdate) {
 		//Noop
 	}
 
@@ -75,15 +75,15 @@ public class AuctionAgent extends Agent {
 
 	@Override
 	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote().getCost());
+		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote());
 		market.bid(this, this.myMax);
 	}
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote().getCost());
-		if (market.getQuote().getAgent() == null && market.getQuote().getCost() < this.myMax) {
-			market.bid(this, market.getQuote().getCost()+1);
+		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote());
+		if (market.getAgent() == null && market.getQuote() < this.myMax) {
+			market.bid(this, market.getQuote()+1);
 		}
 	}
 

@@ -4,15 +4,15 @@ import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
 import brown.messages.Message;
 
-public class MarketUpdate extends Message {
+public class GameReport extends Message {
 	public final Ledger LEDGER;
 	
-	public MarketUpdate() {
+	public GameReport() {
 		super(null);
 		this.LEDGER = null;
 	}
 
-	public MarketUpdate(Ledger ledger) {
+	public GameReport(Ledger ledger) {
 		super(null);
 		this.LEDGER = ledger;
 	}

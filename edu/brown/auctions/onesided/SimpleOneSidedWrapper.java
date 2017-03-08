@@ -27,8 +27,20 @@ public class SimpleOneSidedWrapper extends IOneSidedWrapper {
 				this.BR.AuctionID, agent.ID));
 	}
 	
-	public SimpleBidBundle getQuote() {
-		return (SimpleBidBundle) this.BR.Current;
+	/**
+	 * Gets the current high bid in the auction
+	 * @return double bid
+	 */
+	public double getQuote() {
+		return this.BR.Current.getCost();
+	}
+	
+	/**
+	 * Gets the current high bidder
+	 * @return integer : agent ID
+	 */
+	public Integer getAgent() {
+		return this.BR.Current.getAgent();
 	}
 
 	@Override

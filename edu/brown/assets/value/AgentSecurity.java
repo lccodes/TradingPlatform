@@ -55,7 +55,7 @@ public class AgentSecurity implements ITradeable {
 	}
 
 	@Override
-	public ITradeable toAgent() {
+	public ITradeable toAgent(Integer ID) {
 		return this;
 	}
 	

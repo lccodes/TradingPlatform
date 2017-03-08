@@ -15,5 +15,5 @@ public interface ITradeable {
 	
 	Account convert(StateOfTheWorld closingState);
 	ITradeable split(double newCount);
-	ITradeable toAgent();
+	ITradeable toAgent(Integer id);
 }

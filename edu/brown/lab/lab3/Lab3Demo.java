@@ -2,7 +2,7 @@ package brown.lab.lab3;
 
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
-import brown.messages.markets.MarketUpdate;
+import brown.messages.markets.GameReport;
 import brown.setup.Logging;
 
 public class Lab3Demo extends Lab3Agent {
@@ -19,13 +19,16 @@ public class Lab3Demo extends Lab3Agent {
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		//Random bid + 1
-		market.bid(this, Math.random()+1);
+		double currentBid = market.getQuote();
+		Logging.log("Current quote: " + currentBid);
+		//High bid + 1
+		market.bid(this, currentBid+1);
 	}
 
 	@Override
-	public void onMarketUpdate(MarketUpdate marketUpdate) {
-		Logging.log("New ledger!");
+	public void onMarketUpdate(GameReport marketUpdate) {
+		Logging.log("Market outcome:");
+		//TODO: Lab3GameHistory
 	}
 
 }

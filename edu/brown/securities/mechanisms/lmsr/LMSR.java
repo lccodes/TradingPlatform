@@ -6,14 +6,15 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.TradeableType;
 import brown.assets.value.ITradeable;
+import brown.assets.value.Security;
+import brown.assets.value.TradeableType;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.crules.LMSRNoClearing;
 import brown.auctions.crules.LMSRYesClearing;
 import brown.auctions.rules.ClearingRule;
-import brown.auctions.twosided.TwoSidedAuction;
 import brown.auctions.twosided.ITwoSidedWrapper;
+import brown.auctions.twosided.TwoSidedAuction;
 
 public class LMSR implements TwoSidedAuction {
 	private final Integer ID;
@@ -49,8 +50,8 @@ public class LMSR implements TwoSidedAuction {
 	}
 
 	@Override
-	public FullType getType() {
-		return this.TYPE;
+	public ITradeable getTradeable() {
+		return new Security(null, 0, this.TYPE);
 	}
 
 	@Override

@@ -50,8 +50,8 @@ public class ShortShare implements ITradeable {
 	}
 
 	@Override
-	public ITradeable toAgent() {
-		return null;
+	public ITradeable toAgent(Integer ID) {
+		return this;
 	}
 
 }

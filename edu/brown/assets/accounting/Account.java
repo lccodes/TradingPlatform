@@ -127,7 +127,7 @@ public class Account {
 	public Account toAgent() {
 		List<ITradeable> forAgent = new LinkedList<ITradeable>();
 		for (ITradeable t : this.tradeables) {
-			forAgent.add(t.toAgent());
+			forAgent.add(t.toAgent(this.ID));
 		}
 		
 		return new Account(this.ID, this.monies, forAgent);

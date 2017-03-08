@@ -2,7 +2,7 @@ package brown.auctions.twosided;
 
 import brown.agent.Agent;
 
-public interface ITwoSidedPriceTaker {
+public interface ITwoSidedPriceTaker extends ITwoSidedWrapper {
 	public void buy(Agent agent, double shareNum, double maxPrice);
 	public void sell(Agent agent, double shareNum, double maxPrice);
 	

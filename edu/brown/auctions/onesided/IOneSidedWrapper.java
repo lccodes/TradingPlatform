@@ -4,7 +4,6 @@ import java.util.Set;
 
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarketWrapper;
-import brown.auctions.bundles.BundleType;
 import brown.auctions.prules.PaymentType;
 import brown.messages.auctions.BidReqeust;
 
@@ -30,14 +29,11 @@ public abstract class IOneSidedWrapper implements IMarketWrapper {
 		return this.BR.Goods;
 	}
 	
-	public BundleType getBundleType() {
-		return this.BR.TYPE;
-	}
-	
 	public Integer getAuctionID() {
 		return this.BR.AuctionID;
 	}
 	
 	//TODO: On override implement bid
-	//TODO: On override implement quote
+	//TODO: On override implement getQuote
+	//TODO: on override implement getAgent
 }

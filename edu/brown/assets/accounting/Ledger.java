@@ -2,6 +2,7 @@ package brown.assets.accounting;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,8 +12,7 @@ import brown.auctions.IMarket;
 
 public class Ledger {
 	//TODO: Naive way first
-	//TODO: Make it a list
-	protected final Set<Transaction> transactions;
+	protected final List<Transaction> transactions;
 	protected final Map<ITradeable, Transaction> latest;
 	protected final IMarket market;
 	
@@ -22,7 +22,7 @@ public class Ledger {
 	 */
 	public Ledger(IMarket market) {
 		this.market = market;
-		this.transactions = new HashSet<Transaction>();
+		this.transactions = new LinkedList<Transaction>();
 		this.latest = new HashMap<ITradeable, Transaction>();
 	}
 	
@@ -39,7 +39,7 @@ public class Ledger {
 	 * Constructs a set of all transactions
 	 * @return set
 	 */
-	public Set<Transaction> getSet() {
+	public List<Transaction> getList() {
 		return this.transactions;
 	}
 	
@@ -60,6 +60,19 @@ public class Ledger {
 			this.latest.put(t.TRADEABLE, t);
 		}
 		this.transactions.addAll(trans);
+	}
+	
+	/**
+	 * Gets the ledger without others' IDs
+	 * @param ID : this agent's ID
+	 * @return ledger
+	 */
+	public Ledger getSanitized(Integer ID) {
+		Ledger ledger = new Ledger(this.market);
+		for (Transaction t : this.transactions) {
+			ledger.add(t.sanitize(ID));
+		}
+		return ledger;
 	}
 
 }

@@ -82,7 +82,7 @@ public class TestServer extends AgentServer {
 	public void runGame() {
 		// this.exchange.open(new ContinuousDoubleAuction(0, TYPENO, new
 		// ClosestMatchClearing()));
-		this.exchange.open(new ContinuousDoubleAuction(1, TYPEYES,
+		this.exchange.open(new ContinuousDoubleAuction(1, new Contract(null,0,TYPEYES, null),
 				new ClosestMatchClearing((Double d) -> {
 					Contract newSec = new Contract(null, 1, TYPEYES,
 							state -> state.getState() == 1 ? new Account(null).add(100)

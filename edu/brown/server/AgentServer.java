@@ -211,12 +211,12 @@ public abstract class AgentServer {
 						if (market.permitShort()) {
 							double toShort = limitorder.sellShares;
 							for (ITradeable t : justAList) {
-								if (t.getType().equals(market.getType())) {
+								if (t.getType().equals(market.getTradeable())) {
 									toShort -= t.getCount();
 								}
 							}
 							if (toShort > 0) {
-								justAList.add(new ShortShare(toShort, market.getType()));
+								justAList.add(new ShortShare(toShort, market.getTradeable().getType()));
 							}
 						}
 						
@@ -225,7 +225,7 @@ public abstract class AgentServer {
 								break;
 							}
 
-							if (tradeable.getType().equals(market.getType())) {
+							if (tradeable.getType().equals(market.getTradeable())) {
 								ITradeable toSell = tradeable;
 								if (tradeable.getCount() > qToSell) {
 									toSell = tradeable.split(qToSell);

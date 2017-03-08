@@ -4,11 +4,13 @@ import brown.agent.Agent;
 import brown.assets.accounting.Account;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
+import brown.lab.UnitCDAWrapper;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.auctions.BidReqeust;
 import brown.messages.trades.NegotiateRequest;
+import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Logging;
 import brown.test.prediction.cda.GameSetup;
@@ -25,17 +27,23 @@ public abstract class Lab4Agent extends Agent {
 		this.myCoin = false;
 		this.myBalance = new Account(null);
 	}
+	
+	@Override
+	public void onContinuousDoubleAuction(CDAWrapper market) {
+		//Invoke the game specific subclass
+		this.onContinuousDoubleAuction(new UnitCDAWrapper(market));
+	}
+
+	protected abstract void onContinuousDoubleAuction(UnitCDAWrapper unitCDAWrapper);
 
 	@Override
 	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		// TODO Auto-generated method stub
-
+		// Noop
 	}
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		// TODO Auto-generated method stub
-
+		// Noop
 	}
 
 	@Override
@@ -58,14 +66,12 @@ public abstract class Lab4Agent extends Agent {
 
 	@Override
 	public void onTradeRequest(BidReqeust bidRequest) {
-		// TODO Auto-generated method stub
-
+		// Noop
 	}
 
 	@Override
 	public void onNegotiateRequest(NegotiateRequest tradeRequest) {
-		// TODO Auto-generated method stub
-
+		// Noop
 	}
 	
 	@Override

@@ -7,14 +7,13 @@ import java.util.TreeMap;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.ITradeable;
 import brown.auctions.twosided.ITwoSidedPriceSetter;
-import brown.auctions.twosided.ITwoSidedWrapper;
 import brown.messages.markets.MarketOrder;
 
-public class CDAWrapper implements ITwoSidedWrapper, ITwoSidedPriceSetter {
+public class CDAWrapper implements ITwoSidedPriceSetter {
 	private final Integer MARKETID;
-	private final FullType TYPE;
+	private final ITradeable TYPE;
 	private final SortedMap<Double, Double> BUYBOOK;
 	private final SortedMap<Double, Double> SELLBOOK;
 	
@@ -30,7 +29,7 @@ public class CDAWrapper implements ITwoSidedWrapper, ITwoSidedPriceSetter {
 		this.SELLBOOK = new TreeMap<Double, Double>();
 		
 		this.MARKETID = CDA.getID();
-		this.TYPE = CDA.getType();
+		this.TYPE = CDA.getTradeable();
 		for (Map.Entry<Double, Set<Order>> entry : CDA.getBuyBook().entrySet()) {
 			double count = 0;
 			for (Order t : entry.getValue()) {
@@ -54,7 +53,7 @@ public class CDAWrapper implements ITwoSidedWrapper, ITwoSidedPriceSetter {
 	}
 
 	@Override
-	public FullType getType() {
+	public ITradeable getTradeable() {
 		return this.TYPE;
 	}
 

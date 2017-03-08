@@ -97,7 +97,7 @@ public class Lab4Server extends AgentServer {
 		}
 		// this.exchange.open(new ContinuousDoubleAuction(0, TYPENO, new
 		// ClosestMatchClearing()));
-		this.exchange.open(new ContinuousDoubleAuction(1, TYPEYES,
+		this.exchange.open(new ContinuousDoubleAuction(1, new Contract(null,0,TYPEYES,null),
 				new ClosestMatchClearing((Double d) -> {
 					Contract newSec = new Contract(null, 1, TYPEYES,
 							state -> state.getState() == 1 ? new Account(null).add(100)
@@ -125,9 +125,9 @@ public class Lab4Server extends AgentServer {
 	public static void main(String[] args) throws AgentCreationException {
 		Lab4Server serv = new Lab4Server(2121);
 
-		for (int i = 0; i < 50; i++) {
-			new Lab4DemoAgent("localhost", 2121);
-		}
+		//for (int i = 0; i < 50; i++) {
+		//	new Lab4DemoAgent("localhost", 2121);
+		//}
 
 		serv.runGame();
 		while (true) {
