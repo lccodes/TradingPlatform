@@ -10,8 +10,10 @@ import brown.messages.auctions.Bid;
 
 public interface PaymentRule {
 
-	Map<BidBundle, Set<ITradeable>> getPayments(Map<Integer, Set<ITradeable>> allocations, Set<Bid> bids);
+	public Map<BidBundle, Set<ITradeable>> getPayments(Map<Integer, Set<ITradeable>> allocations, Set<Bid> bids);
 
-	PaymentType getPaymentType();
+	public PaymentType getPaymentType();
+	
+	public boolean permitShort();
 
 }

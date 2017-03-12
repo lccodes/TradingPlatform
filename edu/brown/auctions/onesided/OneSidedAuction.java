@@ -156,7 +156,7 @@ public class OneSidedAuction implements IMarket {
 
 	@Override
 	public boolean permitShort() {
-		return false;
+		return this.PRULE.permitShort();
 	}
 
 	@Override
