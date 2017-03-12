@@ -18,11 +18,6 @@ public abstract class Lab5Agent extends LabAgent {
 	}
 
 	@Override
-	public void onLemonade(LemonadeWrapper wrapper) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void onSimpleSealed(SimpleOneSidedWrapper market) {
 		this.onLemonade(new LemonadeWrapper(market));
 	}
@@ -51,8 +46,10 @@ public abstract class Lab5Agent extends LabAgent {
 
 	@Override
 	public void onMarketUpdate(GameReport marketUpdate) {
-		// TODO Auto-generated method stub
+		this.onLemonadeUpdate((LemonadeReport) marketUpdate);
 	}
+
+	public abstract void onLemonadeUpdate(LemonadeReport lemonadeReport);
 
 	@Override
 	public void onTradeRequest(BidReqeust bidRequest) {
