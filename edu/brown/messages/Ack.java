@@ -33,7 +33,7 @@ public class Ack extends Message {
 		this.failedBR = null;
 		this.failedTR = null;
 		this.failedLO = null;
-		this.REJECTED = true;
+		this.REJECTED = b;
 	}
 	
 	/**

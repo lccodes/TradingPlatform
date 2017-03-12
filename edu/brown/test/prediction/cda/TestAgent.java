@@ -34,16 +34,16 @@ public class TestAgent extends Agent {
 	@Override
 	public void onContinuousDoubleAuction(CDAWrapper market) {
 		Logging.log("[" + this.ID + "] "+ market.getAuctionID());
-		if (this.ME == 0 && market.getTradeable().getType().TYPE.equals(TradeableType.PredictionYes)) {
+		if (this.ME == 0 && market.getTradeableType().TYPE.equals(TradeableType.PredictionYes)) {
 			market.sell(this, 1, 10);
 			this.ME = -1;
 			Logging.log("[" + this.ID + "] sold yes");
-		} else if (this.ME == 1 && market.getTradeable().getType().TYPE.equals(TradeableType.PredictionNo)){
+		} else if (this.ME == 1 && market.getTradeableType().TYPE.equals(TradeableType.PredictionNo)){
 			market.sell(this, 1, 10);
 			Logging.log("[" + this.ID + "] sold no");
 		} else if (this.ME == 2){
 			market.buy(this, 1, 11);
-			Logging.log("[" + this.ID + "] bought " + market.getTradeable().getType());
+			Logging.log("[" + this.ID + "] bought " + market.getTradeableType());
 		}
 	}
 

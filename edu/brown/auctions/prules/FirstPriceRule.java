@@ -10,6 +10,10 @@ import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
 
 public class FirstPriceRule implements PaymentRule {
+	
+	public FirstPriceRule() {
+		
+	}
 
 	@Override
 	public Map<BidBundle, Set<ITradeable>> getPayments(Map<Integer, Set<ITradeable>> allocations, Set<Bid> bids) {

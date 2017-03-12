@@ -41,8 +41,8 @@ public class Transaction {
 	}
 
 	public Transaction sanitize(Integer ID) {
-		return new Transaction(ID.equals(TO) ? TO : null,
-				ID.equals(FROM) ? FROM : null,
+		return new Transaction(ID != null && ID.equals(TO) ? TO : null,
+				ID != null && ID.equals(FROM) ? FROM : null,
 				PRICE,QUANTITY,TRADEABLE.toAgent(ID));
 	}
 

@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 
+import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
-import brown.assets.value.Security;
 import brown.assets.value.TradeableType;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.crules.LMSRNoClearing;
@@ -50,8 +50,8 @@ public class LMSR implements TwoSidedAuction {
 	}
 
 	@Override
-	public ITradeable getTradeable() {
-		return new Security(null, 0, this.TYPE);
+	public FullType getTradeableType() {
+		return this.TYPE;
 	}
 
 	@Override
@@ -92,8 +92,8 @@ public class LMSR implements TwoSidedAuction {
 	}
 
 	@Override
-	public ITwoSidedWrapper wrap() {
-		return new LMSRWrapper(this);
+	public ITwoSidedWrapper wrap(Ledger ledger) {
+		return new LMSRWrapper(this, ledger);
 	}
 
 	@Override

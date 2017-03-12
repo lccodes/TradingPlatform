@@ -6,30 +6,34 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import brown.agent.Agent;
+import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
-import brown.assets.value.ITradeable;
+import brown.assets.value.FullType;
 import brown.auctions.twosided.ITwoSidedPriceSetter;
 import brown.messages.markets.MarketOrder;
 
 public class CDAWrapper implements ITwoSidedPriceSetter {
 	private final Integer MARKETID;
-	private final ITradeable TYPE;
+	private final FullType TYPE;
 	private final SortedMap<Double, Double> BUYBOOK;
 	private final SortedMap<Double, Double> SELLBOOK;
+	private final Ledger LEDGER;
 	
 	public CDAWrapper() {
 		this.TYPE = null;
 		this.MARKETID = null;
 		this.BUYBOOK = null;
 		this.SELLBOOK = null;
+		this.LEDGER = null;
 	}
 	
-	public CDAWrapper(ContinuousDoubleAuction CDA) {
+	public CDAWrapper(ContinuousDoubleAuction CDA, Ledger ledger) {
 		this.BUYBOOK = new TreeMap<Double, Double>();
 		this.SELLBOOK = new TreeMap<Double, Double>();
+		this.LEDGER = ledger;
 		
 		this.MARKETID = CDA.getID();
-		this.TYPE = CDA.getTradeable();
+		this.TYPE = CDA.getTradeableType();
 		for (Map.Entry<Double, Set<Order>> entry : CDA.getBuyBook().entrySet()) {
 			double count = 0;
 			for (Order t : entry.getValue()) {
@@ -53,7 +57,7 @@ public class CDAWrapper implements ITwoSidedPriceSetter {
 	}
 
 	@Override
-	public ITradeable getTradeable() {
+	public FullType getTradeableType() {
 		return this.TYPE;
 	}
 
@@ -101,6 +105,11 @@ public class CDAWrapper implements ITwoSidedPriceSetter {
 	@Override
 	public void dispatchMessage(Agent agent) {
 		agent.onContinuousDoubleAuction(this);
+	}
+
+	@Override
+	public Ledger getLedger() {
+		return this.LEDGER;
 	}
 
 }

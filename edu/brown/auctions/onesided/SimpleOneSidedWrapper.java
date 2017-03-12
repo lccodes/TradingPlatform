@@ -1,6 +1,8 @@
 package brown.auctions.onesided;
 
 import brown.agent.Agent;
+import brown.assets.accounting.Ledger;
+import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.prules.PaymentType;
@@ -8,13 +10,19 @@ import brown.messages.auctions.Bid;
 import brown.messages.auctions.BidReqeust;
 
 public class SimpleOneSidedWrapper extends IOneSidedWrapper {
+	private final Ledger LEDGER;
+	private final MechanismType TYPE;
 	
 	public SimpleOneSidedWrapper() {
 		super(null, null);
+		this.LEDGER = null;
+		this.TYPE = null;
 	}
 	
-	public SimpleOneSidedWrapper(PaymentType type, BidReqeust br) {
+	public SimpleOneSidedWrapper(PaymentType type, BidReqeust br, MechanismType mtype, Ledger ledger) {
 		super(type, br);
+		this.LEDGER = ledger;
+		this.TYPE = mtype;
 	}
 
 	/**
@@ -45,6 +53,15 @@ public class SimpleOneSidedWrapper extends IOneSidedWrapper {
 
 	@Override
 	public void dispatchMessage(Agent agent) {
-		agent.onSimpleSealed(this);
+		if (this.TYPE.equals(MechanismType.SealedBid)) {
+			agent.onSimpleSealed(this);
+		} else {
+			agent.onSimpleOpenOutcry(this);
+		}
+	}
+
+	@Override
+	public Ledger getLedger() {
+		return this.LEDGER;
 	}
 }

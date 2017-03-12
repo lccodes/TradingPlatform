@@ -9,6 +9,7 @@ import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.auctions.BidReqeust;
+import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
@@ -48,13 +49,14 @@ public abstract class Lab4Agent extends Agent {
 
 	@Override
 	public void onLMSR(LMSRWrapper market) {
-		// TODO Auto-generated method stub
-
+		// Noop
 	}
 
 	@Override
 	public void onAck(Ack message) {
-		Logging.log("Order rejected " + message.failedLO);
+		if (message.REJECTED) {
+			Logging.log("Order rejected " + message.failedLO);
+		}
 	}
 
 	@Override
@@ -81,6 +83,11 @@ public abstract class Lab4Agent extends Agent {
 		this.myCoin = reg.COIN;
 		this.myNumDecoys = reg.DECOYCOUNT;
 		Logging.log("[+] my coin: " + this.myCoin);
+	}
+	
+	@Override
+	public void onMarketUpdate(GameReport report) {
+		// Noop
 	}
 
 }

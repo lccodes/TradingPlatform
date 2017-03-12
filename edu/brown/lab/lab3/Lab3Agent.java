@@ -31,7 +31,9 @@ public abstract class Lab3Agent extends Agent {
 
 	@Override
 	public void onAck(Ack message) {
-		Logging.log("[x] ack: " + message.failedLO + " " + message.REJECTED);
+		if (message.REJECTED) {
+			Logging.log("[x] ack: " + message.failedBR);
+		}
 	}
 
 	@Override

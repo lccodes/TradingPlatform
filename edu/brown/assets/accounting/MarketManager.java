@@ -2,12 +2,15 @@ package brown.assets.accounting;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import brown.assets.value.ITradeable;
 import brown.assets.value.StateOfTheWorld;
 import brown.auctions.IMarket;
+import brown.auctions.onesided.OneSidedAuction;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
@@ -109,6 +112,12 @@ public class MarketManager {
 		return true;
 	}
 	
+	/**
+	 * Registers a security created outside the market
+	 * @param ID
+	 * @param t
+	 * @return
+	 */
 	public boolean register(Integer ID, ITradeable t) {
 		IMarket tsa = tsauctions.get(ID);
 		if (tsa == null) {
@@ -128,16 +137,55 @@ public class MarketManager {
 		return true;
 	}
 
+	/**
+	 * Gets the ledger for this market ID
+	 * @param ID
+	 * @return
+	 */
 	public Ledger getLedger(Integer ID) {
 		return ledgers.get(tsauctions.get(ID));
 	}
 
+	/**
+	 * Gets the market for this ID
+	 * @param ID
+	 * @return
+	 */
 	public IMarket getIMarket(Integer ID) {
 		return tsauctions.get(ID);
 	}
 
+	/**
+	 * Gets all of the auctions
+	 * @return
+	 */
 	public Collection<IMarket> getAuctions() {
 		return this.tsauctions.values();
+	}
+	
+	/**
+	 * Gets all the one sided auctions
+	 * @return
+	 */
+	public List<OneSidedAuction> getOneSidedAuctions() {
+		return this.tsauctions.values().stream()
+				.filter(a -> a instanceof OneSidedAuction)
+				.map(a -> (OneSidedAuction) a)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Gets the one sided auction
+	 * @param auctionID
+	 * @return
+	 */
+	public OneSidedAuction getOneSided(Integer auctionID) {
+		IMarket market = this.tsauctions.get(auctionID);
+		if (market instanceof OneSidedAuction) {
+			return (OneSidedAuction) market;
+		}
+		
+		return null;
 	}
 
 }

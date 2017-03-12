@@ -13,6 +13,10 @@ import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
 
 public class SecondPriceRule implements PaymentRule {
+	
+	public SecondPriceRule() {
+		
+	}
 
 	@Override
 	public Map<BidBundle, Set<ITradeable>> getPayments(Map<Integer, Set<ITradeable>> allocations, Set<Bid> bids) {

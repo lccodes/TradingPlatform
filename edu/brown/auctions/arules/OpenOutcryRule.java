@@ -23,6 +23,13 @@ public class OpenOutcryRule implements AllocationRule {
 	
 	private int ticks;
 	
+	/**
+	 * Constructor
+	 * @param bundleType
+	 * @param ascending
+	 * @param secondsToWait
+	 * @param reserve
+	 */
 	public OpenOutcryRule(BundleType bundleType, boolean ascending,
 			int secondsToWait, BidBundle reserve) {
 		this.END = secondsToWait;
@@ -30,6 +37,14 @@ public class OpenOutcryRule implements AllocationRule {
 		this.BT = bundleType;
 		this.ASC = ascending;
 		this.RESERVE = reserve;
+	}
+	
+	public OpenOutcryRule() {
+		this.END = 0;
+		this.ticks = 0;
+		this.BT = null;
+		this.ASC = false;
+		this.RESERVE = null;
 	}
 
 	@Override

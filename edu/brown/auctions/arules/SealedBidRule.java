@@ -23,6 +23,13 @@ public class SealedBidRule implements AllocationRule {
 	
 	private int ticks;
 	
+	/**
+	 * Constructor
+	 * @param bundleType
+	 * @param ascending
+	 * @param secondsToWait
+	 * @param reserve
+	 */
 	public SealedBidRule(BundleType bundleType, boolean ascending,
 			int secondsToWait, BidBundle reserve) {
 		this.END = secondsToWait;
@@ -30,6 +37,14 @@ public class SealedBidRule implements AllocationRule {
 		this.BT = bundleType;
 		this.ASC = ascending;
 		this.RESERVE = reserve;
+	}
+	
+	public SealedBidRule() {
+		this.RESERVE = null;
+		this.ASC = false;
+		this.BT = null;
+		this.ticks = 0;
+		this.END = 0;
 	}
 
 	@Override

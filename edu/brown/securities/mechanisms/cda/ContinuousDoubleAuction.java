@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 
+import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
+import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.rules.ClearingRule;
@@ -13,7 +15,7 @@ import brown.auctions.twosided.TwoSidedAuction;
 
 public class ContinuousDoubleAuction implements TwoSidedAuction {
 	private final Integer ID;
-	private final ITradeable TYPE;
+	private final FullType TYPE;
 	private final ClearingRule RULE;
 	
 	/**
@@ -32,7 +34,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	 * @param type : SecurityType
 	 * @param rule : ClearingRule
 	 */
-	public ContinuousDoubleAuction(Integer ID, ITradeable type, ClearingRule rule) {
+	public ContinuousDoubleAuction(Integer ID, FullType type, ClearingRule rule) {
 		this.ID = ID;
 		this.TYPE = type;
 		this.RULE = rule;
@@ -44,7 +46,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public ITradeable getTradeable() {
+	public FullType getTradeableType() {
 		return this.TYPE;
 	}
 
@@ -89,8 +91,8 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public ITwoSidedWrapper wrap() {
-		return new CDAWrapper(this);
+	public ITwoSidedWrapper wrap(Ledger ledger) {
+		return new CDAWrapper(this, ledger);
 	}
 
 	@Override

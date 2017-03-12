@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import brown.assets.accounting.Ledger;
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
 import brown.auctions.IMarketWrapper;
@@ -24,6 +25,21 @@ public class OneSidedAuction implements IMarket {
 	protected final Set<Bid> BIDS;
 	protected final Set<ITradeable> ITEMS;
 	
+	public OneSidedAuction() {
+		this.ID = null;
+		this.ARULE = null;
+		this.PRULE = null;
+		this.BIDS = null;
+		this.ITEMS = null;
+	}
+	
+	/**
+	 * Constructor
+	 * @param ID
+	 * @param tradeables
+	 * @param allocationRule
+	 * @param paymentRule
+	 */
 	public OneSidedAuction(Integer ID,Set<ITradeable> tradeables, 
 			AllocationRule allocationRule, PaymentRule paymentRule) {
 		//TODO: Confirm allocation and payment rules use same bundle
@@ -48,7 +64,7 @@ public class OneSidedAuction implements IMarket {
 	 * @param ID : agent to tailor the request
 	 * @return TradeRequest
 	 */
-	public TradeRequest wrap(Integer ID) {
+	public TradeRequest wrap(Integer ID, Ledger ledger) {
 		BidReqeust temp = this.ARULE.getBidRequest(this.BIDS, ID);
 		if (temp == null) {
 			return null;
@@ -60,7 +76,8 @@ public class OneSidedAuction implements IMarket {
 		IOneSidedWrapper wrapper = null;
 		switch(br.TYPE) {
 		case Simple:
-			wrapper = new SimpleOneSidedWrapper(this.PRULE.getPaymentType(), br);
+			wrapper = new SimpleOneSidedWrapper(this.PRULE.getPaymentType(), br, 
+					this.ARULE.getAllocationType(),ledger);
 			break;
 		default:
 			break;
@@ -143,8 +160,8 @@ public class OneSidedAuction implements IMarket {
 	}
 
 	@Override
-	public IMarketWrapper wrap() {
-		// TODO
+	public IMarketWrapper wrap(Ledger ledger) {
+		//TODO: ???
 		return null;
 	}
 }

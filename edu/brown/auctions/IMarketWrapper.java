@@ -1,6 +1,7 @@
 package brown.auctions;
 
 import brown.agent.Agent;
+import brown.assets.accounting.Ledger;
 
 public interface IMarketWrapper {
 	/**
@@ -8,6 +9,12 @@ public interface IMarketWrapper {
 	 * @return id
 	 */
 	public Integer getAuctionID();
+	
+	/**
+	 * Gets the ledger for this market
+	 * @return ledger
+	 */
+	public Ledger getLedger();
 	
 	/**
 	 * Handles the double dispatch for 

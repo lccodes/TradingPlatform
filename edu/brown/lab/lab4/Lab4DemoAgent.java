@@ -6,7 +6,6 @@ import brown.assets.value.ITradeable;
 import brown.exceptions.AgentCreationException;
 import brown.lab.UnitCDAWrapper;
 import brown.messages.BankUpdate;
-import brown.messages.markets.GameReport;
 import brown.setup.Logging;
 
 public class Lab4DemoAgent extends Lab4Agent {
@@ -31,18 +30,16 @@ public class Lab4DemoAgent extends Lab4Agent {
 	}
 
 	@Override
-	public void onMarketUpdate(GameReport marketUpdate) {
-		this.myLedger = marketUpdate.LEDGER;
+	protected void onContinuousDoubleAuction(UnitCDAWrapper market) {
+		// check out the current ledger
+		this.myLedger = market.getLedger();
 		// print the  transactions
 		for (Transaction t : this.myLedger.getList()) {
 			Logging.log("Tradeable " + t.TRADEABLE + " was sold to " + t.TO + " from " + t.FROM + " at price " + t.PRICE);
 		}
-	}
-
-	@Override
-	protected void onContinuousDoubleAuction(UnitCDAWrapper market) {
+		
 		//Print tradeabletype
-		Logging.log("[-] tradeable in this market is " + market.getTradeable().getType());
+		Logging.log("[-] tradeable in this market is " + market.getTradeableType());
 		// Print buy orders
 		for (Double price : market.getBuyBook().keySet()) {
 			Logging.log("[-] " + market.getBuyBook().get(price) + " shares available at " + price);
@@ -60,9 +57,14 @@ public class Lab4DemoAgent extends Lab4Agent {
 			market.sell(this, price);
 		}
 
-		//Randomly cancel a buy order
-		if (Math.random() < .5) {
+		//Randomly cancel a buy order if you have less than two decoy coins
+		if (Math.random() < .5 && this.myNumDecoys < 2) {
 			market.cancel(this, true, 1);
 		}
+	}
+	
+	public static void main(String[] args) throws AgentCreationException {
+		new Lab4DemoAgent("localhost", 2121);
+		while(true){}
 	}
 }

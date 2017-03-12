@@ -11,10 +11,15 @@ import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
 
 public class Ledger {
-	//TODO: Naive way first
 	protected final List<Transaction> transactions;
 	protected final Map<ITradeable, Transaction> latest;
 	protected final IMarket market;
+	
+	public Ledger() {
+		this.transactions = null;
+		this.latest = null;
+		this.market = null;
+	}
 	
 	/**
 	 * Constructs a ledger for the given security
@@ -68,7 +73,7 @@ public class Ledger {
 	 * @return ledger
 	 */
 	public Ledger getSanitized(Integer ID) {
-		Ledger ledger = new Ledger(this.market);
+		Ledger ledger = new Ledger(null);
 		for (Transaction t : this.transactions) {
 			ledger.add(t.sanitize(ID));
 		}

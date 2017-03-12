@@ -77,7 +77,7 @@ public class Lab4Server extends AgentServer {
 		while (i < amt) {
 			try {
 				if (update) {
-					for (IMarket market : this.exchange.getAuctions()) {
+					for (IMarket market : this.manager.getAuctions()) {
 						this.sendMarketUpdate(market);
 					}
 				}
@@ -97,7 +97,7 @@ public class Lab4Server extends AgentServer {
 		}
 		// this.exchange.open(new ContinuousDoubleAuction(0, TYPENO, new
 		// ClosestMatchClearing()));
-		this.exchange.open(new ContinuousDoubleAuction(1, new Contract(null,0,TYPEYES,null),
+		this.manager.open(new ContinuousDoubleAuction(1, TYPEYES,
 				new ClosestMatchClearing((Double d) -> {
 					Contract newSec = new Contract(null, 1, TYPEYES,
 							state -> state.getState() == 1 ? new Account(null).add(100)
@@ -110,7 +110,7 @@ public class Lab4Server extends AgentServer {
 		delay(1, false);
 
 		Logging.log("[-] sent market updates");
-		for (IMarket market : this.exchange.getAuctions()) {
+		for (IMarket market : this.manager.getAuctions()) {
 			this.sendMarketUpdate(market);
 		}
 
@@ -119,7 +119,7 @@ public class Lab4Server extends AgentServer {
 		TestState endState = new TestState(C);
 		Logging.log("[-] markets close with " + C);
 		// this.exchange.close(this, 0, endState);
-		this.exchange.close(this, 1, endState);
+		this.manager.close(this, 1, endState);
 	}
 
 	public static void main(String[] args) throws AgentCreationException {
