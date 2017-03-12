@@ -129,16 +129,20 @@ public abstract class AgentServer {
 	 */
 	protected void onLimitOrder(Connection connection, Integer privateID,
 			MarketOrder limitorder) {
-		//TODO: Improve
+		if (limitorder.marketID == null) {
+			Ack rej = new Ack(privateID, limitorder, true);
+			this.theServer.sendToTCP(connection.getID(), rej);
+			return;
+		}
 		TwoSidedAuction market = (TwoSidedAuction) exchange
 				.getIMarket(limitorder.marketID);
 		synchronized (market) {
-			Ledger ledger = exchange.getLedger(limitorder.marketID);
 			if (market == null) {
 				Ack rej = new Ack(privateID, limitorder, true);
 				this.theServer.sendToTCP(connection.getID(), rej);
 				return;
 			}
+			Ledger ledger = exchange.getLedger(limitorder.marketID);
 
 			if (limitorder.buyShares > 0) {
 				synchronized (privateID) {
