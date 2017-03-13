@@ -13,9 +13,14 @@ import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
 
 public class SecondPriceRule implements PaymentRule {
+	final boolean SHORT;
 	
 	public SecondPriceRule() {
-		
+		this.SHORT = false;
+	}
+	
+	public SecondPriceRule(boolean permitShort) {
+		this.SHORT = permitShort;
 	}
 
 	@Override
@@ -44,6 +49,11 @@ public class SecondPriceRule implements PaymentRule {
 	@Override
 	public PaymentType getPaymentType() {
 		return PaymentType.SecondPrice;
+	}
+
+	@Override
+	public boolean permitShort() {
+		return this.SHORT;
 	}
 
 }

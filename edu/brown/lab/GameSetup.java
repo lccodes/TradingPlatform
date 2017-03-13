@@ -1,6 +1,7 @@
 package brown.lab;
 
 import brown.lab.lab3.Lab3Good;
+import brown.lab.lab5.LemonadeReport;
 import brown.setup.Setup;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -16,6 +17,7 @@ public class GameSetup implements Setup{
   public void setup(Kryo kryo) {
     kryo.register(Lab3Good.class);
     kryo.register(ValuationRegistration.class);
+    kryo.register(LemonadeReport.class);
   }
 
 }

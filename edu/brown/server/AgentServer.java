@@ -15,6 +15,7 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Order;
+import brown.assets.accounting.Transaction;
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
 import brown.auctions.bundles.BidBundle;
@@ -449,6 +450,7 @@ public abstract class AgentServer {
 						if (winners == null) {
 							continue;
 						}
+						Ledger ledger = this.manager.getLedger(auction.getID());
 						for (BidBundle winner : winners.keySet()) {
 							Account account = this.bank.get(winner.getAgent());
 							if (account == null) {
@@ -457,6 +459,7 @@ public abstract class AgentServer {
 							synchronized (account.ID) {
 								for (ITradeable t : winners.get(winner)) {
 									t.setAgentID(winner.getAgent());
+									ledger.add(new Transaction(null, winner.getAgent(), winner.getCost(), t.getCount(), t));
 								}
 								Account newA = account.add(
 										-1 * winner.getCost(),
