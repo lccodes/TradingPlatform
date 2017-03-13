@@ -38,8 +38,8 @@ public class TestServer extends AgentServer {
 	}
 
 	public void closePM(boolean yes) {
-		this.exchange.close(this, 1, new TestState(yes));
-		this.exchange.close(this, 2, new TestState(yes));
+		this.manager.close(this, 1, new TestState(yes));
+		this.manager.close(this, 2, new TestState(yes));
 	}
 	
 	private void delay(int amt) {
@@ -55,22 +55,22 @@ public class TestServer extends AgentServer {
 	}
 
 	public void startGame() {
-		this.exchange.open(new LMSR(1, true, BACKEND, true));
-		this.exchange.open(new LMSR(2, false, BACKEND, true));
+		this.manager.open(new LMSR(1, true, BACKEND, true));
+		this.manager.open(new LMSR(2, false, BACKEND, true));
 		System.out.println("[-] markets added");
 		
 		delay(2);
 	    
 	    Logging.log("Start!");
-	    for (IMarket market : this.exchange.getAuctions()) {
+	    for (IMarket market : this.manager.getAuctions()) {
 	    	this.sendMarketUpdate(market);
 	    	//this.theServer.sendToAllTCP(new MarketUpdate(0, market, market.getMechanismType()));
 	    }
 	    
 	    delay(3);
 	    TestState endState = new TestState(false);
-	    this.exchange.close(this, 1, endState);
-	    this.exchange.close(this, 2, endState);
+	    this.manager.close(this, 1, endState);
+	    this.manager.close(this, 2, endState);
 	}
 
 }

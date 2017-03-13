@@ -26,40 +26,42 @@ public class AuctionServer extends AgentServer {
 	public AuctionServer(int port) {
 		super(port, new GameSetup());
 	}
-	
+
 	@Override
-	protected void onRegistration(Connection connection, Registration registration) {
+	protected void onRegistration(Connection connection,
+			Registration registration) {
 		Integer theID = this.defaultRegistration(connection, registration);
 		if (theID == null) {
-		  return;
+			return;
 		}
-		
-		double nextValue = Math.random()*100;
+
+		double nextValue = Math.random() * 100;
 		this.MAX = Math.max(nextValue, this.MAX);
-		this.theServer.sendToTCP(connection.getID(), 
-		    new AuctionRegistration(theID, nextValue));
-		
+		this.theServer.sendToTCP(connection.getID(), new AuctionRegistration(
+				theID, nextValue));
+
 		Account oldAccount = bank.get(connections.get(connection));
 		Account newAccount = oldAccount.addAll(100, null);
 		bank.put(connections.get(connection), newAccount);
-		
+
 		List<Integer> IDS = new LinkedList<Integer>();
 		IDS.add(connections.get(connection));
 		this.sendBankUpdates(IDS);
 	}
-	
+
 	public double runGame(boolean outcry, boolean firstprice) {
 		Set<ITradeable> theSet = new HashSet<ITradeable>();
 		theSet.add(new TheGood());
-		//if (outcry) {
-			//this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true, firstprice));
-			this.auctions.put(0, new OneSidedAuction(0, theSet, 
-					new OpenOutcryRule(BundleType.Simple, true, 5,
-							new SimpleBidBundle(10,null,BundleType.Simple)),
-					new FirstPriceRule()));
-		//} else {
-			//this.auctions.put(0, new SealedBid(0, new TheGood(), true, firstprice));
-		//}
+		// if (outcry) {
+		// this.auctions.put(0, new OutcryAuction(0, new TheGood(), false, true,
+		// firstprice));
+		this.manager.open(new OneSidedAuction(0, theSet, new OpenOutcryRule(
+				BundleType.Simple, true, 5, new SimpleBidBundle(10, null,
+						BundleType.Simple)), new FirstPriceRule()));
+		// } else {
+		// this.auctions.put(0, new SealedBid(0, new TheGood(), true,
+		// firstprice));
+		// }
 		int i = 0;
 		while (i < 2) {
 			try {
@@ -69,8 +71,8 @@ public class AuctionServer extends AgentServer {
 				Logging.log("[+] woken: " + e.getMessage());
 			}
 		}
-		
-		while(!this.auctions.get(0).isClosed()) {
+
+		while (!this.manager.getOneSided(0).isClosed()) {
 			try {
 				Thread.sleep(2000);
 				this.updateAllAuctions();
@@ -78,16 +80,17 @@ public class AuctionServer extends AgentServer {
 				Logging.log("[+] woken: " + e.getMessage());
 			}
 		}
-		Map<BidBundle, Set<ITradeable>> bundles = this.auctions.get(0).getWinners();
+		Map<BidBundle, Set<ITradeable>> bundles = this.manager.getOneSided(0)
+				.getWinners();
 		Logging.log("[-] auction over");
 		for (BidBundle b : bundles.keySet()) {
 			Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());
 			return b.getCost();
 		}
-		
+
 		return -1;
 	}
-	
+
 	public static void main(String[] args) {
 		AuctionServer server = new AuctionServer(2121);
 		server.runGame(false, true);

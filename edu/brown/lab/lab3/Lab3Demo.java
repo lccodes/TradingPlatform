@@ -13,13 +13,17 @@ public class Lab3Demo extends Lab3Agent {
 
 	@Override
 	public void onSimpleSealed(SimpleOneSidedWrapper market) {
+		double currentBid = market.getQuote();
+		//Log the current bid
+		Logging.log("Sealed Reserve: " + currentBid);
 		//Random bid
-		market.bid(this, Math.random());
+		market.bid(this, Math.random() * 100);
 	}
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
 		double currentBid = market.getQuote();
+		//Log the current bid
 		Logging.log("Current quote: " + currentBid);
 		//High bid + 1
 		market.bid(this, currentBid+1);
@@ -28,7 +32,12 @@ public class Lab3Demo extends Lab3Agent {
 	@Override
 	public void onMarketUpdate(GameReport marketUpdate) {
 		Logging.log("Market outcome:");
-		//TODO: Lab3GameHistory
+		//TODO: Log market outcome
+	}
+	
+	public static void main(String[] args) throws AgentCreationException {
+		new Lab3Demo("localhost", 2121);
+		while(true){}
 	}
 
 }

@@ -13,4 +13,9 @@ public class FullType {
 		this.TYPE = type;
 		this.ID = ID;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + TYPE + " " + ID + ")";
+	}
 }

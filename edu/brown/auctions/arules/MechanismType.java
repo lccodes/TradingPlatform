@@ -4,5 +4,5 @@ public enum MechanismType {
 	OpenOutcry,
 	SealedBid,
 	LMSR,
-	ContinuousDoubleAuction
+	ContinuousDoubleAuction, Lemonade
 }

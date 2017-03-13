@@ -30,7 +30,9 @@ public class AuctionAgent extends Agent {
 
 	@Override
 	public void onAck(Ack message) {
-		Logging.log("[x] rejected: " + message.failedBR);
+		if (message.REJECTED) {
+			Logging.log("[-] rejected? " + message.failedBR);
+		}
 	}
 
 	@Override
@@ -54,11 +56,6 @@ public class AuctionAgent extends Agent {
 	@Override
 	public void onNegotiateRequest(NegotiateRequest negotiateRequest) {
 		// Noop
-	}
-	
-	public static void main(String[] args) throws AgentCreationException {
-		new AuctionAgent("localhost", 2121);
-		while(true){}
 	}
 
 	@Override
@@ -85,6 +82,11 @@ public class AuctionAgent extends Agent {
 		if (market.getAgent() == null && market.getQuote() < this.myMax) {
 			market.bid(this, market.getQuote()+1);
 		}
+	}
+	
+	public static void main(String[] args) throws AgentCreationException {
+		new AuctionAgent("localhost", 2121);
+		while(true){}
 	}
 
 }

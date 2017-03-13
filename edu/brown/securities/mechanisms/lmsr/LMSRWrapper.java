@@ -1,7 +1,8 @@
 package brown.securities.mechanisms.lmsr;
 
 import brown.agent.Agent;
-import brown.assets.value.ITradeable;
+import brown.assets.accounting.Ledger;
+import brown.assets.value.FullType;
 import brown.auctions.twosided.ITwoSidedPriceTaker;
 import brown.auctions.twosided.ITwoSidedWrapper;
 import brown.auctions.twosided.TwoSidedAuction;
@@ -9,13 +10,16 @@ import brown.messages.markets.MarketOrder;
 
 public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	private final TwoSidedAuction LMSR;
+	private final Ledger LEDGER;
 	
 	public LMSRWrapper() {
 		this.LMSR = null;
+		this.LEDGER = null;
 	}
 	
-	public LMSRWrapper(LMSR lmsr) {
+	public LMSRWrapper(LMSR lmsr, Ledger ledger) {
 		this.LMSR = lmsr;
+		this.LEDGER = ledger;
 	}
 
 	@Override
@@ -24,8 +28,8 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	}
 
 	@Override
-	public ITradeable getTradeable() {
-		return this.LMSR.getTradeable();
+	public FullType getTradeableType() {
+		return this.LMSR.getTradeableType();
 	}
 
 	@Override
@@ -51,5 +55,20 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	@Override
 	public void dispatchMessage(Agent agent) {
 		agent.onLMSR(this);
+	}
+
+	@Override
+	public void cancel(Agent agent, boolean buy, double shareNum,
+			double maxPrice) {
+		if (buy) {
+			agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, 0,shareNum,maxPrice));
+		} else {
+			agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, shareNum,0.0,maxPrice));
+		}
+	}
+
+	@Override
+	public Ledger getLedger() {
+		return this.LEDGER;
 	}
 }

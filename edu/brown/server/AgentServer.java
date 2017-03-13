@@ -50,8 +50,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	// Consider time limiting these
 	protected List<NegotiateRequest> pendingTradeRequests;
-	protected MarketManager exchange;
-	protected Map<Integer, OneSidedAuction> auctions;
+	protected MarketManager manager;
 
 	private int agentCount;
 	private final int PORT;
@@ -64,8 +63,7 @@ public abstract class AgentServer {
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
 		this.bank = new ConcurrentHashMap<Integer, Account>();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<NegotiateRequest>();
-		this.auctions = new ConcurrentHashMap<Integer, OneSidedAuction>();
-		this.exchange = new MarketManager();
+		this.manager = new MarketManager();
 		this.privateToPublic.put(-1, -1);
 
 		theServer = new Server();
@@ -134,7 +132,7 @@ public abstract class AgentServer {
 			this.theServer.sendToTCP(connection.getID(), rej);
 			return;
 		}
-		TwoSidedAuction market = (TwoSidedAuction) exchange
+		TwoSidedAuction market = (TwoSidedAuction) manager
 				.getIMarket(limitorder.marketID);
 		synchronized (market) {
 			if (market == null) {
@@ -142,7 +140,7 @@ public abstract class AgentServer {
 				this.theServer.sendToTCP(connection.getID(), rej);
 				return;
 			}
-			Ledger ledger = exchange.getLedger(limitorder.marketID);
+			Ledger ledger = manager.getLedger(limitorder.marketID);
 
 			if (limitorder.buyShares > 0) {
 				synchronized (privateID) {
@@ -215,12 +213,12 @@ public abstract class AgentServer {
 						if (market.permitShort()) {
 							double toShort = limitorder.sellShares;
 							for (ITradeable t : justAList) {
-								if (t.getType().equals(market.getTradeable())) {
+								if (t.getType().equals(market.getTradeableType())) {
 									toShort -= t.getCount();
 								}
 							}
 							if (toShort > 0) {
-								justAList.add(new ShortShare(toShort, market.getTradeable().getType()));
+								justAList.add(new ShortShare(toShort, market.getTradeableType()));
 							}
 						}
 						
@@ -229,7 +227,7 @@ public abstract class AgentServer {
 								break;
 							}
 
-							if (tradeable.getType().equals(market.getTradeable())) {
+							if (tradeable.getType().equals(market.getTradeableType())) {
 								ITradeable toSell = tradeable;
 								if (tradeable.getCount() > qToSell) {
 									toSell = tradeable.split(qToSell);
@@ -383,7 +381,7 @@ public abstract class AgentServer {
 	 * a BidRequest for an auction
 	 */
 	protected void onBid(Connection connection, Integer privateID, Bid bid) {
-		OneSidedAuction auction = this.auctions.get(bid.AuctionID);
+		OneSidedAuction auction = this.manager.getOneSided(bid.AuctionID);
 		if (auction != null) {
 			synchronized (auction) {
 				Account account = this.bank.get(privateID);
@@ -428,20 +426,20 @@ public abstract class AgentServer {
 	public void sendAllMarketUpdates(List<TwoSidedAuction> tsas) {
 		int i = 0;
 		for (TwoSidedAuction sec : tsas) {
-			TradeRequest mupdate = new TradeRequest(i++, sec.wrap(),
+			TradeRequest mupdate = new TradeRequest(i++, sec.wrap(this.manager.getLedger(sec.getID()).getSanitized(null)),
 					sec.getMechanismType());
 			theServer.sendToAllTCP(mupdate);
 		}
 	}
 
-	/*
+	/**
 	 * Sends a auction update to every agent or closes out any finished
 	 * auctions. about the state of all the public auctions
 	 */
 	public void updateAllAuctions() {
-		synchronized (auctions) {
+		synchronized (this.manager) {
 			List<OneSidedAuction> toRemove = new LinkedList<OneSidedAuction>();
-			for (OneSidedAuction auction : auctions.values()) {
+			for (OneSidedAuction auction : this.manager.getOneSidedAuctions()) {
 				synchronized (auction) {
 					auction.tick(System.currentTimeMillis());
 					if (auction.isClosed()) {
@@ -471,7 +469,8 @@ public abstract class AgentServer {
 					} else {
 						for (Map.Entry<Connection, Integer> id : this.connections
 								.entrySet()) {
-							TradeRequest tr = auction.wrap(id.getValue());
+							TradeRequest tr = auction.wrap(id.getValue(), 
+									this.manager.getLedger(auction.getID()).getSanitized(id.getValue()));
 							if (tr == null) {
 								continue;
 							}
@@ -482,7 +481,7 @@ public abstract class AgentServer {
 			}
 
 			for (OneSidedAuction auction : toRemove) {
-				auctions.remove(auction);
+				this.manager.close(this, auction.getID(), null);
 			}
 		}
 	}
@@ -493,7 +492,7 @@ public abstract class AgentServer {
 	 * @param Security : the market to update on
 	 */
 	public void sendMarketUpdate(IMarket market) {
-		TradeRequest mupdate = new TradeRequest(0, market.wrap(),
+		TradeRequest mupdate = new TradeRequest(0, market.wrap(this.manager.getLedger(market.getID()).getSanitized(null)),
 				market.getMechanismType());
 		theServer.sendToAllTCP(mupdate);
 	}

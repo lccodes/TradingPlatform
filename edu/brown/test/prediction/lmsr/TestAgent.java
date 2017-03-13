@@ -35,7 +35,7 @@ public class TestAgent extends Agent {
 		if (!this.done && Math.random() < .25) {
 			this.done = true;
 			market.buy(this, 1, .6);
-			Logging.log("bought 1 " + market.getTradeable().getType());
+			Logging.log("bought 1 " + market.getTradeableType());
 		}
 	}
 

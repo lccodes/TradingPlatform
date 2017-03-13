@@ -1,5 +1,6 @@
 package brown.auctions;
 
+import brown.assets.accounting.Ledger;
 import brown.auctions.arules.MechanismType;
 
 public interface IMarket {
@@ -31,6 +32,6 @@ public interface IMarket {
 	 * Get wrapper
 	 * @return
 	 */
-	public IMarketWrapper wrap();
+	public IMarketWrapper wrap(Ledger ledger);
 
 }

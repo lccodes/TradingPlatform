@@ -3,7 +3,8 @@ package brown.lab;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.assets.value.ITradeable;
+import brown.assets.accounting.Ledger;
+import brown.assets.value.FullType;
 import brown.securities.mechanisms.cda.CDAWrapper;
 
 public class UnitCDAWrapper implements ITwoSidedUnitSetter {
@@ -49,8 +50,8 @@ public class UnitCDAWrapper implements ITwoSidedUnitSetter {
 	}
 
 	@Override
-	public ITradeable getTradeable() {
-		return this.WRAP.getTradeable();
+	public FullType getTradeableType() {
+		return this.WRAP.getTradeableType();
 	}
 
 	@Override
@@ -62,7 +63,10 @@ public class UnitCDAWrapper implements ITwoSidedUnitSetter {
 	public void dispatchMessage(Agent agent) {
 		//Noop
 	}
-	
-	
+
+	@Override
+	public Ledger getLedger() {
+		return this.WRAP.getLedger();
+	}
 
 }
