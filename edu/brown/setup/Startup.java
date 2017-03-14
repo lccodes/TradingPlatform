@@ -43,7 +43,7 @@ import brown.messages.BankUpdate;
 import brown.messages.Message;
 import brown.messages.Registration;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
@@ -68,13 +68,14 @@ public final class Startup {
 		kryo.register(HashSet.class);
 		kryo.register(TreeMap.class);
 		kryo.register(java.util.Collections.reverseOrder().getClass());
+		kryo.register(int[].class);
 		
 		kryo.register(Agent.class);
 		kryo.register(Message.class);
 		kryo.register(BankUpdate.class);
 		kryo.register(GameReport.class);
 		kryo.register(Bid.class);
-		kryo.register(BidReqeust.class);
+		kryo.register(BidRequest.class);
 		kryo.register(Transaction.class);
 		kryo.register(Registration.class);
 		kryo.register(Trade.class);

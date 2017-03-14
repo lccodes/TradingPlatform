@@ -26,6 +26,7 @@ import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.auctions.Bid;
+import brown.messages.markets.GameReport;
 import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
@@ -484,6 +485,10 @@ public abstract class AgentServer {
 			}
 
 			for (OneSidedAuction auction : toRemove) {
+				GameReport report = auction.getReport();
+				if (report != null) {
+					this.theServer.sendToAllTCP(report);
+				}
 				this.manager.close(this, auction.getID(), null);
 			}
 		}

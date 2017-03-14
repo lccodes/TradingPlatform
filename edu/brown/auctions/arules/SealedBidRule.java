@@ -13,7 +13,8 @@ import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.rules.AllocationRule;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
+import brown.messages.markets.GameReport;
 
 public class SealedBidRule implements AllocationRule {
 	private final int END;
@@ -89,7 +90,7 @@ public class SealedBidRule implements AllocationRule {
 	}
 
 	@Override
-	public BidReqeust getBidRequest(Set<Bid> bids, Integer ID) {
+	public BidRequest getBidRequest(Set<Bid> bids, Integer ID) {
 		for (Bid b : bids) {
 			if (b.AgentID == null || b.AgentID.equals(ID)) {
 				return null;
@@ -103,7 +104,7 @@ public class SealedBidRule implements AllocationRule {
 				topBid = topBids.get(0).Bundle;
 			}
 			
-			return new BidReqeust(1, null, this.BT, topBid,null);
+			return new BidRequest(1, null, this.BT, topBid,null);
 		}
 	}
 
@@ -136,6 +137,12 @@ public class SealedBidRule implements AllocationRule {
 	@Override
 	public MechanismType getAllocationType() {
 		return MechanismType.SealedBid;
+	}
+
+	@Override
+	public GameReport getReport() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

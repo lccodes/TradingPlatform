@@ -15,8 +15,10 @@ import brown.auctions.prules.PaymentType;
 import brown.auctions.rules.AllocationRule;
 import brown.auctions.rules.PaymentRule;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
+import brown.messages.markets.GameReport;
 import brown.messages.markets.TradeRequest;
+import brown.setup.Logging;
 
 public class OneSidedAuction implements IMarket {
 	protected final Integer ID;
@@ -65,14 +67,14 @@ public class OneSidedAuction implements IMarket {
 	 * @return TradeRequest
 	 */
 	public TradeRequest wrap(Integer ID, Ledger ledger) {
-		BidReqeust temp = this.ARULE.getBidRequest(this.BIDS, ID);
+		BidRequest temp = this.ARULE.getBidRequest(this.BIDS, ID);
 		if (temp == null) {
 			return null;
 		}
 		BidBundle toUse = (ID.equals(temp.Current.getAgent()) || !this.isPrivate()) ? 
 				temp.Current : temp.Current.wipeAgent(null);
 		
-		BidReqeust br = new BidReqeust(temp.getID(), this.ID, temp.TYPE, toUse, this.ITEMS);
+		BidRequest br = new BidRequest(temp.getID(), this.ID, temp.TYPE, toUse, this.ITEMS);
 		IOneSidedWrapper wrapper = null;
 		switch(br.TYPE) {
 		case Simple:
@@ -80,6 +82,7 @@ public class OneSidedAuction implements IMarket {
 					this.ARULE.getAllocationType(),ledger);
 			break;
 		default:
+			Logging.log("[X] Error unknown wrapper type");
 			break;
 		}
 		
@@ -163,5 +166,9 @@ public class OneSidedAuction implements IMarket {
 	public IMarketWrapper wrap(Ledger ledger) {
 		//TODO: ???
 		return null;
+	}
+	
+	public GameReport getReport() {
+		return this.ARULE.getReport();
 	}
 }

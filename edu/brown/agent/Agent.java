@@ -8,7 +8,7 @@ import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Message;
 import brown.messages.Registration;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
@@ -147,7 +147,7 @@ public abstract class Agent {
 	 * @param bidRequest
 	 *            - auction metadata
 	 */
-	public abstract void onTradeRequest(BidReqeust bidRequest);
+	public abstract void onTradeRequest(BidRequest bidRequest);
 
 	/**
 	 * Whenever another agent requests a trade either directly with this agent

@@ -13,7 +13,7 @@ import brown.messages.Message;
  * 
  * @author lcamery
  */
-public class BidReqeust extends Message {
+public class BidRequest extends Message {
   public final Integer AuctionID;
   public final Set<ITradeable> Goods;
   public final BidBundle Current;
@@ -22,7 +22,7 @@ public class BidReqeust extends Message {
   /**
    * Kryo requires empty constructor DO NOT USE
    */
-  public BidReqeust() {
+  public BidRequest() {
     super(null);
     this.AuctionID = null;
     this.Current = null;
@@ -39,7 +39,7 @@ public class BidReqeust extends Message {
    * @param bundle
    * @param goods
    */
-  public BidReqeust(int ID, Integer auctionID, BundleType type, BidBundle bundle, Set<ITradeable> goods) {
+  public BidRequest(int ID, Integer auctionID, BundleType type, BidBundle bundle, Set<ITradeable> goods) {
     super(ID);
     this.AuctionID = auctionID;
     this.Current = bundle;

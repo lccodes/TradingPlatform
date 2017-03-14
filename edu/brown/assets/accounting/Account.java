@@ -41,7 +41,11 @@ public class Account {
 	private Account(Integer ID, double monies, List<ITradeable> goods) {
 		this.ID = ID;
 		this.monies = monies;
-		this.tradeables = goods;
+		if (goods != null) {
+			this.tradeables = goods;
+		}else{
+			this.tradeables = new LinkedList<ITradeable>();
+		}
 	}
 	
 	/**

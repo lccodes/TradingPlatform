@@ -5,18 +5,18 @@ import java.util.Set;
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarketWrapper;
 import brown.auctions.prules.PaymentType;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
 
 public abstract class IOneSidedWrapper implements IMarketWrapper {
 	protected final PaymentType PTYPE;
-	protected final BidReqeust BR;
+	protected final BidRequest BR;
 	
 	public IOneSidedWrapper() {
 		this.PTYPE = null;
 		this.BR = null;
 	}
 	
-	public IOneSidedWrapper(PaymentType type, BidReqeust br) {
+	public IOneSidedWrapper(PaymentType type, BidRequest br) {
 		this.PTYPE = type;
 		this.BR = br;
 	}

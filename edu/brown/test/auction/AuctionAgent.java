@@ -6,7 +6,7 @@ import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
@@ -49,7 +49,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	public void onTradeRequest(BidReqeust bidRequest) {
+	public void onTradeRequest(BidRequest bidRequest) {
 		Logging.log("[-] bidRequest for " + bidRequest.AuctionID + " w/ hb " + bidRequest.Current.getCost());
 	}
 

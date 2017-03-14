@@ -7,7 +7,8 @@ import brown.assets.value.ITradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.BundleType;
 import brown.messages.auctions.Bid;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
+import brown.messages.markets.GameReport;
 
 public interface AllocationRule {
 
@@ -15,7 +16,7 @@ public interface AllocationRule {
 
 	Map<Integer, Set<ITradeable>> getAllocations(Set<Bid> bids, Set<ITradeable> items);
 
-	BidReqeust getBidRequest(Set<Bid> bids, Integer iD);
+	BidRequest getBidRequest(Set<Bid> bids, Integer iD);
 
 	boolean isPrivate();
 	
@@ -28,5 +29,7 @@ public interface AllocationRule {
 	boolean isValid(Bid bid, Set<Bid> bids);
 
 	MechanismType getAllocationType();
+
+	GameReport getReport();
 
 }

@@ -4,7 +4,7 @@ import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.lab.LabAgent;
 import brown.messages.Ack;
-import brown.messages.auctions.BidReqeust;
+import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.CDAWrapper;
@@ -52,7 +52,7 @@ public abstract class Lab5Agent extends LabAgent {
 	public abstract void onLemonadeUpdate(LemonadeReport lemonadeReport);
 
 	@Override
-	public void onTradeRequest(BidReqeust bidRequest) {
+	public void onTradeRequest(BidRequest bidRequest) {
 		// TODO Auto-generated method stub
 	}
 

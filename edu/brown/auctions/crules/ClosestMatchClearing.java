@@ -131,6 +131,8 @@ public class ClosestMatchClearing implements ClearingRule {
 			}
 			wanted.add(new Order(null, opp.getAgentID(), sharePrice*shareNum, opp.getCount(), opp));
 			this.sellOrderBook.put(sharePrice, wanted);
+			//TODO: Modify shorter to make the opposite position
+			//TODO: Get the opposite position and add it to completed
 		}
 		
 		return completed;
