@@ -1,0 +1,36 @@
+\section{Equilibria}
+We will use two classic equilibria concepts from the literature and a third of our design. 
+
+\subsection{RE and PI}
+\commentl{Define RE and PI here} \\
+
+A major flaw in the current literature, which is reflected in LMSR and the agent behavior theories, is the generalization that agents cannot choose when to enter the market. Although fixing entry time is useful for equilibrium calculations nevertheless it is important to theorize about the value of a certain entry time $\Time$. Under a model based in RE where the collective signal is truthful, a rational agent would want to be the last decision maker and then have the outcome revealed with certainty.\\
+
+\subsection{No Trade Theorem}
+Under relaxed assumptions from PI, agents wait until $x \in \[0, |\Agents| \]$ agents have executed
+their strategies depending on their valuation of the information gained. It is trivial to show that 
+the valuations are monotonically increasing with $x$. When $x \geq \frac{|\Agents|}{2}$, agents can 
+determine with certainty what the outcome will be and therefore incur no risk. 
+Each $x \leq \frac{|\Agents|}{2}$ is worth $\frac{x}{|\Agents|}$. This implies that rational agents
+would need to be paid the difference between their riskless profits and the value of $x$ in order to 
+select that spot. Therefore, lacking any external payments, no agent will enter the market and no
+trades will occur.
+
+\subsection{Prior Information Timing}
+We present a novel theory called Prior Information Timing (PIT) that takes into account our No Trade
+Theorem where agents choose valuations based on a linear combination of their signal and the market
+price, but value deferring this assesment in order to gain more information. Risk neutral agents can
+price the ability to defer the decision until position $x$ based on the added information of the 
+preceding $x-1$ agents can pay up to the value of the information to defer. In order for markets
+to clear in PIT then the market maker needs to compensate agents for their spot selection.\\
+
+\subsection{Agent Strategy}
+We will consider different types of agent strategies in our experiments. There are two types of agent strategies \mydef{myopic} $\Myopic$ and \mydef{farsighted} $\Farsighted$. Prediction markets are known to be myopically incentive compatible, which means that myopic agents bid truthfully. Similarly, \mydef{informed} $\Informed$ agents have an exogenous signal about the outcome whereas \mydef{uninformed} $\Uninformed$ agents can only base their decision on the market price. \\
+
+$\AgentStrategy^{\Myopic\Informed}_\Agent(\Time)$ is an informed agent holding exogenous signal $\Agent_\AgentBelief$ who is willing to pay up to $\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to their belief $\Agent_\AgentBelief$. \\
+
+$\AgentStrategy^{\Myopic\Uninformed}_\Agent(\Time)$ is an uninformed agent holding no exogenous signal $\Agent_\AgentBelief$ who who is willing to pay up to $\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to 1 if at time $\Time$ $\OptionPrice_\Market\Time \ge .5$ otherwise 0. \\
+
+$\AgentStrategy^{\Farsighted\Informed}_\Agent(\Time)$ is an informed agent holding exogenous signal $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on a linear combination of their signal $\Agent_\AgentBelief$ and the current market price $\OptionPrice_\Market$ accounting for how many agents $N$ have already bid. \\
+
+$\AgentStrategy^{\Farsighted\Uninformed}_\Agent(\Time)$ is an uninformed agent holding exogenous signal $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on the current market price $\OptionPrice_\Market$ accounting for how many agents $N$ have already bid. \\

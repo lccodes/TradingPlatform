@@ -1,0 +1,45 @@
+\section{Benchmarks}
+We establish two benchmarks for the market making mechanisms. The first is market maker profit. This is essential because LMSR and our trade incentivizing market makers often operate at no profit or at a loss. The second is accuracy. We will evaluate accuracy according to expected price as determined by our three equilibrium concepts.
+
+\subsection{Profit}
+  \begin{definition} (Market Maker Revenue)
+  \label{def:mmr}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the revenue obtained from $\OptionPrice_\Market$ is defined as
+     $$R(\OptionPrice_\Market, \Agents_\Option) = 
+      \sum_{\Agent\in\Agents_\Option} \left[
+	\int_{\Time = 0}^{\Time = \Option_\Time} 
+	  \Price_\Market(\Option_0,\Agent,\Time, \AgentStrategy^{0}_{\Agent}(\Time))\AgentStrategy^{0}_{\Agent}(\Time)dt
+	  + \int_{\Time = 0}^{\Time = \Option_\Time} 
+	  \Price_\Market(\Option_1,\Agent,\Time, \AgentStrategy^{1}_{\Agent}(\Time))\AgentStrategy^{1}_{\Agent}(\Time)dt\right]$$
+  \end{definition}
+  
+    \begin{definition} (Market Maker Cost)
+  \label{def:mmc}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the cost to $\OptionPrice_\Market$ is defined as
+     $$ C(\OptionPrice_\Market, \Agents_\Option) =
+     \sum_{\Agent\in\Agents_\Option} \left[
+	\int_{\Time = 0}^{\Time = \Option_\Time} 
+	\Revealer(\Option_\Event)\AgentStrategy^{0}_{\Agent}(\Time)dt
+	+\int_{\Time = 0}^{\Time = \Option_\Time} 
+	\Revealer(\Option_\Event)\AgentStrategy^{1}_{\Agent}(\Time)dt
+	\right]$$
+  \end{definition}
+
+      \begin{definition} (Market Maker Proft)
+  \label{def:mmf}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the profit of $\OptionPrice_\Market$ is defined as
+     $$ P(\OptionPrice_\Market, \Agents_\Option) = R(\OptionPrice_\Market, \Agents_\Option) 
+     - C(\OptionPrice_\Market, \Agents_\Option)$$
+  \end{definition}
+  
+\begin{definition} (Profit-Maximizing Market Maker).
+\label{def:pmmm}
+Among all Market Makers $\MarketMakers$, given a set of participating agents $\Agents_\Option$ find the one that maximizes Profit:
+$$ PM(\MarketMakers, \Agents_\Option) = arg max_{\Agent \in \Agents_\Option} P(\OptionPrice_\Market, \Agents_\Option)$$
+\end{definition}
+
+\subsection{Accuracy}
+\commentl{Define RE, PI, and PIT equilbrium prices}
