@@ -20,11 +20,13 @@ public class LMSR implements TwoSidedAuction {
 	private final Integer ID;
 	private final ClearingRule RULE;
 	private final FullType TYPE;
+	private final LMSRBackend BACKEND;
 	
 	public LMSR() {
 		this.ID = null;
 		this.RULE = null;
 		this.TYPE = null;
+		this.BACKEND = null;
 	}
 	
 	public LMSR(Integer ID, boolean dir, LMSRBackend backend, boolean shortSelling) {
@@ -32,6 +34,7 @@ public class LMSR implements TwoSidedAuction {
 		this.RULE = dir ? new LMSRYesClearing(backend, shortSelling) : new LMSRNoClearing(backend, shortSelling);
 		this.TYPE = new FullType(dir ? TradeableType.PredictionYes : TradeableType.PredictionNo, 
 				backend.getId());
+		this.BACKEND = backend;
 	}
 
 	@Override
@@ -99,6 +102,29 @@ public class LMSR implements TwoSidedAuction {
 	@Override
 	public boolean permitShort() {
 		return this.RULE.isShort();
+	}
+
+	@Override
+	public void cancel(Integer agentID, boolean buy, double shareNum,
+			double sharePrice) {
+		//Noop		
+	}
+
+	/**
+	 * Gets the market price
+	 * @return price
+	 */
+	public double price() {
+		return this.RULE.price();
+	}
+	
+	/**
+	 * How many shares does it take to fill this budget?
+	 * @param monies
+	 * @return shares
+	 */
+	public double moniesToShares(double monies) {
+		return this.BACKEND.budgetToShares(monies, this.TYPE.TYPE == TradeableType.PredictionYes);
 	}
 
 }

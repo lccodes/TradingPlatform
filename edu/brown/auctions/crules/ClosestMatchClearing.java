@@ -39,6 +39,7 @@ public class ClosestMatchClearing implements ClearingRule {
 	@Override
 	public List<Order> buy(Integer agentID, double shareNum, double sharePrice) {
 		List<Order> completed = new LinkedList<Order>();
+		Set<Double> bigRemove = new HashSet<Double>();
 		for (Map.Entry<Double, Set<Order>> postedSell : this.sellOrderBook.entrySet()) {
 			if (shareNum <= 0) {
 				break;
@@ -50,9 +51,10 @@ public class ClosestMatchClearing implements ClearingRule {
 				for (Order opp : opps) {
 					if (shareNum <= 0) {
 						break;
-					} else if (!opp.GOOD.getAgentID().equals(opp.FROM) || agentID.equals(opp.FROM)) {
-						//TODO: Think about this case
+					} else if (!opp.GOOD.getAgentID().equals(opp.FROM)) {
 						toRemove.add(opp);
+						continue;
+					} else if (agentID.equals(opp.FROM)) {
 						continue;
 					}
 					
@@ -64,10 +66,17 @@ public class ClosestMatchClearing implements ClearingRule {
 					}
 				}
 				opps.removeAll(toRemove);
+				if (opps.size() == 0) {
+					bigRemove.add(postedSell.getKey());
+				}
 			} else {
 				break;
 			}
 		}
+		for(Double d : bigRemove) {
+			this.sellOrderBook.remove(d);
+		}
+		
 		
 		if (shareNum > 0) {
 			Set<Order> wanted = this.buyOrderBook.get(sharePrice);
@@ -84,6 +93,7 @@ public class ClosestMatchClearing implements ClearingRule {
 	@Override
 	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice) {
 		List<Order> completed = new LinkedList<Order>();
+		Set<Double> bigRemove = new HashSet<Double>();
 		double shareNum = opp.getCount();
 		if (this.SHORT && opp.getAgentID() == null) {
 			opp = this.SHORTER.apply(opp.getCount());
@@ -103,8 +113,7 @@ public class ClosestMatchClearing implements ClearingRule {
 				for (Order buy : want) {
 					if (shareNum <= 0) {
 						break;
-					} else if (buy.FROM.equals(agentID)) {
-						toRemove.add(buy);
+					} else if (agentID.equals(buy.FROM)) {
 						continue;
 					}
 					
@@ -119,9 +128,15 @@ public class ClosestMatchClearing implements ClearingRule {
 					shareNum -= quantity;
 				}
 				want.removeAll(toRemove);
+				if (want.size() == 0) {
+					bigRemove.add(wanted.getKey());
+				}
 			} else {
 				break;
 			}
+		}
+		for (Double d : bigRemove) {
+			this.buyOrderBook.remove(d);
 		}
 		
 		if (shareNum > 0) {
@@ -205,6 +220,57 @@ public class ClosestMatchClearing implements ClearingRule {
 	@Override
 	public boolean isShort() {
 		return this.SHORT;
+	}
+
+	@Override
+	public void cancel(Integer agentID, boolean buy, double shareNum,
+			double sharePrice) {;
+		if (buy) {
+			List<Order> toRemove = new LinkedList<Order>();
+			for (Map.Entry<Double, Set<Order>> postedBuy : this.buyOrderBook.entrySet()) {
+				if (postedBuy.getKey() == sharePrice) {
+					for (Order o : postedBuy.getValue()) {
+						if (o.FROM.equals(agentID) && o.QUANTITY == shareNum) {
+							toRemove.add(o);
+							break;
+						}
+					}
+				}
+			}
+			
+			Set<Order> orders = this.buyOrderBook.get(sharePrice);
+			if (orders != null) {
+				orders.removeAll(toRemove);
+				if (orders.size() == 0) {
+					this.buyOrderBook.remove(sharePrice);
+				}
+			}
+		} else {
+			List<Order> toRemove = new LinkedList<Order>();
+			for (Map.Entry<Double, Set<Order>> postedBuy : this.sellOrderBook.entrySet()) {
+				if (postedBuy.getKey() == sharePrice) {
+					for (Order o : postedBuy.getValue()) {
+						if (o.FROM.equals(agentID) && o.QUANTITY == shareNum) {
+							toRemove.add(o);
+							break;
+						}
+					}
+				}
+			}
+			Set<Order> orders = this.sellOrderBook.get(sharePrice);
+			if (orders != null) {
+				orders.removeAll(toRemove);
+				if (orders.size() == 0) {
+					this.buyOrderBook.remove(sharePrice);
+				}
+			}
+		}
+	}
+
+	@Override
+	public double price() {
+		// Noop
+		return 0;
 	}
 
 }

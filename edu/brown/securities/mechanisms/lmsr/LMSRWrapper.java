@@ -5,11 +5,10 @@ import brown.assets.accounting.Ledger;
 import brown.assets.value.FullType;
 import brown.auctions.twosided.ITwoSidedPriceTaker;
 import brown.auctions.twosided.ITwoSidedWrapper;
-import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.markets.MarketOrder;
 
 public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
-	private final TwoSidedAuction LMSR;
+	private final LMSR LMSR;
 	private final Ledger LEDGER;
 	
 	public LMSRWrapper() {
@@ -51,6 +50,14 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	public double quoteAsk(double shareNum) {
 		return this.LMSR.quoteAsk(shareNum, -1);
 	}
+	
+	/**
+	 * Gets the price
+	 * @return price : double
+	 */
+	public double price() {
+		return this.LMSR.price();
+	}
 
 	@Override
 	public void dispatchMessage(Agent agent) {
@@ -70,5 +77,14 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	@Override
 	public Ledger getLedger() {
 		return this.LEDGER;
+	}
+	
+	/**
+	 * Gets the number of shares that will cost X monies
+	 * @param monies
+	 * @return shareNum
+	 */
+	public double moniesToShares(double monies) {
+		return this.LMSR.moniesToShares(monies);
 	}
 }

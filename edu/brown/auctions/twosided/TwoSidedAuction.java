@@ -14,6 +14,7 @@ public interface TwoSidedAuction extends IMarket {
 	
 	public List<Order> buy(Integer agentID, double shareNum, double sharePrice);
 	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice);
+	public void cancel(Integer agentID, boolean buy, double shareNum, double sharePrice);
 	
 	public double quoteBid(double shareNum, double sharePrice);
 	public double quoteAsk(double shareNum, double sharePrice);

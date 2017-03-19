@@ -9,6 +9,7 @@ public class MarketOrder extends Message {
 	public final double buyShares;
 	public final double sellShares;
 	public final double price;
+	public final boolean cancel;
 
 	public MarketOrder() {
 		super(null);
@@ -16,6 +17,7 @@ public class MarketOrder extends Message {
 		this.buyShares = 0;
 		this.sellShares = 0;
 		this.price = 0;
+		this.cancel = false;
 	}
 	
 	public MarketOrder(Integer ID, TwoSidedAuction market, double buyShares, double sellShares, double price) {
@@ -24,6 +26,7 @@ public class MarketOrder extends Message {
 		this.buyShares = buyShares;
 		this.sellShares = sellShares;
 		this.price = price;
+		this.cancel = false;
 	}
 	
 	public MarketOrder(Integer ID, Integer marketID, double buyShares, double sellShares, double price) {
@@ -32,6 +35,17 @@ public class MarketOrder extends Message {
 		this.buyShares = buyShares;
 		this.sellShares = sellShares;
 		this.price = price;
+		this.cancel = false;
+	}
+	
+	public MarketOrder(Integer ID, Integer marketID, double buyShares, 
+			double sellShares, double price, boolean cancel) {
+		super(ID);
+		this.marketID = marketID;
+		this.buyShares = buyShares;
+		this.sellShares = sellShares;
+		this.price = price;
+		this.cancel = cancel;
 	}
 
 	@Override

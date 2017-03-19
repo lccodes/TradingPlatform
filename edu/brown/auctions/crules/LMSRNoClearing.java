@@ -92,4 +92,15 @@ public class LMSRNoClearing implements ClearingRule {
 		return this.SHORT;
 	}
 
+	@Override
+	public void cancel(Integer agentID, boolean buy, double shareNum,
+			double sharePrice) {
+		//Noop
+	}
+
+	@Override
+	public double price() {
+		return this.BACKEND.price(false);
+	}
+
 }

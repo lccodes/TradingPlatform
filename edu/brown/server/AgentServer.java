@@ -144,11 +144,16 @@ public abstract class AgentServer {
 			}
 			Ledger ledger = manager.getLedger(limitorder.marketID);
 
-			if (limitorder.buyShares > 0) {
+			if (limitorder.cancel) {
+				double shares = limitorder.buyShares != 0 ? limitorder.buyShares : limitorder.sellShares;
+				market.cancel(privateID, limitorder.sellShares == 0, 
+						shares, limitorder.price);
+			} else if (limitorder.buyShares > 0) {
 				synchronized (privateID) {
 					Account account = this.bank.get(privateID);
-					if (!market.permitShort() && account.monies < market.quoteBid(limitorder.buyShares,
-							limitorder.price)) {
+					if (!market.permitShort()
+							&& account.monies < market.quoteBid(
+									limitorder.buyShares, limitorder.price)) {
 						Ack rej = new Ack(privateID, limitorder, true);
 						this.theServer.sendToTCP(connection.getID(), rej);
 						return;
@@ -166,7 +171,9 @@ public abstract class AgentServer {
 						if (t.FROM != null) {
 							synchronized (t.FROM) {
 								Account fromBank = this.bank.get(t.FROM);
-								if (!market.permitShort() && !fromBank.tradeables.contains(t.GOOD)) {
+								if (!market.permitShort()
+										&& !fromBank.tradeables
+												.contains(t.GOOD)) {
 									// TODO: Deal with this case
 								}
 								Account finalUpdatedFrom = fromBank.add(t.COST,
@@ -185,7 +192,8 @@ public abstract class AgentServer {
 							synchronized (t.TO) {
 								Account toBank = this.bank.get(t.TO);
 								Account oldbank = toBank;
-								if (market.permitShort() || toBank.monies >= t.COST) {
+								if (market.permitShort()
+										|| toBank.monies >= t.COST) {
 									if (split == null) {
 										t.GOOD.setAgentID(t.TO);
 										toBank = toBank
@@ -210,26 +218,30 @@ public abstract class AgentServer {
 					Account sellerAccount = this.bank.get(privateID);
 					double qToSell = limitorder.sellShares;
 					synchronized (sellerAccount.tradeables) {
-						List<ITradeable> justAList = new LinkedList<ITradeable>(sellerAccount.tradeables);
-						//Short sale check
+						List<ITradeable> justAList = new LinkedList<ITradeable>(
+								sellerAccount.tradeables);
+						// Short sale check
 						if (market.permitShort()) {
 							double toShort = limitorder.sellShares;
 							for (ITradeable t : justAList) {
-								if (t.getType().equals(market.getTradeableType())) {
+								if (t.getType().equals(
+										market.getTradeableType())) {
 									toShort -= t.getCount();
 								}
 							}
 							if (toShort > 0) {
-								justAList.add(new ShortShare(toShort, market.getTradeableType()));
+								justAList.add(new ShortShare(toShort, market
+										.getTradeableType()));
 							}
 						}
-						
+
 						for (ITradeable tradeable : justAList) {
 							if (qToSell <= 0) {
 								break;
 							}
 
-							if (tradeable.getType().equals(market.getTradeableType())) {
+							if (tradeable.getType().equals(
+									market.getTradeableType())) {
 								ITradeable toSell = tradeable;
 								if (tradeable.getCount() > qToSell) {
 									toSell = tradeable.split(qToSell);
@@ -243,7 +255,9 @@ public abstract class AgentServer {
 										synchronized (t.FROM) {
 											Account fromBank = this.bank
 													.get(t.FROM);
-											if (market.permitShort() || fromBank.tradeables.contains(t.GOOD)) {
+											if (market.permitShort()
+													|| fromBank.tradeables
+															.contains(t.GOOD)) {
 												Account taken = fromBank
 														.remove(0, t.GOOD);
 												Account finalUpdatedFrom = taken
@@ -265,7 +279,8 @@ public abstract class AgentServer {
 											Account toBank = this.bank
 													.get(t.TO);
 											Account oldBank = toBank;
-											if (market.permitShort() || toBank.monies >= t.COST) {
+											if (market.permitShort()
+													|| toBank.monies >= t.COST) {
 												t.GOOD.setAgentID(t.TO);
 												toBank = toBank.add(
 														-1 * t.COST, t.GOOD);
@@ -387,7 +402,8 @@ public abstract class AgentServer {
 		if (auction != null) {
 			synchronized (auction) {
 				Account account = this.bank.get(privateID);
-				if (auction.permitShort() || account.monies >= bid.Bundle.getCost()) {
+				if (auction.permitShort()
+						|| account.monies >= bid.Bundle.getCost()) {
 					auction.handleBid(bid.safeCopy(privateID));
 				} else {
 					Ack rej = new Ack(privateID, bid, true);
@@ -428,7 +444,8 @@ public abstract class AgentServer {
 	public void sendAllMarketUpdates(List<TwoSidedAuction> tsas) {
 		int i = 0;
 		for (TwoSidedAuction sec : tsas) {
-			TradeRequest mupdate = new TradeRequest(i++, sec.wrap(this.manager.getLedger(sec.getID()).getSanitized(null)),
+			TradeRequest mupdate = new TradeRequest(i++, sec.wrap(this.manager
+					.getLedger(sec.getID()).getSanitized(null)),
 					sec.getMechanismType());
 			theServer.sendToAllTCP(mupdate);
 		}
@@ -460,7 +477,9 @@ public abstract class AgentServer {
 							synchronized (account.ID) {
 								for (ITradeable t : winners.get(winner)) {
 									t.setAgentID(winner.getAgent());
-									ledger.add(new Transaction(null, winner.getAgent(), winner.getCost(), t.getCount(), t));
+									ledger.add(new Transaction(null, winner
+											.getAgent(), winner.getCost(), t
+											.getCount(), t));
 								}
 								Account newA = account.add(
 										-1 * winner.getCost(),
@@ -473,8 +492,9 @@ public abstract class AgentServer {
 					} else {
 						for (Map.Entry<Connection, Integer> id : this.connections
 								.entrySet()) {
-							TradeRequest tr = auction.wrap(id.getValue(), 
-									this.manager.getLedger(auction.getID()).getSanitized(id.getValue()));
+							TradeRequest tr = auction.wrap(id.getValue(),
+									this.manager.getLedger(auction.getID())
+											.getSanitized(id.getValue()));
 							if (tr == null) {
 								continue;
 							}
@@ -500,9 +520,12 @@ public abstract class AgentServer {
 	 * @param Security : the market to update on
 	 */
 	public void sendMarketUpdate(IMarket market) {
-		TradeRequest mupdate = new TradeRequest(0, market.wrap(this.manager.getLedger(market.getID()).getSanitized(null)),
-				market.getMechanismType());
-		theServer.sendToAllTCP(mupdate);
+		for (Entry<Connection, Integer> ID : this.connections.entrySet()) {
+			TradeRequest mupdate = new TradeRequest(0, market.wrap(this.manager
+					.getLedger(market.getID()).getSanitized(ID.getValue())),
+					market.getMechanismType());
+			theServer.sendToTCP(ID.getKey().getID(), mupdate);;
+		}
 	}
 
 	/*
@@ -605,8 +628,9 @@ public abstract class AgentServer {
 		if (registration.getID() == null) {
 			return null;
 		}
-		
-		this.theServer.sendToTCP(connection.getID(), new Ack(registration, false));
+
+		this.theServer.sendToTCP(connection.getID(), new Ack(registration,
+				false));
 
 		Collection<Integer> allIds = connections.values();
 		Integer theID = registration.getID();

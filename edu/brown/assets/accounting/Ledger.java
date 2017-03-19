@@ -13,12 +13,14 @@ import brown.auctions.IMarket;
 public class Ledger {
 	protected final List<Transaction> transactions;
 	protected final Map<ITradeable, Transaction> latest;
+	protected final List<Transaction> unshared;
 	protected final IMarket market;
 	
 	public Ledger() {
 		this.transactions = null;
 		this.latest = null;
 		this.market = null;
+		this.unshared = null;
 	}
 	
 	/**
@@ -27,6 +29,7 @@ public class Ledger {
 	 */
 	public Ledger(IMarket market) {
 		this.market = market;
+		this.unshared = new LinkedList<Transaction>();
 		this.transactions = new LinkedList<Transaction>();
 		this.latest = new HashMap<ITradeable, Transaction>();
 	}
@@ -38,6 +41,7 @@ public class Ledger {
 	public void add(Transaction t) {
 		this.latest.put(t.TRADEABLE,t);
 		this.transactions.add(t);
+		this.unshared.add(t);
 	}
 	
 	/**
@@ -65,6 +69,7 @@ public class Ledger {
 			this.latest.put(t.TRADEABLE, t);
 		}
 		this.transactions.addAll(trans);
+		this.unshared.addAll(trans);
 	}
 	
 	/**
@@ -74,9 +79,10 @@ public class Ledger {
 	 */
 	public Ledger getSanitized(Integer ID) {
 		Ledger ledger = new Ledger(null);
-		for (Transaction t : this.transactions) {
+		for (Transaction t : this.unshared) {
 			ledger.add(t.sanitize(ID));
 		}
+		this.unshared.clear();
 		return ledger;
 	}
 

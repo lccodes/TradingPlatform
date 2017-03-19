@@ -30,7 +30,6 @@ public class Lab4Server extends AgentServer {
 	// private boolean yes, no = false;
 
 	private boolean C = Math.random() > .5;
-	private boolean D = Math.random() > .5;
 
 	public Lab4Server(int port) {
 		super(port, new GameSetup());
@@ -67,9 +66,10 @@ public class Lab4Server extends AgentServer {
 	}
 	
 	public void register(Connection conn) {
-		int decoys = (int) (Math.random() * Math.pow(2, this.connections.size()));
+		int decoys = (int) Math.ceil((Math.random() * (this.connections.size()/2.0)));
+		decoys = decoys == 0 ? 1 : decoys;
 		this.theServer.sendToTCP(conn.getID(), new PMRegistration(this.connections.get(conn),
-				Math.random() <= 1/(decoys+1) ? C : D, decoys));
+				Math.random() <= 1/(decoys+1) ? C : Math.random() > .5, decoys));
 	}
 
 	private void delay(int amt, boolean update) {

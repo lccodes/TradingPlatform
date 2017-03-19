@@ -104,4 +104,10 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	public boolean permitShort() {
 		return this.RULE.isShort();
 	}
+
+	@Override
+	public void cancel(Integer agentID, boolean buy, double shareNum,
+			double sharePrice) {
+		this.RULE.cancel(agentID, buy, shareNum, sharePrice);		
+	}
 }

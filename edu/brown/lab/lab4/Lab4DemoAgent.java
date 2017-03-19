@@ -31,6 +31,7 @@ public class Lab4DemoAgent extends Lab4Agent {
 
 	@Override
 	protected void onContinuousDoubleAuction(UnitCDAWrapper market) {
+		Logging.log("My decoys " + this.myNumDecoys);
 		// check out the current ledger
 		this.myLedger = market.getLedger();
 		// print the  transactions

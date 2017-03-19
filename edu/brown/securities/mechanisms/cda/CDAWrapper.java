@@ -96,9 +96,9 @@ public class CDAWrapper implements ITwoSidedPriceSetter {
 	@Override
 	public void cancel(Agent agent, boolean buy, double shareNum, double sharePrice) {
 		if (buy) {
-			this.sell(agent, shareNum, sharePrice);
+			agent.CLIENT.sendTCP(new MarketOrder(0,this.MARKETID, shareNum, 0, sharePrice, true));
 		} else {
-			this.buy(agent, shareNum, sharePrice);
+			agent.CLIENT.sendTCP(new MarketOrder(0, this.MARKETID, 0, shareNum, sharePrice, true));
 		}
 	}
 

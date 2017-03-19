@@ -201,4 +201,55 @@ public class LowestPriceClearing implements ClearingRule {
 		return this.SHORT;
 	}
 
+	@Override
+	public void cancel(Integer agentID, boolean buy, double shareNum,
+			double sharePrice) {
+		if (buy) {
+			List<Order> toRemove = new LinkedList<Order>();
+			for (Map.Entry<Double, Set<Order>> postedBuy : this.buyOrderBook.entrySet()) {
+				if (postedBuy.getKey() == sharePrice) {
+					for (Order o : postedBuy.getValue()) {
+						if (o.FROM.equals(agentID) && o.QUANTITY == shareNum) {
+							toRemove.add(o);
+							break;
+						}
+					}
+				}
+			}
+			
+			Set<Order> orders = this.buyOrderBook.get(sharePrice);
+			if (orders != null) {
+				orders.removeAll(toRemove);
+				if (orders.size() == 0) {
+					this.buyOrderBook.remove(sharePrice);
+				}
+			}
+		} else {
+			List<Order> toRemove = new LinkedList<Order>();
+			for (Map.Entry<Double, Set<Order>> postedBuy : this.sellOrderBook.entrySet()) {
+				if (postedBuy.getKey() == sharePrice) {
+					for (Order o : postedBuy.getValue()) {
+						if (o.FROM.equals(agentID) && o.QUANTITY == shareNum) {
+							toRemove.add(o);
+							break;
+						}
+					}
+				}
+			}
+			Set<Order> orders = this.sellOrderBook.get(sharePrice);
+			if (orders != null) {
+				orders.removeAll(toRemove);
+				if (orders.size() == 0) {
+					this.buyOrderBook.remove(sharePrice);
+				}
+			}
+		}
+	}
+
+	@Override
+	public double price() {
+		//Noop
+		return 0;
+	}
+
 }
