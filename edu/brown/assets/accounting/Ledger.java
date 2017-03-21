@@ -82,8 +82,14 @@ public class Ledger {
 		for (Transaction t : this.unshared) {
 			ledger.add(t.sanitize(ID));
 		}
-		this.unshared.clear();
 		return ledger;
+	}
+	
+	/**
+	 * Clears the latest set
+	 */
+	public void clearLatest() {
+		this.unshared.clear();
 	}
 
 }

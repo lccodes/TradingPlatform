@@ -448,6 +448,7 @@ public abstract class AgentServer {
 					.getLedger(sec.getID()).getSanitized(null)),
 					sec.getMechanismType());
 			theServer.sendToAllTCP(mupdate);
+			this.manager.getLedger(sec.getID()).clearLatest();
 		}
 	}
 
@@ -500,6 +501,7 @@ public abstract class AgentServer {
 							}
 							this.theServer.sendToTCP(id.getKey().getID(), tr);
 						}
+						this.manager.getLedger(auction.getID()).clearLatest();
 					}
 				}
 			}
@@ -524,8 +526,9 @@ public abstract class AgentServer {
 			TradeRequest mupdate = new TradeRequest(0, market.wrap(this.manager
 					.getLedger(market.getID()).getSanitized(ID.getValue())),
 					market.getMechanismType());
-			theServer.sendToTCP(ID.getKey().getID(), mupdate);;
+			theServer.sendToTCP(ID.getKey().getID(), mupdate);
 		}
+		this.manager.getLedger(market.getID()).clearLatest();
 	}
 
 	/*
