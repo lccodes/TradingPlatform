@@ -39,9 +39,11 @@ public class Ledger {
 	 * @param t : transaction to add
 	 */
 	public void add(Transaction t) {
-		this.latest.put(t.TRADEABLE,t);
-		this.transactions.add(t);
-		this.unshared.add(t);
+		synchronized(transactions) {
+			this.latest.put(t.TRADEABLE,t);
+			this.transactions.add(t);
+			this.unshared.add(t);
+		}
 	}
 	
 	/**
@@ -49,7 +51,7 @@ public class Ledger {
 	 * @return set
 	 */
 	public List<Transaction> getList() {
-		return this.transactions;
+		return new LinkedList<Transaction>(this.transactions);
 	}
 	
 	/**
@@ -65,11 +67,13 @@ public class Ledger {
 	 * @param trans
 	 */
 	public void add(List<Transaction> trans) {
-		for (Transaction t : trans) {
-			this.latest.put(t.TRADEABLE, t);
+		synchronized(transactions) {
+			for (Transaction t : trans) {
+				this.latest.put(t.TRADEABLE, t);
+			}
+			this.transactions.addAll(trans);
+			this.unshared.addAll(trans);
 		}
-		this.transactions.addAll(trans);
-		this.unshared.addAll(trans);
 	}
 	
 	/**
@@ -79,8 +83,10 @@ public class Ledger {
 	 */
 	public Ledger getSanitized(Integer ID) {
 		Ledger ledger = new Ledger(null);
-		for (Transaction t : this.unshared) {
-			ledger.add(t.sanitize(ID));
+		synchronized(transactions) {
+			for (Transaction t : this.unshared) {
+				ledger.add(t.sanitize(ID));
+			}
 		}
 		return ledger;
 	}

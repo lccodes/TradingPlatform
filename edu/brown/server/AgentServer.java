@@ -522,13 +522,15 @@ public abstract class AgentServer {
 	 * @param Security : the market to update on
 	 */
 	public void sendMarketUpdate(IMarket market) {
-		for (Entry<Connection, Integer> ID : this.connections.entrySet()) {
-			TradeRequest mupdate = new TradeRequest(0, market.wrap(this.manager
-					.getLedger(market.getID()).getSanitized(ID.getValue())),
-					market.getMechanismType());
-			theServer.sendToTCP(ID.getKey().getID(), mupdate);
+		synchronized(market) {
+			for (Entry<Connection, Integer> ID : this.connections.entrySet()) {
+				TradeRequest mupdate = new TradeRequest(0, market.wrap(this.manager
+						.getLedger(market.getID()).getSanitized(ID.getValue())),
+						market.getMechanismType());
+				theServer.sendToTCP(ID.getKey().getID(), mupdate);
+			}
+			this.manager.getLedger(market.getID()).clearLatest();
 		}
-		this.manager.getLedger(market.getID()).clearLatest();
 	}
 
 	/*
