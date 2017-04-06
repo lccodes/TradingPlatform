@@ -92,9 +92,20 @@ public class Lab4Server extends AgentServer {
 			}
 		}
 	}
+	
+	public void printBalances() {
+		Logging.log("Bank Accounts: ");
+		for (Integer privateID : this.privateToPublic.keySet()) {
+			if (privateID == -1) {
+				continue;
+			}
+			Logging.log("ID " + this.privateToPublic.get(privateID) + " (" + privateID + ") has $"
+					+ this.bank.get(privateID).monies);
+		}
+	}
 
 	public void runGame() {
-		delay(10, false);
+		delay(2, false);
 		this.closed = true;
 		for (Connection c : this.connections.keySet()) {
 			register(c);
@@ -128,14 +139,15 @@ public class Lab4Server extends AgentServer {
 		Logging.log("[-] markets close with " + C);
 		// this.exchange.close(this, 0, endState);
 		this.manager.close(this, 1, endState);
+		printBalances();
 	}
 
 	public static void main(String[] args) throws AgentCreationException {
 		Lab4Server serv = new Lab4Server(2121);
 
-		//for (int i = 0; i < 50; i++) {
-		//	new Lab4DemoAgent("localhost", 2121);
-		//}
+		for (int i = 0; i < 5; i++) {
+			new Lab4DemoAgent("localhost", 2121);
+		}
 
 		serv.runGame();
 		while (true) {
