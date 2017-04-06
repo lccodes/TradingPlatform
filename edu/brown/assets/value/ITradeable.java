@@ -1,5 +1,7 @@
 package brown.assets.value;
 
+import java.util.List;
+
 import brown.assets.accounting.Account;
 
 /**
@@ -13,7 +15,7 @@ public interface ITradeable {
 	void setCount(double count);
 	FullType getType();
 	
-	Account convert(StateOfTheWorld closingState);
+	List<Account> convert(StateOfTheWorld closingState);
 	ITradeable split(double newCount);
 	ITradeable toAgent(Integer id);
 }

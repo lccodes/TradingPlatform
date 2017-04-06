@@ -27,7 +27,6 @@ public abstract class KellyAgent extends Agent {
 	@Override
 	public void onSimpleSealed(SimpleOneSidedWrapper market) {
 		// Noop
-
 	}
 
 	@Override
@@ -35,25 +34,34 @@ public abstract class KellyAgent extends Agent {
 		// Noop
 
 	}
+	
+	protected double fractionalBet(double p_m, LMSRWrapper market) {
+		if (p_m <= this.belief) {
+			double fraction = (this.belief - p_m) / (1 - p_m);
+			fraction *= this.money;
+			return market.moniesToShares(fraction);
+		} else {
+			double fraction = (p_m - this.belief) / p_m;
+			fraction *= this.money;
+			return market.moniesToShares(fraction);
+		}
+	}
 
 	@Override
 	public void onLMSR(LMSRWrapper market) {
 		double p_m = market.getTradeableType().TYPE == TradeableType.PredictionYes ? market.price() : 1-market.price();
+		// = ???
 		if (p_m <= this.belief) {
-			double fraction = (this.belief - p_m) / (1 - p_m);
-			fraction *= this.money;
 			if (market.getTradeableType().TYPE == TradeableType.PredictionYes) {
-				market.buy(this, market.moniesToShares(fraction), 1);
+				market.buy(this, this.fractionalBet(p_m, market), 1);
 			} else {
-				market.sell(this, market.moniesToShares(fraction), 1);
+				market.sell(this, this.fractionalBet(p_m, market), 1);
 			}
-		} else {
-			double fraction = (p_m - this.belief) / p_m;
-			fraction *= this.money;
+		} else if (p_m > this.belief){
 			if (market.getTradeableType().TYPE == TradeableType.PredictionYes) {
-				market.sell(this, market.moniesToShares(fraction), 1);
+				market.sell(this, this.fractionalBet(p_m, market), 1);
 			} else {
-				market.buy(this, market.moniesToShares(fraction), 1);
+				market.buy(this, this.fractionalBet(p_m, market), 1);
 			}
 		}
 	}

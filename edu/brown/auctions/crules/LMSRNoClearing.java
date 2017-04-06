@@ -18,13 +18,13 @@ public class LMSRNoClearing implements ClearingRule {
 	private final LMSRBackend BACKEND;
 	private final FullType TYPE;
 	private final boolean SHORT;
-	
+
 	public LMSRNoClearing() {
 		this.BACKEND = null;
 		this.TYPE = null;
 		this.SHORT = false;
 	}
-	
+
 	public LMSRNoClearing(LMSRBackend backend, boolean shortSelling) {
 		this.BACKEND = backend;
 		this.TYPE = new FullType(TradeableType.PredictionNo, backend.getId());
@@ -36,9 +36,13 @@ public class LMSRNoClearing implements ClearingRule {
 		double cost = this.BACKEND.ask(shareNum);
 		this.BACKEND.no(null, shareNum);
 		List<Order> trans = new LinkedList<Order>();
-		Contract newSec = new Contract(agentID, shareNum, this.TYPE,
-				state -> state.getState() == 0 ? new Account(null).add(1) : null);
-		newSec.setClosure(state -> state.getState() == 0 ? new Account(null).add(newSec.getCount()) : null);
+		Contract newSec = new Contract(agentID, shareNum, this.TYPE, state -> {
+			List<Account> list = new LinkedList<Account>();
+			if (state.STATE.getState() == 0) {
+				list.add(new Account(null).add(state.QUANTITY));
+			}
+			return list;
+		});
 		trans.add(new Order(agentID, null, cost, shareNum, newSec));
 		return trans;
 	}
@@ -47,15 +51,19 @@ public class LMSRNoClearing implements ClearingRule {
 	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice) {
 		List<Order> trans = new LinkedList<Order>();
 		if (this.SHORT && opp.getAgentID() == null) {
-			Contract newSec = new Contract(agentID, opp.getCount(), this.TYPE,
-					state -> state.getState() == 0 ? new Account(null).add(1) : null);
-			newSec.setClosure(state -> state.getState() == 0 ? new Account(null).add(newSec.getCount()) : null);
+			Contract newSec = new Contract(agentID, opp.getCount(), this.TYPE, state -> {
+				List<Account> list = new LinkedList<Account>();
+				if (state.STATE.getState() == 0) {
+					list.add(new Account(null).add(state.QUANTITY));
+				}
+				return list;
+			});
 			opp = newSec;
 		} else if (opp.getAgentID() == null) {
 			return trans;
 		}
 		double cost = this.BACKEND.ask(-1 * opp.getCount());
-		this.BACKEND.no(null, -1 *opp.getCount());
+		this.BACKEND.no(null, -1 * opp.getCount());
 		trans.add(new Order(null, agentID, cost, opp.getCount(), opp));
 		return trans;
 	}
@@ -93,9 +101,8 @@ public class LMSRNoClearing implements ClearingRule {
 	}
 
 	@Override
-	public void cancel(Integer agentID, boolean buy, double shareNum,
-			double sharePrice) {
-		//Noop
+	public void cancel(Integer agentID, boolean buy, double shareNum, double sharePrice) {
+		// Noop
 	}
 
 	@Override

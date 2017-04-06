@@ -22,6 +22,58 @@ public class MarketManager {
 		this.ledgers = new ConcurrentHashMap<IMarket, Ledger>();
 		this.tsauctions = new ConcurrentHashMap<Integer, IMarket>();
 	}
+	
+	/**
+	 * Process each account
+	 * @param server
+	 * @param market
+	 * @param ledger
+	 * @param t
+	 * @param toReplace
+	 */
+	private void process(AgentServer server, IMarket market, Ledger ledger, 
+			Transaction t, Account toReplace) {
+		synchronized (t.TRADEABLE.getAgentID()) {
+			Account oldAccount = server.privateToAccount(t
+					.TRADEABLE.getAgentID());
+			if (oldAccount == null) {
+				Logging.log("[X] agent without account "
+						+ t.TRADEABLE.getAgentID());
+				return;
+			}
+
+			Account newAccount = oldAccount.remove(0, t.TRADEABLE);
+			server.setAccount(t.TRADEABLE.getAgentID(), newAccount);
+			if (toReplace == null) {
+				server.sendBankUpdate(t.TRADEABLE.getAgentID(), oldAccount,
+						newAccount);
+			}
+		}
+
+		if (toReplace != null) {
+			Integer toReplaceID = toReplace.ID;
+			if (toReplaceID == null) {
+				toReplaceID = t.TRADEABLE.getAgentID();
+			}
+
+			synchronized (toReplaceID) {
+				Account oldAccount = server
+						.privateToAccount(toReplaceID);
+				if (oldAccount == null) {
+					Logging.log("[X] agent without account "
+							+ toReplaceID);
+					return;
+				}
+
+				Account newAccount = oldAccount.add(
+						toReplace.monies, new HashSet<ITradeable>(
+								toReplace.tradeables));
+				server.setAccount(toReplaceID, newAccount);
+				server.sendBankUpdate(toReplaceID, oldAccount,
+						newAccount);
+			}
+		}
+	}
 
 	/**
 	 * Closes a market TODO: Close pair markets together i.e. PMs
@@ -36,46 +88,9 @@ public class MarketManager {
 			Ledger ledger = this.ledgers.get(market);
 			synchronized (ledger) {
 				for (Transaction t : ledger.getLatest()) {
-					Account toReplace = t.TRADEABLE.convert(closingState);
-					synchronized (t.TRADEABLE.getAgentID()) {
-						Account oldAccount = server.privateToAccount(t
-								.TRADEABLE.getAgentID());
-						if (oldAccount == null) {
-							Logging.log("[X] agent without account "
-									+ t.TRADEABLE.getAgentID());
-							continue;
-						}
-
-						Account newAccount = oldAccount.remove(0, t.TRADEABLE);
-						server.setAccount(t.TRADEABLE.getAgentID(), newAccount);
-						if (toReplace == null) {
-							server.sendBankUpdate(t.TRADEABLE.getAgentID(), oldAccount,
-									newAccount);
-						}
-					}
-
-					if (toReplace != null) {
-						Integer toReplaceID = toReplace.ID;
-						if (toReplaceID == null) {
-							toReplaceID = t.TRADEABLE.getAgentID();
-						}
-
-						synchronized (toReplaceID) {
-							Account oldAccount = server
-									.privateToAccount(toReplaceID);
-							if (oldAccount == null) {
-								Logging.log("[X] agent without account "
-										+ toReplaceID);
-								continue;
-							}
-
-							Account newAccount = oldAccount.add(
-									toReplace.monies, new HashSet<ITradeable>(
-											toReplace.tradeables));
-							server.setAccount(toReplaceID, newAccount);
-							server.sendBankUpdate(toReplaceID, oldAccount,
-									newAccount);
-						}
+					List<Account> allReplacements = t.TRADEABLE.convert(closingState);
+					for (Account toReplace : allReplacements) {
+						this.process(server, market, ledger, t, toReplace);
 					}
 				}
 

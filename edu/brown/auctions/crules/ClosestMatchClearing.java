@@ -12,24 +12,25 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 import brown.assets.accounting.Order;
+import brown.assets.value.Good;
 import brown.assets.value.ITradeable;
 import brown.auctions.rules.ClearingRule;
 
 public class ClosestMatchClearing implements ClearingRule {
 	private final SortedMap<Double, Set<Order>> buyOrderBook;
 	private final SortedMap<Double, Set<Order>> sellOrderBook;
-	
+
 	private final boolean SHORT;
-	private final Function<Double, ITradeable> SHORTER;
-	
+	private final Function<Good, ITradeable> SHORTER;
+
 	public ClosestMatchClearing() {
 		this.buyOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
 		this.sellOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
 		this.SHORT = false;
 		this.SHORTER = null;
 	}
-	
-	public ClosestMatchClearing(Function<Double, ITradeable> shorter) {
+
+	public ClosestMatchClearing(Function<Good, ITradeable> shorter) {
 		this.buyOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
 		this.sellOrderBook = new TreeMap<Double, Set<Order>>(Collections.reverseOrder());
 		this.SHORT = true;
@@ -44,7 +45,7 @@ public class ClosestMatchClearing implements ClearingRule {
 			if (shareNum <= 0) {
 				break;
 			}
-			
+
 			Set<Order> opps = postedSell.getValue();
 			if (postedSell.getKey() <= sharePrice && shareNum > 0) {
 				Set<Order> toRemove = new HashSet<Order>();
@@ -57,10 +58,11 @@ public class ClosestMatchClearing implements ClearingRule {
 					} else if (agentID.equals(opp.FROM)) {
 						continue;
 					}
-					
+
 					double quantity = Math.min(shareNum, opp.GOOD.getCount());
-					completed.add(new Order(agentID, opp.FROM, postedSell.getKey()*quantity, quantity, opp.GOOD));
-					shareNum-=quantity;
+					completed.add(new Order(agentID, opp.FROM, 
+							postedSell.getKey() * quantity, quantity, opp.GOOD));
+					shareNum -= quantity;
 					if (quantity == opp.GOOD.getCount()) {
 						toRemove.add(opp);
 					}
@@ -73,11 +75,10 @@ public class ClosestMatchClearing implements ClearingRule {
 				break;
 			}
 		}
-		for(Double d : bigRemove) {
+		for (Double d : bigRemove) {
 			this.sellOrderBook.remove(d);
 		}
-		
-		
+
 		if (shareNum > 0) {
 			Set<Order> wanted = this.buyOrderBook.get(sharePrice);
 			if (wanted == null) {
@@ -86,7 +87,7 @@ public class ClosestMatchClearing implements ClearingRule {
 			wanted.add(new Order(null, agentID, -1, shareNum, null));
 			this.buyOrderBook.put(sharePrice, wanted);
 		}
-		
+
 		return completed;
 	}
 
@@ -96,17 +97,16 @@ public class ClosestMatchClearing implements ClearingRule {
 		Set<Double> bigRemove = new HashSet<Double>();
 		double shareNum = opp.getCount();
 		if (this.SHORT && opp.getAgentID() == null) {
-			opp = this.SHORTER.apply(opp.getCount());
-			opp.setAgentID(agentID);
+			opp = this.SHORTER.apply(new Good(agentID, opp.getCount(), null));
 		} else if (opp.getAgentID() == null) {
 			return completed;
 		}
-		
+
 		for (Entry<Double, Set<Order>> wanted : this.buyOrderBook.entrySet()) {
 			if (shareNum <= 0) {
 				break;
 			}
-			
+
 			Set<Order> want = wanted.getValue();
 			if (wanted.getKey() >= sharePrice && shareNum > 0) {
 				Set<Order> toRemove = new HashSet<Order>();
@@ -116,10 +116,10 @@ public class ClosestMatchClearing implements ClearingRule {
 					} else if (agentID.equals(buy.FROM)) {
 						continue;
 					}
-					
+
 					double quantity = Math.min(opp.getCount(), buy.QUANTITY);
 					ITradeable toGive = quantity == opp.getCount() ? opp : opp.split(quantity);
-					completed.add(new Order(buy.FROM, agentID, sharePrice*quantity, quantity, toGive));
+					completed.add(new Order(buy.FROM, agentID, sharePrice * quantity, quantity, toGive));
 					if (quantity == buy.QUANTITY) {
 						toRemove.add(buy);
 					} else {
@@ -138,18 +138,16 @@ public class ClosestMatchClearing implements ClearingRule {
 		for (Double d : bigRemove) {
 			this.buyOrderBook.remove(d);
 		}
-		
+
 		if (shareNum > 0) {
 			Set<Order> wanted = this.sellOrderBook.get(sharePrice);
 			if (wanted == null) {
 				wanted = new HashSet<Order>();
 			}
-			wanted.add(new Order(null, opp.getAgentID(), sharePrice*shareNum, opp.getCount(), opp));
+			wanted.add(new Order(null, opp.getAgentID(), sharePrice * shareNum, opp.getCount(), opp));
 			this.sellOrderBook.put(sharePrice, wanted);
-			//TODO: Modify shorter to make the opposite position
-			//TODO: Get the opposite position and add it to completed
 		}
-		
+
 		return completed;
 	}
 
@@ -161,45 +159,45 @@ public class ClosestMatchClearing implements ClearingRule {
 			if (buyQ <= 0) {
 				break;
 			}
-			
+
 			Set<Order> all = this.sellOrderBook.get(price);
 			for (Order t : all) {
 				if (buyQ <= 0) {
 					break;
 				}
-				
+
 				double quantity = Math.min(buyQ, t.GOOD.getCount());
-				cost += quantity*price;
+				cost += quantity * price;
 				buyQ -= quantity;
 			}
 		}
-		
-		return buyQ > 0 ? cost + buyQ*sharePrice : cost; 
+
+		return buyQ > 0 ? cost + buyQ * sharePrice : cost;
 	}
 
 	@Override
 	public double quoteAsk(double shareNum, double sharePrice) {
 		double sellQ = shareNum;
 		double cost = 0;
-		
+
 		for (double price : this.buyOrderBook.keySet()) {
 			if (sellQ <= 0) {
 				break;
 			}
-			
+
 			Set<Order> all = this.buyOrderBook.get(price);
 			for (Order t : all) {
 				if (sellQ <= 0) {
 					break;
 				}
-				
+
 				double quantity = Math.min(sellQ, t.QUANTITY);
-				cost += quantity*price;
+				cost += quantity * price;
 				sellQ -= quantity;
 			}
 		}
-		
-		return sellQ > 0 ? cost + sellQ*sharePrice : cost;
+
+		return sellQ > 0 ? cost + sellQ * sharePrice : cost;
 	}
 
 	@Override
@@ -223,8 +221,8 @@ public class ClosestMatchClearing implements ClearingRule {
 	}
 
 	@Override
-	public void cancel(Integer agentID, boolean buy, double shareNum,
-			double sharePrice) {;
+	public void cancel(Integer agentID, boolean buy, double shareNum, double sharePrice) {
+		;
 		if (buy) {
 			List<Order> toRemove = new LinkedList<Order>();
 			for (Map.Entry<Double, Set<Order>> postedBuy : this.buyOrderBook.entrySet()) {
@@ -237,7 +235,7 @@ public class ClosestMatchClearing implements ClearingRule {
 					}
 				}
 			}
-			
+
 			Set<Order> orders = this.buyOrderBook.get(sharePrice);
 			if (orders != null) {
 				orders.removeAll(toRemove);

@@ -1,9 +1,11 @@
 package brown.test.auction;
 
+import java.util.List;
+
 import brown.assets.accounting.Account;
 import brown.assets.value.FullType;
-import brown.assets.value.StateOfTheWorld;
 import brown.assets.value.ITradeable;
+import brown.assets.value.StateOfTheWorld;
 
 public class TheGood implements ITradeable {
 	private Integer agentID;
@@ -37,8 +39,8 @@ public class TheGood implements ITradeable {
 	}
 
 	@Override
-	public Account convert(StateOfTheWorld closingState) {
-		// TODO Auto-generated method stub
+	public List<Account> convert(StateOfTheWorld closingState) {
+		// Noop
 		return null;
 	}
 

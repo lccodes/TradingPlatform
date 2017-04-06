@@ -1,5 +1,7 @@
 package brown.auctions.crules;
 
+import java.util.List;
+
 import brown.assets.accounting.Account;
 import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
@@ -40,7 +42,7 @@ public class ShortShare implements ITradeable {
 	}
 
 	@Override
-	public Account convert(StateOfTheWorld closingState) {
+	public List<Account> convert(StateOfTheWorld closingState) {
 		return null;
 	}
 

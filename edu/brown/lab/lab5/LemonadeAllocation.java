@@ -85,7 +85,11 @@ public class LemonadeAllocation implements AllocationRule {
 			for (Integer person : slots[i]) {
 				Set<ITradeable> goods = new HashSet<ITradeable>();
 				final double pay = payoff;
-				goods.add(new Contract(person, 1, new FullType(), s -> new Account(person).add(pay)));
+				goods.add(new Contract(person, 1, new FullType(), s -> {
+					List<Account> list = new LinkedList<Account>();
+					list.add(new Account(null).add(pay));
+					return list;
+				}));
 				securities.put(person, goods);
 			}
 		}

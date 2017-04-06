@@ -1,8 +1,12 @@
 package brown.lab.lab4;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import brown.assets.accounting.Account;
 import brown.assets.value.Contract;
 import brown.assets.value.FullType;
+import brown.assets.value.Good;
 import brown.assets.value.TradeableType;
 import brown.auctions.IMarket;
 import brown.auctions.crules.ClosestMatchClearing;
@@ -98,12 +102,16 @@ public class Lab4Server extends AgentServer {
 		// this.exchange.open(new ContinuousDoubleAuction(0, TYPENO, new
 		// ClosestMatchClearing()));
 		this.manager.open(new ContinuousDoubleAuction(1, TYPEYES,
-				new ClosestMatchClearing((Double d) -> {
-					Contract newSec = new Contract(null, 1, TYPEYES,
-							state -> state.getState() == 1 ? new Account(null).add(100)
-									: null);
-					newSec.setClosure(state -> state.getState() == 1 ? new Account(null)
-							.add(newSec.getCount() * 100) : null);
+				new ClosestMatchClearing((Good g) -> {
+					Contract newSec = new Contract(g.getAgentID(), g.getCount(), TYPEYES,
+					(Contract.EndState state) -> {
+						List<Account> list = new LinkedList<Account>();
+						if(state.STATE.getState() == 1) {
+							list.add(new Account(null).add(100*state.QUANTITY));
+							list.add(new Account(g.getAgentID()).add(-100*state.QUANTITY));
+						}
+						return list;
+					});
 					return newSec;
 				})));
 		Logging.log("[-] markets open");

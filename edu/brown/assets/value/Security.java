@@ -1,6 +1,6 @@
 package brown.assets.value;
 
-import java.util.function.Function;
+import java.util.List;
 
 import brown.assets.accounting.Account;
 
@@ -71,12 +71,8 @@ public class Security implements ITradeable {
 	}
 
 	@Override
-	public Account convert(StateOfTheWorld closingState) {
+	public List<Account> convert(StateOfTheWorld closingState) {
 		return null;
-	}
-	
-	public void setClosure(Function<StateOfTheWorld, Account> close) {
-		//Noop
 	}
 
 	@Override

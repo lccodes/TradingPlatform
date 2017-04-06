@@ -1,12 +1,21 @@
 package brown.assets.value;
 
+import java.util.List;
 import java.util.function.Function;
 
 import brown.assets.accounting.Account;
 
+/**
+ * Closable security
+ * @author lcamery
+ *
+ */
 public class Contract extends Security {
-	private Function<StateOfTheWorld, Account> CONVERTER;
+	private Function<EndState, List<Account>> CONVERTER;
 	
+	/**
+	 * For kryo
+	 */
 	public Contract() {
 		super(null,0,null);
 		this.CONVERTER = null;
@@ -20,7 +29,7 @@ public class Contract extends Security {
 	 * @param closure : what to do when it is closed; nullable
 	 */
 	public Contract(Integer agentID, double count, FullType type,
-			Function<StateOfTheWorld,Account> closure) {
+			Function<EndState, List<Account>> closure) {
 		super(agentID, count, type);
 		if (closure == null) {
 			this.CONVERTER = state -> null;
@@ -30,21 +39,24 @@ public class Contract extends Security {
 	}
 	
 	@Override
-	public Account convert(StateOfTheWorld closingState) {
-		return this.CONVERTER.apply(closingState);
-	}
-	
-	/**
-	 * Set the closure function
-	 */
-	public void setClosure(Function<StateOfTheWorld, Account> close) {
-		this.CONVERTER = close;
+	public List<Account> convert(StateOfTheWorld closingState) {
+		return this.CONVERTER.apply(new EndState(this.count, closingState));
 	}
 	
 	@Override
 	public ITradeable split(double newCount) {
 		this.count = this.count - newCount;
 		return new Contract(this.agentID, newCount, this.TYPE, this.CONVERTER);
+	}
+	
+	public static class EndState {
+		public final double QUANTITY;
+		public final StateOfTheWorld STATE;
+		
+		public EndState(double quantity, StateOfTheWorld state) {
+			this.QUANTITY = quantity;
+			this.STATE = state;
+		}
 	}
 
 }

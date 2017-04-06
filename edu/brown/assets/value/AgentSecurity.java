@@ -1,5 +1,7 @@
 package brown.assets.value;
 
+import java.util.List;
+
 import brown.assets.accounting.Account;
 
 public class AgentSecurity implements ITradeable {
@@ -45,7 +47,7 @@ public class AgentSecurity implements ITradeable {
 	}
 
 	@Override
-	public Account convert(StateOfTheWorld closingState) {
+	public List<Account> convert(StateOfTheWorld closingState) {
 		return null;
 	}
 
