@@ -50,12 +50,16 @@ $\Agent\in\Agents_\Option$ purchases
 either some number of $\Option_0$ or $\Option_1$ options paying the price quoted by the 
 market maker.\\
 
-A \mydef{market maker} $\OptionPrice_\Market$ is a function 
-that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$ 
+A \mydef{market maker} $\OptionPrice_\MarketMaker$ is a function 
+that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$, 
 and a quantity $\Quantity\in\mathbb{R}_+$ at time $\Time \in [0,\Time_\Option)$ 
 to a price $\OptionPrice(\Option,\Agent,\Quantity,\Time) \in \mathbb{R}_+$. 
 By definition $\OptionPrice(\Option,\Agent, \Time) = \Revealer(\Option_\Event)$ if 
 $\Time \ge \Time_\Option$.
+
+An \mydef{lmsr market maker} $\OptionPrice_\LMSRMarketMaker$ is a function
+that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$, and
+a quantity $\Quantity\in\mathbb{R}_+$ at time $\Time \in [0,\Time_\Option)$ as a function of b $\LMSRb\in\mathbb{R}_+$.
 
 \subsection{Assumptions}
 

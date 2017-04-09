@@ -1,11 +1,11 @@
 \section{Market Makers}
-In these experiments we will test the following three market markers.
+In these experiments we will test the following three LMSR market markers.
 
 \subsection{\href{http://mason.gmu.edu/~rhanson/mktscore.pdf}{Logarithmic Market Scoring Rule}}
 LMSR is a strictly proper scoring rule developed by Robert Hanson. LMSR uses a logarithmic cost function: \\
-$C(q_1,q_2) = b\ln(e^{\frac{q_1}{b}} + e^{\frac{q_2}{b}})$ where $q_1$ and $q_2$ represent the number of shares acquired for each of the binary events: 1 and 2. The cost charged to a trader wanting to buy $q_a$ shares on event 1 and $q_b$ shares on event 1 is: $C(q_1 + q_a, q_2 + q_b) - C(q_1,q_2)$. Traders are charged for their movement in the market prediction. $b$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $b\ln(2)$. A large b means that it would cost a lot to move the market price while a small b makes large swings relatively inexpensive.\\
+$C(q_1,q_2) = b\ln(e^{\frac{q_1}{b}} + e^{\frac{q_2}{b}})$ where $q_1$ and $q_2$ represent the number of shares acquired for each of the binary events: 1 and 2. The cost charged to a trader wanting to buy $q_a$ shares on event 1 and $q_b$ shares on event 1 is: $C(q_1 + q_a, q_2 + q_b) - C(q_1,q_2)$. Traders are charged for their movement in the market prediction. $\LMSRb$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $\LMSRb\ln(2)$. A large $\LMSRb$ means that it would cost a lot to move the market price while a small $\LMSRb$ makes large swings relatively inexpensive.\\
 
-The instantaneous price of LMSR market x, which is also the market prediction for x, is quoted with: $p_x = \frac{e^{\frac{q_1}{b}}}{e^{\frac{q_1}{b}} + e^{\frac{q_2}{b}}}$. \\
+The instantaneous price of LMSR market $\LMSRMarketMaker$, which is also the market's prediction for the option $\Option$, is quoted with: $p_x = \frac{e^{\frac{q_1}{\LMSRb}}}{e^{\frac{q_1}{\LMSRb}} + e^{\frac{q_2}{\LMSRb}}}$. \\
 
 \textbf{Advantages}\\
 \begin{enumerate}
@@ -21,16 +21,24 @@ The instantaneous price of LMSR market x, which is also the market prediction fo
 
 \subsection{\href{https://www.cs.cmu.edu/~sandholm/liquidity-sensitive automated market maker.teac.pdf}{Practical Liquidity Sensitive Market Maker}}
 The LSMM uses the underlying LMSR mechanism but invokes a novel
-function for setting the liquidity parameter b. The function is:
-$b(q) = \alpha \sum_{i} q_i$. $q$ represents the quantity vector
+function for setting the liquidity parameter $\LMSRb$. The function is:
+$\LMSRb(q) = \alpha \sum_{i} q_i$. $q$ represents the quantity vector
 for each option available from the market maker. In a binary
 prediction market, $q$ has two values which represent the quantity
-outstanding for shares of YES and NO.\\
+outstanding for shares of YES and NO. $\alpha$ is an ex ante parameter 
+between $[0,1]$ that represents what commission the market maker takes
+off of each transaction. A larger $\alpha$ will result in a higher
+profit.\\
+
+The LSMM uses this formula for setting $\LMSRb$ to make the market
+maker profitable and to make it liquidity sensitive, meaning that
+the market maker charges traders differently depending on the market
+depth. \\
 
 \textbf{Advantages}\\
 \begin{enumerate}
 \item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate [Hanson 2003]}
-\item{Liquidity Sensitive - the market adjusts to periods with low or high activity. The market maker decreasingly subsudizes the market as activity rises.}
+\item{Liquidity Sensitive - the market adjusts to periods with low or high activity. The market maker decreasingly subsidizes the market as activity rises.}
 \item{Guaranteed Profit - the market maker has unbounded profit but bounded
 loss at near 0.}
 \end{enumerate}
@@ -46,8 +54,10 @@ and decreases the number of traders who are willing to trade with the market mak
 \commentl{It needs to be homogenous degree 1.}
 
 It needs to have an understanding of time. LSMM scales with price but does not reward traders that insert information when the market has less information to offer them in exchange. It incentivizes you to wait until the
-end to trade.
+end to trade. \\
 
 It needs to incentivize lowering the commission in a competition. LSMM 
 encourages MMs to ramp up their take in a group setting, which is
-suboptimal for the market at large since that disincentivizes trading.
+suboptimal for the market at large since that disincentivizes trading. \\
+
+The current function is $\LMSRb(q) = \alpha \left[\sum_{i}(q_i) + t \right]$ where $t$ represents the number of transactions that have occurred.
