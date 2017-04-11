@@ -2,7 +2,7 @@
 We will use two classic equilibria concepts from the literature and a third of our design. 
 
 \subsection{RE and PI}
-The two classic equilibria concepts that we will utilize are the \mydef{Rational Expectations Equilibirium} (RE) and the \mydef{Prior Information Equilibrium} (PI). Rational Expectations hypothesizes that all agents act as if they had the collective signal. The collective signal is the signal that aggregates the individual signals received by each agent. This implies that the prediction markets should be as accurate as the collective signal. Under our model, this implies that prediction markets should be 100\% accurate with high confidence.\\
+The two classic equilibria concepts that we will utilize are the \mydef{Rational Expectations Equilibirium} (RE) and the \mydef{Prior Information Equilibrium} (PI). Rational Expectations hypothesizes that all agents act as if they had the collective signal. The collective signal is the signal that aggregates the individual signals received by each agent. This implies that the prediction markets should be as accurate as the collective signal. Under our model, this implies that the prediction markets' final prediction should predict the true outcome. \\
 
 \mydef{Prior Information} hypothesizes that all agents act on a linear combination of their private information and the current market price as Bayesian updaters. PI implies that agents will take into account the current market price and their own signal. Agents are willing to participate at their expected value given the two signals. \\
 
@@ -26,7 +26,18 @@ price the ability to defer the decision until position $x$ based on the added in
 preceding $x-1$ agents can pay up to the value of the information to defer. In order for markets
 to clear in PIT then the market maker needs to compensate agents for their spot selection.\\
 
+\subsection{Examples}
+\mydef{Rational Expectations} implies that the final price will be the average of each agent's signal since all agents have equal budgets. As we have restricted signals to the set of ${0,1}$, the expected price will simply be the number of 1 signals divided by the total number of agents $\frac{|\Agents_{\Option_1}|}{|\Agents_\Option|}$.  For example, with a signal vector $\left[0,1,1,0,1\right]$, the expected price is .6 and the prediction will be correct. \\
+
+\mydef{Prior Information} implies that the final price will be between the weighted average and .5 because it is biased towards the initial price. The prediction will still be accurate just with lower confidence. For example, with a signal vector $\left[0,1,1\right]$, the first agent will target .25 since it is the Bayesian update between their prior 0 and the price .5. The second agent will target .5 since it is the Bayesian update between their prior 1 and the price .25 giving .25 double weight. The third agent will target .625 since it is the Bayesian update between their prior 1 and the price .5 giving .5 triple weight. The outcome will still be correct at .625, but less than .66 which is the RE prediction in this case.\\
+
+\mydef{Prior Information Timing} implies something that I will calculate.\\
+
 \subsection{Agent Strategy}
+An agent's $\Agent\in\Agents_\Option$ \mydef{strategy} 
+$\AgentStrategy_\Agent(\Time) \in \mathbb{R}_+$ specifies the quantity of option 
+$\Option$ purchased by the agent at time $\Time$.\\
+
 In order to assess accuracy in situations where agents have variable information, we will consider different types of agent strategies in our experiments. There are two types of agent strategies \mydef{myopic} $\Myopic$ and \mydef{farsighted} $\Farsighted$. Prediction markets are known to be myopically incentive compatible, which means that myopic agents bid truthfully. Similarly, \mydef{informed} $\Informed$ agents have an exogenous signal about the outcome whereas \mydef{uninformed} $\Uninformed$ agents can only base their decision on the market price. \\
 
 The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Myopic class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Myopic, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior.\\

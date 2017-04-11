@@ -1,6 +1,6 @@
 \section{Experimental Design}
 \subsection{Metrics}
-For each of the following configurations, we will rank our three market makers against our two benchmarks defined above: \mydef{Profit-Maximizing Market Maker} and \mydef{Accuracy} according to RE, PI, and PIT.
+For each of the following configurations, we will rank our three market makers against our two benchmarks defined above: \mydef{Profit-Maximizing Market Maker} and \mydef{Accuracy} according to RE, PI, and PIT. For our experiments, we will assume that private beliefs are ${0,1}$ and that budgets are equal.\\
 
 \subsection{Configurations}
 \subsubsection{Market Makers}
@@ -8,9 +8,9 @@ We will run each agent arrangement against the following market makers:
 \begin{enumerate}
 \item \mydef{Logarithmic Market Scoring Rule} with varying b values. Since there is little intuition behind setting b other than the loss incurred by the market maker, we want to evaluate a full range of b options that appear in other papers. Therefore we will use every integer value for b between 1 and 100 as those correspond to natural extremes where the price is trivially malleable to where it is near static.
 
-\item \mydef{Liquidity Sensitive Market Maker} with varying alpha parameters. Since alpha corresponds to the commission, we will assess all alpha values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
+\item \mydef{Liquidity Sensitive Market Maker} with varying $\alpha$ parameters. Since alpha corresponds to the commission, we will assess all $\alpha$ values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
 
-\item \mydef{Time Sensitive Market Maker} with varying alpha parameters. Since alpha corresponds to the commission, we will assess all alpha values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
+\item \mydef{Time Sensitive Market Maker} with varying $\alpha$ parameters. Since $\alpha$ corresponds to the commission, we will assess all $\alpha$ values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
 \end{enumerate}
 
 \subsection{Agents}

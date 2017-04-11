@@ -39,14 +39,10 @@ is the subjective probability that the agent
 assigns to the outcome of event $\Option_\Event$ being direction $\Option_\OptionDirection$
 at strike time $\Option_\Time$.\\
 
-An agent's $\Agent\in\Agents_\Option$ \mydef{strategy} 
-$\AgentStrategy_\Agent(\Time) \in \mathbb{R}_+$ specifies the quantity of option 
-$\Option$ purchased by the agent at time $\Time$.\\
-
-A \mydef{prediction market} $\Market$ trades complementary options. 
+%A \mydef{prediction market} $\Market$ trades complementary options. 
 Formally, a prediction market is a tuple $\Market = 
 \left<\Option_c, \Agents_\Option \right>$ where each \mydef{agent} 
-$\Agent\in\Agents_\Option$ purchases 
+$\Agent\in\Agents_\Option$ purchases or sells
 either some number of $\Option_0$ or $\Option_1$ options paying the price quoted by the 
 market maker.\\
 
@@ -69,8 +65,8 @@ and execute their strategy only once at time $\Agent_\Time$.\\
 
 We assume that agents' private beliefs and budgets are not common knowledge
 but are drawn from known distributions $\AgentBelief \sim v(\cdot)$ and
-$\AgentBudget \sim b(\cdot)$. For our experiments, we will assume that private beliefs are ${0,1}$ and that budgets are equal.\\
+$\AgentBudget \sim b(\cdot)$.\\
 
 We assume agents are allowed to observe the true current price of any option.\\
 
-We assume that the market maker mechanism and all its parameters are common knowledge.\\
+We assume that the market maker and all its parameters are common knowledge.\\
