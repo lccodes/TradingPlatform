@@ -38,6 +38,7 @@ import brown.auctions.prules.SecondPriceRule;
 import brown.auctions.rules.ClearingRule;
 import brown.auctions.twosided.ITwoSidedWrapper;
 import brown.auctions.twosided.TwoSidedAuction;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Message;
@@ -118,6 +119,8 @@ public final class Startup {
 		kryo.register(SealedBidRule.class);
 		kryo.register(FirstPriceRule.class);
 		kryo.register(SecondPriceRule.class);
+		
+		kryo.register(SimpleWrapper.class);
 		
 		return true;
 	}

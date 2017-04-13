@@ -1,17 +1,21 @@
 package brown.auctions.bundles;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import brown.assets.value.FullType;
+
 
 public class SimpleBidBundle implements BidBundle {
-	private final double Bid;
-	private final Integer AgentID;
+	private final Map<FullType, BidBundle.BidderPrice> BIDS;
 	private final BundleType BT;
 	
 	/**
 	 * Empty constructor for kryo net
 	 */
 	public SimpleBidBundle() {
-		this.Bid = 0;
-		this.AgentID = null;
+		this.BIDS = null;
 		this.BT = null;
 	}
 	
@@ -21,20 +25,22 @@ public class SimpleBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public SimpleBidBundle(double bid, Integer agent, BundleType type) {
-		this.Bid = bid;
-		this.AgentID = agent;
-		this.BT = type;
+	public SimpleBidBundle(Map<FullType, BidBundle.BidderPrice> bid) {
+		this.BIDS = bid;
+		this.BT = BundleType.Simple;
 	}
 
 	@Override
 	public double getCost() {
-		return this.Bid;
+		double max = 0;
+		for (BidBundle.BidderPrice b : this.BIDS.values()) {
+			max = Math.max(b.PRICE, max);
+		}
+		return max;
 	}
 
-	@Override
-	public Integer getAgent() {
-		return this.AgentID;
+	public BidBundle.BidderPrice getItemCost(FullType type) {
+		return this.BIDS.get(type);
 	}
 
 	@Override
@@ -44,6 +50,18 @@ public class SimpleBidBundle implements BidBundle {
 
 	@Override
 	public BidBundle wipeAgent(Integer ID) {
-		return new SimpleBidBundle(this.Bid, ID, this.BT);
+		Map<FullType, BidBundle.BidderPrice> newBids = new HashMap<FullType, BidBundle.BidderPrice>();
+		for (Entry<FullType, BidderPrice> entry : this.BIDS.entrySet()) {
+			if (ID.equals(entry.getValue().AGENTID)) {
+				newBids.put(entry.getKey(), entry.getValue());
+			} else {
+				newBids.put(entry.getKey(), new BidBundle.BidderPrice(null,entry.getValue().PRICE));
+			}
+		}
+		return new SimpleBidBundle(newBids);
+	}
+	
+	public BidBundle.BidderPrice getBid(FullType type) {
+		return this.BIDS.get(type);
 	}
 }

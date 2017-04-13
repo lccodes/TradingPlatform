@@ -7,14 +7,14 @@ import java.util.Set;
 
 import brown.assets.accounting.Account;
 import brown.assets.value.ITradeable;
-import brown.auctions.arules.OpenOutcryRule;
-import brown.auctions.arules.SealedBidRule;
-import brown.auctions.bundles.BundleType;
-import brown.auctions.bundles.SimpleBidBundle;
-import brown.auctions.onesided.OneSidedAuction;
-import brown.auctions.prules.FirstPriceRule;
-import brown.auctions.prules.SecondPriceRule;
-import brown.auctions.rules.PaymentRule;
+import brown.auctions.activity.SimpleNoJumpActivityRule;
+import brown.auctions.info.AnonymousPolicy;
+import brown.auctions.interfaces.Market;
+import brown.auctions.interfaces.allocation.SimpleHighestBidderAllocation;
+import brown.auctions.payment.SimpleSecondPrice;
+import brown.auctions.query.OutcryQueryRule;
+import brown.auctions.state.SimpleInternalState;
+import brown.auctions.termination.NoBidsTermination;
 import brown.lab.GameSetup;
 import brown.lab.ValuationRegistration;
 import brown.messages.Registration;
@@ -59,17 +59,17 @@ public class Lab3Server extends AgentServer {
 		// Constructs auction according to rules
 		Set<ITradeable> theSet = new HashSet<ITradeable>();
 		theSet.add(new Lab3Good());
-		PaymentRule prule = firstprice ? new FirstPriceRule()
-				: new SecondPriceRule();
+		//PaymentRule prule = firstprice ? new FirstPriceRule()
+		//		: new SecondPriceRule();
 		if (outcry) {
-			this.manager.open(new OneSidedAuction(0, theSet,
-					new OpenOutcryRule(BundleType.Simple, true, 5,
-							new SimpleBidBundle(reserve, null,
-									BundleType.Simple)), prule));
+			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
+					new OutcryQueryRule(), new AnonymousPolicy(),
+					new NoBidsTermination(3), new SimpleNoJumpActivityRule(),
+					new SimpleInternalState(0, theSet)));
 		} else {
-			this.manager.open(new OneSidedAuction(0, theSet, new SealedBidRule(
-					BundleType.Simple, true, 5, new SimpleBidBundle(reserve,
-							null, BundleType.Simple)), prule));
+			//this.manager.open(new OneSidedAuction(0, theSet, new SealedBidRule(
+			//		BundleType.Simple, true, 5, new SimpleBidBundle(reserve,
+			//				null, BundleType.Simple)), prule));
 		}
 
 		// Gives everyone 20 seconds to join the auction
@@ -84,8 +84,8 @@ public class Lab3Server extends AgentServer {
 		}
 
 		// Runs the auction to completion
-		OneSidedAuction market = this.manager.getOneSided(0);
-		while (!market.isClosed()) {
+		Market market = this.manager.getIMarket(0);
+		while (!market.isOver()) {
 			try {
 				Thread.sleep(1000);
 				this.updateAllAuctions();

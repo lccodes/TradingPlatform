@@ -44,4 +44,12 @@ public class Order {
 		return new Transaction(this.TO,this.FROM,this.COST/this.QUANTITY,this.QUANTITY,this.GOOD);
 	}
 
+	public Order updatePrice(double cost) {
+		return new Order(this.TO, this.FROM, cost, this.QUANTITY, this.GOOD);
+	}
+
+	public Order updateToAgent(Integer newAgent) {
+		return new Order(newAgent, this.FROM, this.COST, this.QUANTITY, this.GOOD);
+	}
+
 }

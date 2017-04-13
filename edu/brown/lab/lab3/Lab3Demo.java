@@ -1,6 +1,6 @@
 package brown.lab.lab3;
 
-import brown.auctions.onesided.SimpleOneSidedWrapper;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.markets.GameReport;
 import brown.setup.Logging;
@@ -12,8 +12,8 @@ public class Lab3Demo extends Lab3Agent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		double currentBid = market.getQuote();
+	public void onSimpleSealed(SimpleWrapper market) {
+		double currentBid = market.getHighBid();
 		//Log the current bid
 		Logging.log("Sealed Reserve: " + currentBid);
 		//Random bid
@@ -21,12 +21,15 @@ public class Lab3Demo extends Lab3Agent {
 	}
 
 	@Override
-	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		double currentBid = market.getQuote();
+	public void onSimpleOpenOutcry(SimpleWrapper market) {
+		double currentBid = market.getHighBid();
 		//Log the current bid
 		Logging.log("Current quote: " + currentBid);
 		//High bid + 1
-		market.bid(this, currentBid+1);
+		if (market.getHighBid() < this.myValuation && !this.ID.equals(market.getHighBidder())) {
+			System.out.println(market.getHighBidder());
+			market.bid(this, currentBid+1);
+		}
 	}
 
 	@Override

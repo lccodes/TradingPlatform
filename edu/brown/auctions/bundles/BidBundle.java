@@ -12,12 +12,6 @@ public interface BidBundle {
 	double getCost();
 	
 	/**
-	 * Which agent owns the bid bundle
-	 * @return agent id
-	 */
-	Integer getAgent();
-	
-	/**
 	 * Removes agent ID
 	 * @return BidBundle w/o agent ID
 	 */
@@ -36,5 +30,15 @@ public interface BidBundle {
 			return new Double(arg0.getCost()).compareTo(new Double(arg1.getCost()));
 		}
 		
+	}
+	
+	public static class BidderPrice {
+		public final Integer AGENTID;
+		public final double PRICE;
+		
+		public BidderPrice(Integer agentID, double price) {
+			this.AGENTID = agentID;
+			this.PRICE = price;
+		}
 	}
 }

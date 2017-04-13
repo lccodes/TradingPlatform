@@ -15,18 +15,15 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Order;
-import brown.assets.accounting.Transaction;
 import brown.assets.value.ITradeable;
 import brown.auctions.IMarket;
-import brown.auctions.bundles.BidBundle;
 import brown.auctions.crules.ShortShare;
-import brown.auctions.onesided.OneSidedAuction;
+import brown.auctions.interfaces.Market;
 import brown.auctions.twosided.TwoSidedAuction;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.auctions.Bid;
-import brown.messages.markets.GameReport;
 import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
 import brown.messages.trades.NegotiateRequest;
@@ -57,6 +54,7 @@ public abstract class AgentServer {
 	private int agentCount;
 	private final int PORT;
 	protected Server theServer;
+	protected boolean SHORT;
 
 	public AgentServer(int port, Setup gameSetup) {
 		this.PORT = port;
@@ -67,6 +65,7 @@ public abstract class AgentServer {
 		this.pendingTradeRequests = new CopyOnWriteArrayList<NegotiateRequest>();
 		this.manager = new MarketManager();
 		this.privateToPublic.put(-1, -1);
+		this.SHORT = false;
 
 		theServer = new Server();
 		theServer.start();
@@ -398,18 +397,19 @@ public abstract class AgentServer {
 	 * a BidRequest for an auction
 	 */
 	protected void onBid(Connection connection, Integer privateID, Bid bid) {
-		OneSidedAuction auction = this.manager.getOneSided(bid.AuctionID);
+		Market auction = this.manager.getIMarket(bid.AuctionID);
 		if (auction != null) {
 			synchronized (auction) {
 				Account account = this.bank.get(privateID);
-				if (auction.permitShort()
-						|| account.monies >= bid.Bundle.getCost()) {
-					auction.handleBid(bid.safeCopy(privateID));
-				} else {
+				if ((!this.SHORT && account.monies < bid.Bundle.getCost())
+						|| !auction.handleBid(bid.safeCopy(privateID))) {
 					Ack rej = new Ack(privateID, bid, true);
 					this.theServer.sendToTCP(connection.getID(), rej);
 				}
 			}
+		} else {
+			Ack rej = new Ack(privateID, bid, true);
+			this.theServer.sendToTCP(connection.getID(), rej);
 		}
 	}
 
@@ -458,36 +458,43 @@ public abstract class AgentServer {
 	 */
 	public void updateAllAuctions() {
 		synchronized (this.manager) {
-			List<OneSidedAuction> toRemove = new LinkedList<OneSidedAuction>();
-			for (OneSidedAuction auction : this.manager.getOneSidedAuctions()) {
+			List<Market> toRemove = new LinkedList<Market>();
+			for (Market auction : this.manager.getAuctions()) {
 				synchronized (auction) {
 					auction.tick(System.currentTimeMillis());
-					if (auction.isClosed()) {
+					if (auction.isOver()) {
 						toRemove.add(auction);
-						Map<BidBundle, Set<ITradeable>> winners = auction
-								.getWinners();
+						List<Order> winners = auction.getOrders();
 						if (winners == null) {
 							continue;
 						}
 						Ledger ledger = this.manager.getLedger(auction.getID());
-						for (BidBundle winner : winners.keySet()) {
-							Account account = this.bank.get(winner.getAgent());
-							if (account == null) {
-								continue;
-							}
-							synchronized (account.ID) {
-								for (ITradeable t : winners.get(winner)) {
-									t.setAgentID(winner.getAgent());
-									ledger.add(new Transaction(null, winner
-											.getAgent(), winner.getCost(), t
-											.getCount(), t));
+						for (Order winner : winners) {
+							if (winner.TO != null && this.bank.containsKey(winner.TO)) {
+								Account accountTo = this.bank.get(winner.TO);
+								synchronized (accountTo.ID) {
+									winner.GOOD.setAgentID(winner.TO);
+									ledger.add(winner.toTransaction());
+									
+									Account newA = accountTo.add(
+											-1 * winner.COST,
+											winner.GOOD);
+									this.bank.put(winner.TO, newA);
+									this.sendBankUpdate(winner.TO, accountTo,
+											newA);
 								}
-								Account newA = account.add(
-										-1 * winner.getCost(),
-										winners.get(winner));
-								this.bank.put(winner.getAgent(), newA);
-								this.sendBankUpdate(winner.getAgent(), account,
-										newA);
+							}
+							
+							if (winner.FROM != null && this.bank.containsKey(winner.FROM)) {
+								Account accountFrom = this.bank.get(winner.FROM);
+								synchronized (accountFrom.ID) {									
+									Account newA = accountFrom.remove(
+											-1 * winner.COST,
+											winner.GOOD);
+									this.bank.put(winner.FROM, newA);
+									this.sendBankUpdate(winner.FROM, accountFrom,
+											newA);
+								}
 							}
 						}
 					} else {
@@ -506,11 +513,11 @@ public abstract class AgentServer {
 				}
 			}
 
-			for (OneSidedAuction auction : toRemove) {
-				GameReport report = auction.getReport();
-				if (report != null) {
-					this.theServer.sendToAllTCP(report);
-				}
+			for (Market auction : toRemove) {
+				//GameReport report = auction.getReport();
+				//if (report != null) {
+				//	this.theServer.sendToAllTCP(report);
+				//}
 				this.manager.close(this, auction.getID(), null);
 			}
 		}
@@ -668,6 +675,14 @@ public abstract class AgentServer {
 
 			return theID;
 		}
+	}
+	
+	/**
+	 * Toggles short sale
+	 * @param shorting true permits negative balance
+	 */
+	public void setShort(boolean shorting) {
+		this.SHORT = shorting;
 	}
 
 }

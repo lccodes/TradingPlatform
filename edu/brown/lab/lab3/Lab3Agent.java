@@ -14,8 +14,7 @@ import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Logging;
 
 public abstract class Lab3Agent extends Agent {
-
-	private double myValuation;
+	protected double myValuation;
 
 	public Lab3Agent(String host, int port) throws AgentCreationException {
 		super(host, port, new GameSetup());
@@ -32,7 +31,7 @@ public abstract class Lab3Agent extends Agent {
 	@Override
 	public void onAck(Ack message) {
 		if (message.REJECTED) {
-			Logging.log("[x] ack: " + message.failedBR);
+			Logging.log("[x] rej: " + message.failedBR);
 		}
 	}
 
