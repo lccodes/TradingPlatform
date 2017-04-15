@@ -25,8 +25,11 @@ public class SimpleBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public SimpleBidBundle(Map<FullType, BidBundle.BidderPrice> bid) {
-		this.BIDS = bid;
+	public SimpleBidBundle(Map<FullType, BidBundle.BidderPrice> bids) {
+		if (bids == null) {
+			throw new IllegalArgumentException("Null bids");
+		}
+		this.BIDS = bids;
 		this.BT = BundleType.Simple;
 	}
 
@@ -37,10 +40,6 @@ public class SimpleBidBundle implements BidBundle {
 			max = Math.max(b.PRICE, max);
 		}
 		return max;
-	}
-
-	public BidBundle.BidderPrice getItemCost(FullType type) {
-		return this.BIDS.get(type);
 	}
 
 	@Override
@@ -62,6 +61,16 @@ public class SimpleBidBundle implements BidBundle {
 	}
 	
 	public BidBundle.BidderPrice getBid(FullType type) {
-		return this.BIDS.get(type);
+		for (Entry<FullType, BidderPrice> ot : this.BIDS.entrySet()) {
+			if(ot.getKey().equals(type)) {
+				return ot.getValue();
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.BT + ": " + this.BIDS + "]";
 	}
 }

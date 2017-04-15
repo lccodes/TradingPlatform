@@ -1,5 +1,9 @@
 package brown.lab.lab3;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import brown.assets.value.FullType;
 import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.markets.GameReport;
@@ -13,23 +17,20 @@ public class Lab3Demo extends Lab3Agent {
 
 	@Override
 	public void onSimpleSealed(SimpleWrapper market) {
-		double currentBid = market.getHighBid();
-		//Log the current bid
-		Logging.log("Sealed Reserve: " + currentBid);
-		//Random bid
-		market.bid(this, Math.random() * 100);
+		market.bid(this, this.myValuation);
 	}
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleWrapper market) {
-		double currentBid = market.getHighBid();
-		//Log the current bid
-		Logging.log("Current quote: " + currentBid);
-		//High bid + 1
-		if (market.getHighBid() < this.myValuation && !this.ID.equals(market.getHighBidder())) {
-			System.out.println(market.getHighBidder());
-			market.bid(this, currentBid+1);
+		Map<FullType, Double> toBid = new HashMap<FullType, Double>();
+		for (FullType type : this.myValuation.keySet()) {
+			if (this.myValuation.containsKey(type) && market.getHighBid(type).PRICE < this.myValuation.get(type)) {
+				System.out.println("BID: " + market.getHighBid(type));
+				toBid.put(type, this.myValuation.get(type));
+			}
 		}
+		
+		market.bid(this, toBid);
 	}
 
 	@Override

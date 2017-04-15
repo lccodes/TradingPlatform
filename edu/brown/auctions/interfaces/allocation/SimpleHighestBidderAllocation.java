@@ -11,6 +11,7 @@ import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.AllocationRule;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
+import brown.setup.Logging;
 
 public class SimpleHighestBidderAllocation implements AllocationRule {
 	private final Map<FullType, BidBundle.BidderPrice> RESERVE;
@@ -36,6 +37,8 @@ public class SimpleHighestBidderAllocation implements AllocationRule {
 					if (bp != null && bp.PRICE > maxBidder.PRICE) {
 						maxBidder = new BidBundle.BidderPrice(bid.AgentID, bp.PRICE);
 					}
+				} else {
+					Logging.log("[X] Incorrect bundle type by " + bid.AgentID + " in auction " + bid.AuctionID);
 				}
 			}
 			highest.put(trade.getType(), maxBidder);

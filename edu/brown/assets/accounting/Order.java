@@ -51,5 +51,10 @@ public class Order {
 	public Order updateToAgent(Integer newAgent) {
 		return new Order(newAgent, this.FROM, this.COST, this.QUANTITY, this.GOOD);
 	}
+	
+	@Override
+	public String toString() {
+		return "<" + this.TO + "," + this.COST + ">";
+	}
 
 }

@@ -2,7 +2,6 @@ package brown.lab;
 
 import brown.lab.lab3.Lab3Good;
 import brown.lab.lab5.LemonadeReport;
-import brown.lab.lab5.LemonadeWrapper;
 import brown.setup.Setup;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -19,7 +18,7 @@ public class GameSetup implements Setup{
     kryo.register(Lab3Good.class);
     kryo.register(ValuationRegistration.class);
     kryo.register(LemonadeReport.class);
-    kryo.register(LemonadeWrapper.class);
+    //kryo.register(LemonadeWrapper.class);
   }
 
 }

@@ -1,6 +1,9 @@
 package brown.lab.lab3;
 
+import java.util.Map;
+
 import brown.agent.Agent;
+import brown.assets.value.FullType;
 import brown.exceptions.AgentCreationException;
 import brown.lab.GameSetup;
 import brown.lab.ValuationRegistration;
@@ -14,7 +17,7 @@ import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Logging;
 
 public abstract class Lab3Agent extends Agent {
-	protected double myValuation;
+	protected Map<FullType, Double> myValuation;
 
 	public Lab3Agent(String host, int port) throws AgentCreationException {
 		super(host, port, new GameSetup());
@@ -24,7 +27,7 @@ public abstract class Lab3Agent extends Agent {
 	public void onRegistration(Registration registration) {
 		super.onRegistration(registration);
 		ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
-		this.myValuation = valuationRegistration.getValue();
+		this.myValuation = valuationRegistration.getValues();
 		Logging.log("[+] max: " + this.myValuation);
 	}
 

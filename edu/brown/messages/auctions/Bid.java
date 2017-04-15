@@ -77,4 +77,9 @@ public class Bid extends Message {
 	public void dispatch(Agent agent) {
 		//Noop
 	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.AuctionID + ":" + this.AgentID + "->" + this.Bundle + "]";
+	}
 }

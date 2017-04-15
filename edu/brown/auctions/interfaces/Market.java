@@ -85,7 +85,6 @@ public class Market {
 		if (!this.isOver())  {
 			return new LinkedList<Order>();
 		}
-		
 		this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
 		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
 		return this.STATE.getPayments();

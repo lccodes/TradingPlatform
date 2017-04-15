@@ -29,9 +29,6 @@ import brown.auctions.crules.ClosestMatchClearing;
 import brown.auctions.crules.LMSRNoClearing;
 import brown.auctions.crules.LMSRYesClearing;
 import brown.auctions.crules.LowestPriceClearing;
-import brown.auctions.onesided.IOneSidedWrapper;
-import brown.auctions.onesided.OneSidedAuction;
-import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.auctions.prules.FirstPriceRule;
 import brown.auctions.prules.PaymentType;
 import brown.auctions.prules.SecondPriceRule;
@@ -62,6 +59,7 @@ public final class Startup {
 	
 	//TODO: Consider reflection for dynamic loading
 	public static boolean start(Kryo kryo) {
+		kryo.register(IllegalArgumentException.class);
 		kryo.register(java.util.LinkedList.class);
 		kryo.register(ArrayList.class);
 		kryo.register(Set.class);
@@ -89,6 +87,7 @@ public final class Startup {
 		kryo.register(Timestamp.class);
 		kryo.register(Date.class);
 		kryo.register(BidBundle.class);
+		kryo.register(BidBundle.BidderPrice.class);
 		kryo.register(SimpleBidBundle.class);
 		kryo.register(BundleType.class);
 		kryo.register(MarketOrder.class);
@@ -110,11 +109,8 @@ public final class Startup {
 		kryo.register(ClosestMatchClearing.class);
 		kryo.register(LowestPriceClearing.class);
 		kryo.register(Order.class);
-		kryo.register(IOneSidedWrapper.class);
-		kryo.register(SimpleOneSidedWrapper.class);
 		kryo.register(Ledger.class);
 		kryo.register(HashMap.class);
-		kryo.register(OneSidedAuction.class);
 		kryo.register(OpenOutcryRule.class);
 		kryo.register(SealedBidRule.class);
 		kryo.register(FirstPriceRule.class);

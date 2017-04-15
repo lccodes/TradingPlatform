@@ -1,20 +1,26 @@
 package brown.lab.lab3;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import brown.assets.accounting.Account;
+import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
+import brown.assets.value.TradeableType;
 import brown.auctions.activity.SimpleNoJumpActivityRule;
 import brown.auctions.info.AnonymousPolicy;
 import brown.auctions.interfaces.Market;
 import brown.auctions.interfaces.allocation.SimpleHighestBidderAllocation;
 import brown.auctions.payment.SimpleSecondPrice;
 import brown.auctions.query.OutcryQueryRule;
+import brown.auctions.query.SealedBidQuery;
 import brown.auctions.state.SimpleInternalState;
 import brown.auctions.termination.NoBidsTermination;
+import brown.auctions.termination.OneShotTermination;
 import brown.lab.GameSetup;
 import brown.lab.ValuationRegistration;
 import brown.messages.Registration;
@@ -29,9 +35,14 @@ import com.esotericsoftware.kryonet.Connection;
  * @author lcamery
  */
 public class Lab3Server extends AgentServer {
+	private final Set<Integer> INTS;
 
 	public Lab3Server(int port) {
 		super(port, new GameSetup());
+		this.INTS = new HashSet<Integer>();
+		for (int i = 0; i < 3; i++) {
+			this.INTS.add(i);
+		}
 	}
 
 	@Override
@@ -42,9 +53,16 @@ public class Lab3Server extends AgentServer {
 			return;
 		}
 
-		double nextValue = Math.random() * 100;
+		Map<FullType,Double> value = new HashMap<FullType,Double>();
+		for (Integer i : this.INTS) {
+			if (Math.random() < .1) {
+				continue;
+			}
+			double nextValue = Math.random() * 100;
+			value.put(new FullType(TradeableType.Custom,i), nextValue);
+		}
 		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(
-				theID, nextValue));
+				theID, value));
 
 		Account oldAccount = bank.get(connections.get(connection));
 		Account newAccount = oldAccount.addAll(100, null);
@@ -58,7 +76,9 @@ public class Lab3Server extends AgentServer {
 	public void runGame(boolean outcry, boolean firstprice, double reserve) {
 		// Constructs auction according to rules
 		Set<ITradeable> theSet = new HashSet<ITradeable>();
-		theSet.add(new Lab3Good());
+		for(Integer ID : this.INTS) {
+			theSet.add(new Lab3Good(ID));
+		}
 		//PaymentRule prule = firstprice ? new FirstPriceRule()
 		//		: new SecondPriceRule();
 		if (outcry) {
@@ -67,14 +87,15 @@ public class Lab3Server extends AgentServer {
 					new NoBidsTermination(3), new SimpleNoJumpActivityRule(),
 					new SimpleInternalState(0, theSet)));
 		} else {
-			//this.manager.open(new OneSidedAuction(0, theSet, new SealedBidRule(
-			//		BundleType.Simple, true, 5, new SimpleBidBundle(reserve,
-			//				null, BundleType.Simple)), prule));
+			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
+					new SealedBidQuery(), new AnonymousPolicy(),
+					new OneShotTermination(), new SimpleNoJumpActivityRule(),
+					new SimpleInternalState(0, theSet)));
 		}
 
 		// Gives everyone 20 seconds to join the auction
 		int i = 0;
-		while (i < 10) {
+		while (i < 5) {
 			try {
 				Thread.sleep(1000);
 				Logging.log("[-] setup phase " + i++);
@@ -105,7 +126,7 @@ public class Lab3Server extends AgentServer {
 
 	public static void main(String[] args) {
 		Lab3Server l3s = new Lab3Server(2121);
-		l3s.runGame(true, true, 0);
+		l3s.runGame(false, true, 0);
 	}
 
 }

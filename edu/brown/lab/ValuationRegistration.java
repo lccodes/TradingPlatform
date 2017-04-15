@@ -1,5 +1,8 @@
 package brown.lab;
 
+import java.util.Map;
+
+import brown.assets.value.FullType;
 import brown.messages.Registration;
 
 /**
@@ -11,14 +14,14 @@ public class ValuationRegistration extends Registration {
   /**
    * Agent's valuation.
    */
-  private final double value;
+  private final Map<FullType, Double> valueMap;
 
   /**
    * Empty Constructor for Kryo.
    */
   public ValuationRegistration() {
     super(null);
-    this.value = -1;
+    this.valueMap = null;
   }
 
   /**
@@ -27,9 +30,9 @@ public class ValuationRegistration extends Registration {
    * @param id
    * @param value
    */
-  public ValuationRegistration(Integer id, double value) {
+  public ValuationRegistration(Integer id, Map<FullType, Double> values) {
     super(id);
-    this.value = value;
+    this.valueMap = values;
   }
 
   /**
@@ -37,7 +40,11 @@ public class ValuationRegistration extends Registration {
    * 
    * @return the agents valuation.
    */
-  public double getValue() {
-    return this.value;
+  public double getValue(FullType type) {
+    return this.valueMap.getOrDefault(type, 0.0);
   }
+
+public Map<FullType, Double> getValues() {
+	return this.valueMap;
+}
 }

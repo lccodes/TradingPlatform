@@ -6,6 +6,7 @@ import brown.assets.accounting.Account;
 import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.assets.value.StateOfTheWorld;
+import brown.assets.value.TradeableType;
 
 /**
  * Implementation of a good for Lab3.
@@ -18,12 +19,13 @@ public class Lab3Good implements ITradeable {
 	 * Id of the agent that currently owns the good.
 	 */
 	private Integer agentId;
+	private final Integer goodID;
 
 	/**
 	 * Empty Constructor.
 	 */
 	public Lab3Good() {
-
+		this.goodID = null;
 	}
 
 	/**
@@ -31,8 +33,9 @@ public class Lab3Good implements ITradeable {
 	 * 
 	 * @param agentId
 	 */
-	public Lab3Good(Integer agentId) {
-		this.agentId = agentId;
+	public Lab3Good(Integer goodID) {
+		this.agentId = null;
+		this.goodID = goodID;
 	}
 
 	@Override
@@ -52,14 +55,12 @@ public class Lab3Good implements ITradeable {
 
 	@Override
 	public void setCount(double count) {
-		// TODO Auto-generated method stub
-
+		// Noop
 	}
 
 	@Override
 	public FullType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FullType(TradeableType.Custom, this.goodID);
 	}
 
 	@Override
@@ -69,7 +70,6 @@ public class Lab3Good implements ITradeable {
 
 	@Override
 	public ITradeable split(double newCount) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

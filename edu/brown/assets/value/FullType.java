@@ -18,4 +18,13 @@ public class FullType {
 	public String toString() {
 		return "(" + TYPE + " " + ID + ")";
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof FullType) {
+			FullType theOther = (FullType) other;
+			return theOther.TYPE.equals(this.TYPE) && theOther.ID.equals(this.ID);
+		}
+		return false;
+	}
 }

@@ -39,6 +39,9 @@ public class SimpleWrapper implements IMarketWrapper {
 	 */
 	public SimpleWrapper(Integer ID, Ledger ledger, PaymentType ptype, MechanismType mtype,
 			SimpleBidBundle highBid) {
+		if (highBid == null || ledger == null) {
+			throw new IllegalArgumentException("Null structures");
+		}
 		this.ID = ID;
 		this.LEDGER = ledger;
 		this.HIGHBID = highBid;

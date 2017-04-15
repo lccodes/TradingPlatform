@@ -1,12 +1,16 @@
 package brown.auctions.state;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import brown.assets.accounting.Order;
+import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
+import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
 
@@ -27,7 +31,21 @@ public class SimpleInternalState implements MarketInternalState {
 		this.TRADEABLES = tradeables;
 		this.ID = ID;
 		this.ticks = 0;
-		this.reserve = null;
+		Map<FullType, BidBundle.BidderPrice> reserve = new HashMap<FullType, BidBundle.BidderPrice>();
+		for (ITradeable t : this.TRADEABLES) {
+			reserve.put(t.getType(), new BidBundle.BidderPrice(null,0));
+		}
+		this.reserve = new SimpleBidBundle(reserve);
+	}
+	
+	public SimpleInternalState(Integer ID, Set<ITradeable> tradeables, Map<FullType, BidBundle.BidderPrice> reserve) {
+		this.BIDS = new LinkedList<Bid>();
+		this.lastAlloc = null;
+		this.lastPayments = null;
+		this.TRADEABLES = tradeables;
+		this.ID = ID;
+		this.ticks = 0;
+		this.reserve = new SimpleBidBundle(reserve);
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class SealedBidQuery implements QueryRule {
 	@Override
 	public TradeRequest wrap(Ledger ledger, PaymentType type, MarketInternalState state) {
 		return new TradeRequest(0, 
-				new SimpleWrapper(state.getID(), ledger, type, MechanismType.OpenOutcry, 
+				new SimpleWrapper(state.getID(), ledger, type, MechanismType.SealedBid, 
 						(SimpleBidBundle) state.getReserve()), 
 						MechanismType.OpenOutcry);
 	}
