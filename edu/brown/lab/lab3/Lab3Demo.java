@@ -1,7 +1,7 @@
 package brown.lab.lab3;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import brown.assets.value.FullType;
 import brown.auctions.wrappers.SimpleWrapper;
@@ -22,15 +22,16 @@ public class Lab3Demo extends Lab3Agent {
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleWrapper market) {
-		Map<FullType, Double> toBid = new HashMap<FullType, Double>();
+		Set<FullType> toBid = new HashSet<FullType>();
 		for (FullType type : this.myValuation.keySet()) {
 			if (this.myValuation.containsKey(type) && market.getHighBid(type).PRICE < this.myValuation.get(type)) {
-				System.out.println("BID: " + market.getHighBid(type));
-				toBid.put(type, this.myValuation.get(type));
+				toBid.add(type);
 			}
 		}
 		
-		market.bid(this, toBid);
+		if (toBid.size() != 0) {
+			market.demandBid(this, toBid);
+		}
 	}
 
 	@Override

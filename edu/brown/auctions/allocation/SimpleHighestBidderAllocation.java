@@ -1,4 +1,4 @@
-package brown.auctions.interfaces.allocation;
+package brown.auctions.allocation;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -19,6 +19,8 @@ public class Market {
 	private final TerminationCondition TCONDITION;
 	
 	private final MarketInternalState STATE;
+	private int term = 0;
+	private int lastTerm = 0;
 	
 	public Market(PaymentRule pRule, AllocationRule aRule, QueryRule qRule,
 			InformationRevelationPolicy infoPolicy,  
@@ -49,8 +51,16 @@ public class Market {
 	 * @return TradeRequest for ID
 	 */
 	public TradeRequest wrap(Integer ID, Ledger ledger) {
-		this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
-		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
+		System.out.println("STARTWRAP" + this.term);
+		if (this.term != this.lastTerm) {
+			System.out.println("BIDS " + this.STATE.getBids());
+			this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
+			this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
+			System.out.println("ALLOC" + this.STATE.getAllocation());
+			System.out.println(this.STATE.getPayments());
+			this.lastTerm = this.term;
+		}
+
 		return this.QRULE.wrap(ledger, this.PRULE.getPaymentType(),
 				this.INFOPOLICY.handleInfo(ID, this.STATE));
 	}
@@ -85,8 +95,10 @@ public class Market {
 		if (!this.isOver())  {
 			return new LinkedList<Order>();
 		}
+		
 		this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
 		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
+		System.out.println(this.STATE.getPayments());
 		return this.STATE.getPayments();
 	}
 	
@@ -95,6 +107,7 @@ public class Market {
 	 * @param time
 	 */
 	public void tick(long time) {
+		this.term++;
 		this.STATE.tick(time);
 	}
 }

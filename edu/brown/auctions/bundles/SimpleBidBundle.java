@@ -57,6 +57,7 @@ public class SimpleBidBundle implements BidBundle {
 				newBids.put(entry.getKey(), new BidBundle.BidderPrice(null,entry.getValue().PRICE));
 			}
 		}
+		
 		return new SimpleBidBundle(newBids);
 	}
 	
@@ -72,5 +73,9 @@ public class SimpleBidBundle implements BidBundle {
 	@Override
 	public String toString() {
 		return "[" + this.BT + ": " + this.BIDS + "]";
+	}
+
+	public boolean isDemanded(FullType type) {
+		return this.getBid(type) != null;
 	}
 }

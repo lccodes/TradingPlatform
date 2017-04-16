@@ -12,10 +12,12 @@ import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.assets.value.TradeableType;
 import brown.auctions.activity.SimpleNoJumpActivityRule;
+import brown.auctions.allocation.SimpleDemandAllocation;
+import brown.auctions.allocation.SimpleHighestBidderAllocation;
 import brown.auctions.info.AnonymousPolicy;
 import brown.auctions.interfaces.Market;
-import brown.auctions.interfaces.allocation.SimpleHighestBidderAllocation;
 import brown.auctions.payment.SimpleSecondPrice;
+import brown.auctions.payment.SimpleSecondPriceDemand;
 import brown.auctions.query.OutcryQueryRule;
 import brown.auctions.query.SealedBidQuery;
 import brown.auctions.state.SimpleInternalState;
@@ -58,7 +60,7 @@ public class Lab3Server extends AgentServer {
 			if (Math.random() < .1) {
 				continue;
 			}
-			double nextValue = Math.random() * 100;
+			double nextValue = Math.random() * 50;
 			value.put(new FullType(TradeableType.Custom,i), nextValue);
 		}
 		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(
@@ -82,7 +84,7 @@ public class Lab3Server extends AgentServer {
 		//PaymentRule prule = firstprice ? new FirstPriceRule()
 		//		: new SecondPriceRule();
 		if (outcry) {
-			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
+			this.manager.open(new Market(new SimpleSecondPriceDemand(), new SimpleDemandAllocation(),
 					new OutcryQueryRule(), new AnonymousPolicy(),
 					new NoBidsTermination(3), new SimpleNoJumpActivityRule(),
 					new SimpleInternalState(0, theSet)));
@@ -95,7 +97,7 @@ public class Lab3Server extends AgentServer {
 
 		// Gives everyone 20 seconds to join the auction
 		int i = 0;
-		while (i < 5) {
+		while (i < 3) {
 			try {
 				Thread.sleep(1000);
 				Logging.log("[-] setup phase " + i++);
@@ -122,6 +124,9 @@ public class Lab3Server extends AgentServer {
 		//for (BidBundle b : bundles.keySet()) {
 		//	Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());
 		//}
+		for (Account account : this.bank.values()) {
+			System.out.println(account);
+		}
 	}
 
 	public static void main(String[] args) {

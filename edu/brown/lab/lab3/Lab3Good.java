@@ -20,12 +20,14 @@ public class Lab3Good implements ITradeable {
 	 */
 	private Integer agentId;
 	private final Integer goodID;
+	private final FullType TYPE;
 
 	/**
 	 * Empty Constructor.
 	 */
 	public Lab3Good() {
 		this.goodID = null;
+		this.TYPE = null;
 	}
 
 	/**
@@ -36,6 +38,7 @@ public class Lab3Good implements ITradeable {
 	public Lab3Good(Integer goodID) {
 		this.agentId = null;
 		this.goodID = goodID;
+		this.TYPE = new FullType(TradeableType.Custom, this.goodID);
 	}
 
 	@Override
@@ -60,7 +63,7 @@ public class Lab3Good implements ITradeable {
 
 	@Override
 	public FullType getType() {
-		return new FullType(TradeableType.Custom, this.goodID);
+		return this.TYPE;
 	}
 
 	@Override
@@ -76,6 +79,11 @@ public class Lab3Good implements ITradeable {
 	@Override
 	public ITradeable toAgent(Integer ID) {
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return "Lab3Good-"+this.goodID;
 	}
 
 }

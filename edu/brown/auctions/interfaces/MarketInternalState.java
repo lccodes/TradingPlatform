@@ -33,4 +33,8 @@ public interface MarketInternalState {
 
 	public int getTicks();
 
+	public void clearBids();
+
+	public double getIncrement();
+
 }

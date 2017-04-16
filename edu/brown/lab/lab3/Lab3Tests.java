@@ -9,12 +9,12 @@ public class Lab3Tests {
 
 			@Override
 			public void run() {
-				l3s.runGame(false, true, 0);
+				l3s.runGame(true, true, 0);
 			}
 			
 		});
 		mainLoop.start();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 2; i++) {
 			Thread otherThread = new Thread(new Runnable() {
 
 				@Override

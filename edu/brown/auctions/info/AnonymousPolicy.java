@@ -11,7 +11,7 @@ public class AnonymousPolicy implements InformationRevelationPolicy {
 	@Override
 	public MarketInternalState handleInfo(Integer ID, MarketInternalState state) {
 		BidBundle cleanedAlloc = state.getAllocation();
-		cleanedAlloc.wipeAgent(ID);
+		cleanedAlloc = cleanedAlloc.wipeAgent(ID);
 		MarketInternalState newState = new SimpleInternalState(state.getID(), state.getTradeables());
 		for (Bid b : state.getBids()) {
 			newState.addBid(b);

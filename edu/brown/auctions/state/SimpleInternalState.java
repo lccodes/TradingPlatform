@@ -15,6 +15,7 @@ import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
 
 public class SimpleInternalState implements MarketInternalState {
+	private final double INCREMENT = 1.0;
 	private final Integer ID;
 	private final List<Bid> BIDS;
 	private final Set<ITradeable> TRADEABLES;
@@ -107,6 +108,16 @@ public class SimpleInternalState implements MarketInternalState {
 	@Override
 	public BidBundle getReserve() {
 		return this.reserve;
+	}
+
+	@Override
+	public void clearBids() {
+		this.BIDS.clear();
+	}
+
+	@Override
+	public double getIncrement() {
+		return this.INCREMENT;
 	}
 
 }
