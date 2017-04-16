@@ -28,7 +28,6 @@ public class SimpleDemandAllocation implements AllocationRule {
 		for (ITradeable trade : state.getTradeables()) {
 			BidBundle.BidderPrice lastHigh = this.lastDemand.getOrDefault(
 					trade.getType(), new BidBundle.BidderPrice(null, 0));
-			highest.put(trade.getType(), lastHigh);
 			boolean updated = false;
 			for (Bid bid : state.getBids()) {
 				if (updated) {
@@ -59,6 +58,12 @@ public class SimpleDemandAllocation implements AllocationRule {
 					entry.getKey(),
 					new BidBundle.BidderPrice(entry.getValue().AGENTID, entry
 							.getValue().PRICE + state.getIncrement()));
+		}
+		for (ITradeable t : state.getTradeables()) {
+			if (!highest.containsKey(t.getType())) {
+				highest.put(t.getType(), this.lastDemand.getOrDefault(
+						t.getType(), new BidBundle.BidderPrice(null, 0)));
+			}
 		}
 		//System.out.println(this.lastDemand);
 		return new SimpleBidBundle(highest);

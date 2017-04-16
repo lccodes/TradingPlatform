@@ -463,6 +463,7 @@ public abstract class AgentServer {
 				synchronized (auction) {
 					auction.tick(System.currentTimeMillis());
 					if (auction.isOver()) {
+						toRemove.add(auction);
 						List<Order> winners = auction.getOrders();
 						if (winners == null) {
 							continue;

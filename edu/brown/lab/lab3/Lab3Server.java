@@ -21,8 +21,8 @@ import brown.auctions.payment.SimpleSecondPriceDemand;
 import brown.auctions.query.OutcryQueryRule;
 import brown.auctions.query.SealedBidQuery;
 import brown.auctions.state.SimpleInternalState;
-import brown.auctions.termination.NoBidsTermination;
 import brown.auctions.termination.OneShotTermination;
+import brown.auctions.termination.SamePaymentsTermination;
 import brown.lab.GameSetup;
 import brown.lab.ValuationRegistration;
 import brown.messages.Registration;
@@ -42,7 +42,7 @@ public class Lab3Server extends AgentServer {
 	public Lab3Server(int port) {
 		super(port, new GameSetup());
 		this.INTS = new HashSet<Integer>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 97; i++) {
 			this.INTS.add(i);
 		}
 	}
@@ -67,7 +67,7 @@ public class Lab3Server extends AgentServer {
 				theID, value));
 
 		Account oldAccount = bank.get(connections.get(connection));
-		Account newAccount = oldAccount.addAll(100, null);
+		Account newAccount = oldAccount.addAll(1000, null);
 		bank.put(connections.get(connection), newAccount);
 
 		List<Integer> IDS = new LinkedList<Integer>();
@@ -86,7 +86,7 @@ public class Lab3Server extends AgentServer {
 		if (outcry) {
 			this.manager.open(new Market(new SimpleSecondPriceDemand(), new SimpleDemandAllocation(),
 					new OutcryQueryRule(), new AnonymousPolicy(),
-					new NoBidsTermination(3), new SimpleNoJumpActivityRule(),
+					new SamePaymentsTermination(3), new SimpleNoJumpActivityRule(),
 					new SimpleInternalState(0, theSet)));
 		} else {
 			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
@@ -107,8 +107,8 @@ public class Lab3Server extends AgentServer {
 		}
 
 		// Runs the auction to completion
-		Market market = this.manager.getIMarket(0);
-		while (!market.isOver()) {
+		//Market market = this.manager.getIMarket(0);
+		while (this.manager.getAuctions().size() > 0) {
 			try {
 				Thread.sleep(1000);
 				this.updateAllAuctions();
