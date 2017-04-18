@@ -102,6 +102,7 @@ public class SimpleWrapper implements IMarketWrapper {
 		for (Entry<FullType, Double> bid : bids.entrySet()) {
 			fixedBids.put(bid.getKey(), new BidBundle.BidderPrice(agent.ID, bid.getValue()));
 		}
+		System.out.println("Hello? " + fixedBids.size());
 		agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
 	}
 

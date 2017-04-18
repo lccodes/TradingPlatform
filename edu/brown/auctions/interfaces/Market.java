@@ -51,12 +51,12 @@ public class Market {
 	 * @return TradeRequest for ID
 	 */
 	public TradeRequest wrap(Integer ID, Ledger ledger) {
-		System.out.println("STARTWRAP" + this.term);
+		//System.out.println("STARTWRAP" + this.term);
 		if (this.term != this.lastTerm) {
-			System.out.println("BIDS " + this.STATE.getBids());
+			//System.out.println("BIDS " + this.STATE.getBids());
 			this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
 			this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
-			System.out.println("ALLOC" + this.STATE.getAllocation());
+			//System.out.println("ALLOC" + this.STATE.getAllocation());
 			System.out.println(this.STATE.getPayments());
 			this.lastTerm = this.term;
 		}

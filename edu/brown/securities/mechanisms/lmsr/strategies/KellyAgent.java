@@ -2,7 +2,7 @@ package brown.securities.mechanisms.lmsr.strategies;
 
 import brown.agent.Agent;
 import brown.assets.value.TradeableType;
-import brown.auctions.onesided.SimpleOneSidedWrapper;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -25,14 +25,15 @@ public abstract class KellyAgent extends Agent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		// Noop
+	public void onSimpleSealed(SimpleWrapper simpleWrapper) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		// Noop
-
+	public void onSimpleOpenOutcry(SimpleWrapper simpleWrapper) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	protected double fractionalBet(double p_m, LMSRWrapper market) {

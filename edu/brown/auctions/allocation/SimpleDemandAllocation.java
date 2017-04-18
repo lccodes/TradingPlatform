@@ -24,6 +24,7 @@ public class SimpleDemandAllocation implements AllocationRule {
 
 	@Override
 	public BidBundle getAllocation(MarketInternalState state) {
+		//System.out.println("WHUT " + state.getBids());
 		Map<FullType, BidBundle.BidderPrice> highest = new HashMap<FullType, BidBundle.BidderPrice>();
 		for (ITradeable trade : state.getTradeables()) {
 			BidBundle.BidderPrice lastHigh = this.lastDemand.getOrDefault(

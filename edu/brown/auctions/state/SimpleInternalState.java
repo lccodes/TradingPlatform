@@ -15,7 +15,7 @@ import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
 
 public class SimpleInternalState implements MarketInternalState {
-	private final double INCREMENT = 1.0;
+	private final double INCREMENT = 20.0;
 	private final Integer ID;
 	private final List<Bid> BIDS;
 	private final Set<ITradeable> TRADEABLES;

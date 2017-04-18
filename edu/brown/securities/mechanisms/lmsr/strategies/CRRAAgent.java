@@ -1,6 +1,7 @@
 package brown.securities.mechanisms.lmsr.strategies;
 
 import brown.assets.value.TradeableType;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.securities.mechanisms.lmsr.LMSRWrapper;
 import brown.setup.Setup;

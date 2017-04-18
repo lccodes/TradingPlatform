@@ -54,7 +54,7 @@ public class Order {
 	
 	@Override
 	public String toString() {
-		return "<" + this.TO + "," + this.COST + ">";
+		return "<" + this.TO + "," + this.GOOD + "," + this.COST + ">";
 	}
 
 }

@@ -33,6 +33,27 @@ The following agent strategies build off of the work on Kelly Agents, Constant R
 
 $\AgentStrategy^{\Myopic\Informed}_\Agent(\Time)$ is an \mydef{informed agent} holding exogenous signal $\Agent_\AgentBelief$ who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to their belief $\Agent_\AgentBelief$. \\
 
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{Myopic Informed Strategy $\Myopic\Informed$}
+\KwData{belief $\Agent_\AgentBelief$, market $\Market$}
+\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
+initialization\;
+\eIf{$\Market_\MarketPrice < \Agent_\AgentBelief$}{
+shareNum = 0;
+\While{$Market$.getPriceYes(shareNum) $< \Agent_\AgentBelief$}{
+	shareNum += .01;
+}
+$\Market$.buyYes(shareNum);
+}{
+shareNum = 0;
+\While{$\Market$.getPriceNo(shareNum) $> \Agent_\AgentBelief$}{
+	shareNum += .01;
+}
+\Market.buyNo(shareNum);
+}
+\end{algorithm}
+
 $\AgentStrategy^{\Myopic\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agent} holding no exogenous signal $\Agent_\AgentBelief$ who who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to 1 if at time $\Time$, $\OptionPrice_{\Market\Time} \ge .5$ otherwise 0. \\
 
 $\AgentStrategy^{\Farsighted\Informed}_\Agent(\Time)$ is an \mydef{informed agent}holding exogenous signal $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on a linear combination of their signal $\Agent_\AgentBelief$ and the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
