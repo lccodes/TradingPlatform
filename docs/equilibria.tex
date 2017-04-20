@@ -29,6 +29,8 @@ to clear in PIT then the market maker needs to compensate agents for their spot 
 \subsection{Agent Strategy}
 In order to assess accuracy in situations where agents have variable information, we will consider different types of agent strategies in our experiments. There are two types of agent strategies \mydef{myopic} $\Myopic$ and \mydef{farsighted} $\Farsighted$. Prediction markets are known to be myopically incentive compatible, which means that myopic agents bid truthfully. Similarly, \mydef{informed} $\Informed$ agents have an exogenous signal about the outcome whereas \mydef{uninformed} $\Uninformed$ agents can only base their decision on the market price. \\
 
+MENTION PENNOCK INDEPENDENT SIGNAL STUFF
+
 The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Myopic class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Myopic, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior.\\
 
 $\AgentStrategy^{\Myopic\Informed}_\Agent(\Time)$ is an \mydef{informed agent} holding exogenous signal $\Agent_\AgentBelief$ who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to their belief $\Agent_\AgentBelief$. \\
@@ -36,25 +38,42 @@ $\AgentStrategy^{\Myopic\Informed}_\Agent(\Time)$ is an \mydef{informed agent} h
 \begin{algorithm}[H]
 \SetAlgoLined
 \TitleOfAlgo{Myopic Informed Strategy $\Myopic\Informed$}
-\KwData{belief $\Agent_\AgentBelief$, market $\Market$}
+\KwData{belief $\Agent_\AgentBelief$, market $\Market$, market maker $\MarketMaker$}
 \KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
 initialization\;
 \eIf{$\Market_\MarketPrice < \Agent_\AgentBelief$}{
-shareNum = 0;
-\While{$Market$.getPriceYes(shareNum) $< \Agent_\AgentBelief$}{
-	shareNum += .01;
-}
-$\Market$.buyYes(shareNum);
+neededCapital = $\MarketMaker$.priceToYesShares($\Agent_\AgentBelief$);
+toSpend = min($\Agent_\AgentBudget$, neededCapital);
+sharesDemanded = $\MarketMaker$.capitalToYesShares(toSpend);
+$\Market$.buyYes(sharesDemanded);
 }{
-shareNum = 0;
-\While{$\Market$.getPriceNo(shareNum) $> \Agent_\AgentBelief$}{
-	shareNum += .01;
-}
-\Market.buyNo(shareNum);
+neededCapital = $\MarketMaker$.priceToNoShares($\Agent_\AgentBelief$);
+toSpend = min($\Agent_\AgentBudget$, neededCapital);
+sharesDemanded = $\MarketMaker$.capitalToNoShares(toSpend);
+$\Market$.buyNo(sharesDemanded);
 }
 \end{algorithm}
 
 $\AgentStrategy^{\Myopic\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agent} holding no exogenous signal $\Agent_\AgentBelief$ who who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to 1 if at time $\Time$, $\OptionPrice_{\Market\Time} \ge .5$ otherwise 0. \\
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{Myopic Uninformed Strategy $\Myopic\Uninformed$}
+\KwData{belief $\Agent_\AgentBelief$, market $\Market$, market maker $\MarketMaker$}
+\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
+initialization\;
+\eIf{$\Market_\MarketPrice > .5$}{
+neededCapital = $\MarketMaker$.priceToYesShares(1);
+toSpend = min($\Agent_\AgentBudget$, neededCapital);
+sharesDemanded = $\MarketMaker$.capitalToYesShares(toSpend);
+$\Market$.buyYes(sharesDemanded);
+}{
+neededCapital = $\MarketMaker$.priceToNoShares(0);
+toSpend = min($\Agent_\AgentBudget$, neededCapital);
+sharesDemanded = $\MarketMaker$.capitalToNoShares(toSpend);
+$\Market$.buyNo(sharesDemanded);
+}
+\end{algorithm}
 
 $\AgentStrategy^{\Farsighted\Informed}_\Agent(\Time)$ is an \mydef{informed agent}holding exogenous signal $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on a linear combination of their signal $\Agent_\AgentBelief$ and the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
 

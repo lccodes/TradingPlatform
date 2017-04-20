@@ -19,6 +19,72 @@ The instantaneous price of LMSR market $\LMSRMarketMaker$, which is also the mar
 \item{Guaranteed Loss - the market maker cannot profit and has a guaranteed bounded loss.}
 \end{enumerate}
 
+\textbf{Algorithms}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{priceToYesShares}
+\KwData{lmsr market maker $\MarketMaker$}
+\KwResult{quantity $\Quantity$}
+initialization\;
+return priceToShares(quantity, true);
+\end{algorithm}
+
+\textbf{Algorithms}
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{priceToNoShares}
+\KwData{lmsr market maker $\MarketMaker$}
+\KwResult{quantity $\Quantity$}
+initialization\;
+return priceToShares(quantity, false);
+\end{algorithm}
+
+\textbf{Algorithms}
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{capitalToYesShares}
+\KwData{lmsr market maker $\MarketMaker$}
+\KwResult{money $\Money$}
+initialization\;
+return capitalToShares(money, true);
+\end{algorithm}
+
+\textbf{Algorithms}
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{capitalToNoShares}
+\KwData{lmsr market maker $\MarketMaker$}
+\KwResult{money $\Money$}
+initialization\;
+return capitalToShares(money, false);
+\end{algorithm}
+
+\textbf{Algorithms}
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{priceToShares}
+\KwData{lmsr market maker $\MarketMaker$, desiredPrice $\OptionPrice$, direction boolean}
+\KwResult{quantity $\Quantity$}
+initialization\;
+top = !direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
+side = direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
+price = direction ? $\Market_\MarketPrice$ : (1-$\Market_\MarketPrice$);
+return $\MarketMaker$.getLiquidityParameter()*log((price*exp(top/$\MarketMaker$.getLiquidityParameter()))/(1-price)) - side;
+\end{algorithm}
+
+\textbf{Algorithms}
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{capitalToShares}
+\KwData{lmsr market maker $\MarketMaker$, money $\Money$, direction boolean}
+\KwResult{quantity $\Quantity$}
+initialization\;
+top = !direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
+side = direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
+return $\MarketMaker$.getLiquidityParameter() * log(exp(money/ $\MarketMaker$.getLiquidityParameter() + log(pow(e, $\MarketMaker$.getYesQuantity() / $\MarketMaker$.getLiquidityParameter()) + pow(e, $\MarketMaker$.getNoQuantity() / $\MarketMaker$.getLiquidityParameter()))) - exp(top / $\MarketMaker$.getLiquidityParameter())) - side;
+\end{algorithm}
+
 \subsection{\href{https://www.cs.cmu.edu/~sandholm/liquidity-sensitive automated market maker.teac.pdf}{Practical Liquidity Sensitive Market Maker}}
 The LSMM uses the underlying LMSR mechanism but invokes a novel
 function for setting the liquidity parameter $\LMSRb$. The function is:
