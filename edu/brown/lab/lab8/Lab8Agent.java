@@ -1,5 +1,6 @@
 package brown.lab.lab8;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,14 +23,15 @@ public abstract class Lab8Agent extends Agent {
 
 	public Lab8Agent(String host, int port) throws AgentCreationException {
 		super(host, port, new GameSetup());
+		this.myValuation = new HashMap<Set<FullType>, Double>();
 	}
 
 	@Override
 	public void onRegistration(Registration registration) {
 		super.onRegistration(registration);
 		ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
-		this.myValuation = valuationRegistration.getValues();
-		Logging.log("[+] max: " + this.myValuation);
+		this.myValuation.putAll(valuationRegistration.getValues());
+		Logging.log("[+] new XOR bids: " + this.myValuation);
 	}
 
 	@Override
