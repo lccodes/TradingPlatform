@@ -19,7 +19,22 @@ The instantaneous price of LMSR market $\LMSRMarketMaker$, which is also the mar
 \item{Guaranteed Loss - the market maker cannot profit and has a guaranteed bounded loss.}
 \end{enumerate}
 
-\textbf{Algorithms}
+\subsection{LMSR Algorithms}
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{cost}
+\KwData{lmsr market maker $\MarketMaker$, quantity $\Quantity$, direction $\Option_\OptionDirection$}
+\KwResult{cost $\Money$}
+initialization\;
+oldScore = $\MarketMaker\text{.getLiquidityParameter()}\exp(\frac{\MarketMaker\text{.getYesQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}}) + \exp(\frac{\MarketMaker\text{.getNoQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}})$\;
+\eIf{direction == YES}{
+	newScore = $\MarketMaker\text{.getLiquidityParameter()}\exp(\frac{\MarketMaker\text{.getYesQuantity()} + \Quantity}{\MarketMaker\text{.getLiquidityParameter()}}) + \exp(\frac{\MarketMaker\text{.getNoQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}})$\;
+}{
+	newScore = $\MarketMaker\text{.getLiquidityParameter()}\exp(\frac{\MarketMaker\text{.getYesQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}}) + \exp(\frac{\MarketMaker\text{.getNoQuantity()} + \Quantity}{\MarketMaker\text{.getLiquidityParameter()}})$\;
+}
+
+return newScore - oldScore\;
+\end{algorithm}
 
 \begin{algorithm}[H]
 \SetAlgoLined
@@ -27,62 +42,68 @@ The instantaneous price of LMSR market $\LMSRMarketMaker$, which is also the mar
 \KwData{lmsr market maker $\MarketMaker$}
 \KwResult{quantity $\Quantity$}
 initialization\;
-return priceToShares(quantity, true);
+return $\MarketMaker$.priceToShares(quantity, true)\;
 \end{algorithm}
 
-\textbf{Algorithms}
 \begin{algorithm}[H]
 \SetAlgoLined
 \TitleOfAlgo{priceToNoShares}
 \KwData{lmsr market maker $\MarketMaker$}
 \KwResult{quantity $\Quantity$}
 initialization\;
-return priceToShares(quantity, false);
+return $\MarketMaker$.priceToShares(quantity, false)\;
 \end{algorithm}
 
-\textbf{Algorithms}
 \begin{algorithm}[H]
 \SetAlgoLined
 \TitleOfAlgo{capitalToYesShares}
 \KwData{lmsr market maker $\MarketMaker$}
 \KwResult{money $\Money$}
 initialization\;
-return capitalToShares(money, true);
+return $\MarketMaker$.capitalToShares(money, true)\;
 \end{algorithm}
 
-\textbf{Algorithms}
 \begin{algorithm}[H]
 \SetAlgoLined
 \TitleOfAlgo{capitalToNoShares}
 \KwData{lmsr market maker $\MarketMaker$}
 \KwResult{money $\Money$}
 initialization\;
-return capitalToShares(money, false);
+return $\MarketMaker$.capitalToShares(money, false)\;
 \end{algorithm}
 
-\textbf{Algorithms}
 \begin{algorithm}[H]
 \SetAlgoLined
 \TitleOfAlgo{priceToShares}
 \KwData{lmsr market maker $\MarketMaker$, desiredPrice $\OptionPrice$, direction boolean}
 \KwResult{quantity $\Quantity$}
 initialization\;
-top = !direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
-side = direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
-price = direction ? $\Market_\MarketPrice$ : (1-$\Market_\MarketPrice$);
-return $\MarketMaker$.getLiquidityParameter()*log((price*exp(top/$\MarketMaker$.getLiquidityParameter()))/(1-price)) - side;
+\eIf{direction}{
+price = $\Market_\MarketPrice$\;
+side = $\MarketMaker$.getYesQuantity()\;
+top = $\MarketMaker$.getNoQuantity()\;
+}{
+price = (1-$\Market_\MarketPrice$)\;
+side = $\MarketMaker$.getNoQuantity()\;
+top = $\MarketMaker$.getYesQuantity()\;
+}
+return $\MarketMaker$.getLiquidityParameter()*log((price*exp(top/$\MarketMaker$.getLiquidityParameter()))/(1-price)) - side\;
 \end{algorithm}
 
-\textbf{Algorithms}
 \begin{algorithm}[H]
 \SetAlgoLined
 \TitleOfAlgo{capitalToShares}
 \KwData{lmsr market maker $\MarketMaker$, money $\Money$, direction boolean}
 \KwResult{quantity $\Quantity$}
 initialization\;
-top = !direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
-side = direction ? $\MarketMaker$.getYesQuantity() : $\MarketMaker$.getNoQuantity();
-return $\MarketMaker$.getLiquidityParameter() * log(exp(money/ $\MarketMaker$.getLiquidityParameter() + log(pow(e, $\MarketMaker$.getYesQuantity() / $\MarketMaker$.getLiquidityParameter()) + pow(e, $\MarketMaker$.getNoQuantity() / $\MarketMaker$.getLiquidityParameter()))) - exp(top / $\MarketMaker$.getLiquidityParameter())) - side;
+\eIf{direction}{
+side = $\MarketMaker$.getYesQuantity()\;
+top = $\MarketMaker$.getNoQuantity()\;
+}{
+side = $\MarketMaker$.getNoQuantity()\;
+top = $\MarketMaker$.getYesQuantity()\;
+}
+return $\MarketMaker$.getLiquidityParameter() * log(exp(money/ $\MarketMaker$.getLiquidityParameter() + log(pow(e, $\MarketMaker$.getYesQuantity() / $\MarketMaker$.getLiquidityParameter()) + pow(e, $\MarketMaker$.getNoQuantity() / $\MarketMaker$.getLiquidityParameter()))) - exp(top / $\MarketMaker$.getLiquidityParameter())) - side\;
 \end{algorithm}
 
 \subsection{\href{https://www.cs.cmu.edu/~sandholm/liquidity-sensitive automated market maker.teac.pdf}{Practical Liquidity Sensitive Market Maker}}
@@ -115,6 +136,15 @@ loss at near 0.}
 \item Market makers are incentivized to raise their commission to 1, which not only hurts traders, but also increases the valid probability range
 and decreases the number of traders who are willing to trade with the market maker. See $\frac{1}{n} - \alpha(n - 1)\ln(n) \leq p(q_i) \leq \frac{1}{n} + \alpha\ln(n)$.
 \end{enumerate}
+
+\subsection{LSMM Algorithms}
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{getLiquidityParameter}
+\KwData{alpha $\alpha$}
+initialization\;
+return $\alpha (\MarketMaker\text{.getYesQuantity()} + \MarketMaker\text{.getNoQuantity()})$\;
+\end{algorithm}
 
 \subsection{Luke's New MM}
 \commentl{It needs to be homogenous degree 1.}
