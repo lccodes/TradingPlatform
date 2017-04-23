@@ -456,13 +456,13 @@ public abstract class AgentServer {
 	 * Sends a auction update to every agent or closes out any finished
 	 * auctions. about the state of all the public auctions
 	 */
-	public void updateAllAuctions() {
+	public void updateAllAuctions(boolean closeable) {
 		synchronized (this.manager) {
 			List<Market> toRemove = new LinkedList<Market>();
 			for (Market auction : this.manager.getAuctions()) {
 				synchronized (auction) {
 					auction.tick(System.currentTimeMillis());
-					if (auction.isOver()) {
+					if (auction.isOver() && closeable) {
 						toRemove.add(auction);
 						List<Order> winners = auction.getOrders();
 						if (winners == null) {

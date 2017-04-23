@@ -19,8 +19,8 @@ public class Market {
 	private final TerminationCondition TCONDITION;
 	
 	private final MarketInternalState STATE;
-	private int term = 0;
 	private int lastTerm = 0;
+	private int term = 0;
 	
 	public Market(PaymentRule pRule, AllocationRule aRule, QueryRule qRule,
 			InformationRevelationPolicy infoPolicy,  

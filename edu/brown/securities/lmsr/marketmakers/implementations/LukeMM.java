@@ -33,19 +33,26 @@ public class LukeMM extends LiquiditySensitive {
 	
 	public static void main(String[] args) {
 		LukeMM luke = new LukeMM(.2);
-		System.out.println(luke.ask(1));
+		LiquiditySensitive LS = new LiquiditySensitive(.2);
+		System.out.println(luke.price(true) + " " + LS.price(true));
 		/*luke.no(null, 100);
 		luke.yes(null, 100);
 		*/
-		luke.no(null, 50);
-		luke.yes(null, 50);
-		System.out.println(luke.ask(1));
-		luke.no(null, 50);
-		luke.yes(null, 50);
-		System.out.println(luke.ask(1));
-		luke.no(null, 100);
-		luke.yes(null, 100);
-		System.out.println(luke.ask(1));
+		luke.no(null, 2);
+		luke.yes(null, 1);
+		LS.no(null, 2);
+		LS.yes(null, 1);
+		System.out.println(luke.price(true) + " " + LS.price(true));
+		luke.no(null, 1);
+		luke.yes(null, 1);
+		LS.no(null, 1);
+		LS.yes(null, 1);
+		System.out.println(luke.price(true) + " " + LS.price(true));
+		luke.no(null, 1);
+		luke.yes(null, 1);
+		LS.no(null, 1);
+		LS.yes(null, 1);
+		System.out.println(luke.price(true) + " " + LS.price(true));
 	}
 
 }

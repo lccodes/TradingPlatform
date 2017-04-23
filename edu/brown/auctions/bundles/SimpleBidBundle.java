@@ -3,6 +3,7 @@ package brown.auctions.bundles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import brown.assets.value.FullType;
 
@@ -35,11 +36,11 @@ public class SimpleBidBundle implements BidBundle {
 
 	@Override
 	public double getCost() {
-		double max = 0;
+		double total = 0;
 		for (BidBundle.BidderPrice b : this.BIDS.values()) {
-			max = Math.max(b.PRICE, max);
+			total += b.PRICE;
 		}
-		return max;
+		return total;
 	}
 
 	@Override
@@ -77,5 +78,9 @@ public class SimpleBidBundle implements BidBundle {
 
 	public boolean isDemanded(FullType type) {
 		return this.getBid(type) != null;
+	}
+	
+	public Set<FullType> getDemandSet() {
+		return this.BIDS.keySet();
 	}
 }

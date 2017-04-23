@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import brown.assets.accounting.Account;
+import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.activity.SimpleNoJumpActivityRule;
@@ -59,26 +60,24 @@ public class Lab8Server extends AgentServer {
 	}
 
 	@Override
-	protected void onRegistration(Connection connection,
-			Registration registration) {
+	protected void onRegistration(Connection connection, Registration registration) {
 		Integer theID = this.defaultRegistration(connection, registration);
 		if (theID == null) {
 			return;
 		}
 
 		Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
-//		for (Integer i : this.INTS) {
-//			if (Math.random() < .1) {
-//				continue;
-//			}
-//			double nextValue = Math.random() * 50;
-//			Set<FullType> theSet = new HashSet<FullType>();
-//			theSet.add(new FullType(TradeableType.Custom, i));
-//			value.put(theSet, nextValue);
-//		}
+		// for (Integer i : this.INTS) {
+		// if (Math.random() < .1) {
+		// continue;
+		// }
+		// double nextValue = Math.random() * 50;
+		// Set<FullType> theSet = new HashSet<FullType>();
+		// theSet.add(new FullType(TradeableType.Custom, i));
+		// value.put(theSet, nextValue);
+		// }
 		this.numberOfBidders++;
-		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(
-				theID, value));
+		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(theID, value));
 
 		Account oldAccount = bank.get(connections.get(connection));
 		Account newAccount = oldAccount.addAll(10000, null);
@@ -89,8 +88,7 @@ public class Lab8Server extends AgentServer {
 		this.sendBankUpdates(IDS);
 	}
 
-	public void runGame(boolean outcry, boolean firstprice, double reserve)
-			throws UnsupportedBiddingLanguageException {
+	public void runGame(boolean outcry, boolean finalround, double reserve) throws UnsupportedBiddingLanguageException {
 		// Constructs auction according to rules
 		Set<ITradeable> theSet = new HashSet<ITradeable>();
 		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
@@ -102,17 +100,13 @@ public class Lab8Server extends AgentServer {
 		// PaymentRule prule = firstprice ? new FirstPriceRule()
 		// : new SecondPriceRule();
 		if (outcry) {
-			this.manager.open(new Market(new SimpleSecondPriceDemand(),
-					new SimpleDemandAllocation(), new OutcryQueryRule(),
-					new AnonymousPolicy(), new SamePaymentsTermination(3),
-					new SimpleNoJumpActivityRule(), new SimpleInternalState(0,
-							theSet)));
+			this.manager.open(new Market(new SimpleSecondPriceDemand(), new SimpleDemandAllocation(),
+					new OutcryQueryRule(), new AnonymousPolicy(), new SamePaymentsTermination(3),
+					new SimpleNoJumpActivityRule(), new SimpleInternalState(0, theSet)));
 		} else {
-			this.manager.open(new Market(new SimpleSecondPrice(),
-					new SimpleHighestBidderAllocation(), new SealedBidQuery(),
-					new AnonymousPolicy(), new OneShotTermination(),
-					new SimpleNoJumpActivityRule(), new SimpleInternalState(0,
-							theSet)));
+			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
+					new SealedBidQuery(), new AnonymousPolicy(), new OneShotTermination(),
+					new SimpleNoJumpActivityRule(), new SimpleInternalState(0, theSet)));
 		}
 
 		// Gives everyone X seconds to join the auction
@@ -127,31 +121,32 @@ public class Lab8Server extends AgentServer {
 		}
 
 		// Gets valuations
-		SpecValGenerator generator = new SpecValGenerator(this.numberOfBidders,
-				this.numberOfValuationsPerBidder, this.bundleSizeMean,
-				this.bundleSizeStdez, this.VALUESCALE);
+		SpecValGenerator generator = new SpecValGenerator(this.numberOfBidders, this.numberOfValuationsPerBidder,
+				this.bundleSizeMean, this.bundleSizeStdez, this.VALUESCALE);
 		generator.makeValuations();
 		Map<String, Map<Set<String>, Double>> allBids = generator
 				.convertAllBidsToSimpleBids(generator.allBidderValuations);
 		System.out.println("VALUATIONS " + allBids);
 		Map<Integer, Map<Set<FullType>, Double>> valuations = new HashMap<Integer, Map<Set<FullType>, Double>>();
-		
+
 		for (Entry<Connection, Integer> conn : this.connections.entrySet()) {
 			String toRemove = null;
 			for (Entry<String, Map<Set<String>, Double>> entry : allBids.entrySet()) {
 				Map<Set<String>, Double> each = entry.getValue();
-				Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
 				for (Entry<Set<String>, Double> toAdd : each.entrySet()) {
+					Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
 					Set<FullType> adjusted = new HashSet<FullType>();
 					for (String s : toAdd.getKey()) {
 						adjusted.add(forTakehiro.get(s));
 					}
 					value.put(adjusted, toAdd.getValue());
+					this.theServer.sendToTCP(conn.getKey().getID(), new ValuationRegistration(conn.getValue(), value));
+					if (valuations.containsKey(conn.getValue())) {
+						value.putAll(valuations.get(conn.getValue()));
+					}
+					valuations.put(conn.getValue(), value);
 				}
 				toRemove = entry.getKey();
-				this.theServer.sendToTCP(conn.getKey().getID(), new ValuationRegistration(
-						conn.getValue(), value));
-				valuations.put(conn.getValue(), value);
 			}
 			if (toRemove != null) {
 				allBids.remove(toRemove);
@@ -159,14 +154,43 @@ public class Lab8Server extends AgentServer {
 		}
 
 		// Runs the auction to completion
-		// Market market = this.manager.getIMarket(0);
-		while (this.manager.getAuctions().size() > 0) {
+		Market market = this.manager.getIMarket(0);
+		while (!market.isOver()) {
 			try {
 				Thread.sleep(2000);
-				this.updateAllAuctions();
+				this.updateAllAuctions(false);
 			} catch (InterruptedException e) {
 				Logging.log("[+] woken: " + e.getMessage());
 			}
+		}
+		
+		if (finalround) {
+			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
+					new SealedBidQuery(), new AnonymousPolicy(), new OneShotTermination(),
+					new SimpleNoJumpActivityRule(), new SimpleInternalState(1, theSet)));
+			while (this.manager.getAuctions().size() > 0) {
+				try {
+					Thread.sleep(2000);
+					this.updateAllAuctions(false);
+				} catch (InterruptedException e) {
+					Logging.log("[+] woken: " + e.getMessage());
+				}
+			}
+			List<Order> firstOrders = this.manager.getIMarket(0).getOrders();
+			List<Order> secondOrders = this.manager.getIMarket(1).getOrders();
+			double totalRevenue0 = 0, totalRevenue1 = 0;
+			for (Order o : firstOrders) {
+				totalRevenue0 += o.COST;
+			}
+			for (Order o : secondOrders) {
+				totalRevenue1 += o.COST;
+			}
+			if (totalRevenue0 > totalRevenue1) {
+				this.manager.close(this, 1, null);
+			} else {
+				this.manager.close(this, 0, null);
+			}
+			this.updateAllAuctions(true);
 		}
 
 		// Logs the winner and price
@@ -179,7 +203,8 @@ public class Lab8Server extends AgentServer {
 		System.out.println("\n\n\n\n\nOUTCOME:");
 		for (Account account : this.bank.values()) {
 			System.out.println(account);
-			System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of " + (10000-account.monies)/account.tradeables.size());
+			System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
+					+ (10000 - account.monies) / account.tradeables.size());
 			Map<Set<FullType>, Double> myValue = valuations.get(account.ID);
 			Double maxValue = 0.0;
 			for (Set<FullType> wantedBundle : myValue.keySet()) {
@@ -187,8 +212,8 @@ public class Lab8Server extends AgentServer {
 					maxValue = Math.max(maxValue, myValue.get(wantedBundle));
 				}
 			}
-			double linearCost = (10000-account.monies) > 0 ? (10000-account.monies) : account.monies-10000;
-			double deltaFuncCost = (10000-account.monies) > 0 ? (10000-account.monies) : Double.MAX_VALUE;
+			double linearCost = (10000 - account.monies) > 0 ? (10000 - account.monies) : account.monies - 10000;
+			double deltaFuncCost = (10000 - account.monies) > 0 ? (10000 - account.monies) : Double.MAX_VALUE;
 			System.out.println(account.ID + " valued what they got at " + maxValue);
 			System.out.println(account.ID + " has a linear utility of " + (maxValue - linearCost));
 			System.out.println(account.ID + " has a strict budget utility of " + (maxValue - deltaFuncCost));
@@ -196,10 +221,9 @@ public class Lab8Server extends AgentServer {
 		}
 	}
 
-	public static void main(String[] args)
-			throws UnsupportedBiddingLanguageException {
+	public static void main(String[] args) throws UnsupportedBiddingLanguageException {
 		Lab8Server l3s = new Lab8Server(2121);
-		l3s.runGame(true, true, 0);
+		l3s.runGame(true, false, 0);
 	}
 
 }

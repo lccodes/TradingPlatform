@@ -119,5 +119,4 @@ public class SimpleInternalState implements MarketInternalState {
 	public double getIncrement() {
 		return this.INCREMENT;
 	}
-
 }
