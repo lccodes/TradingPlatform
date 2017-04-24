@@ -14,15 +14,15 @@ import brown.setup.Setup;
 public abstract class ExperimentalAgent extends Agent {
 	protected double SIGNAL;
 	protected double BUDGET;
-	protected final int TIME;
+	protected int TIME;
 	protected int CURRENTTIME;
 
 	public ExperimentalAgent(String host, int port, Setup gameSetup, 
-			double signal, int timeToGo) throws AgentCreationException {
+			double signal) throws AgentCreationException {
 		super(host, port, gameSetup);
 		this.SIGNAL = signal;
 		this.BUDGET = 0;
-		this.TIME = timeToGo;
+		this.TIME = -1;
 		this.CURRENTTIME = 0;
 	}
 
@@ -64,6 +64,11 @@ public abstract class ExperimentalAgent extends Agent {
 	@Override
 	public void onNegotiateRequest(NegotiateRequest tradeRequest) {
 		// Noop
+	}
+	
+	public void setTime(int time) {
+		this.TIME = time;
+		this.CURRENTTIME = 0;
 	}
 
 }

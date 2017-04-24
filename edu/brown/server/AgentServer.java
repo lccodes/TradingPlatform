@@ -539,6 +539,22 @@ public abstract class AgentServer {
 			this.manager.getLedger(market.getID()).clearLatest();
 		}
 	}
+	
+	/*
+	 * Sends a MarketUpdate about this specific market to all agents
+	 * without the ledger
+	 * @param Security : the market to update on
+	 */
+	public void sendMarketUpdateNL(IMarket market) {
+		synchronized(market) {
+			for (Entry<Connection, Integer> ID : this.connections.entrySet()) {
+				TradeRequest mupdate = new TradeRequest(0, market.wrap(null),
+						market.getMechanismType());
+				theServer.sendToTCP(ID.getKey().getID(), mupdate);
+			}
+			this.manager.getLedger(market.getID()).clearLatest();
+		}
+	}
 
 	/*
 	 * Agents only know each other's public IDs. Private IDs are only known to

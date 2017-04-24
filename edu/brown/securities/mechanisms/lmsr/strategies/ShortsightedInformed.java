@@ -7,17 +7,17 @@ import brown.setup.Setup;
 
 public class ShortsightedInformed extends ExperimentalAgent {
 
-	public ShortsightedInformed(String host, int port, Setup gameSetup, double signal, int timeToGo) throws AgentCreationException {
-		super(host, port, gameSetup, signal, timeToGo);
+	public ShortsightedInformed(String host, int port, Setup gameSetup, double signal) throws AgentCreationException {
+		super(host, port, gameSetup, signal);
 	}
 
 	@Override
 	public void onLMSR(LMSRWrapper market) {
-		if (this.CURRENTTIME++ != this.TIME) {
-			return;
-		}
-		
 		if (market.getTradeableType().TYPE.equals(TradeableType.PredictionYes)) {
+			if (this.CURRENTTIME++ != this.TIME) {
+				return;
+			}
+			
 			if (market.price() < this.SIGNAL) {
 				double shareNum = market.priceToShares(this.SIGNAL);
 				double totalCost = Math.min(this.BUDGET, market.moniesToShares(shareNum));
@@ -27,7 +27,10 @@ public class ShortsightedInformed extends ExperimentalAgent {
 				}
 			}
 		} else {
-			if (market.price() > (1 - this.SIGNAL)) {
+			if (this.CURRENTTIME != this.TIME) {
+				return;
+			}
+			if (market.price() < (1 - this.SIGNAL)) {
 				double shareNum = market.priceToShares(1 - this.SIGNAL);
 				double totalCost = Math.min(this.BUDGET, market.moniesToShares(shareNum));
 				double sharesToBuy = market.priceToShares(totalCost);

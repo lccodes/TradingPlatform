@@ -7,8 +7,8 @@ import brown.setup.Setup;
 
 public class ShortsightedUninformed extends ShortsightedInformed {
 
-	public ShortsightedUninformed(String host, int port, Setup gameSetup, int timeToGo) throws AgentCreationException {
-		super(host, port, gameSetup, 1, timeToGo);
+	public ShortsightedUninformed(String host, int port, Setup gameSetup) throws AgentCreationException {
+		super(host, port, gameSetup, 1);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ $$ PM(\MarketMakers, \Agents_\Option) = arg max_{\Agent \in \Agents_\Option} P(\
 \subsection{Accuracy}
 We will use the following definitions of accuracy from our equilibrium concepts.
 
-\mydef{Rational Expectations}, \mydef{Prior Information}, and \mydef{Prior Information Timing} provide three definitions for ground truth against which we can compare the final prediction for our \mydef{market makers}. All three equilibria predict 100\% accuracy for the final prediction. \\
+\mydef{Rational Expectations}, \mydef{Prior Information}, and \mydef{Prior Information Timing} provide three definitions for ground truth against which we can compare the final prediction for our \mydef{market makers}. All three equilibria suggest that the market's final prediction will predict the true outcome. \\
 
 \mydef{Ration Expectations} implies that the final price will be the average of each agent's signal since all agents have equal budgets. As we have restricted signals to the set of ${0,1}$, the expected price will simply be the number of 1 signals divided by the total number of agents $\frac{|\Agents_1|}{|\Agents|}$. Given that the aggregate signal is truthful, this implies that the market is 100\% accurate. For example, with a signal vector $\left[0,1,1,0,1\right]$, the expected price is .6 and the prediction will be correct. \\
 

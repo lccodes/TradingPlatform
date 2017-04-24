@@ -7,9 +7,9 @@ import brown.setup.Setup;
 
 public class FarsightedInformed extends ShortsightedInformed {
 
-	public FarsightedInformed(String host, int port, Setup gameSetup, double signal, int timeToGo)
+	public FarsightedInformed(String host, int port, Setup gameSetup, double signal)
 			throws AgentCreationException {
-		super(host, port, gameSetup, signal, timeToGo);
+		super(host, port, gameSetup, signal);
 	}
 
 	@Override
