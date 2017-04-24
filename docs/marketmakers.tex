@@ -2,10 +2,12 @@
 In these experiments we will test the following three LMSR market markers.
 
 \subsection{\href{http://mason.gmu.edu/~rhanson/mktscore.pdf}{Logarithmic Market Scoring Rule}}
-LMSR is a strictly proper scoring rule developed by Robert Hanson. LMSR uses a logarithmic cost function: \\
+LMSR is a strictly proper scoring rule developed by Robert Hanson. A scoring rule is strictly proper if the forecaster has no incentive to report anything but their true belief. This condition is the same as stating that LMSR is myopically incentive compatible.\\ 
+
+LMSR uses a logarithmic cost function: \\
 $C(q_1,q_2) = b\ln(e^{\frac{q_1}{b}} + e^{\frac{q_2}{b}})$ where $q_1$ and $q_2$ represent the number of shares acquired for each of the binary events: 1 and 2. The cost charged to a trader wanting to buy $q_a$ shares on event 1 and $q_b$ shares on event 1 is: $C(q_1 + q_a, q_2 + q_b) - C(q_1,q_2)$. Traders are charged for their movement in the market prediction. $\LMSRb$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $\LMSRb\ln(2)$. A large $\LMSRb$ means that it would cost a lot to move the market price while a small $\LMSRb$ makes large swings relatively inexpensive.\\
 
-The instantaneous price of LMSR market $\LMSRMarketMaker$, which is also the market's prediction for the option $\Option$, is quoted with: $p_x = \frac{e^{\frac{q_1}{\LMSRb}}}{e^{\frac{q_1}{\LMSRb}} + e^{\frac{q_2}{\LMSRb}}}$. \\
+The instantaneous price of LMSR market $\MarketMaker$, which is also the market's prediction for the option $\Option$, is quoted with: $p_x = \frac{e^{\frac{q_1}{\LMSRb}}}{e^{\frac{q_1}{\LMSRb}} + e^{\frac{q_2}{\LMSRb}}}$. \\
 
 \textbf{Advantages}\\
 \begin{enumerate}
@@ -23,14 +25,14 @@ The instantaneous price of LMSR market $\LMSRMarketMaker$, which is also the mar
 \begin{algorithm}[H]
 \SetAlgoLined
 \TitleOfAlgo{cost}
-\KwData{lmsr market maker $\MarketMaker$, quantity $\Quantity$, direction $\Option_\OptionDirection$}
+\KwData{market maker $\MarketMaker$, new quantity $\Quantity$, direction $\Option_\OptionDirection$}
 \KwResult{cost $\Money$}
 initialization\;
-oldScore = $\MarketMaker\text{.getLiquidityParameter()}\exp(\frac{\MarketMaker\text{.getYesQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}}) + \exp(\frac{\MarketMaker\text{.getNoQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}})$\;
+oldScore = $\MarketMaker_\LMSRb * \exp(\frac{\MarketMaker_\QuantityYes}{\MarketMaker_\LMSRb}) + \exp(\frac{\MarketMaker_\QuantityNo}{\MarketMaker_\LMSRb})$\;
 \eIf{direction == YES}{
-	newScore = $\MarketMaker\text{.getLiquidityParameter()}\exp(\frac{\MarketMaker\text{.getYesQuantity()} + \Quantity}{\MarketMaker\text{.getLiquidityParameter()}}) + \exp(\frac{\MarketMaker\text{.getNoQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}})$\;
+	newScore = $\MarketMaker_\LMSRb * \exp(\frac{\MarketMaker_\QuantityYes + \Quantity}{\MarketMaker_\LMSRb}) + \exp(\frac{\MarketMaker_\QuantityNo}{\MarketMaker_\LMSRb})$\;
 }{
-	newScore = $\MarketMaker\text{.getLiquidityParameter()}\exp(\frac{\MarketMaker\text{.getYesQuantity()}}{\MarketMaker\text{.getLiquidityParameter()}}) + \exp(\frac{\MarketMaker\text{.getNoQuantity()} + \Quantity}{\MarketMaker\text{.getLiquidityParameter()}})$\;
+	newScore = $\MarketMaker_\LMSRb * \exp(\frac{\MarketMaker_\QuantityYes}{\MarketMaker_\LMSRb}) + \exp(\frac{\MarketMaker_\QuantityNo + \Quantity}{\MarketMaker_\LMSRb})$\;
 }
 
 return newScore - oldScore\;
@@ -38,56 +40,20 @@ return newScore - oldScore\;
 
 \begin{algorithm}[H]
 \SetAlgoLined
-\TitleOfAlgo{priceToYesShares}
-\KwData{lmsr market maker $\MarketMaker$}
-\KwResult{quantity $\Quantity$}
-initialization\;
-return $\MarketMaker$.priceToShares(quantity, true)\;
-\end{algorithm}
-
-\begin{algorithm}[H]
-\SetAlgoLined
-\TitleOfAlgo{priceToNoShares}
-\KwData{lmsr market maker $\MarketMaker$}
-\KwResult{quantity $\Quantity$}
-initialization\;
-return $\MarketMaker$.priceToShares(quantity, false)\;
-\end{algorithm}
-
-\begin{algorithm}[H]
-\SetAlgoLined
-\TitleOfAlgo{capitalToYesShares}
-\KwData{lmsr market maker $\MarketMaker$}
-\KwResult{money $\Money$}
-initialization\;
-return $\MarketMaker$.capitalToShares(money, true)\;
-\end{algorithm}
-
-\begin{algorithm}[H]
-\SetAlgoLined
-\TitleOfAlgo{capitalToNoShares}
-\KwData{lmsr market maker $\MarketMaker$}
-\KwResult{money $\Money$}
-initialization\;
-return $\MarketMaker$.capitalToShares(money, false)\;
-\end{algorithm}
-
-\begin{algorithm}[H]
-\SetAlgoLined
 \TitleOfAlgo{priceToShares}
-\KwData{lmsr market maker $\MarketMaker$, desiredPrice $\OptionPrice$, direction boolean}
+\KwData{market maker $\MarketMaker$, desiredPrice $\OptionPrice$, direction boolean}
 \KwResult{quantity $\Quantity$}
 initialization\;
 \eIf{direction}{
 price = $\Market_\MarketPrice$\;
-side = $\MarketMaker$.getYesQuantity()\;
-top = $\MarketMaker$.getNoQuantity()\;
+side = $\MarketMaker_\QuantityYes$\;
+top = $\MarketMaker_\QuantityNo$\;
 }{
 price = (1-$\Market_\MarketPrice$)\;
-side = $\MarketMaker$.getNoQuantity()\;
-top = $\MarketMaker$.getYesQuantity()\;
+side = $\MarketMaker_\QuantityNo$\;
+top = $\MarketMaker_\QuantityYes$\;
 }
-return $\MarketMaker$.getLiquidityParameter()*log((price*exp(top/$\MarketMaker$.getLiquidityParameter()))/(1-price)) - side\;
+return $\MarketMaker_\LMSRb * \log((\frac{\text{price}*\exp(\frac{\text{top}}{\MarketMaker_\LMSRb})}{1-\text{price}}) - \text{side}$\;
 \end{algorithm}
 
 \begin{algorithm}[H]
@@ -97,13 +63,24 @@ return $\MarketMaker$.getLiquidityParameter()*log((price*exp(top/$\MarketMaker$.
 \KwResult{quantity $\Quantity$}
 initialization\;
 \eIf{direction}{
-side = $\MarketMaker$.getYesQuantity()\;
-top = $\MarketMaker$.getNoQuantity()\;
+side = $\MarketMaker_\QuantityYes$\;
+top = $\MarketMaker_\QuantityNo$\;
 }{
-side = $\MarketMaker$.getNoQuantity()\;
-top = $\MarketMaker$.getYesQuantity()\;
+side = $\MarketMaker_\QuantityNo$\;
+top = $\MarketMaker_\QuantityYes$\;
 }
-return $\MarketMaker$.getLiquidityParameter() * log(exp(money/ $\MarketMaker$.getLiquidityParameter() + log(pow(e, $\MarketMaker$.getYesQuantity() / $\MarketMaker$.getLiquidityParameter()) + pow(e, $\MarketMaker$.getNoQuantity() / $\MarketMaker$.getLiquidityParameter()))) - exp(top / $\MarketMaker$.getLiquidityParameter())) - side\;
+return $\MarketMaker_\LMSRb * 
+\log(
+	\exp(
+		\frac{\Money}{\MarketMaker_\LMSRb} + 
+		\log(
+			\exp(\frac{\MarketMaker_\QuantityYes}{\MarketMaker_\LMSRb}) + 
+			\exp(\frac{\MarketMaker_\QuantityNo}{\MarketMaker_\LMSRb})
+		)
+	) - 
+	\exp(\frac{\text{top}}{\MarketMaker_\LMSRb}
+	)
+) - \text{side}$\;
 \end{algorithm}
 
 \subsection{\href{https://www.cs.cmu.edu/~sandholm/liquidity-sensitive automated market maker.teac.pdf}{Practical Liquidity Sensitive Market Maker}}

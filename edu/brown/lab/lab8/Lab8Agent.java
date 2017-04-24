@@ -31,7 +31,7 @@ public abstract class Lab8Agent extends Agent {
 		super.onRegistration(registration);
 		ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
 		this.myValuation.putAll(valuationRegistration.getValues());
-		Logging.log("[+] new XOR bids: " + this.myValuation);
+		Logging.log("[+] new XOR values: " + valuationRegistration.getValues());
 	}
 
 	@Override

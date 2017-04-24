@@ -37,7 +37,7 @@ public class Lab8Demo extends Lab8Agent {
 		Set<FullType> toBid = new HashSet<FullType>();
 		for (Set<FullType> types : this.myValuation.keySet()) {
 			for (FullType type : types) {
-				if (market.getHighBid(type).PRICE < this.myValuation.get(types)) {
+				if (market.getHighBid(type).PRICE < Math.min(100,this.myValuation.get(types))) {
 					toBid.add(type);
 				}
 			}

@@ -33,6 +33,10 @@ public class SamePaymentsTermination implements TerminationCondition {
 			return done;
 		}
 		boolean toReturn = true;
+		//System.out.println("COMPARE " + this.sameness);
+		//System.out.println(this.lastPayments);
+		//System.out.println(state.getPayments());
+		//System.out.println("----");
 		if (state.getPayments() == null || this.lastPayments.size() != state.getPayments().size()) {
 			toReturn = false;
 			this.sameness = this.original;
@@ -51,6 +55,8 @@ public class SamePaymentsTermination implements TerminationCondition {
 		this.lastPayments = state.getPayments() != null ? state.getPayments() : this.lastPayments;
 		if (toReturn && sameness-- <= 0) {
 			this.done = true;
+		} else if (!toReturn) {
+			this.sameness = this.original;
 		}
 		return done;
 	}

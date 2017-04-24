@@ -101,17 +101,28 @@ public class SimpleWrapper implements IMarketWrapper {
 		Map<FullType, BidBundle.BidderPrice> fixedBids = new HashMap<FullType,BidBundle.BidderPrice>();
 		for (Entry<FullType, Double> bid : bids.entrySet()) {
 			fixedBids.put(bid.getKey(), new BidBundle.BidderPrice(agent.ID, bid.getValue()));
+			if (fixedBids.size() > 10) {
+				agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
+				fixedBids.clear();
+			}
 		}
-		System.out.println("Hello? " + fixedBids.size());
-		agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
+		if (fixedBids.size() > 0) {
+			agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
+		}
 	}
 
 	public void demandBid(Agent agent, Set<FullType> toBid) {
 		Map<FullType, BidBundle.BidderPrice> fixedBids = new HashMap<FullType,BidBundle.BidderPrice>();
 		for (FullType bid : toBid) {
 			fixedBids.put(bid, new BidBundle.BidderPrice(agent.ID, 0));
+			if (fixedBids.size() > 10) {
+				agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
+				fixedBids.clear();
+			}
 		}
-		agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
+		if (fixedBids.size() != 0) {
+			agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
+		}
 	}
 
 }

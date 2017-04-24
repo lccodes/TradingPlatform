@@ -15,7 +15,8 @@ import brown.auctions.interfaces.PaymentRule;
 import brown.auctions.prules.PaymentType;
 import brown.setup.Logging;
 
-public class SimpleSecondPriceDemand implements PaymentRule {
+public class SimpleClockRule implements PaymentRule {
+	private final SimpleBidBundle RESERVE = new SimpleBidBundle(new HashMap<FullType, BidBundle.BidderPrice>());
 
 	@Override
 	public List<Order> getPayments(MarketInternalState state) {
@@ -26,26 +27,26 @@ public class SimpleSecondPriceDemand implements PaymentRule {
 		}
 		
 		SimpleBidBundle bundle = (SimpleBidBundle) state.getAllocation();
-		for (ITradeable tradeable : state.getTradeables()) {
-			BidBundle.BidderPrice winner = bundle.getBid(tradeable.getType());
+		for(ITradeable trade : state.getTradeables()) {
+			BidBundle.BidderPrice winner = bundle.getBid(trade.getType());
 			if (winner.AGENTID != null) {
-				orders.add(new Order(winner.AGENTID,null,Math.max(winner.PRICE-state.getIncrement(), 0),
-						tradeable.getCount(),tradeable));
+				orders.add(new Order(winner.AGENTID,null,winner.PRICE,
+						trade.getCount(),trade));
 			}
 		}
-		//System.out.println("ORDERS " +orders);
 		
+		System.out.println("Payment " + orders);
 		return orders;
 	}
 
 	@Override
 	public PaymentType getPaymentType() {
-		return PaymentType.SecondPrice;
+		return PaymentType.VCG;
 	}
 
 	@Override
 	public BidBundle getReserve() {
-		return new SimpleBidBundle(new HashMap<FullType, BidBundle.BidderPrice>());
+		return this.RESERVE;
 	}
 
 }

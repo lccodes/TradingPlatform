@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="lib/kryonet-2.21-all.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/specvalProject.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ValueGenerator"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

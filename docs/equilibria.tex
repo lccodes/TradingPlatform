@@ -6,16 +6,16 @@ The two classic equilibria concepts that we will utilize are the \mydef{Rational
 
 \mydef{Prior Information} hypothesizes that all agents act on a linear combination of their private information and the current market price as Bayesian updaters. PI implies that agents will take into account the current market price and their own belief. Agents are willing to participate at their expected value given the two beliefs. \\
 
-A major shortcoming in the current literature, which is reflected in the agent behavior theories, is the generalization that agents cannot choose when to enter the market [CITE]. Although fixing entry time simplifies equilibrium calculations, in practice agents strategize about the value of a certain entry time $\Time$. Under a model based in REE where the collective belief is truthful, a rational agent would want to be the last decision maker and then have the outcome revealed with certainty.\\
+A major shortcoming in the current literature, which is reflected in the agent behavior theories, is the generalization that agents cannot choose when to enter the market (Hanson, 2003). Although fixing entry time simplifies equilibrium calculations, in practice agents strategize about the value of a certain entry time $\Time$. Under a model based in REE where the collective belief is truthful, a rational agent would want to be the last decision maker and then have the outcome revealed with certainty.\\
 
 \subsection{No Trade Theorem}
 Under relaxed assumptions from REE and PI, agents wait until $x \in \left[0, |\Agents| \right]$ agents have executed
 their strategies depending on their valuation of the information gained by waiting. It is trivial to show that 
-the valuations are monotonically increasing with $x$. When $x \geq HOLD$, agents can 
-determine with certainty what the outcome will be, incur no risk, and therefore $\forall x \geq HOLD = E\left[\Option\right]$.
-Each spot  $x \leq HOLD$ is worth $\frac{x}{|\Agents|} 
-E\left[\Option\right]$. This implies that rational agents
-would need to be paid the difference between their riskless profits and the value of $x$ in order to select spot $x < HOLD$: $E\left[\Option\right](1 - \frac{x}{|\Agents|})$. In the absence of this payment, it is individually rational for agents to wait until the first half of agents have already entered the market before trading. Therefore, lacking any external payments, no agent will enter the market and no
+the valuations are monotonically increasing with $x$. 
+%When $x \geq HOLD$, agents can determine with certainty what the outcome will be, incur no risk, and therefore $\forall x \geq HOLD = E\left[\Option\right]$.
+Each spot  $\forall x$ is worth $\frac{x}{|\Agents|} 
+E\left[\Option\right]$ since each increment in $x$ provides an equal increase in information. This implies that rational agents
+would need to be paid the difference between their riskless profits and the value of $x$ in order to select spot $x | E\left[\Option\right](1 - \frac{x}{|\Agents|})$. In the absence of this payment, it is individually rational for agents to wait until the first half of agents have already entered the market before trading. Therefore, lacking any external payments, no agent will enter the market and no
 trades will occur.
 
 \subsection{Prior Information Timing}
@@ -27,60 +27,13 @@ preceding $x-1$ agents can pay up to the value of the information to defer. In o
 to clear in PIT then the market maker needs to compensate agents for their spot selection.\\
 
 \subsection{Agent Strategy}
-In order to assess accuracy in situations where agents have variable information, we will consider different types of agent strategies in our experiments. There are two types of agent strategies \mydef{simple} $\Simple$ and \mydef{farsighted} $\Farsighted$. Similarly, \mydef{informed} $\Informed$ agents have an exogenous belief about the outcome whereas \mydef{uninformed} $\Uninformed$ agents can only base their decision on the market price. \\
+In order to assess accuracy in situations where agents have variable information, we will consider different types of agent strategies in our experiments. There are two types of agent strategies \mydef{shortsighted} $\Simple$ and \mydef{farsighted} $\Farsighted$. Similarly, \mydef{informed} $\Informed$ agents have an exogenous belief about the outcome whereas \mydef{uninformed} $\Uninformed$ agents can only base their decision on the market price. \\
 
-The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Simple class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Simple, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior. All four strategies are myopic.\\
+The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Shortsighted class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Shortsighted, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior. All four strategies are myopic.\\
 
-The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Simple class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Simple, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior.\\
+The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Shortsighted class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Shortsighted, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior.\\
 
 Prediction markets are known to be myopically incentive compatible, which means that myopic agents bid truthfully. There is much work demonstrating that this assumption fails when agents can use \mydef{bluffing} and \mydef{reticence} to mislead other agents and profit off of that deception. We will show that when restricting the game to a single shot for each agent and using market scoring rule based mechanisms that it is impossible to design a dominant non-myopic strategy.\\
 
 \mydef{Lemma} \\
 Consider a non-myopic strategy that is dominant for an agent in a MSR based market. That agent has a final belief, which incorporates whatever logic and prior information the agent has, called $\Agent_\AgentBelief$. The non-myopic strategy must either move the price $\OptionPrice$ towards their belief $\Agent_\AgentBelief$, but less than their budget $\Agent_\AgentBudget$ permits, or away from it. In the case where the non-myopic strategy moves the price away from their belief, the agent will be scored on how much their price movement improves the market prediction, which is mapped to the price. In order to make positive profit, the belief needs to improve. If the agent thinks that this non-myopic strategy is improving the price then they cannot hold belief $\Agent_\AgentBelief$, which is a contradiction. In the second case, if the agent holds belief $\Agent_\AgentBelief$ then it would be strictly preferable to move the price as close as possible to $\Agent_\AgentBelief$. This means that the myopic strategy strictly dominates the non-myopic strategy. Since in both cases the myopic strategy strictly dominates therefore the myopic strategy is dominant under this model.\\
-
-\subsection{Strategies}
-$\AgentStrategy^{\Simple\Informed}_\Agent(\Time)$ is an \mydef{informed agent} holding exogenous belief $\Agent_\AgentBelief$ who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to their belief $\Agent_\AgentBelief$. \\
-
-\begin{algorithm}[H]
-\SetAlgoLined
-\TitleOfAlgo{Simple Informed Strategy $\Simple\Informed$}
-\KwData{belief $\Agent_\AgentBelief$, market $\Market$}
-\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
-initialization\;
-\eIf{$\Market_\MarketPrice < \Agent_\AgentBelief$}{
-neededCapital = $\MarketMaker$.priceToYesShares($\Agent_\AgentBelief$)\;
-toSpend = min($\Agent_\AgentBudget$, neededCapital)\;
-sharesDemanded = $\MarketMaker$.capitalToYesShares(toSpend)\;
-$\Market$.buyYes(sharesDemanded)\;
-}{
-neededCapital = $\MarketMaker$.priceToNoShares($\Agent_\AgentBelief$)\;
-toSpend = min($\Agent_\AgentBudget$, neededCapital)\;
-sharesDemanded = $\MarketMaker$.capitalToNoShares(toSpend)\;
-$\Market$.buyNo(sharesDemanded)\;
-}
-\end{algorithm}
-
-$\AgentStrategy^{\Simple\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agent} holding no exogenous belief $\Agent_\AgentBelief$ who who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to 1 if at time $\Time$, $\OptionPrice_{\Market\Time} \ge .5$ otherwise 0. \\
-
-\begin{algorithm}[H]
-\SetAlgoLined
-\TitleOfAlgo{Simple Uninformed Strategy $\Simple\Uninformed$}
-\KwData{belief $\Agent_\AgentBelief$, market $\Market$, market maker $\MarketMaker$}
-\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
-initialization\;
-\eIf{$\Market_\MarketPrice > .5$}{
-neededCapital = $\MarketMaker$.priceToYesShares(1)\;
-toSpend = min($\Agent_\AgentBudget$, neededCapital)\;
-sharesDemanded = $\MarketMaker$.capitalToYesShares(toSpend)\;
-$\Market$.buyYes(sharesDemanded)\;
-}{
-neededCapital = $\MarketMaker$.priceToNoShares(0)\;
-toSpend = min($\Agent_\AgentBudget$, neededCapital)\;
-sharesDemanded = $\MarketMaker$.capitalToNoShares(toSpend)\;
-$\Market$.buyNo(sharesDemanded)\;
-}
-\end{algorithm}
-
-$\AgentStrategy^{\Farsighted\Informed}_\Agent(\Time)$ is an \mydef{informed agent}holding exogenous belief $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on a linear combination of their belief $\Agent_\AgentBelief$ and the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
-
-$\AgentStrategy^{\Farsighted\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agent} holding exogenous belief $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
