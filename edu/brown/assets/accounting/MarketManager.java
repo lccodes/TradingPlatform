@@ -9,16 +9,21 @@ import java.util.concurrent.ConcurrentHashMap;
 import brown.assets.value.ITradeable;
 import brown.assets.value.StateOfTheWorld;
 import brown.auctions.interfaces.Market;
+import brown.auctions.twosided.TwoSidedAuction;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
 public class MarketManager {
 	private Map<Market, Ledger> ledgers;
 	private Map<Integer, Market> tsauctions;
+	
+	private Map<Integer, TwoSidedAuction> twosided;
 
 	public MarketManager() {
 		this.ledgers = new ConcurrentHashMap<Market, Ledger>();
 		this.tsauctions = new ConcurrentHashMap<Integer, Market>();
+		
+		this.twosided = new ConcurrentHashMap<Integer,TwoSidedAuction>();
 	}
 	
 	/**
@@ -176,6 +181,14 @@ public class MarketManager {
 	 */
 	public Collection<Market> getAuctions() {
 		return this.tsauctions.values();
+	}
+
+	public TwoSidedAuction getTwoSided(Integer marketID) {
+		return this.twosided.get(marketID);
+	}
+	
+	public void openTwoSided(TwoSidedAuction tsa) {
+		this.twosided.put(tsa.getID(), tsa);
 	}
 
 }

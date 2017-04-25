@@ -26,7 +26,7 @@ public class LMSRPlayground {
 	public LMSRPlayground(int sInformed, int sUninformed, int fInformed, int fUninformed)
 			throws AgentCreationException, IOException {
 		this.SERVER = new ExperimentalServer(2929);
-		this.WRITER = new BufferedWriter(new FileWriter("experiment-" + new java.util.Date() + ".csv"));
+		this.WRITER = new BufferedWriter(new FileWriter("/research/glamor2/lmsrexp/experiment-" + new java.util.Date() + ".csv"));
 
 		double prob = Math.random();
 		this.WRITER.write("prob,sInf,sUninf,fInf,fUninf\n");
@@ -75,12 +75,19 @@ public class LMSRPlayground {
 		} else if (type == 2) {
 			backend = new LukeMM(param);
 		}
-		LMSR yes = new LMSR(0,true, backend, false);
-		LMSR no = new LMSR(1,false, backend, false);
+		LMSR yes = new LMSR(0,true, backend, true);
+		LMSR no = new LMSR(1,false, backend, true);
+		this.SERVER.manager.openTwoSided(yes);
+		this.SERVER.manager.openTwoSided(no);
 		for (int i = 0; i < this.AGENTS.size(); i++) {
 			this.SERVER.sendMarketUpdateNL(no);
 			this.SERVER.sendMarketUpdateNL(yes);
 		}
 		this.WRITER.write(param + "," + yes.price()); //TODO: Profit?
+	}
+	
+	public static void main(String[] args) throws AgentCreationException, IOException {
+		LMSRPlayground pg = new LMSRPlayground(5, 0, 0, 0);
+		pg.simulate(0, 10);
 	}
 }

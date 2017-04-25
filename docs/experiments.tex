@@ -6,21 +6,53 @@ For each of the following configurations, we will rank our three market makers a
 \subsubsection{Market Makers}
 We will run each agent arrangement against the following market makers:
 \begin{enumerate}
-\item \mydef{Logarithmic Market Scoring Rule} with varying b values. Since there is little intuition behind setting b other than the loss incurred by the market maker, we want to evaluate a full range of b options that appear in other papers. Therefore we will use every integer value for b between 1 and 100 as those correspond to natural extremes where the price is trivially malleable to where it is near static.
+\item \mydef{Logarithmic Market Scoring Rule} with varying $\LMSRb$ values. Since there is little intuition behind setting b other than the loss incurred by the market maker, we want to evaluate a full range of b options that appear in other papers. Therefore we will use every integer value for $\LMSRb$ between 1 and 100 as those correspond to natural extremes where the price is trivially malleable to where it is near static.
 
-\item \mydef{Liquidity Sensitive Market Maker} with varying alpha parameters. Since alpha corresponds to the commission, we will assess all alpha values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
+\item \mydef{Liquidity Sensitive Market Maker} with varying alpha parameters. Since alpha corresponds to the commission, we will assess all $\LMSRAlpha$ values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
 
-\item \mydef{Time Sensitive Market Maker} with varying alpha parameters. Since alpha corresponds to the commission, we will assess all alpha values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
+\item \mydef{Time Sensitive Market Maker} with varying $\LMSRAlpha$ parameters. Since $\LMSRAlpha$ corresponds to the commission, we will assess all $\LMSRAlpha$ values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
 \end{enumerate}
 
 \subsection{Agents}
 We will run each of the following configurations with 9 agents, 49 agents, and 99 agents. Prediction markets vary between miniscule and small in market depth so this represents a reasonable range for evaluation. The odd numbers prohibit market outcomes at .5. The final price for each configuration will be the average of the prices that result from every ordering of the agents.
 \begin{enumerate}
-\item Informed and Uninformed Myopic Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
+\item Informed and Uninformed Shortsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
 \item Informed and Uninformed Farsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
-\item Informed Myopic and Informed Farsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
-\item Informed Farsighted and Uninformed Myopic Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
+\item Informed Shortsighted and Informed Farsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
+\item Informed Farsighted and Uninformed Shortsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
 \end{enumerate}
+
+\subsection{Configuration Table}
+\begin{center}
+ \begin{tabular}{||c c c c||} 
+ Name & Market Maker & Agent Types & Agent Split \\ [0.5ex] 
+ \hline\hline
+ 1 & LMSR & $\Simple^\Informed,\Simple^\Uninformed$ & 5,4 \\
+ \hline
+ 2 & LMSR & $\Simple^\Informed,\Simple^\Uninformed$ & 6,3 \\
+ \hline
+ 3 & LMSR & $\Simple^\Informed,\Simple^\Uninformed$ & 8,1 \\
+\hline
+ 4 & LMSR & $\Farsighted^\Informed,\Farsighted^\Uninformed$ & 5,4 \\ 
+ \hline
+ 5 & LMSR & $\Farsighted^\Informed,\Farsighted^\Uninformed$ & 6,3 \\ 
+ \hline
+ 6 & LMSR & $\Farsighted^\Informed,\Farsighted^\Uninformed$ & 8,1 \\ 
+ \hline
+ 7 & LMSR & $\Simple^\Informed,\Farsighted^\Informed$ & 5,4 \\ 
+  \hline
+ 8 & LMSR & $\Simple^\Informed,\Farsighted^\Informed$ & 6,3 \\ 
+  \hline
+ 9 & LMSR & $\Simple^\Informed,\Farsighted^\Informed$ & 8,1 \\ 
+  \hline
+ 10 & LMSR & $\Farsighted^\Informed,\Simple^\Uninformed$ & 5,4 \\ 
+  \hline
+ 11 & LMSR & $\Farsighted^\Informed,\Simple^\Uninformed$ & 6,3 \\ 
+  \hline
+ 12 & LMSR & $\Farsighted^\Informed,\Simple^\Uninformed$ & 8,1 \\ 
+ \hline
+\end{tabular}
+\end{center}
 
 \subsection{Simulator}
 Since LMSR based mechanisms provide constant time transactions, we can reliably converge each of these markets within a tightly bounded interval. Based on tests using our Java Virtual Machine based simulation, each agent takes a conservative upper bound of 15 milliseconds to fully enter the market. This means that the worst amount of time that a market can take in these experiments is 1.5 seconds.

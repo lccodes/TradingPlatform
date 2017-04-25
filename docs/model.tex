@@ -4,7 +4,7 @@
 
 We denote \mydef{time} by $\Time\in\mathbb{R}_+$. \\
 
-An \mydef{event} $\Event$ has an outcome at time $\Event_\Time \in \mathbb{R}_+$. 
+An \mydef{event} $\Event$ has an outcome at time $\Event_\EventTime \in \mathbb{R}_+$. 
 Observe that we restrict our attention to binary outcomes. 
 The outcome is equal to YES in case the event occurs, and NO otherwise. 
 We denote the YES outcome with a 1, and the NO outcome with a 0.
@@ -14,48 +14,50 @@ $\Revealer$ is an \mydef{oracle} for mapping an event to an outcome.
 We denote the outcome of event $\Event$ under $\Revealer$ as 
 $\Revealer(\Event) \in \{0,1\}$.\\
 
-An \mydef{option} $\Option$ is a security that yields a return depending on 
+An \mydef{option} $\Option(\Event) = \left<\Option_\Event, \Option_\OptionDirection\right>$ is a security that yields a return depending on 
 the outcome of an event $\Option_\Event$. Each option has a direction 
-$\Option_\OptionDirection \in \{0, 1\}$ and a strike time $\Option_\Time$ 
-when $\Revealer(\Option_\Event)$ will be evaluated. 
-The option will convert to \$1 at time $\Option_\Time$ if $\Revealer(\Option_\Event)$ equals 
+$\Option_\OptionDirection \in \{0, 1\}$. 
+The option will convert to \$1 at time $\Event_\EventTime$ if $\Revealer(\Option_\Event)$ equals 
 $\Option_\OptionDirection$, otherwise it converts to \$0. Two options are said to be
 \mydef{complementary options} if they trade opposite directions in the same event. Given an
 event $\Event$, we denote the complementary options as 
-$\OptionComplements = \left<\Option_{0}, \Option_{1}\right>$.\\
+$\Option_\Event = \left<\Option_{0}, \Option_{1}\right>$.\\
 
-Given complementary options $\Option_{0}$ and $\Option_{1}$,
-let $\Agents_{\Option_0}$ be the \mydef{set of agents} that acquire option
-$\Option_{0}$, and similarly let $\Agents_{\Option_1}$ be the set 
-of agents that acquire option $\Option_{1}$. 
-Let $\Agents_\Option = \Agents_{\Option_0} \cup \Agents_{\Option_1}$
-be the set of all agents trading complementary options.\\
+%Given complementary options $\Option_{0}$ and $\Option_{1}$,
+%let $\Agents_{\Option_0}$ be the \mydef{set of agents} that acquire option
+%$\Option_{0}$, and similarly let $\Agents_{\Option_1}$ be the set 
+%of agents that acquire option $\Option_{1}$. 
+%Let $\Agents_\Option = \Agents_{\Option_0} \cup \Agents_{\Option_1}$
+%be the set of all agents trading complementary options.\\
 
-An \mydef{agent} $\Agent\in\Agents_\Option$ has a \mydef{private belief} 
+An \mydef{agent} $\Agent\in\Agents$ has a \mydef{private belief} 
 $\Agent_\AgentBelief \in {0,1}$ 
 and a \mydef{budget} $\Agent_\AgentBudget \in \mathbb{R}_+$.
 The agent's private belief $\Agent_\AgentBelief$ 
 is the subjective probability that the agent
 assigns to the outcome of event $\Option_\Event$ being direction $\Option_\OptionDirection$
-at strike time $\Option_\Time$. We constrain beliefs about both outcomes of an event to sum to 1. We assign beliefs about options rather than events to permit naturally occuring financial behavior such as hedging.\\
+at strike time $\Event_\EventTime$. \\
 
-An agent's $\Agent\in\Agents_\Option$ \mydef{strategy} 
+An agent's $\Agent\in\Agents$ \mydef{strategy} 
 $\AgentStrategy_\Agent(\Time) \in \mathbb{R}_+$ specifies the quantity of option 
-$\Option$ purchased by the agent at time $\Time$. $\Time \leq \tau = \Option_\Time$\\
+$\Option$ purchased by the agent at time $\Agent_\Time$. $\Agent_\Time \leq \EventTime. \Option_\EventTime$\\
 
-A \mydef{prediction market} $\Market$ trades complementary options. 
-Formally, a prediction market is a tuple $\Market(\Event) = 
-\left<\Option_\Event, \Agents_\Event \right>$ where each \mydef{agent} 
-$\Agent\in\Agents_\Event$ purchases 
+A \mydef{prediction market} $\Market$ is a forum for trading complementary options. 
+Formally, a prediction market is a tuple $\Market(\Option_\Event) = 
+\left<\Option_0, \Option_1, \Agents \right>$ where each \mydef{agent} 
+$\Agent\in\Agents$ purchases 
 either some number of $\Option_0$ or $\Option_1$ options paying the price quoted by the 
-market maker.\\
+market maker. We denote the total quantity purchased of $\Option_0$ and $\Option_1$
+as $\QuantityYes$ and $\QuantityNo$ respectively. \\
 
-A \mydef{market maker} $\OptionPrice_\MarketMaker$ is a function 
-that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$, 
-and a quantity $\Quantity\in\mathbb{R}_+$ at time $\Time \in [0,\Time_\Option)$ 
-to a price $\OptionPrice(\Option,\Agent,\Quantity,\Time) \in \mathbb{R}_+$. 
-By definition, $\OptionPrice(\Option,\Agent, \Time) = \Revealer(\Option_\Event)$ if 
-$\Time \ge \Time_\Option$.\\
+A \mydef{market maker} $\MarketMaker$ provides liquidity in a market $\Market$ by
+offering to trade either option $\Option$ at a price $\OptionPrice$ that it determines. 
+Formally, a $\MarketMaker$ is a function 
+that maps an option $\Option$, 
+and a quantity $\Quantity\in\mathbb{R}_+$ at time $\Time \in [0,\EventTime)$ 
+to a price $\OptionPrice(\Option,\Quantity,\Time) \in \mathbb{R}_+$. 
+By definition, $\OptionPrice(\Option,\Quantity,\Time) = \Revealer(\Option_\Event)$ if 
+$\Time \ge \EventTime$.\\
 
 %%An \mydef{lmsr market maker} $\OptionPrice_\LMSRMarketMaker$ is a function
 %that maps an option $\Option$, an agent $\Agent \in \Agents_\Option$, and
@@ -63,14 +65,14 @@ $\Time \ge \Time_\Option$.\\
 
 \subsection{Assumptions}
 
-In our model we assume without loss of generality that agent $\Agent \in \Agents_\Option$ has an arrival time 
-$\Agent_\Time \in \mathbb{R}_+$ where $\Agent_\Time < \Option_\Time$, 
+In our model we assume without loss of generality that agent $\Agent \in \Agents$ has an arrival time 
+$\Agent_\Time \in \mathbb{R}_+$ where $\Agent_\Time < \EventTime$, 
 and execute their strategy only once at time $\Agent_\Time$.\\
 
 We assume that agents' private beliefs and budgets are not common knowledge
 but are drawn from known distributions $\AgentBelief \sim v(\cdot)$ and
 $\AgentBudget \sim b(\cdot)$. For our experiments, we will assume that private beliefs are ${0,1}$ and that budgets are equal.\\
 
-We assume agents are allowed to observe the true current price of any option.\\
+We assume agents are allowed to observe the true current price of any option $\forall \Time \in \left[0,\EventTime\right]$.\\
 
-We assume that the market maker mechanism and all its parameters are common knowledge.\\
+We assume that the market maker $\MarketMaker$ and all its parameters are common knowledge.\\

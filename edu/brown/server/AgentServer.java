@@ -49,7 +49,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	// Consider time limiting these
 	protected List<NegotiateRequest> pendingTradeRequests;
-	protected MarketManager manager;
+	public MarketManager manager;
 
 	private int agentCount;
 	private final int PORT;
@@ -133,15 +133,14 @@ public abstract class AgentServer {
 			this.theServer.sendToTCP(connection.getID(), rej);
 			return;
 		}
-		TwoSidedAuction market = (TwoSidedAuction) manager
-				.getIMarket(limitorder.marketID);
+		TwoSidedAuction market = this.manager.getTwoSided(limitorder.marketID);
 		synchronized (market) {
 			if (market == null) {
 				Ack rej = new Ack(privateID, limitorder, true);
 				this.theServer.sendToTCP(connection.getID(), rej);
 				return;
 			}
-			Ledger ledger = manager.getLedger(limitorder.marketID);
+			Ledger ledger = new Ledger(null);//manager.getLedger(limitorder.marketID);
 
 			if (limitorder.cancel) {
 				double shares = limitorder.buyShares != 0 ? limitorder.buyShares : limitorder.sellShares;
@@ -552,7 +551,6 @@ public abstract class AgentServer {
 						market.getMechanismType());
 				theServer.sendToTCP(ID.getKey().getID(), mupdate);
 			}
-			this.manager.getLedger(market.getID()).clearLatest();
 		}
 	}
 
