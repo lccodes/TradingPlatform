@@ -9,6 +9,7 @@ public class ShortsightedInformed extends ExperimentalAgent {
 
 	public ShortsightedInformed(String host, int port, Setup gameSetup, double signal) throws AgentCreationException {
 		super(host, port, gameSetup, signal);
+		System.out.println(signal);
 	}
 
 	@Override
@@ -18,10 +19,12 @@ public class ShortsightedInformed extends ExperimentalAgent {
 				return;
 			}
 			
+			System.out.println(market.price() + " " + this.SIGNAL);
 			if (market.price() < this.SIGNAL) {
 				double shareNum = market.priceToShares(this.SIGNAL);
-				double totalCost = Math.min(this.BUDGET, market.moniesToShares(shareNum));
-				double sharesToBuy = market.priceToShares(totalCost);
+				System.out.println("Price to share num: " + shareNum);
+				double sharesToBuy = Math.min(shareNum, market.moniesToShares(this.BUDGET));
+				System.out.println(sharesToBuy + " !!!");
 				if (sharesToBuy != 0) {
 					market.buy(this, sharesToBuy, 1);
 				}
@@ -30,10 +33,13 @@ public class ShortsightedInformed extends ExperimentalAgent {
 			if (this.CURRENTTIME != this.TIME) {
 				return;
 			}
+			
+			System.out.println(market.price() + " " + (1 - this.SIGNAL));
 			if (market.price() < (1 - this.SIGNAL)) {
-				double shareNum = market.priceToShares(1 - this.SIGNAL);
-				double totalCost = Math.min(this.BUDGET, market.moniesToShares(shareNum));
-				double sharesToBuy = market.priceToShares(totalCost);
+				double shareNum = market.priceToShares(1-this.SIGNAL);
+				System.out.println("Price to share num: " + shareNum);
+				double sharesToBuy = Math.min(shareNum, market.moniesToShares(this.BUDGET));
+				System.out.println(sharesToBuy + " !!!");
 				if (sharesToBuy != 0) {
 					market.buy(this, sharesToBuy, 1);
 				}

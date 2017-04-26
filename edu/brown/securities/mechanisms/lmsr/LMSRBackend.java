@@ -102,7 +102,9 @@ public class LMSRBackend {
 	  double top = !direction ? this.yes : this.no;
 	  double side = direction ? this.yes : this.no;
 	  double p = direction ? price : (1-price);
-	  return this.b*Math.log((p*Math.exp(top/this.b))/(1-p)) - side;
+	  double temp = this.b*Math.log((p*Math.exp(top/this.b))/(1-p)) - side;
+	  System.out.println(temp + " " + direction);
+	  return temp;
 	}
 	
 	/*

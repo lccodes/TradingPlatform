@@ -129,24 +129,25 @@ public abstract class AgentServer {
 	protected void onLimitOrder(Connection connection, Integer privateID,
 			MarketOrder limitorder) {
 		if (limitorder.marketID == null) {
+			System.out.println("FUCK");
 			Ack rej = new Ack(privateID, limitorder, true);
 			this.theServer.sendToTCP(connection.getID(), rej);
 			return;
 		}
 		TwoSidedAuction market = this.manager.getTwoSided(limitorder.marketID);
+		if (market == null) {
+			Ack rej = new Ack(privateID, limitorder, true);
+			this.theServer.sendToTCP(connection.getID(), rej);
+			return;
+		}
 		synchronized (market) {
-			if (market == null) {
-				Ack rej = new Ack(privateID, limitorder, true);
-				this.theServer.sendToTCP(connection.getID(), rej);
-				return;
-			}
 			Ledger ledger = new Ledger(null);//manager.getLedger(limitorder.marketID);
-
 			if (limitorder.cancel) {
 				double shares = limitorder.buyShares != 0 ? limitorder.buyShares : limitorder.sellShares;
 				market.cancel(privateID, limitorder.sellShares == 0, 
 						shares, limitorder.price);
 			} else if (limitorder.buyShares > 0) {
+				System.out.println("HI");
 				synchronized (privateID) {
 					Account account = this.bank.get(privateID);
 					if (!market.permitShort()
@@ -154,11 +155,13 @@ public abstract class AgentServer {
 									limitorder.buyShares, limitorder.price)) {
 						Ack rej = new Ack(privateID, limitorder, true);
 						this.theServer.sendToTCP(connection.getID(), rej);
+						System.out.println("NO");
 						return;
 					}
 
 					List<Order> trans = market.buy(privateID,
 							limitorder.buyShares, limitorder.price);
+					System.out.println("WOW");
 					for (Order t : trans) {
 						ITradeable split = null;
 						if (t.GOOD.getCount() > t.QUANTITY) {
@@ -212,6 +215,7 @@ public abstract class AgentServer {
 					}
 				}
 			} else if (limitorder.sellShares > 0) {
+				System.out.println("AYY");
 				synchronized (privateID) {
 					Account sellerAccount = this.bank.get(privateID);
 					double qToSell = limitorder.sellShares;

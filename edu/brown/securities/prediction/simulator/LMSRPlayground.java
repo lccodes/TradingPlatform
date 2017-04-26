@@ -3,7 +3,9 @@ package brown.securities.prediction.simulator;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +28,9 @@ public class LMSRPlayground {
 	public LMSRPlayground(int sInformed, int sUninformed, int fInformed, int fUninformed)
 			throws AgentCreationException, IOException {
 		this.SERVER = new ExperimentalServer(2929);
-		this.WRITER = new BufferedWriter(new FileWriter("/research/glamor2/lmsrexp/experiment-" + new java.util.Date() + ".csv"));
+		String datetime = new SimpleDateFormat("MM-dd-HH").format(new Date());
+		this.WRITER = new BufferedWriter(new FileWriter("exp/" + sInformed + "_" + sUninformed + "_" + fInformed + "_"
+				+ fUninformed + datetime + ".csv"));
 
 		double prob = Math.random();
 		this.WRITER.write("prob,sInf,sUninf,fInf,fUninf\n");
@@ -63,29 +67,33 @@ public class LMSRPlayground {
 
 		this.AGENTS = agents;
 	}
-	
+
 	public void simulate(int type, double param) throws IOException {
 		Collections.shuffle(this.AGENTS);
 		for (int i = 0; i < this.AGENTS.size(); i++) {
 			this.AGENTS.get(i).setTime(i);
 		}
-		LMSRBackend backend = new LMSRBackend(0, param); //TODO: Tell it the truth and it can calc profit
+		LMSRBackend backend = new LMSRBackend(0, param); // TODO: Tell it the
+															// truth and it can
+															// calc profit
 		if (type == 1) {
 			backend = new LiquiditySensitive(param);
 		} else if (type == 2) {
 			backend = new LukeMM(param);
 		}
-		LMSR yes = new LMSR(0,true, backend, true);
-		LMSR no = new LMSR(1,false, backend, true);
+		LMSR yes = new LMSR(0, true, backend, true);
+		LMSR no = new LMSR(1, false, backend, true);
 		this.SERVER.manager.openTwoSided(yes);
 		this.SERVER.manager.openTwoSided(no);
 		for (int i = 0; i < this.AGENTS.size(); i++) {
 			this.SERVER.sendMarketUpdateNL(no);
 			this.SERVER.sendMarketUpdateNL(yes);
 		}
-		this.WRITER.write(param + "," + yes.price()); //TODO: Profit?
+		this.WRITER.write(param + "," + yes.price()); // TODO: Profit?
+		this.WRITER.flush();
+		this.WRITER.close();
 	}
-	
+
 	public static void main(String[] args) throws AgentCreationException, IOException {
 		LMSRPlayground pg = new LMSRPlayground(5, 0, 0, 0);
 		pg.simulate(0, 10);
