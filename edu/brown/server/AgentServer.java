@@ -49,7 +49,7 @@ public abstract class AgentServer {
 	protected Map<Integer, Account> bank;
 	// Consider time limiting these
 	protected List<NegotiateRequest> pendingTradeRequests;
-	public MarketManager manager;
+	protected MarketManager manager;
 
 	private int agentCount;
 	private final int PORT;
@@ -540,21 +540,6 @@ public abstract class AgentServer {
 				theServer.sendToTCP(ID.getKey().getID(), mupdate);
 			}
 			this.manager.getLedger(market.getID()).clearLatest();
-		}
-	}
-	
-	/*
-	 * Sends a MarketUpdate about this specific market to all agents
-	 * without the ledger
-	 * @param Security : the market to update on
-	 */
-	public void sendMarketUpdateNL(IMarket market) {
-		synchronized(market) {
-			for (Entry<Connection, Integer> ID : this.connections.entrySet()) {
-				TradeRequest mupdate = new TradeRequest(0, market.wrap(null),
-						market.getMechanismType());
-				theServer.sendToTCP(ID.getKey().getID(), mupdate);
-			}
 		}
 	}
 

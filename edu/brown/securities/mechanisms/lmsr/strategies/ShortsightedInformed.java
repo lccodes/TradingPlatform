@@ -22,9 +22,9 @@ public class ShortsightedInformed extends ExperimentalAgent {
 			System.out.println(market.price() + " " + this.SIGNAL);
 			if (market.price() < this.SIGNAL) {
 				double shareNum = market.priceToShares(this.SIGNAL);
-				System.out.println("Price to share num: " + shareNum);
+				System.out.println("Signal " + this.SIGNAL + " MP "+ market.price() +" Price to share num: " + shareNum);
 				double sharesToBuy = Math.min(shareNum, market.moniesToShares(this.BUDGET));
-				System.out.println(sharesToBuy + " !!!");
+				System.out.println("Budget " + this.BUDGET +  " w/ mTS " + market.moniesToShares(this.BUDGET));
 				if (sharesToBuy != 0) {
 					market.buy(this, sharesToBuy, 1);
 				}
@@ -34,12 +34,9 @@ public class ShortsightedInformed extends ExperimentalAgent {
 				return;
 			}
 			
-			System.out.println(market.price() + " " + (1 - this.SIGNAL));
 			if (market.price() < (1 - this.SIGNAL)) {
 				double shareNum = market.priceToShares(1-this.SIGNAL);
-				System.out.println("Price to share num: " + shareNum);
 				double sharesToBuy = Math.min(shareNum, market.moniesToShares(this.BUDGET));
-				System.out.println(sharesToBuy + " !!!");
 				if (sharesToBuy != 0) {
 					market.buy(this, sharesToBuy, 1);
 				}

@@ -38,12 +38,12 @@ public class LMSRPlayground {
 		this.WRITER.write("profit,b-a,prediction\n");
 		int totalInformed = sInformed + fInformed;
 		int numberOnes = (int) (prob * totalInformed);
-		List<Integer> nums = new LinkedList<Integer>();
+		List<Double> nums = new LinkedList<Double>();
 		for (int i = 0; i < totalInformed; i++) {
 			if (numberOnes-- > 0) {
-				nums.add(1);
+				nums.add(.99);
 			} else {
-				nums.add(0);
+				nums.add(.01);
 			}
 		}
 		Collections.shuffle(nums);
@@ -73,6 +73,7 @@ public class LMSRPlayground {
 		for (int i = 0; i < this.AGENTS.size(); i++) {
 			this.AGENTS.get(i).setTime(i);
 		}
+		this.SERVER.setBanks(100);
 		LMSRBackend backend = new LMSRBackend(0, param); // TODO: Tell it the
 															// truth and it can
 															// calc profit
@@ -83,8 +84,8 @@ public class LMSRPlayground {
 		}
 		LMSR yes = new LMSR(0, true, backend, true);
 		LMSR no = new LMSR(1, false, backend, true);
-		this.SERVER.manager.openTwoSided(yes);
-		this.SERVER.manager.openTwoSided(no);
+		this.SERVER.getManager().openTwoSided(yes);
+		this.SERVER.getManager().openTwoSided(no);
 		for (int i = 0; i < this.AGENTS.size(); i++) {
 			this.SERVER.sendMarketUpdateNL(no);
 			this.SERVER.sendMarketUpdateNL(yes);
