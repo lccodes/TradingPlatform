@@ -1,4 +1,4 @@
-package brown.lab.lab8;
+package brown.lab.finalproject;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,9 +12,9 @@ import brown.exceptions.AgentCreationException;
 import brown.messages.markets.GameReport;
 import brown.setup.Logging;
 
-public class Lab8Demo extends Lab8Agent {
+public class FinalProjectDemo extends FinalProjectAgent {
 
-	public Lab8Demo(String host, int port) throws AgentCreationException {
+	public FinalProjectDemo(String host, int port) throws AgentCreationException {
 		super(host, port);
 	}
 
@@ -23,6 +23,8 @@ public class Lab8Demo extends Lab8Agent {
 		System.out.println("Start");
 		Map<FullType, Double> toBid = new HashMap<FullType,Double>();
 		for (Entry<Set<FullType>, Double> types : this.myValuation.entrySet()) {
+			System.out.println("Sample others...");
+			System.out.println(this.sampleValuation());
 			for (FullType type : types.getKey()) {
 				toBid.put(type, types.getValue()/(double)types.getKey().size());
 			}
@@ -35,6 +37,7 @@ public class Lab8Demo extends Lab8Agent {
 	@Override
 	public void onSimpleOpenOutcry(SimpleWrapper market) {
 		Set<FullType> toBid = new HashSet<FullType>();
+		System.out.println(this.sampleValuation());
 		for (Set<FullType> types : this.myValuation.keySet()) {
 			for (FullType type : types) {
 				if (market.getMarketState(type).PRICE < Math.min(100,this.myValuation.get(types))) {
@@ -55,7 +58,7 @@ public class Lab8Demo extends Lab8Agent {
 	}
 	
 	public static void main(String[] args) throws AgentCreationException {
-		new Lab8Demo("localhost", 2121);
+		new FinalProjectDemo("localhost", 2121);
 		while(true){}
 	}
 

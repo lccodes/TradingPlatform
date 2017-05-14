@@ -19,7 +19,7 @@ public class OutcryQueryRule implements QueryRule {
 		if (state.getAllocation().getType().equals(BundleType.Simple)) {
 			return new TradeRequest(0, 
 					new SimpleWrapper(state.getID(), ledger, type, MechanismType.OpenOutcry, 
-							(SimpleBidBundle) state.getAllocation()), 
+							(SimpleBidBundle) state.getAllocation(), state.getEligibility()), 
 							MechanismType.OpenOutcry);
 		} else {
 			return new TradeRequest(0, 

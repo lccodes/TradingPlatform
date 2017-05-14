@@ -9,7 +9,7 @@ import brown.assets.value.FullType;
 
 
 public class SimpleBidBundle implements BidBundle {
-	private final Map<FullType, BidBundle.BidderPrice> BIDS;
+	private final Map<FullType,MarketState> BIDS;
 	private final BundleType BT;
 	
 	/**
@@ -26,7 +26,7 @@ public class SimpleBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public SimpleBidBundle(Map<FullType, BidBundle.BidderPrice> bids) {
+	public SimpleBidBundle(Map<FullType, MarketState> bids) {
 		if (bids == null) {
 			throw new IllegalArgumentException("Null bids");
 		}
@@ -37,7 +37,7 @@ public class SimpleBidBundle implements BidBundle {
 	@Override
 	public double getCost() {
 		double total = 0;
-		for (BidBundle.BidderPrice b : this.BIDS.values()) {
+		for (MarketState b : this.BIDS.values()) {
 			total += b.PRICE;
 		}
 		return total;
@@ -50,20 +50,20 @@ public class SimpleBidBundle implements BidBundle {
 
 	@Override
 	public BidBundle wipeAgent(Integer ID) {
-		Map<FullType, BidBundle.BidderPrice> newBids = new HashMap<FullType, BidBundle.BidderPrice>();
-		for (Entry<FullType, BidderPrice> entry : this.BIDS.entrySet()) {
+		Map<FullType, MarketState> newBids = new HashMap<FullType, MarketState>();
+		for (Entry<FullType, MarketState> entry : this.BIDS.entrySet()) {
 			if (ID.equals(entry.getValue().AGENTID)) {
 				newBids.put(entry.getKey(), entry.getValue());
 			} else {
-				newBids.put(entry.getKey(), new BidBundle.BidderPrice(null,entry.getValue().PRICE));
+				newBids.put(entry.getKey(), new MarketState(null,entry.getValue().PRICE));
 			}
 		}
 		
 		return new SimpleBidBundle(newBids);
 	}
 	
-	public BidBundle.BidderPrice getBid(FullType type) {
-		for (Entry<FullType, BidderPrice> ot : this.BIDS.entrySet()) {
+	public MarketState getBid(FullType type) {
+		for (Entry<FullType, MarketState> ot : this.BIDS.entrySet()) {
 			if(ot.getKey().equals(type)) {
 				return ot.getValue();
 			}

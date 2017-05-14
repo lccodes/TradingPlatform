@@ -1,0 +1,33 @@
+\section{Results}
+The outcome of Value Iteration on our Markov Decision Process reveals that the cost minimizing policy converges to the Online Learner algorithm. This was contrary to our intuition, which suggested that the greedy policy of the Online Learner would be overly costly in order to meet the constraint every round when it only needs to meet the constraint after the last round. In actuality, however, the running average turns out to be the cost minimizing selection after each time step in expectation. \\
+
+\subsection{Cost Minimizing Policy}
+The fact that the Online Learner algorithm is the cost minimizing policy becomes apparent when examining all possible paths that result in the final market price equaling the equilibrium price. In order to arrive at the equilibrium price, the equilibrium price must be between the penultimate price and the final agent's belief $\Agent^{\Time}_\AgentBelief$. This is a trivial result of the arithmetic mean and myopic agent behavior. The range of valid $\LMSRb$ settings holds using that logic via backward induction for each time step from the end time $\EventTime$ to the origin $\Time=0$. \\
+
+\begin{conjecture}
+The Online Learner finds the minimum cost path where the final market price equals the equilibrium price.
+\end{conjecture}
+
+Consider another algorithm that satisfies the validity condition, which would also ensure that the penultimate price is the farthest price from the equilibrium price. Similarly, another valid algorithm would ensure that the penultimate price is already equal to the equilibrium price. The trade-off between these two extreme algorithms is that the more an agent is able to move the market price, the more shares that they buy and therefore the more liability that the market maker must take on. In order to limit how far an agent can move the market price, however, the market maker must increase $\LMSRb$ which also increases the market maker's liability. The mean of the beliefs aggregated at time $\Time$ is the optimal point between those two extreme strategies that minimizes the market maker's cost of ensuring that the final price will equal the equilibrium price.\\
+
+\subsection{Unique Solution}
+In addition to being the minimum cost policy when the agents beliefs and order are known a priori, the Online Learner is the only algorithm which guarantees that the final market price equals the equilibrium price. \\
+
+\begin{theorem}
+The Online Learner is the unique solution where the final market price equals the equilibrium price when the agents' beliefs are not known a priori.
+\end{theorem}
+
+PROOF. Consider the penultimate market price $p$, the average that is known to the market maker $a = \frac{\sum_{i=1}^{|\Agents|-1} \Agent^{i}_{\AgentBelief}}{|\Agents|-1}$ before the final agent arrives, and the final agent's belief $v = \Agent^{|\Agents|}_{\AgentBelief}$, which is unknown to the market maker but is not equal to $a$. The equilibrium price $P$ would therefore be $v > P > a$ or $v < P < a$.\\
+
+Consider three cases for the penultimate market price $p$ where $p < a$, $p > a$, or $p = a$. If the market maker utilized a strategy such that $p < a$ then $\exists v$ such that $v < p < P < a$, which would result in there being no choice of $\LMSRb$ that would result in the final market price equaling $P$. If the market maker utilized a strategy such that $p > a$ then $\exists v$ such that $v > p > P > a$, which would result in there being no choice of $\LMSRb$ that would result in the final market price equaling $P$. If the market maker utilized a strategy such that $p = a$ then $\forall v$, $v > P > p = a$ or $p = a > P > v$, which would result in there existing a choice of $\LMSRb$ that would result in the final market price equaling $P$.\\
+
+Therefore the only strategy is that guaranteed to succeed is where $p=a$, which is the Online Learner's algorithm.$\blacksquare$\\
+
+\subsection{Optimal Strategy}
+Hanson demonstrates that a market maker using LMSR loses the difference between the score of the initial distribution, which is set by the market maker, and the score of the final distribution \cite{Hanson2003}. This is due to Path Independence \cite{Othman:2013:PLA:2509413.2509414}. Under the assumption that the equilibrium price is known a priori, we can show that the Online Learner is cost-less provided that the market maker initializes the price to the equilibrium price. \\
+
+\begin{theorem}
+When the equilibrium price is known a priori, the Online Learner is a cost-less solution where the final market price equals the equilibrium price if the equilibrium price is set as the initial price.
+\end{theorem}
+
+PROOF. Theorem 9.2 proves that the Online Learner recovers the equilibrium price even if the agents' individual beliefs and order is unknown. Hanson proves that the total cost of aggregating $|\Agents|$ reports is equal to the cost of moving the initial price to the final price \cite{Hanson2003}. Since the Online Learner guarantees that the final price is equal to the equilibrium price and can set the initial price to the equilibrium price, the initial price is therefore equal to the equilibrium price. Therefore the Online Learner is cost-less since the initial price equals the final price. $\blacksquare$\\ 

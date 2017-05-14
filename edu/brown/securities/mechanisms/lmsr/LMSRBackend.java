@@ -1,5 +1,6 @@
 package brown.securities.mechanisms.lmsr;
 
+
 /**
  * Private backend prediction market implementation
  * Agents are provided pointers to the public face
@@ -13,6 +14,7 @@ public class LMSRBackend {
 	public double no;
 	public double b;
 	public double alpha;
+	public double profit;
 	
 	public LMSRBackend() {
 		this.yes = 0;
@@ -20,6 +22,7 @@ public class LMSRBackend {
 		this.b = 1;
 		this.alpha = 0;
 		this.ID = -1;
+		this.profit = 0;
 	}
 	
 	public LMSRBackend(int ID, double b) {
@@ -28,6 +31,7 @@ public class LMSRBackend {
 		this.b = b;
 		this.alpha = 0;
 		this.ID = ID;
+		this.profit = 0;
 	}
 	
 	public LMSRBackend(int ID, double b, double yes, double no) {
@@ -36,6 +40,7 @@ public class LMSRBackend {
 		this.no = no;
 		this.alpha = 0;
 		this.ID = ID;
+		this.profit = 0;
 	}
 	
 	/*
@@ -83,6 +88,7 @@ public class LMSRBackend {
 	 * @param shareNum : int
 	 */
 	public void yes(Integer agentID, double shareNum) {
+		this.profit += cost(shareNum, 0);
 		this.yes += shareNum;
 	}
 	
@@ -91,14 +97,16 @@ public class LMSRBackend {
 	 * @param shareNum : int
 	 */
 	public void no(Integer agentID, double shareNum) {
+		this.profit += cost(0, shareNum);
 		this.no += shareNum;
 	}
 	
-	/*
+	/**
 	 * How many shares does it take to get to the desired price
 	 * @param desired price : double 
 	 */
 	public double howMany(double price, boolean direction) {
+		//System.out.println("Wanted " + price + " with " + direction + " currently at " + this.price(direction));
 	  double top = !direction ? this.yes : this.no;
 	  double side = direction ? this.yes : this.no;
 	  double p = direction ? price : (1-price);
@@ -106,7 +114,7 @@ public class LMSRBackend {
 	  return temp;
 	}
 	
-	/*
+	/**
 	 * How many shares does it take to fill this budget
 	 */
 	public double budgetToShares(double budget, boolean direction) {
@@ -133,6 +141,26 @@ public class LMSRBackend {
 	 */
 	public Integer getId() {
 		return this.ID;
+	}
+	
+	public double getProfit() {
+		return this.profit;
+	}
+	
+	public static void main(String[] args) {
+		LMSRBackend backend = new LMSRBackend(0, 10);
+		for (int i = 0; i < 5; i++) {
+			double price = Math.random();
+			boolean dir = price > backend.price(true);
+			double num = backend.howMany(price, dir);
+			//System.out.println("> " + backend.budgetToShares(1, dir) + " " + num + " " + price + " " + backend.price(true));
+			if (dir) {
+				backend.yes += Math.min(backend.budgetToShares(1, dir), num);
+			} else {
+				backend.no += Math.min(backend.budgetToShares(1, dir), num);
+			}
+			System.out.println( i + " \t" + backend.price(true) + " \t" + backend.yes + " \t" + backend.no);
+		}
 	}
 	
 }

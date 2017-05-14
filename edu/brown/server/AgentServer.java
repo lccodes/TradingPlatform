@@ -129,7 +129,6 @@ public abstract class AgentServer {
 	protected void onLimitOrder(Connection connection, Integer privateID,
 			MarketOrder limitorder) {
 		if (limitorder.marketID == null) {
-			System.out.println("FUCK");
 			Ack rej = new Ack(privateID, limitorder, true);
 			this.theServer.sendToTCP(connection.getID(), rej);
 			return;
@@ -147,7 +146,6 @@ public abstract class AgentServer {
 				market.cancel(privateID, limitorder.sellShares == 0, 
 						shares, limitorder.price);
 			} else if (limitorder.buyShares > 0) {
-				System.out.println("HI");
 				synchronized (privateID) {
 					Account account = this.bank.get(privateID);
 					if (!market.permitShort()
@@ -155,13 +153,11 @@ public abstract class AgentServer {
 									limitorder.buyShares, limitorder.price)) {
 						Ack rej = new Ack(privateID, limitorder, true);
 						this.theServer.sendToTCP(connection.getID(), rej);
-						System.out.println("NO");
 						return;
 					}
 
 					List<Order> trans = market.buy(privateID,
 							limitorder.buyShares, limitorder.price);
-					System.out.println("WOW");
 					for (Order t : trans) {
 						ITradeable split = null;
 						if (t.GOOD.getCount() > t.QUANTITY) {
@@ -215,7 +211,6 @@ public abstract class AgentServer {
 					}
 				}
 			} else if (limitorder.sellShares > 0) {
-				System.out.println("AYY");
 				synchronized (privateID) {
 					Account sellerAccount = this.bank.get(privateID);
 					double qToSell = limitorder.sellShares;
@@ -503,13 +498,13 @@ public abstract class AgentServer {
 					} else {
 						for (Map.Entry<Connection, Integer> id : this.connections
 								.entrySet()) {
-							TradeRequest tr = auction.wrap(id.getValue(),
-									this.manager.getLedger(auction.getID())
-											.getSanitized(id.getValue()));
+							TradeRequest tr = auction.wrap(id.getValue(), new Ledger());
+									//this.manager.getLedger(auction.getID())
+									//		.getSanitized(id.getValue()));//TODO: Fix
 							if (tr == null) {
 								continue;
 							}
-							this.theServer.sendToTCP(id.getKey().getID(), tr);
+							this.theServer.sendToUDP(id.getKey().getID(), tr);
 						}
 						this.manager.getLedger(auction.getID()).clearLatest();
 					}
@@ -626,7 +621,7 @@ public abstract class AgentServer {
 	 */
 	public void sendBankUpdate(Integer ID, Account oldA, Account newA) {
 		BankUpdate bu = new BankUpdate(ID, oldA.toAgent(), newA.toAgent());
-		theServer.sendToTCP(this.privateToConnection(ID).getID(), bu);
+		theServer.sendToUDP(this.privateToConnection(ID).getID(), bu);
 	}
 
 	/**

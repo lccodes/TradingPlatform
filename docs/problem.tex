@@ -1,0 +1,48 @@
+\section{Problem}
+The liquidity parameter $\LMSRb$ both controls how quickly that agents can change the market price and bounds the loss that the market maker can incur. Our algorithm will deal with this trade-off by minimizing the the market maker's loss while constraining the market's final price to equal the collective belief within a small margin of error.
+
+\subsection{Profit}
+  \begin{definition} (Market Maker Revenue)
+  \label{def:mmr}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the revenue obtained from $\OptionPrice_\Market$ is defined as
+     $$R(\OptionPrice_\Market, \Agents_\Option) = 
+      \sum_{\Agent\in\Agents_\Option} \left[
+	\int_{\Time = 0}^{\Time = \Option_\Time} 
+	  \Price_\Market(\Option_0,\Agent,\Time, \AgentStrategy^{0}_{\Agent}(\Time))\AgentStrategy^{0}_{\Agent}(\Time)dt
+	  + \int_{\Time = 0}^{\Time = \Option_\Time} 
+	  \Price_\Market(\Option_1,\Agent,\Time, \AgentStrategy^{1}_{\Agent}(\Time))\AgentStrategy^{1}_{\Agent}(\Time)dt\right]$$
+  \end{definition}
+  
+    \begin{definition} (Market Maker Cost)
+  \label{def:mmc}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the cost to $\OptionPrice_\Market$ is defined as
+     $$ C(\OptionPrice_\Market, \Agents_\Option) =
+     \sum_{\Agent\in\Agents_\Option} \left[
+	\int_{\Time = 0}^{\Time = \Option_\Time} 
+	\Revealer(\Option_\Event)\AgentStrategy^{0}_{\Agent}(\Time)dt
+	+\int_{\Time = 0}^{\Time = \Option_\Time} 
+	\Revealer(\Option_\Event)\AgentStrategy^{1}_{\Agent}(\Time)dt
+	\right]$$
+  \end{definition}
+
+      \begin{definition} (Market Maker Profit)
+  \label{def:mmf}
+   Given a market maker $\OptionPrice_\Market$ and a set of participating agents
+   $\Agents_\Option$, the profit of $\OptionPrice_\Market$ is defined as
+     $$ P(\OptionPrice_\Market, \Agents_\Option) = R(\OptionPrice_\Market, \Agents_\Option) 
+     - C(\OptionPrice_\Market, \Agents_\Option)$$
+  \end{definition}
+  
+\begin{definition} (Loss-Minimizing Market Maker).
+\label{def:pmmm}
+Among all Market Makers $\MarketMakers$, given a set of participating agents $\Agents_\Option$ find the one that minimizes loss, or maximizes Profit:
+$$ PM(\MarketMakers, \Agents_\Option) = arg max_{\Agent \in \Agents_\Option} P(\OptionPrice_\Market, \Agents_\Option)$$
+\end{definition}
+
+\subsection{Aggregate Belief}
+We define the aggregate belief according to the Rational Expectations Equilibrium.\\
+
+The \mydef{Rational Expectations Equilibrium} implies that the final price will be the average of each agent's belief since all agents have equal budgets under our model. Formally: $\OptionPrice_\EventTime = \frac{\sum_{i=1}^{|\Agents|} \Agent^{i}_{\AgentBelief}}{|\Agents|}$. \\
+

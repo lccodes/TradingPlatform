@@ -1,16 +1,12 @@
+\section{Abstract}
+%%TODO
+
 \section{Motivation}
 The Logarithmic Market Scoring Rule (LMSR), while popular in the theoretical
 literature, faces several critical barriers to adoption. The first is that
 the \mydef{market maker} is bounded loss, which is a non-starter for most
-real world applications. The second is that the \mydef{market maker} is not
-sensitive to liquidity. This means that a improperly configured \mydef{market maker}
-might allow any agent with a positive budget to drastically swing the price or at
-the other extreme, not allow any agent to modify the price much at all. LMSR is
-well studied, however, because it has Path Independence and Translation Invariance.
-Many other theoretical \mydef{market makers} have been proposed that also have
-these two properties, but with additional benefits, and some offer tradeoffs in
-order to gain more desirable properties. This work seeks to quantify these
-tradeoffs empirically.
+real world applications. The second is that the \mydef{market maker} is there is no definitive algorithm for setting the liquidity parameter $\LMSRb$. Since LMSR does not necessarily aggregate beliefs according to the rational expectations equilibrium with
+one preset $\LMSRb$, we want to devise an algorithm for setting $\LMSRb$ such that we recover the rational expectations equilibrium aggregate belief. In addition, since $\LMSRb$ determines the market maker's loss, we want the selection of $\LMSRb$ values to be the least costly selection.
 
-\section{Goals}
-To test three different market maker mechanisms, including a novel design, for their lprofit expectation and accuracy. 
+\section{Goal}
+This work seeks to define an algorithm for determining the liquidity parameter in LMSR that minimizes cost while still recovering the aggregate belief according to the rational expectations equilibrium.

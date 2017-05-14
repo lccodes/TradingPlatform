@@ -8,11 +8,17 @@ public class LukeMM extends LiquiditySensitive {
 		this.count = 2;
 	}
 	
+	public LukeMM() {
+		super(0);
+		this.count = 2;
+	}
+	
 	/*
 	 * Returns a share to an agent that buys yes
 	 * @param shareNum : int
 	 */
 	public void yes(Integer agentID, double shareNum) {
+		this.profit += cost(shareNum, 0);
 		this.yes += shareNum;
 		count++;
 	}
@@ -22,6 +28,7 @@ public class LukeMM extends LiquiditySensitive {
 	 * @param shareNum : int
 	 */
 	public void no(Integer agentID, double shareNum) {
+		this.profit += cost(0, shareNum);
 		this.no += shareNum;
 		count++;
 	}
@@ -29,6 +36,11 @@ public class LukeMM extends LiquiditySensitive {
 	@Override
 	protected double getB() {
 		return (this.alpha) * (this.yes + this.no) * this.count;
+	}
+	
+	@Override
+	protected double getB(double newq) {
+		return (this.alpha) * (newq+this.yes + this.no) * this.count;
 	}
 	
 	public static void main(String[] args) {

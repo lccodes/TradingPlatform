@@ -9,6 +9,7 @@ import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
+import brown.auctions.bundles.MarketState;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.auctions.interfaces.PaymentRule;
@@ -16,7 +17,7 @@ import brown.auctions.prules.PaymentType;
 import brown.setup.Logging;
 
 public class SimpleClockRule implements PaymentRule {
-	private final SimpleBidBundle RESERVE = new SimpleBidBundle(new HashMap<FullType, BidBundle.BidderPrice>());
+	private final SimpleBidBundle RESERVE = new SimpleBidBundle(new HashMap<FullType, MarketState>());
 
 	@Override
 	public List<Order> getPayments(MarketInternalState state) {
@@ -28,7 +29,7 @@ public class SimpleClockRule implements PaymentRule {
 		
 		SimpleBidBundle bundle = (SimpleBidBundle) state.getAllocation();
 		for(ITradeable trade : state.getTradeables()) {
-			BidBundle.BidderPrice winner = bundle.getBid(trade.getType());
+			MarketState winner = bundle.getBid(trade.getType());
 			if (winner.AGENTID != null) {
 				orders.add(new Order(winner.AGENTID,null,winner.PRICE,
 						trade.getCount(),trade));

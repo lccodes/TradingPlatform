@@ -1,6 +1,7 @@
 \section{Experimental Design}
+For our experiments, we will assume that private beliefs are ${0,1}$ and that budgets are equal.
 \subsection{Metrics}
-For each of the following configurations, we will rank our three market makers against our two benchmarks defined above: \mydef{Profit-Maximizing Market Maker} and \mydef{Accuracy} according to RE, PI, and PIT.
+For each of the following configurations, we will rank our three market makers against our two benchmarks defined above: \mydef{Profit-Maximizing Market Maker} and \mydef{Accuracy} according to RE and PI.
 
 \subsection{Configurations}
 \subsubsection{Market Makers}
@@ -14,7 +15,7 @@ We will run each agent arrangement against the following market makers:
 \end{enumerate}
 
 \subsection{Agents}
-We will run each of the following configurations with 9 agents, 49 agents, and 99 agents. Prediction markets vary between miniscule and small in market depth so this represents a reasonable range for evaluation. The odd numbers prohibit market outcomes at .5. The final price for each configuration will be the average of the prices that result from every ordering of the agents.
+We will run each of the following configurations with 9 agents, 49 agents, and 99 agents. Prediction markets vary between minuscule and small in market depth so this represents a reasonable range for evaluation. The odd numbers prohibit market outcomes at .5. The final price for each configuration will be the average of the prices that result from every ordering of the agents.
 \begin{enumerate}
 \item Informed and Uninformed Shortsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
 \item Informed and Uninformed Farsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
@@ -84,11 +85,11 @@ maximizing.
 This research will use the following metrics to evaluate each of the five mechanisms.
 \subsubsection{Liquidity Sensitivity}
 This research uses a novel definition of the vague concept of liquidity sensitivity. The need
-for a unified definiton stems from the known issue that LMSR can provide \"too little\" or 
+for a unified definition stems from the known issue that LMSR can provide \"too little\" or 
 \"too much\" weight to each agent depending on its liquidity parameter and market depth. One extreme
 example us that an infinitesimally low liquidity parameter will allow an \mydef{agent} with a nonzero
 budget to dictate the market price regardless of how many \mydef{agents} have already participated in
-the market. Our novel definition attempts to quanity consistency across \mydef{market depths} without
+the market. Our novel definition attempts to quantity consistency across \mydef{market depths} without
 overly constraining implementations. \\
 
 We define a \mydef{market maker} as \mydef{liquidity sensitive} if two \mydef{agents} that have identical
@@ -146,7 +147,7 @@ the 10 simulations have the \mydef{market} predicting $Outcome_{1}$ then the \my
 \section{Experimental Design}
 The following simulations will be run by having an identical set of agents enter each \mydef{market} using each
 of the five \mydef{market makers}. After each simulation, the \mydef{market makers} will be scored for every
-metric. After all the simulations, the \mydef{market makers} will be ranked for each metric depending on the emperical
+metric. After all the simulations, the \mydef{market makers} will be ranked for each metric depending on the empirically
 results. A simulation will be run for the cross product of the following characteristics:
 \begin{enumerate}
   \item Agent Number: 3, 5, 10, 50, 100, 1000, 10000.

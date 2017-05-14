@@ -1,5 +1,6 @@
 package brown.lab;
 
+import brown.lab.finalproject.FinalProjectGood;
 import brown.lab.lab5.LemonadeReport;
 import brown.lab.lab8.Lab8Good;
 import brown.setup.Setup;
@@ -18,6 +19,7 @@ public class GameSetup implements Setup{
     kryo.register(Lab8Good.class);
     kryo.register(ValuationRegistration.class);
     kryo.register(LemonadeReport.class);
+    kryo.register(FinalProjectGood.class);
     //kryo.register(LemonadeWrapper.class);
   }
 

@@ -1,28 +1,42 @@
 package brown.auctions.activity;
 
-import java.util.List;
-
-import brown.assets.accounting.Order;
+import brown.assets.value.FullType;
+import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.ActivityRule;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
 
 public class SMRAActivity implements ActivityRule {
-	private double totalPayments = 0;
-	private List<Order> oldPayments = null;
 
 	@Override
 	public boolean isAcceptable(MarketInternalState state, Bid bid) {
-		if (state.getReserve().getType().equals(bid.Bundle.getType())) {
-			if (oldPayments != state.getPayments()) {
-				totalPayments = 0;
-				for (Order o : state.getPayments()) {
-					totalPayments += o.COST;
-				}
+		double oldTotalNewBid = 0;
+		double newTotalNewBId = 0;
+		double oldTotalOldBid = 0;
+		double newTotalOldBid = 0;
+		SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
+		SimpleBidBundle oldBundle = (SimpleBidBundle) state.getAllocation();
+		for (FullType demanded : bundle.getDemandSet()) {
+			if (bid.AgentID.equals(oldBundle.getBid(demanded).AGENTID)) {
+				newTotalNewBId += oldBundle.getBid(demanded).PRICE;
+			} else {
+				newTotalNewBId += oldBundle.getBid(demanded).PRICE + state.getIncrement();
 			}
-			return bid.Bundle.getCost() > totalPayments;
+			oldTotalNewBid += oldBundle.getBid(demanded).PRICE;
 		}
-		return false;
+		
+		for (FullType oldDemanded : oldBundle.getDemandSet()) {
+			if (bid.AgentID.equals(oldBundle.getBid(oldDemanded).AGENTID)
+					&& bundle.getDemandSet().contains(oldDemanded)) {
+				oldTotalOldBid += oldBundle.getBid(oldDemanded).PRICE;
+				newTotalOldBid += oldBundle.getBid(oldDemanded).PRICE;
+			} else {
+				newTotalOldBid += oldBundle.getBid(oldDemanded).PRICE + state.getIncrement();
+			}
+		}
+
+		return (newTotalOldBid - oldTotalOldBid) 
+				>= (newTotalNewBId - oldTotalNewBid);
 	}
 
 }

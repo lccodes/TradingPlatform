@@ -19,7 +19,7 @@ public class SealedBidQuery implements QueryRule {
 		if (state.getAllocation().getType().equals(BundleType.Simple)) {
 			return new TradeRequest(0, 
 					new SimpleWrapper(state.getID(), ledger, type, MechanismType.SealedBid, 
-							(SimpleBidBundle) state.getReserve()), 
+							(SimpleBidBundle) state.getReserve(), state.getEligibility()), 
 							MechanismType.OpenOutcry);
 		} else {
 			return new TradeRequest(0, 

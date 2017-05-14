@@ -9,26 +9,26 @@ import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
-import brown.auctions.bundles.BidBundle.BidderPrice;
+import brown.auctions.bundles.MarketState;
 import brown.auctions.interfaces.AllocationRule;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
 import brown.setup.Logging;
 
 public class SimpleDemandAllocation implements AllocationRule {
-	private Map<FullType, BidBundle.BidderPrice> lastDemand;
+	private Map<FullType, MarketState> lastDemand;
 
 	public SimpleDemandAllocation() {
-		this.lastDemand = new HashMap<FullType, BidBundle.BidderPrice>();
+		this.lastDemand = new HashMap<FullType, MarketState>();
 	}
 
 	@Override
 	public BidBundle getAllocation(MarketInternalState state) {
 		//System.out.println("WHUT " + state.getBids());
-		Map<FullType, BidBundle.BidderPrice> highest = new HashMap<FullType, BidBundle.BidderPrice>();
+		Map<FullType, MarketState> highest = new HashMap<FullType, MarketState>();
 		for (ITradeable trade : state.getTradeables()) {
-			BidBundle.BidderPrice lastHigh = this.lastDemand.getOrDefault(
-					trade.getType(), new BidBundle.BidderPrice(null, 0));
+			MarketState lastHigh = this.lastDemand.getOrDefault(
+					trade.getType(), new MarketState(null, 0));
 			boolean updated = false;
 			for (Bid bid : state.getBids()) {
 				if (updated) {
@@ -40,7 +40,7 @@ public class SimpleDemandAllocation implements AllocationRule {
 					if (bundle.isDemanded(trade.getType())
 							&& !bid.AgentID.equals(lastHigh.AGENTID)) {
 						updated = true;
-						highest.put(trade.getType(), new BidBundle.BidderPrice(
+						highest.put(trade.getType(), new MarketState(
 								bid.AgentID, lastHigh.PRICE));
 					}
 				} else {
@@ -51,16 +51,16 @@ public class SimpleDemandAllocation implements AllocationRule {
 		}
 
 		state.clearBids();
-		for (Entry<FullType, BidderPrice> entry : highest.entrySet()) {
+		for (Entry<FullType, MarketState> entry : highest.entrySet()) {
 			this.lastDemand.put(
 					entry.getKey(),
-					new BidBundle.BidderPrice(entry.getValue().AGENTID, entry
+					new MarketState(entry.getValue().AGENTID, entry
 							.getValue().PRICE + state.getIncrement()));
 		}
 		for (ITradeable t : state.getTradeables()) {
 			if (!highest.containsKey(t.getType())) {
 				highest.put(t.getType(), this.lastDemand.getOrDefault(
-						t.getType(), new BidBundle.BidderPrice(null, 0)));
+						t.getType(), new MarketState(null, 0)));
 			}
 		}
 		//System.out.println(this.lastDemand);

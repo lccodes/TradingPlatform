@@ -6,7 +6,7 @@ import java.util.Set;
 import brown.assets.value.FullType;
 
 public class ComplexBidBundle implements BidBundle {
-	private final Map<Set<FullType>, BidBundle.BidderPrice> BIDS;
+	private final Map<Set<FullType>, MarketState> BIDS;
 	private final BundleType BT;
 	
 	/**
@@ -23,7 +23,7 @@ public class ComplexBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public ComplexBidBundle(Map<Set<FullType>, BidBundle.BidderPrice> bid, Integer agent) {
+	public ComplexBidBundle(Map<Set<FullType>, MarketState> bid, Integer agent) {
 		this.BIDS = bid;
 		this.BT = BundleType.Complex;
 	}
@@ -31,7 +31,7 @@ public class ComplexBidBundle implements BidBundle {
 	@Override
 	public double getCost() {
 		double max = 0;
-		for (BidBundle.BidderPrice b : this.BIDS.values()) {
+		for (MarketState b : this.BIDS.values()) {
 			max = Math.max(b.PRICE, max);
 		}
 		return max;
@@ -47,7 +47,7 @@ public class ComplexBidBundle implements BidBundle {
 		return this.BT;
 	}
 	
-	public BidBundle.BidderPrice getBid(Set<FullType> types) {
+	public MarketState getBid(Set<FullType> types) {
 		return this.BIDS.get(types);
 	}
 

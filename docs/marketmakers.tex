@@ -1,24 +1,21 @@
-\section{Market Makers}
-In these experiments we will test the following three market markers $\Market$.
-
-\subsection{\href{http://mason.gmu.edu/~rhanson/mktscore.pdf}{Logarithmic Market Scoring Rule}}
-LMSR is a strictly proper scoring rule developed by Robert Hanson. A scoring rule is strictly proper if the forecaster has no incentive to report anything but their true belief. This condition is the same as stating that LMSR is myopically incentive compatible.\\ 
+\section{\href{http://mason.gmu.edu/~rhanson/mktscore.pdf}{Logarithmic Market Scoring Rule}}
+LMSR is a strictly proper scoring rule proposed by Robin Hanson \cite{Hanson2003}. A scoring rule is strictly proper if the forecaster has no incentive to report anything but their true belief. This condition is the same as stating that LMSR is myopically incentive compatible.\\ 
 
 LMSR uses a logarithmic cost function: \\
-$C(\QuantityYes,\QuantityNo) = \LMSRb\ln(e^{\frac{\QuantityYes}{\LMSRb}} + e^{\frac{\QuantityNo}{\LMSRb}})$. The cost charged to a trader wanting to buy $q_a$ shares of $\Option_0$ and $q_b$ shares of $\Option_1$ is: $C(\QuantityYes + q_a, \QuantityNo + q_b) - C(q_1,\QuantityNo)$. Traders are charged for their movement in the market prediction. $\LMSRb$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $\LMSRb\ln(2)$. A large $\LMSRb$ means that it would cost a lot to move the market price while a small $\LMSRb$ makes large swings relatively inexpensive. Formally, LMSR is $\Market(\LMSRb)$.\\
+$C(\QuantityYes,\QuantityNo) = \LMSRb\ln(e^{\frac{\QuantityYes}{\LMSRb}} + e^{\frac{\QuantityNo}{\LMSRb}})$. The cost charged to a trader wanting to buy $q_a$ shares of $\Option_0$ and $q_b$ shares of $\Option_1$ is: $C(\QuantityYes + q_a, \QuantityNo + q_b) - C(q_1,\QuantityNo)$. Agents are charged for their movement in the market prediction. $\LMSRb$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $\LMSRb\ln(2)$. A large $\LMSRb$ means that it would cost a lot to move the market price while a small $\LMSRb$ makes large swings relatively inexpensive.\\
 
 The instantaneous price of LMSR market $\Market$, which is also the market's prediction for the option $\Option_{\{0,1\}}$, is quoted with: $p_{\{0,1\}} = \frac{e^{\frac{q_{\{0,1\}}}{\LMSRb}}}{e^{\frac{\QuantityYes}{\LMSRb}} + e^{\frac{\QuantityNo}{\LMSRb}}}$. \\
 
 \textbf{Advantages}\\
 \begin{enumerate}
-\item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate [Hanson 2003]}
-\item{Translation Invariance - all prices sum to unity. (Direct mapping to a probability.)}
+\item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate (Hanson, 2003)}
+\item{Translation Invariance - all prices sum to unity. This ensures that the price of each outcome state maps to a probability.}
 \end{enumerate}
 
 \textbf{Disadvantages} \\
 \begin{enumerate}
-\item{Liquidity Insensitive - the market cannot adjust to periods with low or high activity. The market maker must set the liquidity parameter based on their prior belief, but has little to no guidance on how to set it.}
-\item{Guaranteed Loss - the market maker cannot profit and has a guaranteed bounded loss.}
+\item{Liquidity Insensitive - the market cannot adjust to periods with low or high activity. The market maker must set the liquidity parameter based on their prior belief, but has little to no guidance on how to set it. \cite{Othman:2013:PLA:2509413.2509414}}
+\item{Guaranteed Loss - the market maker cannot profit, but has a bounded loss.}
 \end{enumerate}
 
 \subsection{LMSR Algorithms}
@@ -27,113 +24,148 @@ The instantaneous price of LMSR market $\Market$, which is also the market's pre
 \TitleOfAlgo{cost}
 \SetKwInOut{Input}{input}
 \SetKwInOut{Output}{output}
-\Input{market $\Market$, liqudity parameter $\LMSRb$, new quantity $\Quantity$, direction $\Option_\OptionDirection$}
-\Output{cost $\Money$}
-oldScore = $\LMSRb * \exp(\frac{\Market_\QuantityYes}{\LMSRb}) + \exp(\frac{\Market_\QuantityNo}{\LMSRb})$\;
+\Input{state $ \left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$, to trade $\Quantity$, \mydef{direction} $\{0,1\}$}
+\Output{cost}
+oldScore = $\LMSRb \exp\left(\frac{\QuantityYes}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo}{\LMSRb}\right)$\\
 \eIf{direction == YES}{
-	newScore = $\LMSRb * \exp(\frac{\Market_\QuantityYes + \Quantity}{\LMSRb}) + \exp(\frac{\Market_\QuantityNo}{\LMSRb})$\;
+	newScore = $\LMSRb \exp\left(\frac{\QuantityYes + \Quantity}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo}{\LMSRb}\right)$\
 }{
-	newScore = $\LMSRb * \exp(\frac{\Market_\QuantityYes}{\LMSRb}) + \exp(\frac{\Market_\QuantityNo + \Quantity}{\LMSRb})$\;
+	newScore = $\LMSRb \exp\left(\frac{\QuantityYes}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo + \Quantity}{\LMSRb}\right)$\
 }
 
-return newScore - oldScore\;
+return newScore - oldScore\
 \end{algorithm}
 
 \begin{algorithm}[H]
 \SetAlgoLined
-\TitleOfAlgo{priceToShares}
+\TitleOfAlgo{price}
 \SetKwInOut{Input}{input}
 \SetKwInOut{Output}{output}
-\Input{market $\Market$, liqudity parameter $\LMSRb$, desiredPrice $\OptionPrice$, direction boolean}
+\Input{state $\left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$}
+\Output{price}
+quantity, price = getQuantityPrice(state, $\LMSRb$,null,true)\\
+return price\\
+\end{algorithm}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{quantity}
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
+\Input{state $\left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$, belief $\Agent_\AgentBelief$, direction $\in \{\text{true},\text{false}\}$}
 \Output{quantity $\Quantity$}
-\eIf{direction}{
-price = $\Market_\MarketPrice$\;
-side = $\Market_\QuantityYes$\;
-top = $\Market_\QuantityNo$\;
+quantity, price = getQuantityPrice(state,$\LMSRb$,belief,direction)\\
+return quantity\\
+\end{algorithm}
+\newpage
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{getQuantityPrice}
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
+\Input{state $\left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$, belief $\Agent_\AgentBelief$, direction $\in \{\text{true},\text{false}\}$}
+\Output{quantity $\Quantity$, price $\MarketPrice$}
+\eIf{belief == null}{
+	quantity = 0
 }{
-price = (1-$\Market_\MarketPrice$)\;
-side = $\Market_\QuantityNo$\;
-top = $\Market_\QuantityYes$\;
+	\eIf{direction}{
+		price = belief\\
+		side = $\QuantityYes$\\
+		top = $\QuantityNo$\
+	}{
+		price = 1 - belief\\
+		side = $\QuantityNo$\\
+		top = $\QuantityYes$\
+	}
+	quantity = $\LMSRb \log\left(\frac{\text{price}\exp\left(\frac{\text{top}}{\LMSRb}\right)}{1-\text{price}}\right) - \text{side}$\\
 }
-return $\LMSRb * \log((\frac{\text{price}*\exp(\frac{\text{top}}{\LMSRb})}{1-\text{price}}) - \text{side}$\;
+\eIf{direction}{
+	newPrice = price($\QuantityYes$ + quantity, $\QuantityNo$, $\LMSRb$)
+}{
+	newPrice = price($\QuantityYes$, $\QuantityNo$ + quantity, $\LMSRb$)	
+}
+return (quantity, newPrice)\\
 \end{algorithm}
 
 \begin{algorithm}[H]
 \TitleOfAlgo{capitalToShares}
 \SetKwInOut{Input}{input}
 \SetKwInOut{Output}{output}
-\Input{market $\Market$, liqudity parameter $\LMSRb$, money $\Money$, direction boolean}
-\Output{quantity $\Quantity$}
+\Input{market maker $\MarketMaker = \left<\QuantityYes, \QuantityNo, \LMSRb\right>$, money $\Money$, direction $\in \{\text{true},\text{false}\}$}
+\Output{quantity}
 \eIf{direction}{
-side = $\Market_\QuantityYes$\;
-top = $\Market_\QuantityNo$\;
+side = $\QuantityYes$\
+top = $\QuantityNo$\
 }{
-side = $\Market_\QuantityNo$\;
-top = $\Market_\QuantityYes$\;
+side = $\QuantityNo$\
+top = $\QuantityYes$\
 }
-return $\LMSRb * 
-\log(
-	\exp(
+return $\LMSRb 
+\log\left(
+	\exp\left(
 		\frac{\Money}{\LMSRb} + 
-		\log(
-			\exp(\frac{\Market_\QuantityYes}{\LMSRb}) + 
-			\exp(\frac{\Market_\QuantityNo}{\LMSRb})
-		)
-	) - 
-	\exp(\frac{\text{top}}{\LMSRb}
-	)
-) - \text{side}$\;
+		\log\left(
+			\exp\left(\frac{\Market_\QuantityYes}{\LMSRb}\right) + 
+			\exp\left(\frac{\Market_\QuantityNo}{\LMSRb}\right)
+		\right)
+	\right) - 
+	\exp\left(\frac{\text{top}}{\LMSRb}
+	\right)
+\right) - \text{side}$\;
 \end{algorithm}
 
-\subsection{\href{https://www.cs.cmu.edu/~sandholm/liquidity-sensitive automated market maker.teac.pdf}{Practical Liquidity Sensitive Market Maker}}
-The LSMM uses the underlying LMSR mechanism but invokes a novel
-function for setting the liquidity parameter $\LMSRb$. The function is:
-$\LMSRb(q) = \LMSRAlpha \sum_{i} q_i$. $q$ represents the quantity vector
-for each option available from the market maker. Binary prediction markets, which
-we have restricted ourselves to, reduce the function to $\LMSRb(q) = \LMSRAlpha (\QuantityYes + \QuantityNo)$. 
-$\LMSRAlpha$ is an ex ante parameter 
-between $[0,1]$ that represents what commission the market maker takes
-off of each transaction. A larger $\LMSRAlpha$ will result in a higher
-profit.\\
+\subsection{Agent Strategy}
+The Logarithmic Market Scoring rule is known to be myopically incentive compatible, which means that myopic agents bid truthfully \cite{Hanson2003}. There is much work demonstrating that this assumption fails when agents can use \mydef{bluffing} and \mydef{reticence} to mislead other agents and profit off of that deception \cite{Chen2007}. We will show that under our model where each agent participates only once it is impossible to design a dominant non-myopic strategy.\\
 
-The LSMM uses this formula for setting $\LMSRb$ to make the market
-maker profitable and to make it liquidity sensitive, meaning that
-the market maker charges traders differently depending on the market
-depth. \\
+\subsection{Non-myopic Lemma}
+\begin{lemma}
+Given that agents participate only once, the myopic strategy is dominant. 
+\end{lemma}
+PROOF. Consider a non-myopic strategy that is dominant for an agent in a market scoring rule based market. The non-myopic strategy must either move the price $\OptionPrice$ towards their belief $\Agent_\AgentBelief$, but less than their budget $\Agent_\AgentBudget$ permits, or away from it. In the case where the non-myopic strategy moves the price away from their belief, the agent will be scored on how much their price movement improves the market price. In order to make positive profit, the market's price needs to move closer to the underlying true probability. If the agent thinks that this non-myopic strategy is improving the price then they cannot hold belief $\Agent_\AgentBelief$, which is a contradiction. In the second case, if the agent holds belief $\Agent_\AgentBelief$ then it would be strictly preferable to move the price as close as possible to $\Agent_\AgentBelief$. This means that the myopic strategy strictly dominates the non-myopic strategy. Since in both cases the myopic strategy strictly dominates therefore the myopic strategy is dominant under this model. $\blacksquare$\\
 
-\textbf{Advantages}\\
-\begin{enumerate}
-\item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate [Hanson 2003]}
-\item{Liquidity Sensitive - the market adjusts to periods with low or high activity. The market maker decreasingly subsidizes the market as activity rises.}
-\item{Guaranteed Profit - the market maker has unbounded profit but bounded
-loss at near 0.}
-\end{enumerate}
+Therefore, we can safely assume that all agents will behave myopically.\\
 
-\textbf{Disadvantages} \\
-\begin{enumerate}
-\item{Translation Variance - all prices sum beyond unity. (No direct mapping to a probability though it does provide a tight range.)}
-\item Market makers are incentivized to raise their commission to 1, which not only hurts traders, but also increases the valid probability range
-and decreases the number of traders who are willing to trade with the market maker. See $\frac{1}{n} - \LMSRAlpha(n - 1)\ln(n) \leq p(q_i) \leq \frac{1}{n} + \alpha\ln(n)$.
-\end{enumerate}
+% \subsection{\href{https://www.cs.cmu.edu/~sandholm/liquidity-sensitive automated market maker.teac.pdf}{Practical Liquidity Sensitive Market Maker}}
+% The Liquidity Sensitive Market Maker uses the underlying LMSR mechanism but invokes a novel
+% function for setting the liquidity parameter $\LMSRb$. The function is:
+% $\LMSRb(q) = \LMSRAlpha \sum_{i} q_i$, where $q$ represents the quantity of 
+% each option on the market. Binary prediction markets, which
+% we have restricted ourselves to, reduce the function to $\LMSRb(q) = \LMSRAlpha (\QuantityYes + \QuantityNo)$. 
+% The parameter $\LMSRAlpha$  
+% between $(0,1]$ that represents the commission the market maker skims
+% off each transaction. A larger $\LMSRAlpha$ yields a higher commission.\\
 
-\subsection{LSMM Algorithms}
-\begin{algorithm}[H]
-\TitleOfAlgo{$\LMSRb(\LMSRAlpha)$}
-\SetKwInOut{Input}{input}
-\SetKwInOut{Output}{output}
-\Input{alpha $\LMSRAlpha$}
-\Output{liquidity parameter $\LMSRb$}
-return $\LMSRAlpha (\Market_\QuantityYes + \Market_\QuantityNo)$\;
-\end{algorithm}
+% The LSMM uses this formula for setting $\LMSRb$ to make the market
+% maker profitable and to make it liquidity sensitive, meaning that
+% the market maker charges traders differently depending on the market
+% depth. \\
 
-\subsection{Luke's New MM}
-\commentl{It needs to be homogenous degree 1.}
+% \textbf{Advantages}\\
+% \begin{enumerate}
+% \item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate [Hanson 2003]}
+% \item{Liquidity Sensitive - the market adjusts to periods with low or high activity. The market maker decreasingly subsidizes the market as activity rises.}
+% \item{Guaranteed Profit - the market maker has unbounded profit but bounded
+% loss at near 0.}
+% \end{enumerate}
 
-It needs to have an understanding of time. LSMM scales with price but does not reward traders that insert information when the market has less information to offer them in exchange. It incentivizes you to wait until the
-end to trade. \\
+% \textbf{Disadvantages} \\
+% \begin{enumerate}
+% \item{Translation Variance - all prices sum beyond unity. (No direct mapping to a probability though it does provide a tight range.)}
+% \item Market makers are incentivized to raise their commission to 1, which not only hurts traders, but also increases the valid probability range
+% and decreases the number of traders who are willing to trade with the market maker. See $\frac{1}{n} - \LMSRAlpha(n - 1)\ln(n) \leq p(q_i) \leq \frac{1}{n} + \alpha\ln(n)$.
+% \end{enumerate}
 
-It needs to incentivize lowering the commission in a competition. LSMM 
-encourages MMs to ramp up their take in a group setting, which is
-suboptimal for the market at large since that disincentivizes trading. \\
+% \subsection{LSMM Algorithms}
+% \begin{algorithm}[H]
+% \TitleOfAlgo{$\LMSRb(\LMSRAlpha)$}
+% \SetKwInOut{Input}{input}
+% \SetKwInOut{Output}{output}
+% \Input{alpha $\LMSRAlpha$}
+% \Output{liquidity parameter $\LMSRb$}
+% return $\LMSRAlpha (\Market_\QuantityYes + \Market_\QuantityNo)$\;
+% \end{algorithm}
 
-The current function is $\LMSRb(q) = \alpha \left[\sum_{i}(q_i) + t \right]$ where $t$ represents the number of transactions that have occurred.
+% \subsection{Luke's New MM}
+
+% The current function is $\LMSRb(q) = \alpha \left[\sum_{i}(q_i) + t \right]$ where $t$ represents the number of transactions that have occurred.

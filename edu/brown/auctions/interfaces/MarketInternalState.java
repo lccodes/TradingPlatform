@@ -37,4 +37,10 @@ public interface MarketInternalState {
 
 	public double getIncrement();
 
+	public void setMaximizingRevenue(boolean b);
+	
+	public boolean isMaximizingRevenue();
+
+	public int getEligibility();
+
 }

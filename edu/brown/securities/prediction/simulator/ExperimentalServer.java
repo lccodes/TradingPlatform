@@ -7,8 +7,10 @@ import com.esotericsoftware.kryonet.Connection;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.MarketManager;
 import brown.auctions.IMarket;
+import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
 import brown.server.AgentServer;
+import brown.setup.Logging;
 
 public class ExperimentalServer extends AgentServer {
 
@@ -39,8 +41,25 @@ public class ExperimentalServer extends AgentServer {
 		for (Integer ID : this.connections.values()) {
 			Account a = new Account(ID).add(amount);
 			this.setAccount(ID, a);
-			this.sendBankUpdate(ID, null, a);
+			this.sendBankUpdate(ID, new Account(ID), a);
 		}
+	}
+	
+	@Override
+	public void onLimitOrder(Connection connection, Integer privateID,
+			MarketOrder limitorder) {
+		if (limitorder.buyShares != 0 || limitorder.sellShares != 0) {
+			//System.out.println("buy-sell " + limitorder.buyShares + "-" + limitorder.sellShares);
+			super.onLimitOrder(connection, privateID, limitorder);
+		}
+		
+		this.sendMarketUpdateNL(this.manager.getTwoSided(1));
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e) {
+			Logging.log("[+] woken: " + e.getMessage());
+		}
+		this.sendMarketUpdateNL(this.manager.getTwoSided(0));
 	}
 
 }

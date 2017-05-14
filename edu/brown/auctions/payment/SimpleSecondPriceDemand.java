@@ -9,6 +9,7 @@ import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
+import brown.auctions.bundles.MarketState;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.auctions.interfaces.PaymentRule;
@@ -27,7 +28,7 @@ public class SimpleSecondPriceDemand implements PaymentRule {
 		
 		SimpleBidBundle bundle = (SimpleBidBundle) state.getAllocation();
 		for (ITradeable tradeable : state.getTradeables()) {
-			BidBundle.BidderPrice winner = bundle.getBid(tradeable.getType());
+			MarketState winner = bundle.getBid(tradeable.getType());
 			if (winner.AGENTID != null) {
 				orders.add(new Order(winner.AGENTID,null,Math.max(winner.PRICE-state.getIncrement(), 0),
 						tradeable.getCount(),tradeable));
@@ -45,7 +46,7 @@ public class SimpleSecondPriceDemand implements PaymentRule {
 
 	@Override
 	public BidBundle getReserve() {
-		return new SimpleBidBundle(new HashMap<FullType, BidBundle.BidderPrice>());
+		return new SimpleBidBundle(new HashMap<FullType, MarketState>());
 	}
 
 }

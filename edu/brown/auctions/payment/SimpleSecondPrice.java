@@ -10,6 +10,7 @@ import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
+import brown.auctions.bundles.MarketState;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.auctions.interfaces.PaymentRule;
@@ -18,18 +19,18 @@ import brown.messages.auctions.Bid;
 import brown.setup.Logging;
 
 public class SimpleSecondPrice implements PaymentRule {
-	private final Map<FullType, BidBundle.BidderPrice> RESERVE;
+	private final Map<FullType, MarketState> RESERVE;
 	
-	public SimpleSecondPrice(Map<FullType, BidBundle.BidderPrice> reserve) {
+	public SimpleSecondPrice(Map<FullType, MarketState> reserve) {
 		if (reserve == null) {
-			this.RESERVE = new HashMap<FullType, BidBundle.BidderPrice>();
+			this.RESERVE = new HashMap<FullType, MarketState>();
 		} else {
 			this.RESERVE = reserve;
 		}
 	}
 	
 	public SimpleSecondPrice() {
-		this.RESERVE = new HashMap<FullType, BidBundle.BidderPrice>();
+		this.RESERVE = new HashMap<FullType, MarketState>();
 	}
 
 	@Override
@@ -40,19 +41,19 @@ public class SimpleSecondPrice implements PaymentRule {
 			return orders;
 		}
 		SimpleBidBundle alloc = (SimpleBidBundle) state.getAllocation();
-		BidBundle.BidderPrice def = new BidBundle.BidderPrice(null,0);
+		MarketState def = new MarketState(null,0);
 		for (ITradeable trade : state.getTradeables()) {
-			BidBundle.BidderPrice bp = alloc.getBid(trade.getType());
+			MarketState bp = alloc.getBid(trade.getType());
 			if (bp == null || bp.AGENTID == null) {
 				continue;
 			}
-			BidBundle.BidderPrice current = this.RESERVE.getOrDefault(trade.getType(), def);
+			MarketState current = this.RESERVE.getOrDefault(trade.getType(), def);
 			for (Bid bid : state.getBids()) {
 				if (bid.Bundle.getType().equals(BundleType.Simple)) {
 					SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
-					BidBundle.BidderPrice otherbid = bundle.getBid(trade.getType());
+					MarketState otherbid = bundle.getBid(trade.getType());
 					if (otherbid != null && otherbid.PRICE > current.PRICE && bp.PRICE > otherbid.PRICE) {
-						current = new BidBundle.BidderPrice(bp.AGENTID, otherbid.PRICE);
+						current = new MarketState(bp.AGENTID, otherbid.PRICE);
 					}
 				} else {
 					Logging.log("[X] Incorrect bundle type by " + bid.AgentID + " in auction " + bid.AuctionID);

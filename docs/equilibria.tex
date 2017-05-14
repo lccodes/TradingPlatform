@@ -1,39 +1,7 @@
-\section{Equilibria}
-We will use two classic equilibria concepts from the literature, and a third of our design. In both equilibria, agents are assumed to be risk neutral utility maximizers.
+\section{Aggregate Belief}
+In order to constrain our algorithm for setting the liquidity parameter $\LMSRb$ such that the final market price is equal to the aggregate belief, we first must define the aggregate belief. We will use a standard solution concept from the literature.
 
-\subsection{REE and PI}
-The two classic equilibria concepts that we will utilize are the \mydef{Rational Expectations Equilibirium} (REE) and the \mydef{Prior Information Equilibrium} (PI). Rational Expectations hypothesizes that all agents act as if they had the collective belief. The collective belief aggregates the individual beliefs received by each agent. This implies that the prediction markets should be as accurate as the collective belief. Under our model, this implies that prediction market's final belief will match the aggregate belief.\\
+\subsection{Rational Expectations Equilibrium}
+The \mydef{Rational Expectations Equilibrium} (REE) hypothesizes that all agents act as if they knew the private belief $\Agent_\AgentBelief$ of all other agents \cite{10.2307/1911360}. This fully revealing hypothesis implies that all agents would operate as if their belief were the aggregate belief constructed from the pooled information. As a result, the equilibrium price should be the aggregate belief regardless of the market mechanism.\\
 
-\mydef{Prior Information} hypothesizes that all agents act on a linear combination of their private information and the current market price as Bayesian updaters. PI implies that agents will take into account the current market price and their own belief. Agents are willing to participate at their expected value given the two beliefs. \\
-
-A major shortcoming in the current literature, which is reflected in the agent behavior theories, is the generalization that agents cannot choose when to enter the market (Hanson, 2003). Although fixing entry time simplifies equilibrium calculations, in practice agents strategize about the value of a certain entry time $\Time$. Under a model based in REE where the collective belief is truthful, a rational agent would want to be the last decision maker and then have the outcome revealed with certainty.\\
-
-\subsection{No Trade Theorem}
-Under relaxed assumptions from REE and PI, agents wait until $x \in \left[0, |\Agents| \right]$ agents have executed
-their strategies depending on their valuation of the information gained by waiting. It is trivial to show that 
-the valuations are monotonically increasing with $x$. 
-%When $x \geq HOLD$, agents can determine with certainty what the outcome will be, incur no risk, and therefore $\forall x \geq HOLD = E\left[\Option\right]$.
-Each spot  $\forall x$ is worth $\frac{x}{|\Agents|} 
-E\left[\Option\right]$ since each increment in $x$ provides an equal increase in information. This implies that rational agents
-would need to be paid the difference between their riskless profits and the value of $x$ in order to select spot $x | E\left[\Option\right](1 - \frac{x}{|\Agents|})$. In the absence of this payment, it is individually rational for agents to wait until the first half of agents have already entered the market before trading. Therefore, lacking any external payments, no agent will enter the market and no
-trades will occur.
-
-\subsection{Prior Information Timing}
-We present a novel theory called \mydef{Prior Information Timing} (PIT) that takes into account our No Trade
-Theorem where agents choose valuations based on a linear combination of their belief and the market
-price, but value deferring this assesment in order to gain more information. Risk neutral agents can
-price the ability to defer the decision until position $x$ based on the added information of the 
-preceding $x-1$ agents can pay up to the value of the information to defer. In order for markets
-to clear in PIT then the market maker needs to compensate agents for their spot selection.\\
-
-\subsection{Agent Strategy}
-In order to assess accuracy in situations where agents have variable information, we will consider different types of agent strategies in our experiments. There are two types of agent strategies \mydef{shortsighted} $\Simple$ and \mydef{farsighted} $\Farsighted$. Similarly, \mydef{informed} $\Informed$ agents have an exogenous belief about the outcome whereas \mydef{uninformed} $\Uninformed$ agents can only base their decision on the market price. \\
-
-The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Shortsighted class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Shortsighted, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior. All four strategies are myopic.\\
-
-The following agent strategies build off of the work on Kelly Agents, Constant Relative Risk Aversion Agents, (Kets et al, 2014) and Zero Intelligence Agents (Othman, 2008). Kelly and CRRA Agents are limiting because they introduce risk aversion in order to limit the bets that agents place. This is empirically less accurate since online betting environments are known to attract risk seeking, or at least risk neutral, traders. Zero Intelligence Agents inspire our Shortsighted class of agents since they are short sighted actors. Kelly and CRRA Agents inspire our Uninformed class of agents since their purpose is to measure the persistence of inaccurate traders. We believe that \mydef{Shortsighted, Farsighted, and Un/Informed} agents cover a more abstract class of trader behavior.\\
-
-Prediction markets are known to be myopically incentive compatible, which means that myopic agents bid truthfully. There is much work demonstrating that this assumption fails when agents can use \mydef{bluffing} and \mydef{reticence} to mislead other agents and profit off of that deception. We will show that when restricting the game to a single shot for each agent and using market scoring rule based mechanisms that it is impossible to design a dominant non-myopic strategy.\\
-
-\subsection{Nonmyopic Lemma}
-Consider a non-myopic strategy that is dominant for an agent in a MSR based market. That agent has a final belief, which incorporates whatever logic and prior information the agent has, called $\Agent_\AgentBelief$. The non-myopic strategy must either move the price $\OptionPrice$ towards their belief $\Agent_\AgentBelief$, but less than their budget $\Agent_\AgentBudget$ permits, or away from it. In the case where the non-myopic strategy moves the price away from their belief, the agent will be scored on how much their price movement improves the market prediction, which is mapped to the price. In order to make positive profit, the belief needs to improve. If the agent thinks that this non-myopic strategy is improving the price then they cannot hold belief $\Agent_\AgentBelief$, which is a contradiction. In the second case, if the agent holds belief $\Agent_\AgentBelief$ then it would be strictly preferable to move the price as close as possible to $\Agent_\AgentBelief$. This means that the myopic strategy strictly dominates the non-myopic strategy. Since in both cases the myopic strategy strictly dominates therefore the myopic strategy is dominant under this model.\\
+Since REE is a perfectly competitive equilibrium concept, the aggregate belief is the budget weighted average of each of the agents private beliefs. Formally, $\frac{\sum_{i=1}^{|\Agents|} (\Agent^{i}_{\AgentBelief} \Agent^{i}_{\AgentBudget})}{\sum_{j=1}^{|\Agents|} \Agent^{j}_{\AgentBudget}}$. As our model restricts agents to have equal budgets, the REE reduces to: $\frac{\sum_{i=1}^{|\Agents|} \Agent^{i}_{\AgentBelief}}{|\Agents|}$.\\

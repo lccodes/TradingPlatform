@@ -10,6 +10,7 @@ import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.ITradeable;
 import brown.auctions.bundles.BidBundle;
+import brown.auctions.bundles.MarketState;
 import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
@@ -24,6 +25,7 @@ public class SimpleInternalState implements MarketInternalState {
 	private List<Order> lastPayments;
 	private int ticks;
 	private BidBundle reserve;
+	private boolean maximizing;
 	
 	public SimpleInternalState(Integer ID, Set<ITradeable> tradeables) {
 		this.BIDS = new LinkedList<Bid>();
@@ -32,14 +34,15 @@ public class SimpleInternalState implements MarketInternalState {
 		this.TRADEABLES = tradeables;
 		this.ID = ID;
 		this.ticks = 0;
-		Map<FullType, BidBundle.BidderPrice> reserve = new HashMap<FullType, BidBundle.BidderPrice>();
+		Map<FullType, MarketState> reserve = new HashMap<FullType, MarketState>();
 		for (ITradeable t : this.TRADEABLES) {
-			reserve.put(t.getType(), new BidBundle.BidderPrice(null,0));
+			reserve.put(t.getType(), new MarketState(null,0));
 		}
 		this.reserve = new SimpleBidBundle(reserve);
+		this.maximizing = false;
 	}
 	
-	public SimpleInternalState(Integer ID, Set<ITradeable> tradeables, Map<FullType, BidBundle.BidderPrice> reserve) {
+	public SimpleInternalState(Integer ID, Set<ITradeable> tradeables, Map<FullType, MarketState> reserve) {
 		this.BIDS = new LinkedList<Bid>();
 		this.lastAlloc = null;
 		this.lastPayments = null;
@@ -118,5 +121,31 @@ public class SimpleInternalState implements MarketInternalState {
 	@Override
 	public double getIncrement() {
 		return this.INCREMENT;
+	}
+
+	@Override
+	public void setMaximizingRevenue(boolean b) {
+		this.maximizing = b;
+	}
+
+	@Override
+	public boolean isMaximizingRevenue() {
+		return this.maximizing;
+	}
+
+	@Override
+	public int getEligibility() {
+		int elig = 0;
+		if (this.reserve == null) {
+			return 0;
+		}
+		SimpleBidBundle bundle = (SimpleBidBundle) this.reserve;
+		for (FullType type : bundle.getDemandSet()) {
+			MarketState state = bundle.getBid(type);
+			if (state != null && state.AGENTID != null) {
+				elig+=1;
+			}
+		}
+		return elig;
 	}
 }
