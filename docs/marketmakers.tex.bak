@@ -1,20 +1,20 @@
 \section{\href{http://mason.gmu.edu/~rhanson/mktscore.pdf}{Logarithmic Market Scoring Rule}}
-LMSR is a strictly proper scoring rule proposed by Robin Hanson \cite{Hanson2003}. A scoring rule charges agents depending on the revealed accuracy of their beliefs. A scoring rule is strictly proper if an agent has no incentive to report anything but their true belief. \\ 
+LMSR is a strictly proper scoring rule proposed by Robin Hanson \cite{Hanson2003}. A scoring rule is strictly proper if the forecaster has no incentive to report anything but their true belief. This condition is the same as stating that LMSR is myopically incentive compatible.\\ 
 
-LMSR is defined by a logarithmic cost function: 
-$C(\QuantityYes,\QuantityNo) = \LMSRb\ln\left(e^{\frac{\QuantityYes}{\LMSRb}} + e^{\frac{\QuantityNo}{\LMSRb}}\right)$. The instantaneous price of market $\Market$, which is also the market's prediction for the option $\Option_{\{0,1\}}$, is quoted with: $p_{\{0,1\}} = \frac{e^{\frac{q_{\{0,1\}}}{\LMSRb}}}{e^{\frac{\QuantityYes}{\LMSRb}} + e^{\frac{\QuantityNo}{\LMSRb}}}$. The cost charged to a trader wanting to buy $q_a$ shares of $\Option_0$ and $q_b$ shares of $\Option_1$ is: $C(\QuantityYes + q_a, \QuantityNo + q_b) - C(q_1,\QuantityNo)$. Agents are charged to move the market prediction. The liquidity parameter $\LMSRb$ is set \emph{ex ante} by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker never loses more than $\LMSRb\ln(2)$. A large $\LMSRb$ means that it would cost a lot to move the market price while a small $\LMSRb$ makes large swings relatively inexpensive.\\
+LMSR uses a logarithmic cost function: \\
+$C(\QuantityYes,\QuantityNo) = \LMSRb\ln(e^{\frac{\QuantityYes}{\LMSRb}} + e^{\frac{\QuantityNo}{\LMSRb}})$. The cost charged to a trader wanting to buy $q_a$ shares of $\Option_0$ and $q_b$ shares of $\Option_1$ is: $C(\QuantityYes + q_a, \QuantityNo + q_b) - C(q_1,\QuantityNo)$. Agents are charged for their movement in the market prediction. $\LMSRb$ is the liquidity parameter set ex ante by the market maker. It controls how much the market maker can lose and also adjusts how easily a trader can change the market price. The market maker always loses up to $\LMSRb\ln(2)$. A large $\LMSRb$ means that it would cost a lot to move the market price while a small $\LMSRb$ makes large swings relatively inexpensive.\\
 
-Although $\LMSRb$ was designed to be a static parameter, recent papers discuss updating $\LMSRb$ as the state of the market changes \cite{Othman:2013:PLA:2509413.2509414}. By updating $\LMSRb$, the market maker can change how quickly the price fluctuates and how much loss they are willing to accept. The goal of this work is to find a novel approach to setting a sequence of $\LMSRb$'s that minimizes loss and recovers the aggregate belief.\\
+The instantaneous price of LMSR market $\Market$, which is also the market's prediction for the option $\Option_{\{0,1\}}$, is quoted with: $p_{\{0,1\}} = \frac{e^{\frac{q_{\{0,1\}}}{\LMSRb}}}{e^{\frac{\QuantityYes}{\LMSRb}} + e^{\frac{\QuantityNo}{\LMSRb}}}$. \\
 
 \textbf{Advantages}\\
 \begin{enumerate}
-\item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate \cite{Hanson2003}.}
+\item{Path Independence - any way the market moves from one state to another state yields the same payment or cost to the traders in aggregate (Hanson, 2003)}
 \item{Translation Invariance - all prices sum to unity. This ensures that the price of each outcome state maps to a probability.}
 \end{enumerate}
 
 \textbf{Disadvantages} \\
 \begin{enumerate}
-\item{Liquidity Insensitive - for a fixed $\LMSRb$, the market cannot adjust to periods with low or high activity. The market maker must set the liquidity parameter based on their prior belief, but has little to no guidance on how to set it \cite{Othman:2013:PLA:2509413.2509414}.}
+\item{Liquidity Insensitive - the market cannot adjust to periods with low or high activity. The market maker must set the liquidity parameter based on their prior belief, but has little to no guidance on how to set it. \cite{Othman:2013:PLA:2509413.2509414}}
 \item{Guaranteed Loss - the market maker cannot profit, but has a bounded loss.}
 \end{enumerate}
 
@@ -24,13 +24,13 @@ Although $\LMSRb$ was designed to be a static parameter, recent papers discuss u
 \TitleOfAlgo{cost}
 \SetKwInOut{Input}{input}
 \SetKwInOut{Output}{output}
-\Input{state $ \left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$, to trade $\Quantity$, direction $\in \{\text{true},\text{false}\}$}
+\Input{state $ \left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$, to trade $\Quantity$, \mydef{direction} $\{0,1\}$}
 \Output{cost}
-oldScore = $\LMSRb \left(\exp\left(\frac{\QuantityYes}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo}{\LMSRb}\right)\right)$\\
-\eIf{direction}{
-	newScore = $\LMSRb \left(\exp\left(\frac{\QuantityYes + \Quantity}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo}{\LMSRb}\right)\right)$\
+oldScore = $\LMSRb \exp\left(\frac{\QuantityYes}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo}{\LMSRb}\right)$\\
+\eIf{direction == YES}{
+	newScore = $\LMSRb \exp\left(\frac{\QuantityYes + \Quantity}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo}{\LMSRb}\right)$\
 }{
-	newScore = $\LMSRb \left(\exp\left(\frac{\QuantityYes}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo + \Quantity}{\LMSRb}\right)\right)$\
+	newScore = $\LMSRb \exp\left(\frac{\QuantityYes}{\LMSRb}\right) + \exp\left(\frac{\QuantityNo + \Quantity}{\LMSRb}\right)$\
 }
 
 return newScore - oldScore\
@@ -43,7 +43,7 @@ return newScore - oldScore\
 \SetKwInOut{Output}{output}
 \Input{state $\left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$}
 \Output{price}
-quantity, price = getQuantityPrice(state, $\LMSRb$, null, true)\\
+quantity, price = getQuantityPrice(state, $\LMSRb$,null,true)\\
 return price\\
 \end{algorithm}
 
@@ -54,7 +54,7 @@ return price\\
 \SetKwInOut{Output}{output}
 \Input{state $\left<\QuantityYes, \QuantityNo\right>$, liquidity parameter $\LMSRb$, belief $\Agent_\AgentBelief$, direction $\in \{\text{true},\text{false}\}$}
 \Output{quantity $\Quantity$}
-quantity, price = getQuantityPrice(state, $\LMSRb$, belief, direction)\\
+quantity, price = getQuantityPrice(state,$\LMSRb$,belief,direction)\\
 return quantity\\
 \end{algorithm}
 \newpage
@@ -78,7 +78,7 @@ return quantity\\
 		side = $\QuantityNo$\\
 		top = $\QuantityYes$\
 	}
-	quantity = $\LMSRb \log\left(\frac{\exp\left(\frac{\text{top}}{\LMSRb}\right)\text{price}}{1-\text{price}}\right) - \text{side}$\\
+	quantity = $\LMSRb \log\left(\frac{\text{price}\exp\left(\frac{\text{top}}{\LMSRb}\right)}{1-\text{price}}\right) - \text{side}$\\
 }
 \eIf{direction}{
 	newPrice = price($\QuantityYes$ + quantity, $\QuantityNo$, $\LMSRb$)
@@ -112,18 +112,19 @@ return $\LMSRb
 	\right) - 
 	\exp\left(\frac{\text{top}}{\LMSRb}
 	\right)
-\right) - \text{side}$
+\right) - \text{side}$\;
 \end{algorithm}
 
 \subsection{Agent Strategy}
-The Logarithmic Market Scoring rule is known to be myopically incentive compatible, which means that myopic agents bid truthfully. There is much work demonstrating that this assumption fails when agents can use \mydef{bluffing} and \mydef{reticence} to mislead other agents and profit off of that deception \cite{Chen2007}. \mydef{Bluffing} occurs when an agent moves the market price away from their belief, and \mydef{reticence} occurs when the agent moves the market price towards its belief, but does not move it as close to their belief as possible. The following lemma shows that in our model where each agent participates only once, bidding myopically is dominant.\\
+The Logarithmic Market Scoring rule is known to be myopically incentive compatible, which means that myopic agents bid truthfully \cite{Hanson2003}. There is much work demonstrating that this assumption fails when agents can use \mydef{bluffing} and \mydef{reticence} to mislead other agents and profit off of that deception \cite{Chen2007}. We will show that under our model where each agent participates only once it is impossible to design a dominant non-myopic strategy.\\
 
+\subsection{Nonmyopic Lemma}
 \begin{lemma}
 Given that agents participate only once, the myopic strategy is dominant. 
 \end{lemma}
-PROOF. Consider a non-myopic strategy that is dominant for an agent in a market scoring rule based market. The non-myopic strategy must either move the price $\OptionPrice$ towards their belief $\Agent_\AgentBelief$, but less than their budget $\Agent_\AgentBudget$ permits, or away from it. In the case where the non-myopic strategy moves the price away from their belief, the agent will profit based on how much their price movement improves the market price. In order for the agent to make positive profit, the market's price needs to move closer to the underlying true probability. If the agent thinks that this non-myopic strategy is improving the price then they cannot hold belief $\Agent_\AgentBelief$, which is a contradiction. Similarly, if the agent holds belief $\Agent_\AgentBelief$ then it would be strictly preferable to move the price as close as possible to $\Agent_\AgentBelief$ rather than simply closer. This means that the myopic strategy strictly dominates the non-myopic strategy. Since in both cases the myopic strategy strictly dominates therefore the myopic strategy is dominant under this model. $\blacksquare$\\
+PROOF. Consider a non-myopic strategy that is dominant for an agent in a market scoring rule based market. The non-myopic strategy must either move the price $\OptionPrice$ towards their belief $\Agent_\AgentBelief$, but less than their budget $\Agent_\AgentBudget$ permits, or away from it. In the case where the non-myopic strategy moves the price away from their belief, the agent will be scored on how much their price movement improves the market price. In order to make positive profit, the market's price needs to move closer to the underlying true probability. If the agent thinks that this non-myopic strategy is improving the price then they cannot hold belief $\Agent_\AgentBelief$, which is a contradiction. In the second case, if the agent holds belief $\Agent_\AgentBelief$ then it would be strictly preferable to move the price as close as possible to $\Agent_\AgentBelief$. This means that the myopic strategy strictly dominates the non-myopic strategy. Since in both cases the myopic strategy strictly dominates therefore the myopic strategy is dominant under this model. $\blacksquare$\\
 
-Therefore, it is safe to assume that all agents will behave myopically.\\
+Therefore, we can safely assume that all agents will behave myopically.\\
 
 % \subsection{\href{https://www.cs.cmu.edu/~sandholm/liquidity-sensitive automated market maker.teac.pdf}{Practical Liquidity Sensitive Market Maker}}
 % The Liquidity Sensitive Market Maker uses the underlying LMSR mechanism but invokes a novel

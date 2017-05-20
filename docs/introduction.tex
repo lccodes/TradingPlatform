@@ -1,12 +1,25 @@
 \section{Abstract}
-%%TODO
+A prediction market is a mechanism for aggregating
+information. Specifically, agents' private beliefs about the
+likelihood of some future event. If the agents truthfully reveal
+their beliefs to the market, which they are incentivized to do by
+strictly proper scoring rules, then the market price can eventually 
+converge to their aggregate belief. One such strictly proper scoring rule, 
+namely the Logarithmic Market Scoring Rule (LMSR), successfully aggregates
+agents' beliefs to discover the rational expectations equilibrium
+(REE), and incurs bounded loss in so doing. The goal of this work is
+to calculate settings for the LMSR liquidity parameter that minimize
+cumulative loss, while still being constrained to discover the REE.
+First, we provide an intuitive heuristic for adjusting the liquidity
+parameter over time.  Then we prove that this heuristic is optimal, 
+which means that it minimizes cumulative loss; moreover, it is also unique.
 
 \section{Motivation}
-The Logarithmic Market Scoring Rule (LMSR), while popular in the theoretical
-literature, faces several critical barriers to adoption. The first is that
-the \mydef{market maker} is bounded loss, which is a non-starter for most
-real world applications. The second is that the \mydef{market maker} is there is no definitive algorithm for setting the liquidity parameter $\LMSRb$. Since LMSR does not necessarily aggregate beliefs according to the rational expectations equilibrium with
-one preset $\LMSRb$, we want to devise an algorithm for setting $\LMSRb$ such that we recover the rational expectations equilibrium aggregate belief. In addition, since $\LMSRb$ determines the market maker's loss, we want the selection of $\LMSRb$ values to be the least costly selection.
+Prediction markets are exchanges that aggregate beliefs about the outcome of an event by incentivizing agents to offer their private information. Traditional mechanisms for trading prediction market securities such as the Continuous Double Auction fail to aggregate beliefs into a single price and do not provide sufficient liquidity at the typically small scale that these markets operate at. Several automated market makers have been proposed to solve this problem. The most popular is the Logarithmic Market Scoring Rule (LMSR) \cite{Hanson2003}. \\
 
-\section{Goal}
-This work seeks to define an algorithm for determining the liquidity parameter in LMSR that minimizes cost while still recovering the aggregate belief according to the rational expectations equilibrium.
+The Logarithmic Market Scoring Rule, while popular in the theoretical
+literature, faces several critical barriers to adoption. The first is that
+an LMSR market maker cannot earn a profit. LMSR has bounded loss, which means that the market maker knows the most that they can lose. Guaranteed loss is a non-starter for most
+real world applications The second is that there is no definitive algorithm for setting the liquidity parameter $\LMSRb$. LMSR was designed to only have a single liquidity parameter during the life of a market, but other research has introduced the notion of updating $\LMSRb$ over time. The third obstacle is that there is little work seeking to understand how well LMSR aggregates beliefs according to a notion of ground truth. This work seeks to further the field on all three questions. This paper will select a notion of ground truth from the literature, the Rational Expectations Equilibrium, and attempt to devise an algorithm for setting $\LMSRb$ that recovers the Rational Expectations Equilibrium. In addition, since the liquidity parameter $\LMSRb$, or the sequence of $\LMSRb$'s, determines the market maker's loss, this paper will find an algorithm that chooses the sequence of $\LMSRb$'s such that the selection is the least costly selection.\\
+
+This work seeks an algorithm for determining the liquidity parameter in LMSR that minimizes cost while still recovering the aggregate belief according to the Rational Expectations Equilibrium.\\

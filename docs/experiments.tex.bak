@@ -1,0 +1,157 @@
+\section{Experimental Design}
+For our experiments, we will assume that private beliefs are ${0,1}$ and that budgets are equal.
+\subsection{Metrics}
+For each of the following configurations, we will rank our three market makers against our two benchmarks defined above: \mydef{Profit-Maximizing Market Maker} and \mydef{Accuracy} according to RE and PI.
+
+\subsection{Configurations}
+\subsubsection{Market Makers}
+We will run each agent arrangement against the following market makers:
+\begin{enumerate}
+\item \mydef{Logarithmic Market Scoring Rule} with varying $\LMSRb$ values. Since there is little intuition behind setting b other than the loss incurred by the market maker, we want to evaluate a full range of b options that appear in other papers. Therefore we will use every integer value for $\LMSRb$ between 1 and 100 as those correspond to natural extremes where the price is trivially malleable to where it is near static.
+
+\item \mydef{Liquidity Sensitive Market Maker} with varying alpha parameters. Since alpha corresponds to the commission, we will assess all $\LMSRAlpha$ values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
+
+\item \mydef{Time Sensitive Market Maker} with varying $\LMSRAlpha$ parameters. Since $\LMSRAlpha$ corresponds to the commission, we will assess all $\LMSRAlpha$ values on the interval [0,1] with two digits of precision. This evaluates the full range of logical values.
+\end{enumerate}
+
+\subsection{Agents}
+We will run each of the following configurations with 9 agents, 49 agents, and 99 agents. Prediction markets vary between miniscule and small in market depth so this represents a reasonable range for evaluation. The odd numbers prohibit market outcomes at .5. The final price for each configuration will be the average of the prices that result from every ordering of the agents.
+\begin{enumerate}
+\item Informed and Uninformed Shortsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
+\item Informed and Uninformed Farsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
+\item Informed Shortsighted and Informed Farsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
+\item Informed Farsighted and Uninformed Shortsighted Agents with a majority to minority split, $\frac{2}{3}$ to $\frac{1}{3}$ split, and $\frac{9}{10}$ to $\frac{1}{10}$ split.
+\end{enumerate}
+
+\subsection{Configuration Table}
+\begin{center}
+ \begin{tabular}{||c c c c||} 
+ Name & Market Maker & Agent Types & Agent Split \\ [0.5ex] 
+ \hline\hline
+ 1 & LMSR & $\Simple^\Informed,\Simple^\Uninformed$ & 5,4 \\
+ \hline
+ 2 & LMSR & $\Simple^\Informed,\Simple^\Uninformed$ & 6,3 \\
+ \hline
+ 3 & LMSR & $\Simple^\Informed,\Simple^\Uninformed$ & 8,1 \\
+\hline
+ 4 & LMSR & $\Farsighted^\Informed,\Farsighted^\Uninformed$ & 5,4 \\ 
+ \hline
+ 5 & LMSR & $\Farsighted^\Informed,\Farsighted^\Uninformed$ & 6,3 \\ 
+ \hline
+ 6 & LMSR & $\Farsighted^\Informed,\Farsighted^\Uninformed$ & 8,1 \\ 
+ \hline
+ 7 & LMSR & $\Simple^\Informed,\Farsighted^\Informed$ & 5,4 \\ 
+  \hline
+ 8 & LMSR & $\Simple^\Informed,\Farsighted^\Informed$ & 6,3 \\ 
+  \hline
+ 9 & LMSR & $\Simple^\Informed,\Farsighted^\Informed$ & 8,1 \\ 
+  \hline
+ 10 & LMSR & $\Farsighted^\Informed,\Simple^\Uninformed$ & 5,4 \\ 
+  \hline
+ 11 & LMSR & $\Farsighted^\Informed,\Simple^\Uninformed$ & 6,3 \\ 
+  \hline
+ 12 & LMSR & $\Farsighted^\Informed,\Simple^\Uninformed$ & 8,1 \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Simulator}
+Since LMSR based mechanisms provide constant time transactions, we can reliably converge each of these markets within a tightly bounded interval. Based on tests using our Java Virtual Machine based simulation, each agent takes a conservative upper bound of 15 milliseconds to fully enter the market. This means that the worst amount of time that a market can take in these experiments is 1.5 seconds.
+
+%% OLD STUFF
+\iffalse
+\section{Problem Statements}
+\subsection{Optimal MM}
+Given N traders and M market makers where M $<$ N, which of our three market makers is the
+dominant strategy to implement for a profit maximizing agent. 
+If none exists then what is the Bayes Nash Equilibrium (BNE).\\
+
+\subsection{Social Planner MM}
+Given N traders and M market makers where M $<$ N, which of our five market makers would
+a social planner implement to maximize social welfare.\\
+
+Given N traders and M market makers where M $<$ N, which of our five market makers would
+a social planner implement to maximize accuracy.
+
+\section{Setup}
+
+\subsection{Types}
+A \mydef{BasicAgent} follows from the definition of these \mydef{market makers} as myopically truthful
+mechanisms. Each \mydef{BasicAgent} reports its belief $\AgentBelief$ and budget $\AgentBudget$
+truthfully when requested by the mechanism. Each \mydef{BasicAgent} is rational and profit
+maximizing.
+
+\subsection{Metrics}
+This research will use the following metrics to evaluate each of the five mechanisms.
+\subsubsection{Liquidity Sensitivity}
+This research uses a novel definition of the vague concept of liquidity sensitivity. The need
+for a unified definiton stems from the known issue that LMSR can provide \"too little\" or 
+\"too much\" weight to each agent depending on its liquidity parameter and market depth. One extreme
+example us that an infinitesimally low liquidity parameter will allow an \mydef{agent} with a nonzero
+budget to dictate the market price regardless of how many \mydef{agents} have already participated in
+the market. Our novel definition attempts to quanity consistency across \mydef{market depths} without
+overly constraining implementations. \\
+
+We define a \mydef{market maker} as \mydef{liquidity sensitive} if two \mydef{agents} that have identical
+transactions in the \mydef{market} will have equal impacts on the \mydef{market price} proportional to 
+the \mydef{market depth} $\MarketDepth_{1}$ at time $\Time_{1}$ of the first purchase, the \mydef{market depth} 
+$\MarketDepth_{2}$ at time $\Time_{2}$ of the second purchase, and the difference in time $\Time_{1} - \Time_{2}$.\\
+
+We formalize \mydef{liquidity sensitive} as the function $\Delta = f(\MarketDepth_{1},\MarketDepth_{2},\Time_{\Delta})$
+having a constant $\Delta$.\\
+
+\subsubsection{Market Maker Profit}
+We define the \mydef{market maker profit} on prediction market $\Market$ at time $\Time$ as\\
+$\sum_{\Agent\in\Agents_\Option} [
+\int_{\Time} 
+\Price(\Option_0,\Agent,\Time, \AgentStrategy^{0}_{\Agent}(\Time))\AgentStrategy^{0}_{\Agent}(\Time)dt
++\int_{\Time} 
+\Price(\Option_1,\Agent,\Time, \AgentStrategy^{1}_{\Agent}(\Time))\AgentStrategy^{1}_{\Agent}(\Time)dt
+-\int_{\Time} 
+\Revealer(\Option_\Event)\AgentStrategy^{0}_{\Agent}(\Time)dt
+-\int_{\Time}
+\Revealer(\Option_\Event)\AgentStrategy^{1}_{\Agent}(\Time)dt]$
+
+\subsubsection{Social Welfare}
+We define the profit of an agent as the sum of the realized value of its \mydef{options} minus the
+sum of the cost of each of its \mydef{options}.
+
+We define \mydef{social welfare} as the \mydef{market maker profit} plus the sum of each agent's profit.
+
+\subsubsection{Accuracy}
+Since the accuracy of a prediction market depends on the accuracy of each of its participants
+as well as a usually unknown ground truth value, we utilize several well studied definitions
+to evaluate each mechanism's accuracy.\\
+
+\textbf{Regret}
+We define the \mydef{regret} of a mechanism as the difference between the mechanism's accuracy
+and the accuracy of the most accurate agent $\Agent\in\Agents$, who can be thought of as the
+best expert. The most accurate agent $\Agent\in\Agents$ is the agent $\Agent$ whose belief is
+most frequently aligned with the outcome over n trials.
+
+\textbf{Expectation}
+We define the \mydef{expectation accuracy} as the difference between the expert's prediction
+and the weighted expected value for each agent $\Agent\in\Agent$. Each agent's belief is weighted
+based off their budget and then an expected value is calculated.
+
+\textbf{Mean Squared Error}
+We define the \mydef{Mean Squared Error} as $\frac{1}{n}\sum_{t=1}^{n} \big(\Market_{0,1} - O_{0,1}\big)^2$. MSE
+is computed across n agents $\Agent\in\Agents$. 
+
+\subsubsection{Precision}
+\mydef{Precision} is the consistency of the \mydef{market maker}. \mydef{Precision} is computed by taking a \mydef{market maker}
+and a set of agents $\Agents$, and randomizing the order that the agents enter the market. \mydef{Precision} is the
+percentage of predictions across all simulations that are the same as the majority outcome. This means that if 6 of
+the 10 simulations have the \mydef{market} predicting $Outcome_{1}$ then the \mydef{Precision} is 0.6.
+
+\section{Experimental Design}
+The following simulations will be run by having an identical set of agents enter each \mydef{market} using each
+of the five \mydef{market makers}. After each simulation, the \mydef{market makers} will be scored for every
+metric. After all the simulations, the \mydef{market makers} will be ranked for each metric depending on the emperical
+results. A simulation will be run for the cross product of the following characteristics:
+\begin{enumerate}
+  \item Agent Number: 3, 5, 10, 50, 100, 1000, 10000.
+  \item Agent Belief: Uniform $[0,1]$, Normal w/ Mean 0.5, Beta(0.5,0.5).
+  \item Agent Budget: Uniform $[0,100]$, Uniform $[0,10]$, Normal w/ Mean 5, 10*Beta(0.5,0.5).
+\end{enumerate}
+\fi

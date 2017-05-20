@@ -1,5 +1,5 @@
 \section{Problem}
-The liquidity parameter $\LMSRb$ both controls how quickly that agents can change the market price and bounds the loss that the market maker can incur. Our algorithm will deal with this trade-off by minimizing the market maker's loss while constraining the market's final price to equal the aggregate belief within a small margin of error.
+The liquidity parameter $\LMSRb$ both controls how quickly that agents can change the market price and bounds the loss that the market maker can incur. Our algorithm will deal with this tradeoff by minimizing the the market maker's loss while constraining the market's final price to equal the collective belief within a small margin of error.
 
 \subsection{Profit}
   \begin{definition} (Market Maker Revenue)
@@ -27,7 +27,7 @@ The liquidity parameter $\LMSRb$ both controls how quickly that agents can chang
 	\right]$$
   \end{definition}
 
-      \begin{definition} (Market Maker Profit)
+      \begin{definition} (Market Maker Proft)
   \label{def:mmf}
    Given a market maker $\OptionPrice_\Market$ and a set of participating agents
    $\Agents_\Option$, the profit of $\OptionPrice_\Market$ is defined as
@@ -41,6 +41,8 @@ Among all Market Makers $\MarketMakers$, given a set of participating agents $\A
 $$ PM(\MarketMakers, \Agents_\Option) = arg max_{\Agent \in \Agents_\Option} P(\OptionPrice_\Market, \Agents_\Option)$$
 \end{definition}
 
-\subsection{Aggregate Belief}
-The REE aggregate belief will be considered the underlying probability for the following experiments.\\
+\subsection{Collective Belief}
+We will use the following definitions of accuracy from our equilibrium concepts.\\
+
+\mydef{Rational Expectations} implies that the final price will be the average of each agent's belief since all agents have equal budgets under our model. Formally, $\OptionPrice_\EventTime = \frac{\sum_{i=1}^{|\Agents|} \Agent^{i}_{\AgentBelief}}{|\Agents|}$. \\
 

@@ -1,0 +1,12 @@
+\section{Abstract}
+This work presents a formal model for studying prediction markets, and represents the market maker's decision problem using a novel Markov Decision Process. It goes on to present a novel algorithm for determining the liquidity parameter of the Logarithmic Market Scoring Rule that recovers the aggregate belief according to the Rational Expectations Equilibrium. It concludes by proving desirable properties about this algorithm including a proof of uniqueness and optimality under this model.
+
+\section{Motivation}
+Prediction markets are exchanges that aggregate beliefs about the outcome of an event by incentivizing agents to offer their private information. Traditional mechanisms for trading prediction market securities such as the Continuous Double Auction fail to aggregate beliefs into a single estimate and do not provide sufficient liquidity at the typicall small scale that these markets operate on. Several automated market makers have been proposed to solve this problem. The most popular is the Logarithmic Market Scoring Rule (LMSR). \\
+
+The Logarithmic Market Scoring Rule, while popular in the theoretical
+literature, faces several critical barriers to adoption. The first is that
+the market maker cannot earn a profit. LMSR has bounded loss, which means that the market maker knows the most that they can lose. Guaranteed loss is a non-starter for most
+real world applications The second is that there is no definitive algorithm for setting the liquidity parameter $\LMSRb$. LMSR was designed to only have a single liquidity parameter during the life of a market, but other research has introduced the notion of updating $\LMSRb$ over time. The third obstical is that there is little work seeking to understand how well LMSR aggregates beliefs according to a notion of ground truth. This work seeks to further the field on all three questions. This paper will select a notion of ground truth from the literature, the Rational Expectations Equilibrium, and attempt to devise an algorithm for setting $\LMSRb$ that recovers the Rational Expectations Equilibrium. In addition, since the liquidity parameter $\LMSRb$, or the sequence of $\LMSRb$'s, determines the market maker's loss, this paper will find an algorithm that chooses the sequence of $\LMSRb$'s such that the selection is the least costly selection.\\
+
+This work seeks an algorithm for determining the liquidity parameter in LMSR that minimizes cost while still recovering the aggregate belief according to the Rational Expectations Equilibrium.\\
