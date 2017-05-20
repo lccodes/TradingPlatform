@@ -12,12 +12,6 @@ public interface BidBundle {
 	double getCost();
 	
 	/**
-	 * Which agent owns the bid bundle
-	 * @return agent id
-	 */
-	Integer getAgent();
-	
-	/**
 	 * Removes agent ID
 	 * @return BidBundle w/o agent ID
 	 */

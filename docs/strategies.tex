@@ -1,0 +1,90 @@
+\section{Strategies}
+An agent's \mydef{strategy} 
+$\AgentStrategy_\Agent(\Time) \in \mathbb{R}_+$ specifies the quantity of option 
+$\Option_{0,1}$ purchased by the agent at time $\Time$, $\forall \Time \leq \Event_\EventTime$\\
+
+$\AgentStrategy^{\Simple^\Informed}_\Agent(\Time)$ is an \mydef{informed agent} holding exogenous belief $\Agent_\AgentBelief$ who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\Market_\MarketPrice$ as close as possible to their belief $\Agent_\AgentBelief$. \\
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{Shortsighted Informed Strategy $\Simple^\Informed$}
+\KwData{belief $\Agent_\AgentBelief$, market marker $\MarketMaker$}
+\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
+initialization\\
+\eIf{$\Market_\MarketPrice < \Agent_\AgentBelief$}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, YES)\\
+wantedShares = priceToShares($\MarketMaker$, $\Agent_\AgentBelief$, YES)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of YES from $\MarketMaker$\\
+}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, NO)\\
+wantedShares = priceToShares($\MarketMaker$, $\Agent_\AgentBelief$, NO)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of NO from $\MarketMaker$\\
+}
+\end{algorithm}
+
+$\AgentStrategy^{\Simple^\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agent} holding no exogenous belief $\Agent_\AgentBelief$ who who is willing to pay up to $\Agent_\AgentBudget$ in order to move the market price $\OptionPrice_\Market$ as close as possible to 1 if at time $\Time$, $\OptionPrice_{\Market\Time} \ge .5$ otherwise 0. \\
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{Shortsighted Uninformed Strategy $\Simple^\Uninformed$}
+\KwData{belief $\Agent_\AgentBelief$, market $\Market$, market maker $\MarketMaker$}
+\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
+initialization\\
+\eIf{$\Market_\MarketPrice > .5$}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, YES)\\
+wantedShares = priceToShares($\MarketMaker$, 1, YES)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of YES from $\MarketMaker$\\
+}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, NO)\\
+wantedShares = priceToShares($\MarketMaker$, 0, NO)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of NO from $\MarketMaker$\\
+}
+\end{algorithm}
+
+$\AgentStrategy^{\Farsighted^\Informed}_\Agent(\Time)$ is an \mydef{informed agent}holding exogenous belief $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on a linear combination of their belief $\Agent_\AgentBelief$ and the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{Shortsighted Informed Strategy $\Farsighted^\Informed$}
+\KwData{belief $\Agent_\AgentBelief$, market marker $\MarketMaker$}
+\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
+initialization\\
+linearBelief = $\frac{\Time*\Market_\MarketPrice + \Agent_\AgentBelief}{\Time+1}$\\
+\eIf{$\Market_\MarketPrice < \Agent_\AgentBelief$}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, YES)\\
+wantedShares = priceToShares($\MarketMaker$, linearBelief, YES)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of YES from $\MarketMaker$\\
+}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, NO)\\
+wantedShares = priceToShares($\MarketMaker$, 1-linearBelief, NO)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of NO from $\MarketMaker$\\
+}
+\end{algorithm}
+
+$\AgentStrategy^{\Farsighted^\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agent} holding exogenous belief $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\TitleOfAlgo{Shortsighted Informed Strategy $\Farsighted^\Uninformed$}
+\KwData{belief $\Agent_\AgentBelief$, market marker $\MarketMaker$}
+\KwResult{$\Market_{\MarketPrice,\Time} \rightarrow \Market_{\MarketPrice,\Time+1}$}
+initialization\\
+linearBelief = $\frac{\Time*\Market_\MarketPrice + 1}{\Time+1}$\\
+\eIf{$\Market_\MarketPrice > .5$}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, YES)\\
+wantedShares = priceToShares($\MarketMaker$, linearBelief, YES)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of YES from $\MarketMaker$\\
+}{
+maxShares = capitalToShares($\MarketMaker$, $\Agent_\AgentBudget$, NO)\\
+wantedShares = priceToShares($\MarketMaker$, 1-linearBelief, NO)\\
+sharesDemanded = min(maxShares, wantedShares)\\
+buy sharesDemanded of NO from $\MarketMaker$\\
+}
+\end{algorithm}

@@ -136,4 +136,9 @@ public class Account {
 		
 		return new Account(this.ID, this.monies, forAgent);
 	}
+	
+	@Override
+	public String toString () {
+		return "(" + this.ID + ": " + this.monies + ", " + this.tradeables + ")"; 
+	}
 }

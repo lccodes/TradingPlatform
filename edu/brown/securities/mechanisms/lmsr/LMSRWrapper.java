@@ -87,4 +87,14 @@ public class LMSRWrapper implements ITwoSidedWrapper, ITwoSidedPriceTaker {
 	public double moniesToShares(double monies) {
 		return this.LMSR.moniesToShares(monies);
 	}
+	
+	/**
+	 * Gets the number of shares that it will take to 
+	 * move the price to price
+	 * @param price
+	 * @return
+	 */
+	public double priceToShares(double price) {
+		return this.LMSR.priceToShares(price);
+	}
 }

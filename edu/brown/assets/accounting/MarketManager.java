@@ -5,22 +5,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import brown.assets.value.ITradeable;
 import brown.assets.value.StateOfTheWorld;
-import brown.auctions.IMarket;
-import brown.auctions.onesided.OneSidedAuction;
+import brown.auctions.interfaces.Market;
+import brown.auctions.twosided.TwoSidedAuction;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
 public class MarketManager {
-	private Map<IMarket, Ledger> ledgers;
-	private Map<Integer, IMarket> tsauctions;
+	private Map<Market, Ledger> ledgers;
+	private Map<Integer, Market> tsauctions;
+	
+	private Map<Integer, TwoSidedAuction> twosided;
 
 	public MarketManager() {
-		this.ledgers = new ConcurrentHashMap<IMarket, Ledger>();
-		this.tsauctions = new ConcurrentHashMap<Integer, IMarket>();
+		this.ledgers = new ConcurrentHashMap<Market, Ledger>();
+		this.tsauctions = new ConcurrentHashMap<Integer, Market>();
+		
+		this.twosided = new ConcurrentHashMap<Integer,TwoSidedAuction>();
 	}
 	
 	/**
@@ -31,7 +34,7 @@ public class MarketManager {
 	 * @param t
 	 * @param toReplace
 	 */
-	private void process(AgentServer server, IMarket market, Ledger ledger, 
+	private void process(AgentServer server, Market market, Ledger ledger, 
 			Transaction t, Account toReplace) {
 		synchronized (t.TRADEABLE.getAgentID()) {
 			Account oldAccount = server.privateToAccount(t
@@ -82,15 +85,17 @@ public class MarketManager {
 	 * @param market
 	 * @param closingState
 	 */
-	public void convert(AgentServer server, IMarket market,
+	public void convert(AgentServer server, Market market,
 			StateOfTheWorld closingState) {
 		synchronized (market) {
 			Ledger ledger = this.ledgers.get(market);
 			synchronized (ledger) {
 				for (Transaction t : ledger.getLatest()) {
 					List<Account> allReplacements = t.TRADEABLE.convert(closingState);
-					for (Account toReplace : allReplacements) {
-						this.process(server, market, ledger, t, toReplace);
+					if (allReplacements != null) {
+						for (Account toReplace : allReplacements) {
+							this.process(server, market, ledger, t, toReplace);
+						}
 					}
 				}
 
@@ -107,7 +112,7 @@ public class MarketManager {
 	 * @param closingState
 	 */
 	public void close(AgentServer server, Integer ID, StateOfTheWorld closingState) {
-		IMarket market = tsauctions.get(ID);
+		Market market = tsauctions.get(ID);
 		//TODO market.close()
 		convert(server, market, closingState);
 	}
@@ -117,7 +122,7 @@ public class MarketManager {
 	 * @param market
 	 * @return
 	 */
-	public boolean open(IMarket market) {
+	public boolean open(Market market) {
 		if (ledgers.containsKey(market)) {
 			return false;
 		}
@@ -134,7 +139,7 @@ public class MarketManager {
 	 * @return
 	 */
 	public boolean register(Integer ID, ITradeable t) {
-		IMarket tsa = tsauctions.get(ID);
+		Market tsa = tsauctions.get(ID);
 		if (tsa == null) {
 			return false;
 		}
@@ -166,7 +171,7 @@ public class MarketManager {
 	 * @param ID
 	 * @return
 	 */
-	public IMarket getIMarket(Integer ID) {
+	public Market getIMarket(Integer ID) {
 		return tsauctions.get(ID);
 	}
 
@@ -174,33 +179,16 @@ public class MarketManager {
 	 * Gets all of the auctions
 	 * @return
 	 */
-	public Collection<IMarket> getAuctions() {
+	public Collection<Market> getAuctions() {
 		return this.tsauctions.values();
 	}
-	
-	/**
-	 * Gets all the one sided auctions
-	 * @return
-	 */
-	public List<OneSidedAuction> getOneSidedAuctions() {
-		return this.tsauctions.values().stream()
-				.filter(a -> a instanceof OneSidedAuction)
-				.map(a -> (OneSidedAuction) a)
-				.collect(Collectors.toList());
-	}
 
-	/**
-	 * Gets the one sided auction
-	 * @param auctionID
-	 * @return
-	 */
-	public OneSidedAuction getOneSided(Integer auctionID) {
-		IMarket market = this.tsauctions.get(auctionID);
-		if (market instanceof OneSidedAuction) {
-			return (OneSidedAuction) market;
-		}
-		
-		return null;
+	public TwoSidedAuction getTwoSided(Integer marketID) {
+		return this.twosided.get(marketID);
+	}
+	
+	public void openTwoSided(TwoSidedAuction tsa) {
+		this.twosided.put(tsa.getID(), tsa);
 	}
 
 }

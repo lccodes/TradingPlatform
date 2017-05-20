@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.value.ITradeable;
-import brown.auctions.IMarket;
+import brown.auctions.interfaces.Market;
 
 public class Ledger {
 	protected final List<Transaction> transactions;
 	protected final Map<ITradeable, Transaction> latest;
 	protected final List<Transaction> unshared;
-	protected final IMarket market;
+	protected final Market market;
 	
 	public Ledger() {
 		this.transactions = null;
@@ -27,7 +27,7 @@ public class Ledger {
 	 * Constructs a ledger for the given security
 	 * @param security : security that all Tradeables will refer to
 	 */
-	public Ledger(IMarket market) {
+	public Ledger(Market market) {
 		this.market = market;
 		this.unshared = new LinkedList<Transaction>();
 		this.transactions = new LinkedList<Transaction>();

@@ -1,6 +1,7 @@
-\section{Equilibria}
-We will use two classic equilibria concepts from the literature and a third of our design. 
+\section{Rational Expectations Equilibrium}
+In order to constrain our algorithm for setting the liquidity parameter $\LMSRb$ such that the final market price is equal to the aggregate belief, we first must define the aggregate belief. We will use a standard solution concept from the literature.\\
 
+<<<<<<< HEAD
 \subsection{RE and PI}
 The two classic equilibria concepts that we will utilize are the \mydef{Rational Expectations Equilibirium} (RE) and the \mydef{Prior Information Equilibrium} (PI). Rational Expectations hypothesizes that all agents act as if they had the collective signal. The collective signal is the signal that aggregates the individual signals received by each agent. This implies that the prediction markets should be as accurate as the collective signal. Under our model, this implies that the prediction markets' final prediction should predict the true outcome. \\
 
@@ -49,3 +50,8 @@ $\AgentStrategy^{\Myopic\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agen
 $\AgentStrategy^{\Farsighted\Informed}_\Agent(\Time)$ is an \mydef{informed agent}holding exogenous signal $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on a linear combination of their signal $\Agent_\AgentBelief$ and the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
 
 $\AgentStrategy^{\Farsighted\Uninformed}_\Agent(\Time)$ is an \mydef{uninformed agent} holding exogenous signal $\Agent_\AgentBelief$ who is attempting to maximize the expected value by bidding based on the current market price $\OptionPrice_\Market$ accounting for how many agents $x$ have already bid. \\
+=======
+The \mydef{Rational Expectations Equilibrium} (REE) hypothesizes that all agents act as if they knew the private belief $\Agent_\AgentBelief$ of all other agents \cite{10.2307/1911360}. This fully revealing hypothesis implies that all agents would operate as if their belief were the aggregate belief constructed from the pooled information. As a result, the equilibrium price should be the aggregate belief regardless of the market mechanism.\\
+
+Since REE is a perfectly competitive equilibrium concept, the aggregate belief is the budget weighted average of each of the agents private beliefs. Formally, $\frac{\sum_{i=1}^{|\Agents|} (\Agent^{i}_{\AgentBelief} \Agent^{i}_{\AgentBudget})}{\sum_{j=1}^{|\Agents|} \Agent^{j}_{\AgentBudget}}$. When agents have equal budgets, the REE reduces to: $\frac{\sum_{i=1}^{|\Agents|} \Agent^{i}_{\AgentBelief}}{|\Agents|}$.\\
+>>>>>>> newInterfaces

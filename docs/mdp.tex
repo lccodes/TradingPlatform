@@ -1,0 +1,142 @@
+\section{Problem Statement}
+The liquidity parameter $\LMSRb$ both controls how quickly that agents can change the market price and bounds the loss that the market maker can incur. Our algorithm will deal with this trade-off by minimizing the market maker's loss while constraining the market's final price to equal the aggregate belief within a small margin of error.\\
+
+\subsection{Markov Decision Process}
+The following Markov Decision Process (MDP) finds the optimal policy given the aforementioned trade-offs. Formally, the MDP will find a loss minimizing market maker whose final market price is equal to the REE aggregate belief. 
+
+\subsubsection{Definitions}
+An MDP $M=\left<\mathcal{S}, \mathcal{A}, T, R\right>$ is defined by a set of states, an action space $\mathcal{A}$, a deterministic transition probability function $T: \mathcal{S} \times \mathcal{A} \rightarrow \mathcal{S}$, and a reward function $R: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$.\\
+
+\subsubsection{Construction}
+We construct an MDP to model the cost of the paths of $\LMSRb$'s through the MDP that result in the final price equaling (close to) the equilibrium price $P$, which is derived from the Rational Expectations Equilibrium. We assume the order in which agents arrive to trade is known and fixed as $\left<\Agent_0, \Agent_1, ..., \Agent_n\right>$, where $\Agent_i \in \Agents$ and $\Agent_0$ is a dummy agent with belief .5. We assume agents are truthfully reporting their beliefs $\Agent_\AgentBelief$ as LMSR incentivizes them to do.\\ 
+
+Given an LMSR market maker, we construct the MDP as follows.\\
+
+%%We define a state $s\in \mathcal{S}$ as $s = \left<\QuantityYes, \QuantityNo,i\right> \in \mathcal{S} = \mathbb{R}_+ \times \mathbb{R}_+ \times \mathbb{N}$. For shorthand, we will use $s_i = \left<\QuantityYes, \QuantityNo\right>$. We denote the initial state as $s_0 = \left<0,0\right>$. There is one designated terminal state $s_{n+1}$.\\
+
+The set of states is $S = \{s_0, s_1, ..., s_n, \text{YES}, \text{NO}, \text{END}\}$, where $s_i= \left<\QuantityYes, \QuantityNo\right>$ for $\QuantityYes, \QuantityNo \in \mathbb{R}_+$, respectively, the total quantity of YES securities and total quantity of NO securities sold by the market maker. There are two special states YES and NO. There is also an absorbing state END. \\
+
+The set of actions is $\mathcal{A}(s_i) = [b_0, b_1]$, where $b_0$ and $b_1$ represent the range of valid liquidity parameter values, determined by $\LMSRb$. The set of actions $\mathcal{A}$(YES) = $\mathcal{A}$(NO) = $\mathcal{A}$(END) = $\emptyset$. \\
+
+We define $q_0'$ = $\QuantityYes$ + getQuantity($\left<\QuantityYes, \QuantityNo\right>$, $\LMSRb$, $\Agent_i$, YES), and $q_1'$ = $\QuantityNo$ + getQuantity($\left<\QuantityYes, \QuantityNo\right>$, $\LMSRb$, $\Agent_i$, NO).\\
+
+Transitions are deterministic. When $i=0, \ldots, n-1, T(s_i,\LMSRb) = \left<q_0', q_1'\right>$, where $s_i = \left<\QuantityYes, \QuantityNo\right>$. When $i=n$,
+\[ T(s_n) = \left\{
+\begin{array}{ll}
+      \text{YES} & \text{if R}(\Option) = 1 \\
+      \text{NO} & \text{if R}(\Option) = 0 \\
+\end{array} 
+\right. \]
+
+$T(s_{n+1}, \text{YES}) = T(s_{n+1}, \text{NO}) = \text{END}$. As $T$ is absorbing, $T(s_i,\text{END}) = \text{END}$.\\
+
+
+%% This is wrong R(s_i, \LMSRb) needs s_{i-1}
+Rewards are defined as follows: when $i=0,\ldots,n$, $R(s_i,\LMSRb) = \text{cost}(q_0', q_1') - \text{cost}(\QuantityYes, \QuantityNo)$, where $s_i = \left<\QuantityYes, \QuantityNo\right>$, and $q_0', q_1'$ are defined above. In addition,
+\[ R(s_{n}, \text{YES}) =  \left\{
+\begin{array}{ll}
+      -\QuantityYes & \text{if getPrice}(\left<\QuantityYes, \QuantityNo\right>, \LMSRb) = P \\
+      -\infty & \text{otherwise} \\
+\end{array} 
+\right. \]
+
+\[ R(s_{n}, \text{NO}) =  \left\{
+\begin{array}{ll}
+      -\QuantityNo & \text{if getPrice}(\left<\QuantityYes, \QuantityNo\right>, \LMSRb) = P \\
+      -\infty & \text{otherwise} \\
+\end{array} 
+\right. \]
+
+\[ R(s_{n+1}, \text{END}) =
+\begin{array}{ll}
+      0
+\end{array}. \]\\
+
+
+%%-\QuantityYes$ if $\Revealer(\Option) = 1$ otherwise $-\QuantityNo$.\\
+
+\subsubsection{Diagram}
+The following is a graphical representation of our Markov Decision Process. The number of intermediate stages $n$ corresponds to the cardinality of the agent set $|\Agents|$. The state $s_0$ represents the initial quantities chosen by the market maker before any agents arrive. \\
+
+The parameter that our solution can vary is the sequence of $\LMSRb$'s used. A parameter that we will hold as fixed for now is the initial state $s_0$.\\
+
+    \begin{tikzpicture}
+        % Setup the style for the states
+        \tikzset{node style/.style={state,
+                                    fill=gray!20!white,
+                                    rectangle}}
+    
+        \node[node style]               (I)   {$s_0 =\left<0,0\right>$ };
+        \node[node style, right=75pt of I]   (II)  {$s_1$};
+        \node[draw=none, below=of II]   (s1e)    {$\vdots$};
+        \node[draw=none, above=of II]   (s1e2)    {$\vdots$};
+        \node[node style, below=of s1e]   (2)  {$s_1$};
+        \node[node style, above=of s1e2]   (3)  {$s_1$};
+        \node[draw=none,  right=of II]   (pen) {$\cdots$};
+        \node[node style, right=of pen] (n)   {$s_n$};
+        \node[draw=none, below=of n]   (sne)    {$\vdots$};
+        \node[draw=none, above=of n]   (sne2)    {$\vdots$};
+        \node[draw=none, below=of sne]   (snex)    {$\vdots$};
+        \node[draw=none, above=of sne2]   (sne2x)    {$\vdots$};
+        \node[node style, above=of sne2x] (9)   {$s_n$};
+        \node[node style, below=of snex] (10)   {$s_n$};
+        \node[draw=none, right=75pt of n]   (empty)    {};
+        \node[node style, below=of empty] (NO)   {NO};
+        \node[node style, above=of empty] (YES)   {YES};
+        \node[node style, right=of empty] (END)   {END};
+        
+        % % Draw empty nodes so we can connect them with arrows
+        \node[draw=none, above=of pen]  (e1)    {$\ldots$};
+        \node[draw=none, below=of pen]  (e2)   {$\ldots$};
+        \node[draw=none, above=of e1]  (e3)  {$\ldots$};
+        \node[draw=none, below=of e2]   (e4)   {$\ldots$};
+        \node[draw=none, above=of e3]  (e5)  {$\ldots$};
+        \node[draw=none, below=of e4]   (e6)   {$\ldots$};
+        \node[draw=none, above=of e5]  (e7)  {$\ldots$};
+        \node[draw=none, below=of e6]   (e8)   {$\ldots$};
+    
+    
+    \draw[>=latex,
+          auto=left,
+          every loop]
+         (I)   edge node {}   (II)
+         (I)  edge node {$\mathcal{A}(s_0) = \{1,25\}$}  (3)
+         (I)  edge node {}  (2)
+         (I)  edge node {}  (s1e)
+         (I)  edge node {}  (s1e2)
+         (pen) edge node {}  (n)
+
+         (3) edge node {} (e3)
+         (3) edge node {} (e5)
+         (3) edge node {$\mathcal{A}(s_1)$} (e7)
+
+         (II)  edge node {}  (pen)
+         (II) edge node {} (e1)
+         (II) edge node {} (e2)
+
+         (2)  edge node {} (e4)
+         (2) edge node {}  (e6)
+         (2) edge node {}  (e8)
+
+         (e8) edge node {}  (10)
+         (e7) edge node {$\mathcal{A}(s_{n-1})$}  (9)
+
+         (n) edge node {}  (NO)
+         (n) edge node {}  (YES)
+
+         (9) edge node {}  (NO)
+         (9) edge node {$\text{if R}(\Option) = 1$}  (YES)
+
+         (10) edge[auto=right] node {$\text{if R}(\Option) = 0$}  (NO)
+         (10) edge node {}  (YES)
+
+         (YES) edge node {}				 (END)
+         (NO) edge node {}				 (END)
+         (END) edge[loop above]  node{}		 (END);
+         
+    \end{tikzpicture}
+
+\subsection{Assumptions}
+We will use a discretization factor of $\delta=\{.25,.5,1\}$ for our action space of $\LMSRb$ values. Since $\LMSRb$ is undefined for $\LMSRb \leq 0$, we restrict our action space to $\mathcal{A}=\{\delta,...\}$, but we will only search over $\mathcal{A}=\{\delta,100\}$ for efficiency.\\
+
+Due to finite precision, we will permit a tolerance of $\epsilon$ for the final market price such that $|P - \text{getPrice}(\left<\QuantityYes, \QuantityNo\right>, \LMSRb)| < \epsilon$.\\

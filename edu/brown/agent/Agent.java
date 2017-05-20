@@ -2,7 +2,7 @@ package brown.agent;
 
 import java.io.IOException;
 
-import brown.auctions.onesided.SimpleOneSidedWrapper;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -85,13 +85,13 @@ public abstract class Agent {
 	 * Provides response to sealed bid auction
 	 * @param SealedBid wrapper
 	 */
-	public abstract void onSimpleSealed(SimpleOneSidedWrapper market);
+	public abstract void onSimpleSealed(SimpleWrapper simpleWrapper);
 
 	/**
 	 * Provides agent response to OpenOutcry auction
 	 * @param OpenOutcry wrapper
 	 */
-	public abstract void onSimpleOpenOutcry(SimpleOneSidedWrapper market);
+	public abstract void onSimpleOpenOutcry(SimpleWrapper simpleWrapper);
 
 	/**
 	 * Provides agent response to LMSR

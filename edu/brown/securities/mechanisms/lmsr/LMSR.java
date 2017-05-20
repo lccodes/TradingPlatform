@@ -126,5 +126,14 @@ public class LMSR implements TwoSidedAuction {
 	public double moniesToShares(double monies) {
 		return this.BACKEND.budgetToShares(monies, this.TYPE.TYPE == TradeableType.PredictionYes);
 	}
+	
+	/**
+	 * How many shares does it take to get to this price?
+	 * @param price
+	 * @return
+	 */
+	public double priceToShares(double price) {
+		return this.BACKEND.howMany(price, this.TYPE.TYPE.equals(TradeableType.PredictionYes));
+	}
 
 }

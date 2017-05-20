@@ -1,6 +1,7 @@
 \section{Conclusion}
+This paper presented a novel algorithm for setting the liquidity parameter in LMSR that achieves several desirable outcomes, namely aggregating beliefs to a defined equilibrium and minimizing the market maker's cost. In addition, it contributed to the literature about LMSR's ability to aggregate information by showing properties of the minimum cost path given an equilibrium solution concept. Furthermore, it demonstrated that an optimal algorithm
+is achievable without knowing the agents' beliefs and order. This is an important result
+given that in practice market makers have little information about agents' beliefs and
+arrival times. \\
 
-
-\subsection{Future Directions}
-
-
+Future research could attempt to extend the Online Learner so that it earns positive profit since the bounded loss condition is a barrier to the practical adoption of LMSR. Additional research could extend this work to situations where agents' beliefs are not drawn from a singular distribution. The most immediate solution would be to charge a variable commission for each transaction that would be some percentage of each agent's cost. The Liquidity Sensitive Automated Market Maker provides a natural example since it extracts a commission from the liquidity that it provides to agents \cite{Othman:2013:PLA:2509413.2509414}.

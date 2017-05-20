@@ -17,6 +17,13 @@ public class LiquiditySensitive extends LMSRBackend {
 		this.alpha = alpha;
 	}
 	
+	public LiquiditySensitive() {
+		this.yes = 1;
+		this.no = 1;
+		this.b = 0;
+		this.alpha = 0; 
+	}
+	
 	/*
 	 * Price function
 	 * @param direction : boolean
@@ -60,8 +67,15 @@ public class LiquiditySensitive extends LMSRBackend {
 	 * @return cost : double
 	 */
 	public double cost(double newq1, double newq2) {
-		return getB()*Math.log(Math.exp((newq1 + yes)/getB()) + Math.exp((newq2+no)/getB()))
+		return getB(newq1+newq2)*Math.log(Math.exp((newq1 + yes)/getB(newq1+newq2)) + Math.exp((newq2+no)/getB(newq1+newq2)))
 				- getB()*Math.log(Math.exp(yes/getB()) + Math.exp(no/getB()));
+	}
+	
+	/*
+	 * Computes b(q)
+	 */
+	protected double getB(double newq) {
+		return alpha * (newq + yes + no);
 	}
 	
 	/*
@@ -77,6 +91,7 @@ public class LiquiditySensitive extends LMSRBackend {
 	 */
 	@Override
 	public void yes(Integer agentID, double shareNum) {
+		this.profit += cost(shareNum, 0);
 		this.yes += shareNum;
 	}
 	
@@ -86,6 +101,7 @@ public class LiquiditySensitive extends LMSRBackend {
 	 */
 	@Override
 	public void no(Integer agentID, double shareNum) {
+		this.profit += cost(0, shareNum);
 		this.no += shareNum;
 	}
 	
@@ -129,19 +145,26 @@ public class LiquiditySensitive extends LMSRBackend {
 	
 	public static void main(String[] args) {
 		LiquiditySensitive luke = new LiquiditySensitive(.2);
-		System.out.println(luke.ask(1));
+		System.out.println(luke.cost(1, 0) + " " + luke.cost(0, 1));
+		luke.yes(null, 1);
+		System.out.println(luke.cost(1, 0) + " " + luke.cost(0, 1));
+		luke.yes(null, 1);
+		System.out.println(luke.cost(1, 0) + " " + luke.cost(0, 1));
+		luke.no(null,1);
+		System.out.println(luke.cost(1, 0) + " " + luke.cost(0, 1));
+		System.out.println(luke.price(true));
 		/*luke.no(null, 100);
 		luke.yes(null, 100);
 		*/
-		luke.no(null, 50);
-		luke.yes(null, 50);
-		System.out.println(luke.ask(1));
-		luke.no(null, 50);
-		luke.yes(null, 50);
-		System.out.println(luke.ask(1));
-		luke.no(null, 100);
-		luke.yes(null, 100);
-		System.out.println(luke.ask(1));
+//		luke.no(null, 50);
+//		luke.yes(null, 50);
+//		System.out.println(luke.ask(1));
+//		luke.no(null, 50);
+//		luke.yes(null, 50);
+//		System.out.println(luke.ask(1));
+//		luke.no(null, 100);
+//		luke.yes(null, 100);
+//		System.out.println(luke.ask(1));
 	}
 
 }

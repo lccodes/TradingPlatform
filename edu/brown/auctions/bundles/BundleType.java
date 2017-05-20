@@ -1,5 +1,5 @@
 package brown.auctions.bundles;
 
 public enum BundleType {
-	Simple
+	Simple, Complex
 }

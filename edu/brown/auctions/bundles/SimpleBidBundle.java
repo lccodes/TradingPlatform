@@ -1,17 +1,22 @@
 package brown.auctions.bundles;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import brown.assets.value.FullType;
+
 
 public class SimpleBidBundle implements BidBundle {
-	private final double Bid;
-	private final Integer AgentID;
+	private final Map<FullType,MarketState> BIDS;
 	private final BundleType BT;
 	
 	/**
 	 * Empty constructor for kryo net
 	 */
 	public SimpleBidBundle() {
-		this.Bid = 0;
-		this.AgentID = null;
+		this.BIDS = null;
 		this.BT = null;
 	}
 	
@@ -21,20 +26,21 @@ public class SimpleBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public SimpleBidBundle(double bid, Integer agent, BundleType type) {
-		this.Bid = bid;
-		this.AgentID = agent;
-		this.BT = type;
+	public SimpleBidBundle(Map<FullType, MarketState> bids) {
+		if (bids == null) {
+			throw new IllegalArgumentException("Null bids");
+		}
+		this.BIDS = bids;
+		this.BT = BundleType.Simple;
 	}
 
 	@Override
 	public double getCost() {
-		return this.Bid;
-	}
-
-	@Override
-	public Integer getAgent() {
-		return this.AgentID;
+		double total = 0;
+		for (MarketState b : this.BIDS.values()) {
+			total += b.PRICE;
+		}
+		return total;
 	}
 
 	@Override
@@ -44,6 +50,37 @@ public class SimpleBidBundle implements BidBundle {
 
 	@Override
 	public BidBundle wipeAgent(Integer ID) {
-		return new SimpleBidBundle(this.Bid, ID, this.BT);
+		Map<FullType, MarketState> newBids = new HashMap<FullType, MarketState>();
+		for (Entry<FullType, MarketState> entry : this.BIDS.entrySet()) {
+			if (ID.equals(entry.getValue().AGENTID)) {
+				newBids.put(entry.getKey(), entry.getValue());
+			} else {
+				newBids.put(entry.getKey(), new MarketState(null,entry.getValue().PRICE));
+			}
+		}
+		
+		return new SimpleBidBundle(newBids);
+	}
+	
+	public MarketState getBid(FullType type) {
+		for (Entry<FullType, MarketState> ot : this.BIDS.entrySet()) {
+			if(ot.getKey().equals(type)) {
+				return ot.getValue();
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.BT + ": " + this.BIDS + "]";
+	}
+
+	public boolean isDemanded(FullType type) {
+		return this.getBid(type) != null;
+	}
+	
+	public Set<FullType> getDemandSet() {
+		return this.BIDS.keySet();
 	}
 }

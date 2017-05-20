@@ -1,0 +1,7 @@
+\section{Aggregate Belief}
+In order to constrain our algorithm for setting the liquidity parameter $\LMSRb$ such that the final market price is equal to the aggregate belief, we first must define the aggregate belief. We will use a standard solution concept from the literature.
+
+\subsection{Rational Expectations Equilibrium}
+The \mydef{Rational Expectations Equilibirium} (REE) hypothesizes that all agents act as if they knew the private belief $\Agent_\AgentBelief$ of all other agents \cite{10.2307/1911360}. This fully revealing hypotehsis implies that all agents would operate as if their belief were the aggregate belief constructed from the pooled information. As a result, the equilibrium price should be the aggregate belief regardless of the market mechanism.\\
+
+Since REE is a perfectly competitive equilibrium concept, the aggregate belief is the budget weighted average of each of the agents private beliefs. Formally, $\frac{\sum_{i=1}^{|\Agents|} (\Agent^{i}_{\AgentBelief} \Agent^{i}_{\AgentBudget})}{\sum_{j=1}^{|\Agents|} \Agent^{j}_{\AgentBudget}}$. As our model restricts agents to have equal budgets, the REE reduces to: $\frac{\sum_{i=1}^{|\Agents|} \Agent^{i}_{\AgentBelief}}{|\Agents|}$.\\
