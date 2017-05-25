@@ -3,9 +3,9 @@ package brown.lab;
 import java.util.SortedMap;
 
 import brown.agent.Agent;
-import brown.auctions.twosided.ITwoSidedWrapper;
+import brown.auctions.twosided.ITwoSidedAuction;
 
-public interface ITwoSidedUnitSetter extends ITwoSidedWrapper {
+public interface ITwoSidedUnitSetter extends ITwoSidedAuction {
 	public void buy(Agent agent, int sharePrice);
 	public void sell(Agent agent, int sharePrice);
 	public void cancel(Agent agent, boolean buy, int sharePrice);

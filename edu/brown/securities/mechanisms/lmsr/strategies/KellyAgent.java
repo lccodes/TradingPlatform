@@ -2,15 +2,15 @@ package brown.securities.mechanisms.lmsr.strategies;
 
 import brown.agent.Agent;
 import brown.assets.value.TradeableType;
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.mechanisms.cda.CDAWrapper;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Setup;
 
 public abstract class KellyAgent extends Agent {
@@ -25,18 +25,18 @@ public abstract class KellyAgent extends Agent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleWrapper simpleWrapper) {
+	public void onSimpleSealed(SimpleAuction simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onSimpleOpenOutcry(SimpleWrapper simpleWrapper) {
+	public void onSimpleOpenOutcry(SimpleAuction simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}
 	
-	protected double fractionalBet(double p_m, LMSRWrapper market) {
+	protected double fractionalBet(double p_m, LMSR market) {
 		if (p_m <= this.belief) {
 			double fraction = (this.belief - p_m) / (1 - p_m);
 			fraction *= this.money;
@@ -49,7 +49,7 @@ public abstract class KellyAgent extends Agent {
 	}
 
 	@Override
-	public void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSR market) {
 		double p_m = market.getTradeableType().TYPE == TradeableType.PredictionYes ? market.price() : 1-market.price();
 		// = ???
 		if (p_m <= this.belief) {
@@ -68,7 +68,7 @@ public abstract class KellyAgent extends Agent {
 	}
 
 	@Override
-	public void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(ContinuousDoubleAuction market) {
 		// Noop
 	}
 

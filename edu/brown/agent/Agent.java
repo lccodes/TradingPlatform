@@ -2,7 +2,7 @@ package brown.agent;
 
 import java.io.IOException;
 
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -11,8 +11,8 @@ import brown.messages.Registration;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.mechanisms.cda.CDAWrapper;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Setup;
 import brown.setup.Startup;
 
@@ -85,25 +85,25 @@ public abstract class Agent {
 	 * Provides response to sealed bid auction
 	 * @param SealedBid wrapper
 	 */
-	public abstract void onSimpleSealed(SimpleWrapper simpleWrapper);
+	public abstract void onSimpleSealed(SimpleAuction simpleWrapper);
 
 	/**
 	 * Provides agent response to OpenOutcry auction
 	 * @param OpenOutcry wrapper
 	 */
-	public abstract void onSimpleOpenOutcry(SimpleWrapper simpleWrapper);
+	public abstract void onSimpleOpenOutcry(SimpleAuction simpleWrapper);
 
 	/**
 	 * Provides agent response to LMSR
 	 * @param LMSR wrapper
 	 */
-	public abstract void onLMSR(LMSRWrapper market);
+	public abstract void onLMSR(LMSR market);
 
 	/**
 	 * Provides agent response to CDAs
 	 * @param market : CDA wrapper
 	 */
-	public abstract void onContinuousDoubleAuction(CDAWrapper market);
+	public abstract void onContinuousDoubleAuction(ContinuousDoubleAuction market);
 
 	/**
 	 * Agents must accept their IDs from the server

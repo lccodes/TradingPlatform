@@ -2,7 +2,7 @@ package brown.securities.mechanisms.lmsr.strategies;
 
 import brown.assets.value.TradeableType;
 import brown.exceptions.AgentCreationException;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Setup;
 
 public class ShortsightedInformed extends ExperimentalAgent {
@@ -12,7 +12,7 @@ public class ShortsightedInformed extends ExperimentalAgent {
 	}
 
 	@Override
-	public void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSR market) {
 		if (market.getTradeableType().TYPE.equals(TradeableType.PredictionYes)) {
 			if (this.CURRENTTIME++ != this.TIME) { //TODO: make this work; yes'ers are missing
 				return;

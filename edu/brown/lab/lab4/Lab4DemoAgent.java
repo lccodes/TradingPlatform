@@ -4,7 +4,7 @@ import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Transaction;
 import brown.assets.value.Tradeable;
 import brown.exceptions.AgentCreationException;
-import brown.lab.UnitCDAWrapper;
+import brown.lab.UnitCDA;
 import brown.messages.BankUpdate;
 import brown.setup.Logging;
 
@@ -30,7 +30,7 @@ public class Lab4DemoAgent extends Lab4Agent {
 	}
 
 	@Override
-	protected void onContinuousDoubleAuction(UnitCDAWrapper market) {
+	protected void onContinuousDoubleAuction(UnitCDA market) {
 		Logging.log("My decoys " + this.myNumDecoys);
 		// check out the current ledger
 		this.myLedger = market.getLedger();

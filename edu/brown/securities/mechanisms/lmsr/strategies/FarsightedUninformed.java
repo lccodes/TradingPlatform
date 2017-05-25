@@ -2,7 +2,7 @@ package brown.securities.mechanisms.lmsr.strategies;
 
 import brown.assets.value.TradeableType;
 import brown.exceptions.AgentCreationException;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Setup;
 
 public class FarsightedUninformed extends ShortsightedInformed {
@@ -12,7 +12,7 @@ public class FarsightedUninformed extends ShortsightedInformed {
 	}
 	
 	@Override
-	public void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSR market) {
 		if (market.getTradeableType().TYPE.equals(TradeableType.PredictionYes)) {
 			if (market.price() > .5) {
 				this.SIGNAL = (.5 + this.TIME) / (this.TIME+1.0);

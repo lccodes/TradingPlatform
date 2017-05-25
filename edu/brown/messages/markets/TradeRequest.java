@@ -1,12 +1,12 @@
 package brown.messages.markets;
 
 import brown.agent.Agent;
-import brown.auctions.IMarketWrapper;
+import brown.auctions.IMarket;
 import brown.auctions.arules.MechanismType;
 import brown.messages.Message;
 
 public class TradeRequest extends Message {
-	public final IMarketWrapper MARKET;
+	public final IMarket MARKET;
 	public final MechanismType MECHANISM;
 	
 	public TradeRequest() {
@@ -15,7 +15,7 @@ public class TradeRequest extends Message {
 		MECHANISM = null;
 	}
 
-	public TradeRequest(Integer ID, IMarketWrapper market, MechanismType mechanism) {
+	public TradeRequest(Integer ID, IMarket market, MechanismType mechanism) {
 		super(ID);
 		this.MARKET = market;
 		this.MECHANISM = mechanism;

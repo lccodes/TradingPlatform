@@ -8,8 +8,8 @@ import brown.auctions.bundles.SimpleBidBundle;
 import brown.auctions.interfaces.MarketInternalState;
 import brown.auctions.interfaces.QueryRule;
 import brown.auctions.prules.PaymentType;
-import brown.auctions.wrappers.ComplexWrapper;
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.ComplexAuction;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.messages.markets.TradeRequest;
 
 public class OutcryQueryRule implements QueryRule {
@@ -18,12 +18,12 @@ public class OutcryQueryRule implements QueryRule {
 	public TradeRequest wrap(Ledger ledger, PaymentType type, MarketInternalState state) {
 		if (state.getAllocation().getType().equals(BundleType.Simple)) {
 			return new TradeRequest(0, 
-					new SimpleWrapper(state.getID(), ledger, type, MechanismType.OpenOutcry, 
+					new SimpleAuction(state.getID(), ledger, type, MechanismType.OpenOutcry, 
 							(SimpleBidBundle) state.getAllocation(), state.getEligibility()), 
 							MechanismType.OpenOutcry);
 		} else {
 			return new TradeRequest(0, 
-					new ComplexWrapper(state.getID(), ledger, type, MechanismType.OpenOutcry, 
+					new ComplexAuction(state.getID(), ledger, type, MechanismType.OpenOutcry, 
 							(ComplexBidBundle) state.getAllocation()), 
 							MechanismType.OpenOutcry);
 		}

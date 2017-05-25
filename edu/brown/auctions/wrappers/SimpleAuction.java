@@ -8,7 +8,7 @@ import java.util.Set;
 import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
 import brown.assets.value.FullType;
-import brown.auctions.IMarketWrapper;
+import brown.auctions.IMarket;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.MarketState;
 import brown.auctions.bundles.SimpleBidBundle;
@@ -16,7 +16,7 @@ import brown.auctions.prules.PaymentType;
 import brown.messages.auctions.Bid;
 import brown.setup.Logging;
 
-public class SimpleWrapper implements IMarketWrapper {
+public class SimpleAuction implements IMarket {
 	private final Integer ID;
 	private final Ledger LEDGER;
 	private final SimpleBidBundle HIGHBID;
@@ -25,7 +25,7 @@ public class SimpleWrapper implements IMarketWrapper {
 	private final PaymentType PTYPE;
 	private final MechanismType MTYPE;
 	
-	public SimpleWrapper() {
+	public SimpleAuction() {
 		this.ID = null;
 		this.LEDGER = null;
 		this.HIGHBID = null;
@@ -40,7 +40,7 @@ public class SimpleWrapper implements IMarketWrapper {
 	 * @param ledger
 	 * @param highBid
 	 */
-	public SimpleWrapper(Integer ID, Ledger ledger, PaymentType ptype, MechanismType mtype,
+	public SimpleAuction(Integer ID, Ledger ledger, PaymentType ptype, MechanismType mtype,
 			SimpleBidBundle highBid, int elig) {
 		if (highBid == null || ledger == null) {
 			throw new IllegalArgumentException("Null structures");

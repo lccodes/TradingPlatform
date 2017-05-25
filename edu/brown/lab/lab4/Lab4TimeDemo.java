@@ -1,12 +1,12 @@
 package brown.lab.lab4;
 
 import brown.exceptions.AgentCreationException;
-import brown.lab.UnitCDAWrapper;
+import brown.lab.UnitCDA;
 import brown.messages.markets.GameReport;
 import brown.setup.Logging;
 
 public class Lab4TimeDemo extends Lab4Agent {
-	private UnitCDAWrapper market;
+	private UnitCDA market;
 
 	public Lab4TimeDemo(String host, int port) throws AgentCreationException {
 		super(host, port);
@@ -14,7 +14,7 @@ public class Lab4TimeDemo extends Lab4Agent {
 	}
 
 	@Override
-	protected void onContinuousDoubleAuction(UnitCDAWrapper unitCDAWrapper) {
+	protected void onContinuousDoubleAuction(UnitCDA unitCDAWrapper) {
 		// Update my latest market
 		this.market = unitCDAWrapper;
 	}

@@ -1,9 +1,9 @@
 package brown.auctions.twosided;
 
 import brown.assets.value.FullType;
-import brown.auctions.IMarketWrapper;
+import brown.auctions.IMarket;
 
-public interface ITwoSidedWrapper extends IMarketWrapper {	
+public interface ITwoSidedAuction extends IMarket {	
 	/**
 	 * Gets the full type of tradeable
 	 * @return FullType

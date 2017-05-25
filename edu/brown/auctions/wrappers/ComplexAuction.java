@@ -2,14 +2,14 @@ package brown.auctions.wrappers;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
-import brown.auctions.IMarketWrapper;
+import brown.auctions.IMarket;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.ComplexBidBundle;
 import brown.auctions.prules.PaymentType;
 
-public class ComplexWrapper implements IMarketWrapper {
+public class ComplexAuction implements IMarket {
 
-	public ComplexWrapper(Integer id, Ledger ledger, PaymentType type, MechanismType openoutcry,
+	public ComplexAuction(Integer id, Ledger ledger, PaymentType type, MechanismType openoutcry,
 			ComplexBidBundle allocation) {
 		// TODO Auto-generated constructor stub
 	}

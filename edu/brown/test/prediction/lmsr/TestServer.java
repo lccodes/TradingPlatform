@@ -6,7 +6,7 @@ import java.util.List;
 import brown.assets.accounting.Account;
 import brown.auctions.IMarket;
 import brown.messages.Registration;
-import brown.securities.mechanisms.lmsr.LMSR;
+import brown.securities.mechanisms.lmsr.LMSRServer;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
 import brown.server.AgentServer;
 import brown.setup.Logging;
@@ -55,8 +55,8 @@ public class TestServer extends AgentServer {
 	}
 
 	public void startGame() {
-		this.manager.open(new LMSR(1, true, BACKEND, true));
-		this.manager.open(new LMSR(2, false, BACKEND, true));
+		this.manager.open(new LMSRServer(1, true, BACKEND, true));
+		this.manager.open(new LMSRServer(2, false, BACKEND, true));
 		System.out.println("[-] markets added");
 		
 		delay(2);

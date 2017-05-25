@@ -2,7 +2,7 @@ package brown.lab;
 
 import brown.agent.Agent;
 import brown.exceptions.AgentCreationException;
-import brown.lab.lab5.LemonadeWrapper;
+import brown.lab.lab5.Lemonade;
 
 public abstract class LabAgent extends Agent {
 
@@ -11,6 +11,6 @@ public abstract class LabAgent extends Agent {
 		super(host, port, new GameSetup());
 	}
 	
-	public abstract void onLemonade(LemonadeWrapper wrapper);
+	public abstract void onLemonade(Lemonade wrapper);
 
 }

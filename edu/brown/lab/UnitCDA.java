@@ -5,12 +5,12 @@ import java.util.SortedMap;
 import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
 import brown.assets.value.FullType;
-import brown.securities.mechanisms.cda.CDAWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
 
-public class UnitCDAWrapper implements ITwoSidedUnitSetter {
-	private final CDAWrapper WRAP;
+public class UnitCDA implements ITwoSidedUnitSetter {
+	private final ContinuousDoubleAuction WRAP;
 	
-	public UnitCDAWrapper(CDAWrapper wrapper) {
+	public UnitCDA(ContinuousDoubleAuction wrapper) {
 		this.WRAP = wrapper;
 	}
 

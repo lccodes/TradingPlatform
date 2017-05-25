@@ -7,8 +7,8 @@ import brown.messages.Ack;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.mechanisms.cda.CDAWrapper;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Logging;
 
 public abstract class Lab5Agent extends LabAgent {
@@ -19,7 +19,7 @@ public abstract class Lab5Agent extends LabAgent {
 
 	@Override
 	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		this.onLemonade(new LemonadeWrapper(market));
+		this.onLemonade(new Lemonade(market));
 	}
 
 	@Override
@@ -28,12 +28,12 @@ public abstract class Lab5Agent extends LabAgent {
 	}
 
 	@Override
-	public void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSR market) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(ContinuousDoubleAuction market) {
 		// TODO Auto-generated method stub
 	}
 

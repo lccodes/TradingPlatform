@@ -1,48 +1,59 @@
 package brown.securities.mechanisms.cda;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
+import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.Tradeable;
-import brown.auctions.arules.MechanismType;
-import brown.auctions.rules.ClearingRule;
-import brown.auctions.twosided.ITwoSidedWrapper;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.auctions.twosided.ITwoSidedPriceSetter;
+import brown.messages.markets.MarketOrder;
 
-public class ContinuousDoubleAuction implements TwoSidedAuction {
-	private final Integer ID;
+public class ContinuousDoubleAuction implements ITwoSidedPriceSetter {
+	private final Integer MARKETID;
 	private final FullType TYPE;
-	private final ClearingRule RULE;
+	private final SortedMap<Double, Double> BUYBOOK;
+	private final SortedMap<Double, Double> SELLBOOK;
+	private final Ledger LEDGER;
 	
-	/**
-	 * For kryonet
-	 * DO NOT USE
-	 */
 	public ContinuousDoubleAuction() {
-		this.ID = null;
 		this.TYPE = null;
-		this.RULE = null;
+		this.MARKETID = null;
+		this.BUYBOOK = null;
+		this.SELLBOOK = null;
+		this.LEDGER = null;
 	}
 	
-	/**
-	 * Constructor
-	 * @param ID : auction ID
-	 * @param type : SecurityType
-	 * @param rule : ClearingRule
-	 */
-	public ContinuousDoubleAuction(Integer ID, FullType type, ClearingRule rule) {
-		this.ID = ID;
-		this.TYPE = type;
-		this.RULE = rule;
+	public ContinuousDoubleAuction(CDAServer CDA, Ledger ledger) {
+		this.BUYBOOK = new TreeMap<Double, Double>();
+		this.SELLBOOK = new TreeMap<Double, Double>();
+		this.LEDGER = ledger;
+		
+		this.MARKETID = CDA.getID();
+		this.TYPE = CDA.getTradeableType();
+		for (Map.Entry<Double, Set<Order>> entry : CDA.getBuyBook().entrySet()) {
+			double count = 0;
+			for (Order t : entry.getValue()) {
+				count += t.QUANTITY;
+			}
+			this.BUYBOOK.put(entry.getKey(), count);
+		}
+		
+		for (Map.Entry<Double, Set<Order>> entry : CDA.getSellBook().entrySet()) {
+			double count = 0;
+			for (Order t : entry.getValue()) {
+				count += t.GOOD.getCount();
+			}
+			this.SELLBOOK.put(entry.getKey(), count);
+		}
 	}
 
 	@Override
-	public Integer getID() {
-		return this.ID;
+	public Integer getAuctionID() {
+		return this.MARKETID;
 	}
 
 	@Override
@@ -51,63 +62,54 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public List<Order> buy(Integer agentID, double shareNum, double sharePrice) {
-		return this.RULE.buy(agentID, shareNum, sharePrice);
+	public void buy(Agent agent, double shareNum, double sharePrice) {
+		agent.CLIENT.sendTCP(new MarketOrder(0,this.MARKETID, shareNum, 0, sharePrice));
 	}
 
 	@Override
-	public List<Order> sell(Integer agentID, Tradeable opp, double sharePrice) {
-		return this.RULE.sell(agentID, opp, sharePrice);
+	public void sell(Agent agent, double shareNum, double sharePrice) {
+		agent.CLIENT.sendTCP(new MarketOrder(0, this.MARKETID, 0, shareNum, sharePrice));
 	}
 
 	@Override
 	public double quoteBid(double shareNum, double sharePrice) {
-		return this.RULE.quoteBid(shareNum, sharePrice);
+		//TODO: Fix
+		return -1;
 	}
 
 	@Override
 	public double quoteAsk(double shareNum, double sharePrice) {
-		return this.RULE.quoteAsk(shareNum, sharePrice);
+		//TODO: Fix
+		return -1;
 	}
 
 	@Override
-	public boolean isClosed() {
-		return false;
+	public SortedMap<Double, Double> getBuyBook() {
+		return this.BUYBOOK;
 	}
 
 	@Override
-	public MechanismType getMechanismType() {
-		return MechanismType.ContinuousDoubleAuction;
+	public SortedMap<Double, Double> getSellBook() {
+		return this.SELLBOOK;
 	}
 
 	@Override
-	public SortedMap<Double, Set<Order>> getBuyBook() {
-		return this.RULE.getBuyBook();
+	public void cancel(Agent agent, boolean buy, double shareNum, double sharePrice) {
+		if (buy) {
+			agent.CLIENT.sendTCP(new MarketOrder(0,this.MARKETID, shareNum, 0, sharePrice, true));
+		} else {
+			agent.CLIENT.sendTCP(new MarketOrder(0, this.MARKETID, 0, shareNum, sharePrice, true));
+		}
 	}
 
 	@Override
-	public SortedMap<Double, Set<Order>> getSellBook() {
-		return this.RULE.getSellBook();
+	public void dispatchMessage(Agent agent) {
+		agent.onContinuousDoubleAuction(this);
 	}
 
 	@Override
-	public ITwoSidedWrapper wrap(Ledger ledger) {
-		return new CDAWrapper(this, ledger);
+	public Ledger getLedger() {
+		return this.LEDGER;
 	}
 
-	@Override
-	public void tick(double time) {
-		// Noop
-	}
-
-	@Override
-	public boolean permitShort() {
-		return this.RULE.isShort();
-	}
-
-	@Override
-	public void cancel(Integer agentID, boolean buy, double shareNum,
-			double sharePrice) {
-		this.RULE.cancel(agentID, buy, shareNum, sharePrice);		
-	}
 }

@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import brown.assets.value.FullType;
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.exceptions.AgentCreationException;
 import brown.messages.markets.GameReport;
 import brown.setup.Logging;
@@ -19,7 +19,7 @@ public class FinalProjectDemo extends FinalProjectAgent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleWrapper market) {
+	public void onSimpleSealed(SimpleAuction market) {
 		System.out.println("Start");
 		Map<FullType, Double> toBid = new HashMap<FullType,Double>();
 		for (Entry<Set<FullType>, Double> types : this.myValuation.entrySet()) {
@@ -35,7 +35,7 @@ public class FinalProjectDemo extends FinalProjectAgent {
 	}
 
 	@Override
-	public void onSimpleOpenOutcry(SimpleWrapper market) {
+	public void onSimpleOpenOutcry(SimpleAuction market) {
 		Set<FullType> toBid = new HashSet<FullType>();
 		System.out.println(this.sampleValuation());
 		for (Set<FullType> types : this.myValuation.keySet()) {

@@ -1,139 +1,100 @@
 package brown.securities.mechanisms.lmsr;
 
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-
+import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
-import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.Tradeable;
-import brown.assets.value.TradeableType;
-import brown.auctions.arules.MechanismType;
-import brown.auctions.crules.LMSRNoClearing;
-import brown.auctions.crules.LMSRYesClearing;
-import brown.auctions.rules.ClearingRule;
-import brown.auctions.twosided.ITwoSidedWrapper;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.auctions.twosided.ITwoSidedPriceTaker;
+import brown.auctions.twosided.ITwoSidedAuction;
+import brown.messages.markets.MarketOrder;
 
-public class LMSR implements TwoSidedAuction {
-	private final Integer ID;
-	private final ClearingRule RULE;
-	private final FullType TYPE;
-	private final LMSRBackend BACKEND;
+public class LMSR implements ITwoSidedAuction, ITwoSidedPriceTaker {
+	private final LMSRServer LMSR;
+	private final Ledger LEDGER;
 	
 	public LMSR() {
-		this.ID = null;
-		this.RULE = null;
-		this.TYPE = null;
-		this.BACKEND = null;
+		this.LMSR = null;
+		this.LEDGER = null;
 	}
 	
-	public LMSR(Integer ID, boolean dir, LMSRBackend backend, boolean shortSelling) {
-		this.ID = ID;
-		this.RULE = dir ? new LMSRYesClearing(backend, shortSelling) : new LMSRNoClearing(backend, shortSelling);
-		this.TYPE = new FullType(dir ? TradeableType.PredictionYes : TradeableType.PredictionNo, 
-				backend.getId());
-		this.BACKEND = backend;
+	public LMSR(LMSRServer lmsr, Ledger ledger) {
+		this.LMSR = lmsr;
+		this.LEDGER = ledger;
 	}
 
 	@Override
-	public Integer getID() {
-		return this.ID;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return false;
-	}
-
-	@Override
-	public MechanismType getMechanismType() {
-		return MechanismType.LMSR;
+	public Integer getAuctionID() {
+		return this.LMSR.getID();
 	}
 
 	@Override
 	public FullType getTradeableType() {
-		return this.TYPE;
+		return this.LMSR.getTradeableType();
 	}
 
 	@Override
-	public List<Order> buy(Integer agentID, double shareNum, double sharePrice) {
-		return this.RULE.buy(agentID, shareNum, sharePrice);
+	public void buy(Agent agent, double shareNum, double maxPrice) {
+		agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, shareNum,0.0,maxPrice));
 	}
 
 	@Override
-	public List<Order> sell(Integer agentID, Tradeable opp, double sharePrice) {
-		return this.RULE.sell(agentID, opp, sharePrice);
+	public void sell(Agent agent, double shareNum, double maxPrice) {
+		agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, 0,shareNum,maxPrice));
 	}
 
 	@Override
-	public double quoteBid(double shareNum, double sharePrice) {
-		return this.RULE.quoteBid(shareNum, sharePrice);
+	public double quoteBid(double shareNum) {
+		return this.LMSR.quoteBid(shareNum, -1);
 	}
 
 	@Override
-	public double quoteAsk(double shareNum, double sharePrice) {
-		return this.RULE.quoteAsk(shareNum, sharePrice);
+	public double quoteAsk(double shareNum) {
+		return this.LMSR.quoteAsk(shareNum, -1);
 	}
-
-	@Override
-	public SortedMap<Double, Set<Order>> getBuyBook() {
-		// Noop
-		return null;
-	}
-
-	@Override
-	public SortedMap<Double, Set<Order>> getSellBook() {
-		// Noop
-		return null;
-	}
-
-	@Override
-	public void tick(double time) {
-		// Noop
-	}
-
-	@Override
-	public ITwoSidedWrapper wrap(Ledger ledger) {
-		return new LMSRWrapper(this, ledger);
-	}
-
-	@Override
-	public boolean permitShort() {
-		return this.RULE.isShort();
-	}
-
-	@Override
-	public void cancel(Integer agentID, boolean buy, double shareNum,
-			double sharePrice) {
-		//Noop		
-	}
-
+	
 	/**
-	 * Gets the market price
-	 * @return price
+	 * Gets the price
+	 * @return price : double
 	 */
 	public double price() {
-		return this.RULE.price();
+		return this.LMSR.price();
+	}
+
+	@Override
+	public void dispatchMessage(Agent agent) {
+		agent.onLMSR(this);
+	}
+
+	@Override
+	public void cancel(Agent agent, boolean buy, double shareNum,
+			double maxPrice) {
+		if (buy) {
+			agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, 0,shareNum,maxPrice));
+		} else {
+			agent.CLIENT.sendTCP(new MarketOrder(0, this.LMSR, shareNum,0.0,maxPrice));
+		}
+	}
+
+	@Override
+	public Ledger getLedger() {
+		return this.LEDGER;
 	}
 	
 	/**
-	 * How many shares does it take to fill this budget?
+	 * Gets the number of shares that will cost X monies
 	 * @param monies
-	 * @return shares
+	 * @return shareNum
 	 */
 	public double moniesToShares(double monies) {
-		return this.BACKEND.budgetToShares(monies, this.TYPE.TYPE == TradeableType.PredictionYes);
+		return this.LMSR.moniesToShares(monies);
 	}
 	
 	/**
-	 * How many shares does it take to get to this price?
+	 * Gets the number of shares that it will take to 
+	 * move the price to price
 	 * @param price
 	 * @return
 	 */
 	public double priceToShares(double price) {
-		return this.BACKEND.howMany(price, this.TYPE.TYPE.equals(TradeableType.PredictionYes));
+		return this.LMSR.priceToShares(price);
 	}
-
 }

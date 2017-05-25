@@ -17,7 +17,7 @@ public class Lab5Example extends Lab5Agent {
 	}
 
 	@Override
-	public void onLemonade(LemonadeWrapper wrapper) {
+	public void onLemonade(Lemonade wrapper) {
 		Logging.log("My slot is always " + mySlot);
 		wrapper.pickPosition(this, mySlot);
 	}

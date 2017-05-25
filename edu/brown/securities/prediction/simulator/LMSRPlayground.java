@@ -12,7 +12,7 @@ import java.util.List;
 import brown.exceptions.AgentCreationException;
 import brown.securities.lmsr.marketmakers.implementations.LiquiditySensitive;
 import brown.securities.lmsr.marketmakers.implementations.LukeMM;
-import brown.securities.mechanisms.lmsr.LMSR;
+import brown.securities.mechanisms.lmsr.LMSRServer;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
 import brown.securities.mechanisms.lmsr.strategies.ExperimentalAgent;
 import brown.securities.mechanisms.lmsr.strategies.FarsightedInformed;
@@ -90,8 +90,8 @@ public class LMSRPlayground {
 		} else if (type == 2) {
 			backend = new LukeMM(param);
 		}
-		LMSR yes = new LMSR(0, true, backend, true);
-		LMSR no = new LMSR(1, false, backend, true);
+		LMSRServer yes = new LMSRServer(0, true, backend, true);
+		LMSRServer no = new LMSRServer(1, false, backend, true);
 		this.SERVER.getManager().openTwoSided(yes);
 		this.SERVER.getManager().openTwoSided(no);
 		//for (int i = 0; i < this.AGENTS.size(); i++) {

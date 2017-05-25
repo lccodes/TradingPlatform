@@ -3,7 +3,7 @@ package brown.test.prediction.cda;
 import brown.agent.Agent;
 import brown.assets.value.Tradeable;
 import brown.assets.value.TradeableType;
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -11,8 +11,8 @@ import brown.messages.Registration;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.mechanisms.cda.CDAWrapper;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Logging;
 
 public class TestAgent extends Agent {
@@ -26,13 +26,13 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	public void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSR market) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(ContinuousDoubleAuction market) {
 		Logging.log("[" + this.ID + "] "+ market.getAuctionID());
 		if (this.ME == 0 && market.getTradeableType().TYPE.equals(TradeableType.PredictionYes)) {
 			market.sell(this, 1, 10);
@@ -92,13 +92,13 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleWrapper simpleWrapper) {
+	public void onSimpleSealed(SimpleAuction simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onSimpleOpenOutcry(SimpleWrapper simpleWrapper) {
+	public void onSimpleOpenOutcry(SimpleAuction simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -14,8 +14,8 @@ import brown.messages.BankUpdate;
 import brown.messages.Registration;
 import brown.messages.auctions.BidRequest;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.mechanisms.cda.CDAWrapper;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Logging;
 
 public abstract class Lab8Agent extends Agent {
@@ -55,13 +55,13 @@ public abstract class Lab8Agent extends Agent {
 	}
 
 	@Override
-	public void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSR market) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(ContinuousDoubleAuction market) {
 		// TODO Auto-generated method stub
 
 	}

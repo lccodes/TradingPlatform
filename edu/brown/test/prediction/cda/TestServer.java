@@ -12,7 +12,7 @@ import brown.auctions.IMarket;
 import brown.auctions.crules.ClosestMatchClearing;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Registration;
-import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
+import brown.securities.mechanisms.cda.CDAServer;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 
@@ -86,7 +86,7 @@ public class TestServer extends AgentServer {
 	public void runGame() {
 		// this.exchange.open(new ContinuousDoubleAuction(0, TYPENO, new
 		// ClosestMatchClearing()));
-		this.manager.open(new ContinuousDoubleAuction(1, TYPEYES, new ClosestMatchClearing((Good g) -> {
+		this.manager.open(new CDAServer(1, TYPEYES, new ClosestMatchClearing((Good g) -> {
 			Contract newSec = new Contract(g.getAgentID(), g.getCount(), TYPEYES, state -> {
 				List<Account> list = new LinkedList<Account>();
 				if (state.STATE.getState() == 1) {

@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import brown.assets.accounting.Account;
+import brown.assets.accounting.AccountManager;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Order;
@@ -46,9 +47,9 @@ import com.esotericsoftware.kryonet.Server;
 public abstract class AgentServer {
 	protected Map<Connection, Integer> connections;
 	protected Map<Integer, Integer> privateToPublic;
-	protected Map<Integer, Account> bank;
 	// Consider time limiting these
 	protected List<NegotiateRequest> pendingTradeRequests;
+	protected AccountManager acctManager;
 	protected MarketManager manager;
 
 	private int agentCount;
@@ -61,7 +62,7 @@ public abstract class AgentServer {
 		this.agentCount = 0;
 		this.connections = new ConcurrentHashMap<Connection, Integer>();
 		this.privateToPublic = new ConcurrentHashMap<Integer, Integer>();
-		this.bank = new ConcurrentHashMap<Integer, Account>();
+		this.acctManager = new AccountManager();
 		this.pendingTradeRequests = new CopyOnWriteArrayList<NegotiateRequest>();
 		this.manager = new MarketManager();
 		this.privateToPublic.put(-1, -1);
@@ -147,7 +148,7 @@ public abstract class AgentServer {
 						shares, limitorder.price);
 			} else if (limitorder.buyShares > 0) {
 				synchronized (privateID) {
-					Account account = this.bank.get(privateID);
+					Account account = this.acctManager.getAccount(privateID);
 					if (!market.permitShort()
 							&& account.monies < market.quoteBid(
 									limitorder.buyShares, limitorder.price)) {
@@ -167,7 +168,7 @@ public abstract class AgentServer {
 
 						if (t.FROM != null) {
 							synchronized (t.FROM) {
-								Account fromBank = this.bank.get(t.FROM);
+								Account fromBank = this.acctManager.getAccount(t.FROM);
 								if (!market.permitShort()
 										&& !fromBank.tradeables
 												.contains(t.GOOD)) {
@@ -179,7 +180,8 @@ public abstract class AgentServer {
 									finalUpdatedFrom = finalUpdatedFrom.remove(
 											0, t.GOOD);
 								}
-								this.bank.put(t.FROM, finalUpdatedFrom);
+								this.acctManager.
+								setAccount(t.FROM, finalUpdatedFrom);
 								this.sendBankUpdate(t.FROM, fromBank,
 										finalUpdatedFrom);
 							}
@@ -187,7 +189,7 @@ public abstract class AgentServer {
 
 						if (t.TO != null) {
 							synchronized (t.TO) {
-								Account toBank = this.bank.get(t.TO);
+								Account toBank = this.acctManager.getAccount(t.TO);
 								Account oldbank = toBank;
 								if (market.permitShort()
 										|| toBank.monies >= t.COST) {
@@ -199,7 +201,7 @@ public abstract class AgentServer {
 										split.setAgentID(t.TO);
 										toBank = toBank.add(-1 * t.COST, split);
 									}
-									this.bank.put(t.TO, toBank);
+									this.acctManager.setAccount(t.TO, toBank);
 									this.sendBankUpdate(t.TO, oldbank, toBank);
 								} else {
 									// TODO: Could not afford
@@ -212,7 +214,8 @@ public abstract class AgentServer {
 				}
 			} else if (limitorder.sellShares > 0) {
 				synchronized (privateID) {
-					Account sellerAccount = this.bank.get(privateID);
+					Account sellerAccount = this.acctManager
+							.getAccount(privateID);
 					double qToSell = limitorder.sellShares;
 					synchronized (sellerAccount.tradeables) {
 						List<Tradeable> justAList = new LinkedList<Tradeable>(
@@ -250,8 +253,8 @@ public abstract class AgentServer {
 								for (Order t : trans) {
 									if (t.FROM != null) {
 										synchronized (t.FROM) {
-											Account fromBank = this.bank
-													.get(t.FROM);
+											Account fromBank = this.acctManager
+													.getAccount(t.FROM);
 											if (market.permitShort()
 													|| fromBank.tradeables
 															.contains(t.GOOD)) {
@@ -260,7 +263,7 @@ public abstract class AgentServer {
 												Account finalUpdatedFrom = taken
 														.add(t.COST,
 																new HashSet<Tradeable>());
-												this.bank.put(t.FROM,
+												this.acctManager.setAccount(t.FROM,
 														finalUpdatedFrom);
 												this.sendBankUpdate(t.FROM,
 														fromBank,
@@ -273,15 +276,15 @@ public abstract class AgentServer {
 
 									if (t.TO != null) {
 										synchronized (t.TO) {
-											Account toBank = this.bank
-													.get(t.TO);
+											Account toBank = this.acctManager
+													.getAccount(t.TO);
 											Account oldBank = toBank;
 											if (market.permitShort()
 													|| toBank.monies >= t.COST) {
 												t.GOOD.setAgentID(t.TO);
 												toBank = toBank.add(
 														-1 * t.COST, t.GOOD);
-												this.bank.put(t.TO, toBank);
+												this.acctManager.setAccount(t.TO, toBank);
 												this.sendBankUpdate(t.TO,
 														oldBank, toBank);
 											} else {
@@ -360,8 +363,8 @@ public abstract class AgentServer {
 				}
 			} else if (privateToPublic.get(privateTo) == trade.tradeRequest.toID
 					|| trade.tradeRequest.toID == -1) {
-				Account toAccount = bank.get(privateTo);
-				Account fromAccount = bank.get(privateFrom);
+				Account toAccount = acctManager.getAccount(privateTo);
+				Account fromAccount = acctManager.getAccount(privateFrom);
 
 				if (trade.tradeRequest.isSatisfied(toAccount, fromAccount)) {
 					Account middleTo = toAccount.remove(
@@ -378,10 +381,11 @@ public abstract class AgentServer {
 							trade.tradeRequest.moniesRequested,
 							trade.tradeRequest.sharesRequested);
 
-					bank.put(privateTo, newTo);
-					bank.put(privateFrom, newFrom);
+					acctManager.setAccount(privateTo, newTo);
+					acctManager.setAccount(privateFrom, newFrom);
 
 					List<Integer> ids = new LinkedList<Integer>();
+					//take a look at locking schemes
 					ids.add(privateTo);
 					ids.add(privateFrom);
 					sendBankUpdates(ids);
@@ -398,7 +402,7 @@ public abstract class AgentServer {
 		Market auction = this.manager.getIMarket(bid.AuctionID);
 		if (auction != null) {
 			synchronized (auction) {
-				Account account = this.bank.get(privateID);
+				Account account = this.acctManager.getAccount(privateID);
 				if ((!this.SHORT && account.monies < bid.Bundle.getCost())
 						|| !auction.handleBid(bid.safeCopy(privateID))) {
 					Ack rej = new Ack(privateID, bid, true);
@@ -423,7 +427,7 @@ public abstract class AgentServer {
 				if (connection == null) {
 					continue;
 				}
-				Account account = this.bank.get(ID);
+				Account account = this.acctManager.getAccount(ID);
 				if (account == null) {
 					continue;
 				}
@@ -468,8 +472,10 @@ public abstract class AgentServer {
 						}
 						Ledger ledger = this.manager.getLedger(auction.getID());
 						for (Order winner : winners) {
-							if (winner.TO != null && this.bank.containsKey(winner.TO)) {
-								Account accountTo = this.bank.get(winner.TO);
+							if (winner.TO != null && this.
+									acctManager.containsAcct(winner.TO)) {
+								Account accountTo = this.acctManager.
+										getAccount(winner.TO);
 								synchronized (accountTo.ID) {
 									winner.GOOD.setAgentID(winner.TO);
 									ledger.add(winner.toTransaction());
@@ -477,19 +483,21 @@ public abstract class AgentServer {
 									Account newA = accountTo.add(
 											-1 * winner.COST,
 											winner.GOOD);
-									this.bank.put(winner.TO, newA);
+									this.acctManager.setAccount(winner.TO, newA);
 									this.sendBankUpdate(winner.TO, accountTo,
 											newA);
 								}
 							}
 							
-							if (winner.FROM != null && this.bank.containsKey(winner.FROM)) {
-								Account accountFrom = this.bank.get(winner.FROM);
+							if (winner.FROM != null && this.acctManager
+									.containsAcct(winner.FROM)) {
+								Account accountFrom = this.acctManager
+										.getAccount(winner.FROM);
 								synchronized (accountFrom.ID) {									
 									Account newA = accountFrom.remove(
 											-1 * winner.COST,
 											winner.GOOD);
-									this.bank.put(winner.FROM, newA);
+									this.acctManager.setAccount(winner.FROM, newA);
 									this.sendBankUpdate(winner.FROM, accountFrom,
 											newA);
 								}
@@ -575,24 +583,17 @@ public abstract class AgentServer {
 	 * Retrieves an agent's bank account from its public ID
 	 */
 	public Account publicToAccount(Integer id) {
-		return bank.get(publicToPrivate(id));
+		return this.acctManager.getAccount(publicToPrivate(id));
 	}
 
 	/*
 	 * Retrieves an agent's bank account from its private ID
 	 */
 	public Account privateToAccount(Integer id) {
-		return bank.get(id);
+		return this.acctManager.getAccount(id);
 	}
 
-	/*
-	 * Sets an agent's bank account from its private ID
-	 */
-	public void setAccount(Integer id, Account account) {
-		synchronized (id) {
-			bank.put(id, account);
-		}
-	}
+
 
 	/*
 	 * Sends a bank update to a set of agents
@@ -606,7 +607,7 @@ public abstract class AgentServer {
 				if (connection == null) {
 					continue;
 				}
-				BankUpdate bu = new BankUpdate(ID, null, bank.get(ID));
+				BankUpdate bu = new BankUpdate(ID, null, this.acctManager.getAccount(ID));
 				theServer.sendToTCP(connection.getID(), bu);
 			}
 		}
@@ -666,7 +667,7 @@ public abstract class AgentServer {
 			}
 
 			privateToPublic.put(theID, agentCount++);
-			bank.put(theID, new Account(theID));
+			this.acctManager.setAccount(theID, new Account(theID));
 
 			connections.put(connection, theID);
 			Logging.log("[-] registered " + theID);

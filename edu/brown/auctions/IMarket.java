@@ -1,37 +1,25 @@
 package brown.auctions;
 
+import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
-import brown.auctions.arules.MechanismType;
 
 public interface IMarket {
 	/**
 	 * Gets the ID of the auction
 	 * @return id
 	 */
-	public Integer getID();
+	public Integer getAuctionID();
 	
 	/**
-	 * Is the market closed
-	 * @return true if ended
+	 * Gets the ledger for this market
+	 * @return ledger
 	 */
-	public boolean isClosed();
+	public Ledger getLedger();
 	
 	/**
-	 * What type of allocation mechanism does it use?
-	 * @return AllocationType
+	 * Handles the double dispatch for 
+	 * trade request types
+	 * @param agent
 	 */
-	public MechanismType getMechanismType();
-	
-	/**
-	 * Is shortselling permitted?
-	 * @return true if shortable
-	 */
-	public boolean permitShort();
-
-	/**
-	 * Get wrapper
-	 * @return
-	 */
-	public IMarketWrapper wrap(Ledger ledger);
-
+	public void dispatchMessage(Agent agent);
 }

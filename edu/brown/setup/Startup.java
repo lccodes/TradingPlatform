@@ -32,9 +32,9 @@ import brown.auctions.prules.FirstPriceRule;
 import brown.auctions.prules.PaymentType;
 import brown.auctions.prules.SecondPriceRule;
 import brown.auctions.rules.ClearingRule;
-import brown.auctions.twosided.ITwoSidedWrapper;
+import brown.auctions.twosided.ITwoSidedAuction;
 import brown.auctions.twosided.TwoSidedAuction;
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Message;
@@ -48,11 +48,11 @@ import brown.messages.trades.NegotiateRequest;
 import brown.messages.trades.Trade;
 import brown.securities.lmsr.marketmakers.implementations.LiquiditySensitive;
 import brown.securities.lmsr.marketmakers.implementations.LukeMM;
-import brown.securities.mechanisms.cda.CDAWrapper;
 import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
-import brown.securities.mechanisms.lmsr.LMSR;
+import brown.securities.mechanisms.cda.CDAServer;
+import brown.securities.mechanisms.lmsr.LMSRServer;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.lmsr.LMSR;
 
 import com.esotericsoftware.kryo.Kryo;
 
@@ -93,18 +93,18 @@ public final class Startup {
 		kryo.register(BundleType.class);
 		kryo.register(MarketOrder.class);
 		kryo.register(TwoSidedAuction.class);
-		kryo.register(ITwoSidedWrapper.class);
+		kryo.register(ITwoSidedAuction.class);
 		kryo.register(MechanismType.class);
 		kryo.register(PaymentType.class);
-		kryo.register(LMSRWrapper.class);
-		kryo.register(CDAWrapper.class);
 		kryo.register(LMSR.class);
+		kryo.register(ContinuousDoubleAuction.class);
+		kryo.register(LMSRServer.class);
 		kryo.register(ClearingRule.class);
 		kryo.register(LMSRYesClearing.class);
 		kryo.register(LMSRNoClearing.class);
 		kryo.register(TradeableType.class);
 		kryo.register(FullType.class);
-		kryo.register(ContinuousDoubleAuction.class);
+		kryo.register(CDAServer.class);
 		kryo.register(ClosestMatchClearing.class);
 		kryo.register(LowestPriceClearing.class);
 		kryo.register(Order.class);
@@ -117,7 +117,7 @@ public final class Startup {
 		kryo.register(LiquiditySensitive.class);
 		kryo.register(LukeMM.class);
 		
-		kryo.register(SimpleWrapper.class);
+		kryo.register(SimpleAuction.class);
 		
 		return true;
 	}

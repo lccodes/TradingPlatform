@@ -1,12 +1,12 @@
 package brown.test.prediction.cda;
 
 import brown.assets.accounting.Transaction;
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.exceptions.AgentCreationException;
-import brown.lab.UnitCDAWrapper;
+import brown.lab.UnitCDA;
 import brown.lab.lab4.Lab4Agent;
 import brown.messages.markets.GameReport;
-import brown.securities.mechanisms.cda.CDAWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
 import brown.setup.Logging;
 
 public class LukeAgent extends Lab4Agent {
@@ -17,7 +17,7 @@ public class LukeAgent extends Lab4Agent {
 	}
 
 	@Override
-	public void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(ContinuousDoubleAuction market) {
 		//System.out.println("MY DECOYS " + this.myNumDecoys);
 		for (Transaction t : market.getLedger().getList()) {
 			Logging.log("Tradeable " + t.TRADEABLE + " was sold to " + t.TO + " from " + t.FROM + " at price " + t.PRICE);
@@ -38,19 +38,19 @@ public class LukeAgent extends Lab4Agent {
 	}
 
 	@Override
-	protected void onContinuousDoubleAuction(UnitCDAWrapper unitCDAWrapper) {
+	protected void onContinuousDoubleAuction(UnitCDA unitCDAWrapper) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleWrapper simpleWrapper) {
+	public void onSimpleSealed(SimpleAuction simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onSimpleOpenOutcry(SimpleWrapper simpleWrapper) {
+	public void onSimpleOpenOutcry(SimpleAuction simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}

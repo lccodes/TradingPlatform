@@ -5,7 +5,7 @@ import java.util.Map;
 
 import brown.agent.Agent;
 import brown.assets.value.FullType;
-import brown.auctions.wrappers.SimpleWrapper;
+import brown.auctions.wrappers.SimpleAuction;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -13,8 +13,8 @@ import brown.messages.Registration;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.mechanisms.cda.CDAWrapper;
-import brown.securities.mechanisms.lmsr.LMSRWrapper;
+import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
+import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Logging;
 
 public class AuctionAgent extends Agent {
@@ -63,13 +63,13 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	public void onLMSR(LMSRWrapper market) {
+	public void onLMSR(LMSR market) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onContinuousDoubleAuction(CDAWrapper market) {
+	public void onContinuousDoubleAuction(ContinuousDoubleAuction market) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -80,7 +80,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleWrapper market) {
+	public void onSimpleSealed(SimpleAuction market) {
 		for (FullType type : market.getTradeables()) {
 			Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getMarketState(type).PRICE);
 			Map<FullType, Double> bids = new HashMap<FullType, Double>();
@@ -90,7 +90,7 @@ public class AuctionAgent extends Agent {
 	}
 
 	@Override
-	public void onSimpleOpenOutcry(SimpleWrapper market) {
+	public void onSimpleOpenOutcry(SimpleAuction market) {
 		for (FullType type : market.getTradeables()) {
 			Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getMarketState(type).PRICE);
 			if (market.getMarketState(type).AGENTID == null && market.getMarketState(type).PRICE < this.myMax) {

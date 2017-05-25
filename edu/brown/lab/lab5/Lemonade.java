@@ -2,13 +2,13 @@ package brown.lab.lab5;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
-import brown.auctions.IMarketWrapper;
+import brown.auctions.IMarket;
 import brown.auctions.onesided.SimpleOneSidedWrapper;
 
-public class LemonadeWrapper implements IMarketWrapper {
+public class Lemonade implements IMarket {
 	private final SimpleOneSidedWrapper WRAP;
 	
-	public LemonadeWrapper(SimpleOneSidedWrapper wrapper) {
+	public Lemonade(SimpleOneSidedWrapper wrapper) {
 		this.WRAP = wrapper;
 	}
 
