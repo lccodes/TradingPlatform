@@ -11,7 +11,7 @@ import java.util.Set;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.activity.SimpleNoJumpActivityRule;
 import brown.auctions.allocation.SimpleClockAllocation;
 import brown.auctions.allocation.SimpleDemandAllocation;
@@ -92,10 +92,10 @@ public class Lab8Server extends AgentServer {
 
 	public void runGame(boolean outcry, boolean finalround, double reserve) throws UnsupportedBiddingLanguageException {
 		// Constructs auction according to rules
-		Set<ITradeable> theSet = new HashSet<ITradeable>();
+		Set<Tradeable> theSet = new HashSet<Tradeable>();
 		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
 		for (Integer ID : this.INTS) {
-			ITradeable newT = new Lab8Good(ID);
+			Tradeable newT = new Lab8Good(ID);
 			theSet.add(newT);
 			forTakehiro.put(ID + "", newT.getType());
 		}
@@ -217,7 +217,7 @@ public class Lab8Server extends AgentServer {
 			Double maxValue = 0.0;
 			for (Set<FullType> wantedBundle : myValue.keySet()) {
 				int contains = 0;
-				for (ITradeable t : account.tradeables) {
+				for (Tradeable t : account.tradeables) {
 					if (wantedBundle.contains(t.getType())) {
 						contains++;
 					}

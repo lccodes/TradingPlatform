@@ -8,7 +8,7 @@ import java.util.Set;
 
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.MarketState;
 import brown.auctions.bundles.SimpleBidBundle;
@@ -19,7 +19,7 @@ public class SimpleInternalState implements MarketInternalState {
 	private final double INCREMENT = 20.0;
 	private final Integer ID;
 	private final List<Bid> BIDS;
-	private final Set<ITradeable> TRADEABLES;
+	private final Set<Tradeable> TRADEABLES;
 	
 	private BidBundle lastAlloc;
 	private List<Order> lastPayments;
@@ -27,7 +27,7 @@ public class SimpleInternalState implements MarketInternalState {
 	private BidBundle reserve;
 	private boolean maximizing;
 	
-	public SimpleInternalState(Integer ID, Set<ITradeable> tradeables) {
+	public SimpleInternalState(Integer ID, Set<Tradeable> tradeables) {
 		this.BIDS = new LinkedList<Bid>();
 		this.lastAlloc = null;
 		this.lastPayments = null;
@@ -35,14 +35,14 @@ public class SimpleInternalState implements MarketInternalState {
 		this.ID = ID;
 		this.ticks = 0;
 		Map<FullType, MarketState> reserve = new HashMap<FullType, MarketState>();
-		for (ITradeable t : this.TRADEABLES) {
+		for (Tradeable t : this.TRADEABLES) {
 			reserve.put(t.getType(), new MarketState(null,0));
 		}
 		this.reserve = new SimpleBidBundle(reserve);
 		this.maximizing = false;
 	}
 	
-	public SimpleInternalState(Integer ID, Set<ITradeable> tradeables, Map<FullType, MarketState> reserve) {
+	public SimpleInternalState(Integer ID, Set<Tradeable> tradeables, Map<FullType, MarketState> reserve) {
 		this.BIDS = new LinkedList<Bid>();
 		this.lastAlloc = null;
 		this.lastPayments = null;
@@ -69,7 +69,7 @@ public class SimpleInternalState implements MarketInternalState {
 	}
 
 	@Override
-	public Set<ITradeable> getTradeables() {
+	public Set<Tradeable> getTradeables() {
 		return this.TRADEABLES;
 	}
 

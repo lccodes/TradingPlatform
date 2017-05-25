@@ -15,7 +15,7 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Order;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.IMarket;
 import brown.auctions.crules.ShortShare;
 import brown.auctions.interfaces.Market;
@@ -159,7 +159,7 @@ public abstract class AgentServer {
 					List<Order> trans = market.buy(privateID,
 							limitorder.buyShares, limitorder.price);
 					for (Order t : trans) {
-						ITradeable split = null;
+						Tradeable split = null;
 						if (t.GOOD.getCount() > t.QUANTITY) {
 							split = t.GOOD.split(t.QUANTITY);
 							ledger.add(t.toTransaction());
@@ -174,7 +174,7 @@ public abstract class AgentServer {
 									// TODO: Deal with this case
 								}
 								Account finalUpdatedFrom = fromBank.add(t.COST,
-										new HashSet<ITradeable>());
+										new HashSet<Tradeable>());
 								if (split == null) {
 									finalUpdatedFrom = finalUpdatedFrom.remove(
 											0, t.GOOD);
@@ -215,12 +215,12 @@ public abstract class AgentServer {
 					Account sellerAccount = this.bank.get(privateID);
 					double qToSell = limitorder.sellShares;
 					synchronized (sellerAccount.tradeables) {
-						List<ITradeable> justAList = new LinkedList<ITradeable>(
+						List<Tradeable> justAList = new LinkedList<Tradeable>(
 								sellerAccount.tradeables);
 						// Short sale check
 						if (market.permitShort()) {
 							double toShort = limitorder.sellShares;
-							for (ITradeable t : justAList) {
+							for (Tradeable t : justAList) {
 								if (t.getType().equals(
 										market.getTradeableType())) {
 									toShort -= t.getCount();
@@ -232,14 +232,14 @@ public abstract class AgentServer {
 							}
 						}
 
-						for (ITradeable tradeable : justAList) {
+						for (Tradeable tradeable : justAList) {
 							if (qToSell <= 0) {
 								break;
 							}
 
 							if (tradeable.getType().equals(
 									market.getTradeableType())) {
-								ITradeable toSell = tradeable;
+								Tradeable toSell = tradeable;
 								if (tradeable.getCount() > qToSell) {
 									toSell = tradeable.split(qToSell);
 								}
@@ -259,7 +259,7 @@ public abstract class AgentServer {
 														.remove(0, t.GOOD);
 												Account finalUpdatedFrom = taken
 														.add(t.COST,
-																new HashSet<ITradeable>());
+																new HashSet<Tradeable>());
 												this.bank.put(t.FROM,
 														finalUpdatedFrom);
 												this.sendBankUpdate(t.FROM,

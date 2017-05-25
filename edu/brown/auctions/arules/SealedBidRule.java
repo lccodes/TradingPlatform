@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.rules.AllocationRule;
@@ -70,14 +70,14 @@ public class SealedBidRule implements AllocationRule {
 	}
 
 	@Override
-	public Map<Integer, Set<ITradeable>> getAllocations(Set<Bid> bids, Set<ITradeable> items) {
+	public Map<Integer, Set<Tradeable>> getAllocations(Set<Bid> bids, Set<Tradeable> items) {
 		List<Bid> topBids = this.getSorted(bids, 1);
 		BidBundle topBid = this.RESERVE;
-		Map<Integer, Set<ITradeable>> allocations = new HashMap<Integer, Set<ITradeable>>();
+		Map<Integer, Set<Tradeable>> allocations = new HashMap<Integer, Set<Tradeable>>();
 		int i = 0;
-		for (ITradeable t : items) {
+		for (Tradeable t : items) {
 			if (i < topBids.size() && topBids.get(i).Bundle.getCost() >= topBid.getCost()) {
-				Set<ITradeable> theSet = new HashSet<ITradeable>();
+				Set<Tradeable> theSet = new HashSet<Tradeable>();
 				theSet.add(t);
 				allocations.put(topBids.get(i).AgentID, theSet);
 			} else {

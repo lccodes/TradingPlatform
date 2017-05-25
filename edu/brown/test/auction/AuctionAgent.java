@@ -1,7 +1,11 @@
 package brown.test.auction;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import brown.agent.Agent;
-import brown.auctions.onesided.SimpleOneSidedWrapper;
+import brown.assets.value.FullType;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -69,24 +73,32 @@ public class AuctionAgent extends Agent {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote());
-		market.bid(this, this.myMax);
-	}
-
-	@Override
-	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getQuote());
-		if (market.getAgent() == null && market.getQuote() < this.myMax) {
-			market.bid(this, market.getQuote()+1);
-		}
-	}
 	
 	public static void main(String[] args) throws AgentCreationException {
 		new AuctionAgent("localhost", 2121);
 		while(true){}
+	}
+
+	@Override
+	public void onSimpleSealed(SimpleWrapper market) {
+		for (FullType type : market.getTradeables()) {
+			Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getMarketState(type).PRICE);
+			Map<FullType, Double> bids = new HashMap<FullType, Double>();
+			bids.put(type, this.myMax);
+			market.bid(this, bids);
+		}
+	}
+
+	@Override
+	public void onSimpleOpenOutcry(SimpleWrapper market) {
+		for (FullType type : market.getTradeables()) {
+			Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getMarketState(type).PRICE);
+			if (market.getMarketState(type).AGENTID == null && market.getMarketState(type).PRICE < this.myMax) {
+				Map<FullType, Double> bids = new HashMap<FullType, Double>();
+				bids.put(type, market.getMarketState(type).PRICE+1);
+				market.bid(this, bids);
+			}
+		}
 	}
 
 }

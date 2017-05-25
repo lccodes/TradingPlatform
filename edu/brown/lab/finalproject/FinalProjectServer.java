@@ -11,7 +11,7 @@ import java.util.Set;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.activity.SMRAActivity;
 import brown.auctions.activity.SimpleNoJumpActivityRule;
 import brown.auctions.allocation.SimpleDemandAllocation;
@@ -92,10 +92,10 @@ public class FinalProjectServer extends AgentServer {
 
 	public void runGame(boolean finalround) throws UnsupportedBiddingLanguageException {
 		// Constructs auction according to rules
-		Set<ITradeable> theSet = new HashSet<ITradeable>();
+		Set<Tradeable> theSet = new HashSet<Tradeable>();
 		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
 		for (Integer ID : this.INTS) {
-			ITradeable newT = new FinalProjectGood(ID);
+			Tradeable newT = new FinalProjectGood(ID);
 			theSet.add(newT);
 			forTakehiro.put(ID + "", newT.getType());
 		}
@@ -216,7 +216,7 @@ public class FinalProjectServer extends AgentServer {
 			Double maxValue = 0.0;
 			for (Set<FullType> wantedBundle : myValue.keySet()) {
 				int contains = 0;
-				for (ITradeable t : account.tradeables) {
+				for (Tradeable t : account.tradeables) {
 					if (wantedBundle.contains(t.getType())) {
 						contains++;
 					}

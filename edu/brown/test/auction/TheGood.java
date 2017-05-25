@@ -4,10 +4,10 @@ import java.util.List;
 
 import brown.assets.accounting.Account;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.assets.value.StateOfTheWorld;
 
-public class TheGood implements ITradeable {
+public class TheGood extends Tradeable {
 	private Integer agentID;
 	
 	public TheGood() {
@@ -45,7 +45,7 @@ public class TheGood implements ITradeable {
 	}
 
 	@Override
-	public ITradeable split(double newCount) {
+	public Tradeable split(double newCount) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -57,7 +57,7 @@ public class TheGood implements ITradeable {
 	}
 
 	@Override
-	public ITradeable toAgent(Integer ID) {
+	public Tradeable toAgent(Integer ID) {
 		return this;
 	}
 

@@ -1,6 +1,7 @@
 package brown.test.prediction.cda;
 
 import brown.assets.accounting.Transaction;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.lab.UnitCDAWrapper;
 import brown.lab.lab4.Lab4Agent;
@@ -38,6 +39,18 @@ public class LukeAgent extends Lab4Agent {
 
 	@Override
 	protected void onContinuousDoubleAuction(UnitCDAWrapper unitCDAWrapper) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSimpleSealed(SimpleWrapper simpleWrapper) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSimpleOpenOutcry(SimpleWrapper simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}

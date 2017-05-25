@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
@@ -15,10 +15,10 @@ import brown.messages.auctions.Bid;
 public class LemonadePayment implements PaymentRule {
 
 	@Override
-	public Map<BidBundle, Set<ITradeable>> getPayments(
-			Map<Integer, Set<ITradeable>> allocations, Set<Bid> bids) {
-		Map<BidBundle, Set<ITradeable>> payments = new HashMap<BidBundle, Set<ITradeable>>();
-		for (Map.Entry<Integer, Set<ITradeable>> alloc : allocations.entrySet()) {
+	public Map<BidBundle, Set<Tradeable>> getPayments(
+			Map<Integer, Set<Tradeable>> allocations, Set<Bid> bids) {
+		Map<BidBundle, Set<Tradeable>> payments = new HashMap<BidBundle, Set<Tradeable>>();
+		for (Map.Entry<Integer, Set<Tradeable>> alloc : allocations.entrySet()) {
 			payments.put(new SimpleBidBundle(0, alloc.getKey(), BundleType.Simple), alloc.getValue());
 		}
 		

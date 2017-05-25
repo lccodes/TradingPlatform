@@ -2,7 +2,7 @@ package brown.lab.lab4;
 
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Transaction;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.exceptions.AgentCreationException;
 import brown.lab.UnitCDAWrapper;
 import brown.messages.BankUpdate;
@@ -22,7 +22,7 @@ public class Lab4DemoAgent extends Lab4Agent {
 		// print the money
 		Logging.log("Monies = " + bankUpdate.newAccount.monies);
 		// print the tradeables
-		for (ITradeable t : bankUpdate.newAccount.tradeables) {
+		for (Tradeable t : bankUpdate.newAccount.tradeables) {
 			Logging.log(t.toString());
 		}
 		// store the bank for future decision making

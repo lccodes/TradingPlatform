@@ -10,7 +10,7 @@ import java.util.Set;
 import brown.assets.accounting.Account;
 import brown.assets.value.Contract;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
@@ -44,10 +44,10 @@ public class LemonadeAllocation implements AllocationRule {
 	}
 
 	@Override
-	public Map<Integer, Set<ITradeable>> getAllocations(Set<Bid> bids, Set<ITradeable> items) {
+	public Map<Integer, Set<Tradeable>> getAllocations(Set<Bid> bids, Set<Tradeable> items) {
 		@SuppressWarnings("unchecked")
 		List<Integer>[] slots = (List<Integer>[]) new List[12];
-		Map<Integer, Set<ITradeable>> securities = new HashMap<Integer, Set<ITradeable>>();
+		Map<Integer, Set<Tradeable>> securities = new HashMap<Integer, Set<Tradeable>>();
 		for (Bid b : bids) {
 			int index = (int) b.Bundle.getCost() - 1;
 			if (slots[index] == null) {
@@ -83,7 +83,7 @@ public class LemonadeAllocation implements AllocationRule {
 			payoff += before < i ? i - before : before;
 			payoff /= (double) slots[i].size();
 			for (Integer person : slots[i]) {
-				Set<ITradeable> goods = new HashSet<ITradeable>();
+				Set<Tradeable> goods = new HashSet<Tradeable>();
 				final double pay = payoff;
 				goods.add(new Contract(person, 1, new FullType(), s -> {
 					List<Account> list = new LinkedList<Account>();
@@ -105,7 +105,7 @@ public class LemonadeAllocation implements AllocationRule {
 			}
 		}
 		
-		return new BidRequest(this.ticks, this.ID, BundleType.Simple, new SimpleBidBundle(1, null, BundleType.Simple), new HashSet<ITradeable>());
+		return new BidRequest(this.ticks, this.ID, BundleType.Simple, new SimpleBidBundle(1, null, BundleType.Simple), new HashSet<Tradeable>());
 	}
 
 	@Override

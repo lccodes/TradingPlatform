@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.interfaces.Market;
 
 public class Ledger {
 	protected final List<Transaction> transactions;
-	protected final Map<ITradeable, Transaction> latest;
+	protected final Map<Tradeable, Transaction> latest;
 	protected final List<Transaction> unshared;
 	protected final Market market;
 	
@@ -31,7 +31,7 @@ public class Ledger {
 		this.market = market;
 		this.unshared = new LinkedList<Transaction>();
 		this.transactions = new LinkedList<Transaction>();
-		this.latest = new HashMap<ITradeable, Transaction>();
+		this.latest = new HashMap<Tradeable, Transaction>();
 	}
 	
 	/**

@@ -3,7 +3,7 @@ package brown.auctions.interfaces;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 
 public interface IBidBundle {
 	/**
@@ -12,14 +12,14 @@ public interface IBidBundle {
 	 * 
 	 * @return complex bundle
 	 */
-	public Map<Set<ITradeable>, Double> getComplexBundle();
+	public Map<Set<Tradeable>, Double> getComplexBundle();
 	
 	/**
 	 * Gives the market a simple bid bundle
 	 * ITradeable -> Double
 	 * @return simple bid bundle
 	 */
-	public Map<ITradeable, Double> getSimpleBidBundle();
+	public Map<Tradeable, Double> getSimpleBidBundle();
 	
 	/**
 	 * Gives the market a complex bid bundle
@@ -27,5 +27,5 @@ public interface IBidBundle {
 	 * @param tradeables
 	 * @return complex bid bundle
 	 */
-	public Map<Set<ITradeable>, Double> getComplexDemandQuery(Set<ITradeable> tradeables);
+	public Map<Set<Tradeable>, Double> getComplexDemandQuery(Set<Tradeable> tradeables);
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.messages.auctions.Bid;
 
@@ -23,7 +23,7 @@ public interface MarketInternalState {
 
 	public List<Bid> getBids();
 
-	public Set<ITradeable> getTradeables();
+	public Set<Tradeable> getTradeables();
 
 	public BidBundle getAllocation();
 	

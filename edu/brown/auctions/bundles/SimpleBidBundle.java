@@ -83,4 +83,8 @@ public class SimpleBidBundle implements BidBundle {
 	public Set<FullType> getDemandSet() {
 		return this.BIDS.keySet();
 	}
+
+	public Set<FullType> getTradeables() {
+		return this.BIDS.keySet();
+	}
 }

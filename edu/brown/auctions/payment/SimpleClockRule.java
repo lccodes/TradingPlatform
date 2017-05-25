@@ -6,7 +6,7 @@ import java.util.List;
 
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.MarketState;
@@ -28,7 +28,7 @@ public class SimpleClockRule implements PaymentRule {
 		}
 		
 		SimpleBidBundle bundle = (SimpleBidBundle) state.getAllocation();
-		for(ITradeable trade : state.getTradeables()) {
+		for(Tradeable trade : state.getTradeables()) {
 			MarketState winner = bundle.getBid(trade.getType());
 			if (winner.AGENTID != null) {
 				orders.add(new Order(winner.AGENTID,null,winner.PRICE,

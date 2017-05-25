@@ -57,7 +57,7 @@ public class Market {
 			this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
 			this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
 			//System.out.println("ALLOC" + this.STATE.getAllocation());
-			System.out.println(this.STATE.getPayments());
+			//System.out.println(this.STATE.getPayments());
 			this.lastTerm = this.term;
 		}
 
@@ -98,7 +98,7 @@ public class Market {
 		
 		this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
 		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
-		System.out.println(this.STATE.getPayments());
+		//System.out.println(this.STATE.getPayments());
 		return this.STATE.getPayments();
 	}
 	

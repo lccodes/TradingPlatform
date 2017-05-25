@@ -4,10 +4,10 @@ import java.util.List;
 
 import brown.assets.accounting.Account;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.assets.value.StateOfTheWorld;
 
-public class ShortShare implements ITradeable {
+public class ShortShare extends Tradeable {
 	private final double COUNT;
 	private final FullType TYPE;
 	
@@ -47,12 +47,12 @@ public class ShortShare implements ITradeable {
 	}
 
 	@Override
-	public ITradeable split(double newCount) {
+	public Tradeable split(double newCount) {
 		return null;
 	}
 
 	@Override
-	public ITradeable toAgent(Integer ID) {
+	public Tradeable toAgent(Integer ID) {
 		return this;
 	}
 

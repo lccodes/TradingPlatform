@@ -1,9 +1,9 @@
 package brown.test.prediction.cda;
 
 import brown.agent.Agent;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.assets.value.TradeableType;
-import brown.auctions.onesided.SimpleOneSidedWrapper;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -67,7 +67,7 @@ public class TestAgent extends Agent {
 	
 	@Override
 	public void onBankUpdate(BankUpdate bankUpdate) {
-		for (ITradeable t : bankUpdate.newAccount.tradeables) {
+		for (Tradeable t : bankUpdate.newAccount.tradeables) {
 			if (t.getType().TYPE.equals(TradeableType.PredictionYes)) {
 				this.ME = 0;
 			} else {
@@ -86,19 +86,19 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void onMarketUpdate(GameReport marketUpdate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSimpleSealed(SimpleWrapper simpleWrapper) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSimpleOpenOutcry(SimpleWrapper simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}

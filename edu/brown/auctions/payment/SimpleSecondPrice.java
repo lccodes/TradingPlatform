@@ -7,7 +7,7 @@ import java.util.Map;
 
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.MarketState;
@@ -42,7 +42,7 @@ public class SimpleSecondPrice implements PaymentRule {
 		}
 		SimpleBidBundle alloc = (SimpleBidBundle) state.getAllocation();
 		MarketState def = new MarketState(null,0);
-		for (ITradeable trade : state.getTradeables()) {
+		for (Tradeable trade : state.getTradeables()) {
 			MarketState bp = alloc.getBid(trade.getType());
 			if (bp == null || bp.AGENTID == null) {
 				continue;

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.assets.value.StateOfTheWorld;
 import brown.auctions.interfaces.Market;
 import brown.auctions.twosided.TwoSidedAuction;
@@ -69,7 +69,7 @@ public class MarketManager {
 				}
 
 				Account newAccount = oldAccount.add(
-						toReplace.monies, new HashSet<ITradeable>(
+						toReplace.monies, new HashSet<Tradeable>(
 								toReplace.tradeables));
 				server.setAccount(toReplaceID, newAccount);
 				server.sendBankUpdate(toReplaceID, oldAccount,
@@ -138,7 +138,7 @@ public class MarketManager {
 	 * @param t
 	 * @return
 	 */
-	public boolean register(Integer ID, ITradeable t) {
+	public boolean register(Integer ID, Tradeable t) {
 		Market tsa = tsauctions.get(ID);
 		if (tsa == null) {
 			return false;

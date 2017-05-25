@@ -1,7 +1,7 @@
 package brown.test.prediction.lmsr;
 
 import brown.agent.Agent;
-import brown.auctions.onesided.SimpleOneSidedWrapper;
+import brown.auctions.wrappers.SimpleWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -77,19 +77,19 @@ public class TestAgent extends Agent {
 	}
 
 	@Override
-	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void onMarketUpdate(GameReport marketUpdate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSimpleSealed(SimpleWrapper simpleWrapper) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSimpleOpenOutcry(SimpleWrapper simpleWrapper) {
 		// TODO Auto-generated method stub
 		
 	}

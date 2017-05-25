@@ -4,7 +4,7 @@ import java.util.List;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Account;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.messages.Message;
 
 /**
@@ -17,10 +17,10 @@ public class NegotiateRequest extends Message {
   public final Integer fromID;
 
   public final Integer moniesRequested;
-  public final List<ITradeable> sharesRequested;
+  public final List<Tradeable> sharesRequested;
 
   public final Integer moniesOffered;
-  public final List<ITradeable> sharesOffered;
+  public final List<Tradeable> sharesOffered;
 
   /**
    * Constructor.
@@ -32,7 +32,7 @@ public class NegotiateRequest extends Message {
    * @param moniesOffered
    * @param sharesOffered
    */
-  public NegotiateRequest(Integer toID, Integer fromID, Integer moniesRequested, List<ITradeable> sharesRequested, Integer moniesOffered, List<ITradeable> sharesOffered) {
+  public NegotiateRequest(Integer toID, Integer fromID, Integer moniesRequested, List<Tradeable> sharesRequested, Integer moniesOffered, List<Tradeable> sharesOffered) {
     super(null);
 	this.toID = toID;
     this.fromID = fromID;

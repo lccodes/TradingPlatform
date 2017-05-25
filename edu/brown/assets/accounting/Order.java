@@ -1,10 +1,10 @@
 package brown.assets.accounting;
 
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 
 public class Order {
 	public final Integer TO;
-	public final ITradeable GOOD;
+	public final Tradeable GOOD;
 	public final Integer FROM;
 	public final double COST;
 	public double QUANTITY;
@@ -28,7 +28,7 @@ public class Order {
 	 * @param quantity
 	 * @param good
 	 */
-	public Order(Integer to, Integer from, double cost, double quantity, ITradeable good) {
+	public Order(Integer to, Integer from, double cost, double quantity, Tradeable good) {
 		this.TO = to;
 		this.FROM = from;
 		this.COST = cost;

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.auctions.bundles.SimpleBidBundle;
@@ -26,7 +26,7 @@ public class SimpleDemandAllocation implements AllocationRule {
 	public BidBundle getAllocation(MarketInternalState state) {
 		//System.out.println("WHUT " + state.getBids());
 		Map<FullType, MarketState> highest = new HashMap<FullType, MarketState>();
-		for (ITradeable trade : state.getTradeables()) {
+		for (Tradeable trade : state.getTradeables()) {
 			MarketState lastHigh = this.lastDemand.getOrDefault(
 					trade.getType(), new MarketState(null, 0));
 			boolean updated = false;
@@ -57,7 +57,7 @@ public class SimpleDemandAllocation implements AllocationRule {
 					new MarketState(entry.getValue().AGENTID, entry
 							.getValue().PRICE + state.getIncrement()));
 		}
-		for (ITradeable t : state.getTradeables()) {
+		for (Tradeable t : state.getTradeables()) {
 			if (!highest.containsKey(t.getType())) {
 				highest.put(t.getType(), this.lastDemand.getOrDefault(
 						t.getType(), new MarketState(null, 0)));

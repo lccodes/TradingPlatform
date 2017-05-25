@@ -7,7 +7,7 @@ import java.util.SortedMap;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.arules.MechanismType;
 import brown.auctions.rules.ClearingRule;
 import brown.auctions.twosided.ITwoSidedWrapper;
@@ -56,7 +56,7 @@ public class ContinuousDoubleAuction implements TwoSidedAuction {
 	}
 
 	@Override
-	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice) {
+	public List<Order> sell(Integer agentID, Tradeable opp, double sharePrice) {
 		return this.RULE.sell(agentID, opp, sharePrice);
 	}
 

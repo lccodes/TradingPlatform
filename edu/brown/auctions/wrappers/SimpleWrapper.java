@@ -159,5 +159,9 @@ public class SimpleWrapper implements IMarketWrapper {
 			agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
 		}
 	}
+	
+	public Set<FullType> getTradeables() {
+		return this.HIGHBID.getTradeables();
+	}
 
 }

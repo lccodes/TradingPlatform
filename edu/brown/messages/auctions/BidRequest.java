@@ -3,7 +3,7 @@ package brown.messages.auctions;
 import java.util.Set;
 
 import brown.agent.Agent;
-import brown.assets.value.ITradeable;
+import brown.assets.value.Tradeable;
 import brown.auctions.bundles.BidBundle;
 import brown.auctions.bundles.BundleType;
 import brown.messages.Message;
@@ -15,7 +15,7 @@ import brown.messages.Message;
  */
 public class BidRequest extends Message {
   public final Integer AuctionID;
-  public final Set<ITradeable> Goods;
+  public final Set<Tradeable> Goods;
   public final BidBundle Current;
   public final BundleType TYPE;
 
@@ -39,7 +39,7 @@ public class BidRequest extends Message {
    * @param bundle
    * @param goods
    */
-  public BidRequest(int ID, Integer auctionID, BundleType type, BidBundle bundle, Set<ITradeable> goods) {
+  public BidRequest(int ID, Integer auctionID, BundleType type, BidBundle bundle, Set<Tradeable> goods) {
     super(ID);
     this.AuctionID = auctionID;
     this.Current = bundle;

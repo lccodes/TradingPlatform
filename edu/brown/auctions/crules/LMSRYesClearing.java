@@ -7,10 +7,9 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
-import brown.assets.value.Contract;
 import brown.assets.value.FullType;
+import brown.assets.value.Tradeable;
 import brown.assets.value.TradeableType;
-import brown.assets.value.ITradeable;
 import brown.auctions.rules.ClearingRule;
 import brown.securities.mechanisms.lmsr.LMSRBackend;
 
@@ -36,7 +35,7 @@ public class LMSRYesClearing implements ClearingRule {
 		double cost = this.BACKEND.bid(shareNum);
 		this.BACKEND.yes(null, shareNum);
 		List<Order> trans = new LinkedList<Order>();
-		Contract newSec = new Contract(agentID, shareNum, this.TYPE, state -> {
+		Tradeable newSec = new Tradeable(this.TYPE, shareNum, agentID, state -> {
 			List<Account> list = new LinkedList<Account>();
 			if (state.STATE.getState() == 1) {
 				list.add(new Account(null).add(state.QUANTITY));
@@ -48,10 +47,10 @@ public class LMSRYesClearing implements ClearingRule {
 	}
 
 	@Override
-	public List<Order> sell(Integer agentID, ITradeable opp, double sharePrice) {
+	public List<Order> sell(Integer agentID, Tradeable opp, double sharePrice) {
 		List<Order> trans = new LinkedList<Order>();
 		if (this.SHORT && opp.getAgentID() == null) {
-			Contract newSec = new Contract(agentID, opp.getCount(), this.TYPE, state -> {
+			Tradeable newSec = new Tradeable(this.TYPE, opp.getCount(), agentID, state -> {
 				List<Account> list = new LinkedList<Account>();
 				if (state.STATE.getState() == 1) {
 					list.add(new Account(null).add(state.QUANTITY));
