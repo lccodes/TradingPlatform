@@ -81,16 +81,17 @@ public class Lab8Server extends AgentServer {
 		this.numberOfBidders++;
 		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(theID, value));
 
-		Account oldAccount = bank.get(connections.get(connection));
+		Account oldAccount = acctManager.getAccount(connections.get(connection));
 		Account newAccount = oldAccount.addAll(10000, null);
-		bank.put(connections.get(connection), newAccount);
+		acctManager.setAccount(connections.get(connection), newAccount);
 
 		List<Integer> IDS = new LinkedList<Integer>();
 		IDS.add(connections.get(connection));
 		this.sendBankUpdates(IDS);
 	}
 
-	public void runGame(boolean outcry, boolean finalround, double reserve) throws UnsupportedBiddingLanguageException {
+	public void runGame(boolean outcry, boolean finalround, double reserve)
+			throws UnsupportedBiddingLanguageException {
 		// Constructs auction according to rules
 		Set<Tradeable> theSet = new HashSet<Tradeable>();
 		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
@@ -209,7 +210,7 @@ public class Lab8Server extends AgentServer {
 		// Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());
 		// }
 		System.out.println("\n\n\n\n\nOUTCOME:");
-		for (Account account : this.bank.values()) {
+		for (Account account : this.acctManager.getAccounts()) {
 			System.out.println(account);
 			System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
 					+ (10000 - account.monies) / account.tradeables.size());

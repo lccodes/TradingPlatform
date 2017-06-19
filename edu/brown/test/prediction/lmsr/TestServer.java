@@ -28,9 +28,9 @@ public class TestServer extends AgentServer {
 			Registration registration) {
 		super.onRegistration(connection, registration);
 
-		Account oldAccount = bank.get(connections.get(connection));
+		Account oldAccount = acctManager.getAccount(connections.get(connection));
 		Account newAccount = oldAccount.addAll(100, null);
-		bank.put(connections.get(connection), newAccount);
+		acctManager.setAccount(connections.get(connection), newAccount);
 
 		List<Integer> IDS = new LinkedList<Integer>();
 		IDS.add(connections.get(connection));

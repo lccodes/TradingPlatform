@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.MarketManager;
 import brown.auctions.IMarket;
+import brown.auctions.IMarketServer;
 import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
 import brown.server.AgentServer;
@@ -27,7 +28,7 @@ public class ExperimentalServer extends AgentServer {
 	 * without the ledger
 	 * @param Security : the market to update on
 	 */
-	public void sendMarketUpdateNL(IMarket market) {
+	public void sendMarketUpdateNL(IMarketServer market) {
 		synchronized(market) {
 			for (Entry<Connection, Integer> ID : this.connections.entrySet()) {
 				TradeRequest mupdate = new TradeRequest(0, market.wrap(null),
@@ -40,7 +41,7 @@ public class ExperimentalServer extends AgentServer {
 	public void setBanks(double amount) {
 		for (Integer ID : this.connections.values()) {
 			Account a = new Account(ID).add(amount);
-			this.setAccount(ID, a);
+			this.acctManager.setAccount(ID, a);
 			this.sendBankUpdate(ID, new Account(ID), a);
 		}
 	}

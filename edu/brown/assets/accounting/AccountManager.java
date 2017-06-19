@@ -1,6 +1,8 @@
 package brown.assets.accounting; 
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AccountManager {
@@ -22,6 +24,10 @@ public class AccountManager {
 
 	public Account getAccount(Integer ID) {
 		return accounts.get(ID);
+	}
+	
+	public List<Account> getAccounts() {
+		return (List<Account>) accounts.values();
 	}
 	
 	public Boolean containsAcct(Integer ID) {

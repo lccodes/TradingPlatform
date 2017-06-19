@@ -46,6 +46,7 @@ public class MarketManager {
 			}
 
 			Account newAccount = oldAccount.remove(0, t.TRADEABLE);
+			//possibly change this later
 			server.setAccount(t.TRADEABLE.getAgentID(), newAccount);
 			if (toReplace == null) {
 				server.sendBankUpdate(t.TRADEABLE.getAgentID(), oldAccount,
@@ -186,9 +187,10 @@ public class MarketManager {
 	public TwoSidedAuction getTwoSided(Integer marketID) {
 		return this.twosided.get(marketID);
 	}
-	
+
 	public void openTwoSided(TwoSidedAuction tsa) {
 		this.twosided.put(tsa.getID(), tsa);
 	}
+
 
 }

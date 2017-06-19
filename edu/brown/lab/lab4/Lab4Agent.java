@@ -2,7 +2,7 @@ package brown.lab.lab4;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Account;
-import brown.auctions.onesided.SimpleOneSidedWrapper;
+//import brown.auctions.onesided.SimpleOneSidedWrapper;
 import brown.exceptions.AgentCreationException;
 import brown.lab.UnitCDA;
 import brown.messages.Ack;
@@ -36,16 +36,16 @@ public abstract class Lab4Agent extends Agent {
 	}
 
 	protected abstract void onContinuousDoubleAuction(UnitCDA unitCDAWrapper);
-
-	@Override
-	public void onSimpleSealed(SimpleOneSidedWrapper market) {
-		// Noop
-	}
-
-	@Override
-	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
-		// Noop
-	}
+//
+//	@Override
+//	public void onSimpleSealed(SimpleOneSidedWrapper market) {
+//		// Noop
+//	}
+//
+//	@Override
+//	public void onSimpleOpenOutcry(SimpleOneSidedWrapper market) {
+//		// Noop
+//	}
 
 	@Override
 	public void onLMSR(LMSR market) {

@@ -18,6 +18,7 @@ import brown.assets.accounting.MarketManager;
 import brown.assets.accounting.Order;
 import brown.assets.value.Tradeable;
 import brown.auctions.IMarket;
+import brown.auctions.IMarketServer;
 import brown.auctions.crules.ShortShare;
 import brown.auctions.interfaces.Market;
 import brown.auctions.twosided.TwoSidedAuction;
@@ -220,7 +221,6 @@ public abstract class AgentServer {
 					synchronized (sellerAccount.tradeables) {
 						List<Tradeable> justAList = new LinkedList<Tradeable>(
 								sellerAccount.tradeables);
-						// Short sale check
 						if (market.permitShort()) {
 							double toShort = limitorder.sellShares;
 							for (Tradeable t : justAList) {
@@ -534,7 +534,7 @@ public abstract class AgentServer {
 	 * 
 	 * @param Security : the market to update on
 	 */
-	public void sendMarketUpdate(IMarket market) {
+	public void sendMarketUpdate(IMarketServer market) {
 		synchronized(market) {
 			for (Entry<Connection, Integer> ID : this.connections.entrySet()) {
 				TradeRequest mupdate = new TradeRequest(0, market.wrap(this.manager
@@ -675,6 +675,15 @@ public abstract class AgentServer {
 			return theID;
 		}
 	}
+	
+	/**
+	 * Hack, for MarketManager
+	 */
+	
+	public void setAccount(Integer ID, Account account) {
+		acctManager.setAccount(ID, account);
+	}
+	
 	
 	/**
 	 * Toggles short sale

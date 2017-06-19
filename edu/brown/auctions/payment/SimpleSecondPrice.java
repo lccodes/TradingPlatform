@@ -52,6 +52,7 @@ public class SimpleSecondPrice implements PaymentRule {
 				if (bid.Bundle.getType().equals(BundleType.Simple)) {
 					SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
 					MarketState otherbid = bundle.getBid(trade.getType());
+					//second price logic
 					if (otherbid != null && otherbid.PRICE > current.PRICE && bp.PRICE > otherbid.PRICE) {
 						current = new MarketState(bp.AGENTID, otherbid.PRICE);
 					}

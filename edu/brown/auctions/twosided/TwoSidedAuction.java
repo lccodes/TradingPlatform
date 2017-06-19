@@ -8,8 +8,9 @@ import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.Tradeable;
 import brown.auctions.IMarket;
+import brown.auctions.IMarketServer;
 
-public interface TwoSidedAuction extends IMarket {
+public interface TwoSidedAuction extends IMarketServer {
 	public FullType getTradeableType();
 	
 	public List<Order> buy(Integer agentID, double shareNum, double sharePrice);

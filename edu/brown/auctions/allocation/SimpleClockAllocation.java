@@ -60,6 +60,7 @@ public class SimpleClockAllocation implements AllocationRule {
 			}
 		}
 		System.out.println("last highest " + highest);
+		//clock price ascension
 		for (Entry<FullType, MarketState> entry : highest.entrySet()) {
 			this.lastDemand.put(
 					entry.getKey(),

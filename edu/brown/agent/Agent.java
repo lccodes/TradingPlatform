@@ -24,7 +24,7 @@ import com.esotericsoftware.minlog.Log;
 
 /**
  * All bidding agents will implement this class It abstracts away the
- * communication issues and let's authors focus on writing bidding logic.
+ * communication issues and lets authors focus on writing bidding logic.
  * 
  * @author lcamery
  */

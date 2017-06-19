@@ -81,9 +81,9 @@ public class FinalProjectServer extends AgentServer {
 		this.numberOfBidders++;
 		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(theID, value));
 
-		Account oldAccount = bank.get(connections.get(connection));
+		Account oldAccount = acctManager.getAccount(connections.get(connection));
 		Account newAccount = oldAccount.addAll(10000, null);
-		bank.put(connections.get(connection), newAccount);
+		acctManager.setAccount(connections.get(connection), newAccount);
 
 		List<Integer> IDS = new LinkedList<Integer>();
 		IDS.add(connections.get(connection));
@@ -208,7 +208,7 @@ public class FinalProjectServer extends AgentServer {
 		// Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());
 		// }
 		System.out.println("\n\n\n\n\nOUTCOME:");
-		for (Account account : this.bank.values()) {
+		for (Account account : this.acctManager.getAccounts()) {
 			System.out.println(account);
 			System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
 					+ (10000 - account.monies) / account.tradeables.size());

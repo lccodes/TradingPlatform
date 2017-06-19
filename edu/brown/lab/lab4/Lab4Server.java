@@ -69,6 +69,7 @@ public class Lab4Server extends AgentServer {
 		//this.sendBankUpdate(connections.get(connection), oldAccount, newAccount);
 	}
 	
+	//registers a bunch of decoys? AC
 	public void register(Connection conn) {
 		int decoys = (int) Math.ceil((Math.random() * (this.connections.size()/2.0)));
 		decoys = decoys == 0 ? 1 : decoys;
@@ -100,7 +101,7 @@ public class Lab4Server extends AgentServer {
 				continue;
 			}
 			Logging.log("ID " + this.privateToPublic.get(privateID) + " (" + privateID + ") has $"
-					+ this.bank.get(privateID).monies);
+					+ this.acctManager.getAccount(privateID).monies);
 		}
 	}
 

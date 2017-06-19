@@ -40,9 +40,9 @@ public class AuctionServer extends AgentServer {
 		this.theServer.sendToTCP(connection.getID(), new AuctionRegistration(
 				theID, nextValue));
 
-		Account oldAccount = bank.get(connections.get(connection));
+		Account oldAccount = acctManager.getAccount(connections.get(connection));
 		Account newAccount = oldAccount.addAll(100, null);
-		bank.put(connections.get(connection), newAccount);
+		acctManager.setAccount(connections.get(connection), newAccount);
 
 		List<Integer> IDS = new LinkedList<Integer>();
 		IDS.add(connections.get(connection));

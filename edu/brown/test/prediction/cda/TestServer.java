@@ -4,9 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.Contract;
 import brown.assets.value.FullType;
-import brown.assets.value.Good;
+import brown.assets.value.Tradeable;
 import brown.assets.value.TradeableType;
 import brown.auctions.IMarket;
 import brown.auctions.crules.ClosestMatchClearing;
@@ -45,8 +44,8 @@ public class TestServer extends AgentServer {
 		this.theServer.sendToTCP(connection.getID(),
 				new PMRegistration(theID, Math.random() > .5 ? C : D, (int) (Math.random() * 1000)));
 
-		Account oldAccount = bank.get(connections.get(connection));
-		Contract newSec = new Contract(oldAccount.ID, 1, TYPEYES, state -> {
+		Account oldAccount = acctManager.getAccount(connections.get(connection));
+		Tradeable newSec = new Tradeable(TYPEYES, 1.0, oldAccount.ID, state -> {
 			List<Account> list = new LinkedList<Account>();
 			if (state.STATE.getState() == 1) {
 				list.add(new Account(null).add(state.QUANTITY * 100));
@@ -61,7 +60,7 @@ public class TestServer extends AgentServer {
 		// no = true;
 		// }*/
 		Account newAccount = oldAccount.add(50, newSec);
-		bank.put(connections.get(connection), newAccount);
+		acctManager.setAccount(connections.get(connection), newAccount);
 
 		this.sendBankUpdate(connections.get(connection), oldAccount, newAccount);
 	}
@@ -117,7 +116,7 @@ public class TestServer extends AgentServer {
 		Logging.log("Bank Accounts: ");
 		for (Integer privateID : this.privateToPublic.keySet()) {
 			Logging.log("ID " + this.privateToPublic.get(privateID) + " (" + privateID + ") has $"
-					+ this.bank.get(privateID));
+					+ this.acctManager.getAccount(privateID));
 		}
 	}
 

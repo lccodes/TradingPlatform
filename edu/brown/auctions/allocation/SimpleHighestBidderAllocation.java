@@ -14,17 +14,16 @@ import brown.auctions.interfaces.MarketInternalState;
 import brown.messages.auctions.Bid;
 import brown.setup.Logging;
 
+
 public class SimpleHighestBidderAllocation implements AllocationRule {
 	private final Map<FullType, MarketState> RESERVE;
-	
 	public SimpleHighestBidderAllocation(Map<FullType, MarketState> reserve) {
 		this.RESERVE = reserve;
 	}
-	
 	public SimpleHighestBidderAllocation() {
 		this.RESERVE = new HashMap<FullType, MarketState>();
 	}
-
+	
 	@Override
 	public BidBundle getAllocation(MarketInternalState state) {
 		System.out.println("BIDS? " + state.getBids());
