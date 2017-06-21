@@ -172,7 +172,367 @@
   "bands": [
     {
       "worldId": 20,
-      "baseCapacity": 2.041432454692685638519833446480333805084228515625,
+      "baseCapacity": 3.795379924471691257537031560786999762058258056640625,
+      "numberOfLots": 2,
+      "licenses": [
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 0,
+          "id": 28,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 1,
+          "id": 29,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 2,
+          "id": 30,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 3,
+          "id": 31,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 4,
+          "id": 32,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 5,
+          "id": 33,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 6,
+          "id": 34,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 7,
+          "id": 35,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 8,
+          "id": 36,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 9,
+          "id": 37,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 10,
+          "id": 38,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 11,
+          "id": 39,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 12,
+          "id": 40,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 13,
+          "id": 41,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 0,
+          "id": 42,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 1,
+          "id": 43,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 2,
+          "id": 44,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 3,
+          "id": 45,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 4,
+          "id": 46,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 5,
+          "id": 47,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 6,
+          "id": 48,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 7,
+          "id": 49,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 8,
+          "id": 50,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 9,
+          "id": 51,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 10,
+          "id": 52,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 11,
+          "id": 53,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 12,
+          "id": 54,
+          "worldId": 20
+        },
+        {
+          "bandName": "LOW_PAIRED",
+          "regionId": 13,
+          "id": 55,
+          "worldId": 20
+        }
+      ],
+      "synergies": {
+        "1": 1.1000000000,
+        "2": 1.2000000000
+      },
+      "name": "LOW_PAIRED"
+    },
+    {
+      "worldId": 20,
+      "baseCapacity": 0.8845767941597995065450277252239175140857696533203125,
+      "numberOfLots": 2,
+      "licenses": [
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 0,
+          "id": 0,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 1,
+          "id": 1,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 2,
+          "id": 2,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 3,
+          "id": 3,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 4,
+          "id": 4,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 5,
+          "id": 5,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 6,
+          "id": 6,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 7,
+          "id": 7,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 8,
+          "id": 8,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 9,
+          "id": 9,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 10,
+          "id": 10,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 11,
+          "id": 11,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 12,
+          "id": 12,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 13,
+          "id": 13,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 0,
+          "id": 14,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 1,
+          "id": 15,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 2,
+          "id": 16,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 3,
+          "id": 17,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 4,
+          "id": 18,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 5,
+          "id": 19,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 6,
+          "id": 20,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 7,
+          "id": 21,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 8,
+          "id": 22,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 9,
+          "id": 23,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 10,
+          "id": 24,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 11,
+          "id": 25,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 12,
+          "id": 26,
+          "worldId": 20
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 13,
+          "id": 27,
+          "worldId": 20
+        }
+      ],
+      "synergies": {
+        "1": 1.1000000000,
+        "2": 1.2000000000
+      },
+      "name": "UNPAIRED"
+    },
+    {
+      "worldId": 20,
+      "baseCapacity": 2.235883255859516083319249446503818035125732421875,
       "numberOfLots": 3,
       "licenses": [
         {
@@ -434,366 +794,6 @@
         "3": 1.1000000000
       },
       "name": "HIGH_PAIRED"
-    },
-    {
-      "worldId": 20,
-      "baseCapacity": 3.948027040238826668172578138182871043682098388671875,
-      "numberOfLots": 2,
-      "licenses": [
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 0,
-          "id": 28,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 1,
-          "id": 29,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 2,
-          "id": 30,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 3,
-          "id": 31,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 4,
-          "id": 32,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 5,
-          "id": 33,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 6,
-          "id": 34,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 7,
-          "id": 35,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 8,
-          "id": 36,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 9,
-          "id": 37,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 10,
-          "id": 38,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 11,
-          "id": 39,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 12,
-          "id": 40,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 13,
-          "id": 41,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 0,
-          "id": 42,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 1,
-          "id": 43,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 2,
-          "id": 44,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 3,
-          "id": 45,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 4,
-          "id": 46,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 5,
-          "id": 47,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 6,
-          "id": 48,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 7,
-          "id": 49,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 8,
-          "id": 50,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 9,
-          "id": 51,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 10,
-          "id": 52,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 11,
-          "id": 53,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 12,
-          "id": 54,
-          "worldId": 20
-        },
-        {
-          "bandName": "LOW_PAIRED",
-          "regionId": 13,
-          "id": 55,
-          "worldId": 20
-        }
-      ],
-      "synergies": {
-        "1": 1.1000000000,
-        "2": 1.2000000000
-      },
-      "name": "LOW_PAIRED"
-    },
-    {
-      "worldId": 20,
-      "baseCapacity": 0.921907736789571163882328619365580379962921142578125,
-      "numberOfLots": 2,
-      "licenses": [
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 0,
-          "id": 0,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 1,
-          "id": 1,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 2,
-          "id": 2,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 3,
-          "id": 3,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 4,
-          "id": 4,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 5,
-          "id": 5,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 6,
-          "id": 6,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 7,
-          "id": 7,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 8,
-          "id": 8,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 9,
-          "id": 9,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 10,
-          "id": 10,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 11,
-          "id": 11,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 12,
-          "id": 12,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 13,
-          "id": 13,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 0,
-          "id": 14,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 1,
-          "id": 15,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 2,
-          "id": 16,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 3,
-          "id": 17,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 4,
-          "id": 18,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 5,
-          "id": 19,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 6,
-          "id": 20,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 7,
-          "id": 21,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 8,
-          "id": 22,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 9,
-          "id": 23,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 10,
-          "id": 24,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 11,
-          "id": 25,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 12,
-          "id": 26,
-          "worldId": 20
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 13,
-          "id": 27,
-          "worldId": 20
-        }
-      ],
-      "synergies": {
-        "1": 1.1000000000,
-        "2": 1.2000000000
-      },
-      "name": "UNPAIRED"
     }
   ],
   "modelName": "Multi-Region Value Model",

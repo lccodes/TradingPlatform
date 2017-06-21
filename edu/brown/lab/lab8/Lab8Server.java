@@ -118,11 +118,12 @@ public class Lab8Server extends AgentServer {
 		generator.makeValuations();
 		Map<String, Map<Set<String>, Double>> allBids = generator
 				.convertAllBidsToSimpleBids(generator.allBidderValuations);
-		System.out.println("VALUATIONS " + allBids);
+		System.out.println("VALUATIONS" + allBids);
 		Map<Integer, Map<Set<FullType>, Double>> valuations = new HashMap<Integer, Map<Set<FullType>, Double>>();
 		Map<Integer, String> intToString = new HashMap<Integer, String>();
 
 		for (Entry<Connection, Integer> conn : this.connections.entrySet()) {
+			System.out.println("connection going ");
 			String toRemove = null;
 			for (Entry<String, Map<Set<String>, Double>> entry : allBids.entrySet()) {
 				Map<Set<String>, Double> each = entry.getValue();
@@ -184,7 +185,7 @@ public class Lab8Server extends AgentServer {
 			List<Order> firstOrders = this.manager.getIMarket(0).getOrders();
 			List<Order> secondOrders = this.manager.getIMarket(1).getOrders();
 			double totalRevenue0 = 0, totalRevenue1 = 0;
-			for (Order o : firstOrders) {
+			for (Order o : firstOrders) {				//Thread.sleep(4000);
 				totalRevenue0 += o.COST;
 			}
 			for (Order o : secondOrders) {
@@ -241,7 +242,7 @@ public class Lab8Server extends AgentServer {
 		// true, true = SMRA w/ sealed bid final round
 		// false, false, = Clock auction
 		// false, true  = clock w/ VCG
-		l3s.runGame(false, false, 0);
+		l3s.runGame(false, true, 0);
 	}
 
 }

@@ -172,7 +172,187 @@
   "bands": [
     {
       "worldId": 8,
-      "baseCapacity": 2.093381105231681527101272877189330756664276123046875,
+      "baseCapacity": 0.81195396102302297425268307051737792789936065673828125,
+      "numberOfLots": 2,
+      "licenses": [
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 0,
+          "id": 0,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 1,
+          "id": 1,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 2,
+          "id": 2,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 3,
+          "id": 3,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 4,
+          "id": 4,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 5,
+          "id": 5,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 6,
+          "id": 6,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 7,
+          "id": 7,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 8,
+          "id": 8,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 9,
+          "id": 9,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 10,
+          "id": 10,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 11,
+          "id": 11,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 12,
+          "id": 12,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 13,
+          "id": 13,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 0,
+          "id": 14,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 1,
+          "id": 15,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 2,
+          "id": 16,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 3,
+          "id": 17,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 4,
+          "id": 18,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 5,
+          "id": 19,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 6,
+          "id": 20,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 7,
+          "id": 21,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 8,
+          "id": 22,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 9,
+          "id": 23,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 10,
+          "id": 24,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 11,
+          "id": 25,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 12,
+          "id": 26,
+          "worldId": 8
+        },
+        {
+          "bandName": "UNPAIRED",
+          "regionId": 13,
+          "id": 27,
+          "worldId": 8
+        }
+      ],
+      "synergies": {
+        "1": 1.1000000000,
+        "2": 1.2000000000
+      },
+      "name": "UNPAIRED"
+    },
+    {
+      "worldId": 8,
+      "baseCapacity": 2.218000693915923360322040025494061410427093505859375,
       "numberOfLots": 3,
       "licenses": [
         {
@@ -437,187 +617,7 @@
     },
     {
       "worldId": 8,
-      "baseCapacity": 0.9625754311844751942572884217952378094196319580078125,
-      "numberOfLots": 2,
-      "licenses": [
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 0,
-          "id": 0,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 1,
-          "id": 1,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 2,
-          "id": 2,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 3,
-          "id": 3,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 4,
-          "id": 4,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 5,
-          "id": 5,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 6,
-          "id": 6,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 7,
-          "id": 7,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 8,
-          "id": 8,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 9,
-          "id": 9,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 10,
-          "id": 10,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 11,
-          "id": 11,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 12,
-          "id": 12,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 13,
-          "id": 13,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 0,
-          "id": 14,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 1,
-          "id": 15,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 2,
-          "id": 16,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 3,
-          "id": 17,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 4,
-          "id": 18,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 5,
-          "id": 19,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 6,
-          "id": 20,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 7,
-          "id": 21,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 8,
-          "id": 22,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 9,
-          "id": 23,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 10,
-          "id": 24,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 11,
-          "id": 25,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 12,
-          "id": 26,
-          "worldId": 8
-        },
-        {
-          "bandName": "UNPAIRED",
-          "regionId": 13,
-          "id": 27,
-          "worldId": 8
-        }
-      ],
-      "synergies": {
-        "1": 1.1000000000,
-        "2": 1.2000000000
-      },
-      "name": "UNPAIRED"
-    },
-    {
-      "worldId": 8,
-      "baseCapacity": 3.936140452274404122334772182512097060680389404296875,
+      "baseCapacity": 3.86979310990051761365293714334256947040557861328125,
       "numberOfLots": 2,
       "licenses": [
         {

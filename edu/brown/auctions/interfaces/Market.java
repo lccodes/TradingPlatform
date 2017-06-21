@@ -96,7 +96,9 @@ public class Market {
 			return new LinkedList<Order>();
 		}
 		
-		this.STATE.setAllocation(this.ARULE.getAllocation(this.STATE));
+		//edited to fix concurrent modification. Hopefully this is what we're looking for
+		MarketInternalState oldState = this.STATE;
+		this.STATE.setAllocation(this.ARULE.getAllocation(oldState));
 		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
 		//System.out.println(this.STATE.getPayments());
 		return this.STATE.getPayments();

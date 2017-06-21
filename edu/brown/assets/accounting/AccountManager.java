@@ -1,5 +1,6 @@
 package brown.assets.accounting; 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,8 @@ public class AccountManager {
 	}
 	
 	public List<Account> getAccounts() {
-		return (List<Account>) accounts.values();
+		List<Account> accountsList = new ArrayList<Account>(accounts.values());
+		return accountsList;
 	}
 	
 	public Boolean containsAcct(Integer ID) {
