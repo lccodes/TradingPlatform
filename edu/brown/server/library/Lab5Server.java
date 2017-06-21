@@ -1,9 +1,11 @@
 package brown.server.library;
 
-import brown.auctions.onesided.OneSidedAuction;
-import brown.lab.LabGameSetup;
+
+import brown.allocationrules.LemonadeAllocation;
+import brown.paymentrules.library.LemonadePayment;
 import brown.server.AgentServer;
 import brown.setup.Logging;
+import brown.setup.library.LabGameSetup;
 
 public class Lab5Server extends AgentServer {
 

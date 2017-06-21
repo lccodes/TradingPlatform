@@ -6,18 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import brown.allocationrules.OpenOutcryRule;
 import brown.assets.accounting.Account;
-import brown.assets.value.Tradeable;
-import brown.auctions.arules.OpenOutcryRule;
-import brown.auctions.bundles.BidBundle;
-import brown.auctions.bundles.BundleType;
-import brown.auctions.bundles.SimpleBidBundle;
-import brown.auctions.onesided.OneSidedAuction;
-import brown.auctions.prules.FirstPriceRule;
-import brown.lab.LabGameSetup;
+import brown.bundles.BidBundle;
+import brown.bundles.BundleType;
+import brown.bundles.SimpleBidBundle;
 import brown.messages.Registration;
+import brown.paymentrules.library.FirstPriceRule;
+import brown.registrations.AuctionRegistration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
+import brown.setup.library.LabGameSetup;
+import brown.tradeables.Tradeable;
 
 import com.esotericsoftware.kryonet.Connection;
 

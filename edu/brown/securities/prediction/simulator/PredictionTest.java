@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import brown.securities.mechanisms.lmsr.LMSRBackend;
+import brown.markets.LMSRBackend;
 
 /*
  * It appears that for all bidders and all budgets and all orderings there exists

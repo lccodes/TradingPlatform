@@ -4,8 +4,8 @@ import java.util.List;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Account;
-import brown.assets.value.Tradeable;
 import brown.messages.Message;
+import brown.tradeables.Tradeable;
 
 /**
  * A message sent to the server by an agent when it wants to initiate a trade note: -1 indicates offer to all agents

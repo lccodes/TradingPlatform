@@ -1,7 +1,7 @@
 package brown.messages.markets;
 
 import brown.agent.Agent;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.markets.TwoSidedAuction;
 import brown.messages.Message;
 
 public class MarketOrder extends Message {

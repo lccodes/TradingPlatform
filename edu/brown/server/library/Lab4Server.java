@@ -3,21 +3,20 @@ package brown.server.library;
 import java.util.LinkedList;
 import java.util.List;
 
+import brown.agent.library.Lab4DemoAgent;
 import brown.assets.accounting.Account;
-import brown.assets.value.Contract;
 import brown.assets.value.FullType;
-import brown.assets.value.Good;
 import brown.assets.value.TradeableType;
-import brown.auctions.IMarket;
-import brown.auctions.crules.ClosestMatchClearing;
+import brown.clearingrules.ClosestMatchClearing;
 import brown.exceptions.AgentCreationException;
+import brown.markets.CDAServer;
+import brown.markets.IMarket;
 import brown.messages.Registration;
-import brown.securities.mechanisms.cda.CDAServer;
+import brown.registrations.PMRegistration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
-import brown.test.prediction.cda.CDAGameSetup;
-import brown.test.prediction.cda.PMRegistration;
-import brown.test.prediction.cda.TestState;
+import brown.setup.library.CDAGameSetup;
+import ch.uzh.ifi.ce.mweiss.specval.model.Good;
 
 import com.esotericsoftware.kryonet.Connection;
 
@@ -136,7 +135,7 @@ public class Lab4Server extends AgentServer {
 
 		delay(3, true);
 
-		TestState endState = new TestState(C);
+		TestStateCDA endState = new TestStateCDA(C);
 		Logging.log("[-] markets close with " + C);
 		// this.exchange.close(this, 0, endState);
 		this.manager.close(this, 1, endState);

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
+import brown.tradeables.Tradeable;
 
 public class Account {
 	public final Integer ID;

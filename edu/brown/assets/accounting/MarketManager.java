@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import brown.assets.value.Tradeable;
-import brown.assets.value.StateOfTheWorld;
-import brown.auctions.interfaces.Market;
-import brown.auctions.twosided.TwoSidedAuction;
+import brown.markets.Market;
+import brown.markets.TwoSidedAuction;
 import brown.server.AgentServer;
 import brown.setup.Logging;
+import brown.states.StateOfTheWorld;
+import brown.tradeables.Tradeable;
 
 public class MarketManager {
 	private Map<Market, Ledger> ledgers;

@@ -1,5 +1,7 @@
 package brown.assets.value;
 
+import brown.states.StateOfTheWorld;
+
 public class EndState {
 	public final double QUANTITY;
 	public final StateOfTheWorld STATE;

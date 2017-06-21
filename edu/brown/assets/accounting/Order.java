@@ -1,6 +1,6 @@
 package brown.assets.accounting;
 
-import brown.assets.value.Tradeable;
+import brown.tradeables.Tradeable;
 
 public class Order {
 	public final Integer TO;

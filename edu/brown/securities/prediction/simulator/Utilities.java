@@ -1,7 +1,7 @@
 package brown.securities.prediction.simulator;
 import java.util.Arrays;
 
-import brown.securities.mechanisms.lmsr.LMSRBackend;
+import brown.markets.LMSRBackend;
 
 public final class Utilities {
 	

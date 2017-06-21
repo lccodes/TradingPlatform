@@ -6,12 +6,12 @@ import com.esotericsoftware.kryonet.Connection;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.MarketManager;
-import brown.auctions.IMarketServer;
+import brown.markets.IMarketServer;
 import brown.messages.markets.MarketOrder;
 import brown.messages.markets.TradeRequest;
-import brown.securities.prediction.simulator.ExperimentalSetup;
 import brown.server.AgentServer;
 import brown.setup.Logging;
+import brown.setup.library.ExperimentalSetup;
 
 public class ExperimentalServer extends AgentServer {
 

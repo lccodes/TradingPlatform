@@ -3,10 +3,10 @@ package brown.messages.auctions;
 import java.util.Set;
 
 import brown.agent.Agent;
-import brown.assets.value.Tradeable;
-import brown.auctions.bundles.BidBundle;
-import brown.auctions.bundles.BundleType;
+import brown.bundles.BidBundle;
+import brown.bundles.BundleType;
 import brown.messages.Message;
+import brown.tradeables.Tradeable;
 
 /**
  * Message to bid on auctions.

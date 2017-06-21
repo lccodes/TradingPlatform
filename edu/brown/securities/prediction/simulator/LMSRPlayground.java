@@ -9,17 +9,19 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import brown.agent.library.ExperimentalAgent;
+import brown.agent.library.FarsightedInformed;
+import brown.agent.library.FarsightedUninformed;
+import brown.agent.library.ShortsightedInformed;
+import brown.agent.library.ShortsightedUninformed;
 import brown.exceptions.AgentCreationException;
-import brown.securities.lmsr.marketmakers.implementations.LiquiditySensitive;
-import brown.securities.lmsr.marketmakers.implementations.LukeMM;
-import brown.securities.mechanisms.lmsr.LMSRServer;
-import brown.securities.mechanisms.lmsr.LMSRBackend;
-import brown.securities.mechanisms.lmsr.strategies.ExperimentalAgent;
-import brown.securities.mechanisms.lmsr.strategies.FarsightedInformed;
-import brown.securities.mechanisms.lmsr.strategies.FarsightedUninformed;
-import brown.securities.mechanisms.lmsr.strategies.ShortsightedInformed;
-import brown.securities.mechanisms.lmsr.strategies.ShortsightedUninformed;
+import brown.markets.LMSRBackend;
+import brown.markets.LMSRServer;
+import brown.markets.LiquiditySensitive;
+import brown.markets.LukeMM;
+import brown.server.library.ExperimentalServer;
 import brown.setup.Logging;
+import brown.setup.library.ExperimentalSetup;
 
 public class LMSRPlayground {
 	private final List<ExperimentalAgent> AGENTS;

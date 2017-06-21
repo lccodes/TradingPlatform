@@ -1,8 +1,8 @@
 package brown.messages.markets;
 
 import brown.agent.Agent;
-import brown.auctions.IMarket;
 import brown.auctions.arules.MechanismType;
+import brown.markets.IMarket;
 import brown.messages.Message;
 
 public class TradeRequest extends Message {

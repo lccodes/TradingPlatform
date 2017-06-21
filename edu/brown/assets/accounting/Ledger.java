@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.Tradeable;
-import brown.auctions.interfaces.Market;
+import brown.markets.Market;
+import brown.tradeables.Tradeable;
 
 public class Ledger {
 	protected final List<Transaction> transactions;

@@ -2,8 +2,10 @@ package brown.agent;
 
 import java.io.IOException;
 
-import brown.auctions.wrappers.SimpleAuction;
 import brown.exceptions.AgentCreationException;
+import brown.markets.ContinuousDoubleAuction;
+import brown.markets.LMSR;
+import brown.markets.SimpleAuction;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.Message;
@@ -11,8 +13,6 @@ import brown.messages.Registration;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
-import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
-import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Setup;
 import brown.setup.Startup;
 
