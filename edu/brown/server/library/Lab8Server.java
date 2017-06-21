@@ -1,4 +1,4 @@
-package brown.lab.finalproject;
+package brown.server.library;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,13 +12,13 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.Tradeable;
-import brown.auctions.activity.SMRAActivity;
 import brown.auctions.activity.SimpleNoJumpActivityRule;
+import brown.auctions.allocation.SimpleClockAllocation;
 import brown.auctions.allocation.SimpleDemandAllocation;
 import brown.auctions.allocation.SimpleHighestBidderAllocation;
-import brown.auctions.bundles.MarketState;
 import brown.auctions.info.AnonymousPolicy;
 import brown.auctions.interfaces.Market;
+import brown.auctions.payment.SimpleClockRule;
 import brown.auctions.payment.SimpleSecondPrice;
 import brown.auctions.payment.SimpleSecondPriceDemand;
 import brown.auctions.query.OutcryQueryRule;
@@ -29,6 +29,7 @@ import brown.auctions.termination.SamePaymentsTermination;
 import brown.lab.LabGameSetup;
 import brown.lab.SpecValGenerator;
 import brown.lab.ValuationRegistration;
+import brown.lab.lab8.Lab8Good;
 import brown.messages.Registration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
@@ -41,18 +42,18 @@ import com.esotericsoftware.kryonet.Connection;
  * 
  * @author lcamery
  */
-public class FinalProjectServer extends AgentServer {
+public class Lab8Server extends AgentServer {
 	private final int GOODNUM = 98;
 	private final double VALUESCALE = 1E-6;
 
-	private final int numberOfValuationsPerBidder = 25;
-	private final int bundleSizeMean = 7;
-	private final double bundleSizeStdez = 2;
+	private final int numberOfValuationsPerBidder = 10;
+	private final int bundleSizeMean = 5;
+	private final double bundleSizeStdez = 5;
 	private final Set<Integer> INTS;
 
 	private int numberOfBidders;
 
-	public FinalProjectServer(int port) {
+	public Lab8Server(int port) {
 		super(port, new LabGameSetup());
 		this.INTS = new HashSet<Integer>();
 		for (int i = 0; i < GOODNUM; i++) {
@@ -90,12 +91,13 @@ public class FinalProjectServer extends AgentServer {
 		this.sendBankUpdates(IDS);
 	}
 
-	public void runGame(boolean finalround) throws UnsupportedBiddingLanguageException {
+	public void runGame(boolean outcry, boolean finalround, double reserve)
+			throws UnsupportedBiddingLanguageException {
 		// Constructs auction according to rules
 		Set<Tradeable> theSet = new HashSet<Tradeable>();
 		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
 		for (Integer ID : this.INTS) {
-			Tradeable newT = new FinalProjectGood(ID);
+			Tradeable newT = new Lab8Good(ID);
 			theSet.add(newT);
 			forTakehiro.put(ID + "", newT.getType());
 		}
@@ -117,11 +119,12 @@ public class FinalProjectServer extends AgentServer {
 		generator.makeValuations();
 		Map<String, Map<Set<String>, Double>> allBids = generator
 				.convertAllBidsToSimpleBids(generator.allBidderValuations);
-		System.out.println("VALUATIONS " + allBids);
+		System.out.println("VALUATIONS" + allBids);
 		Map<Integer, Map<Set<FullType>, Double>> valuations = new HashMap<Integer, Map<Set<FullType>, Double>>();
 		Map<Integer, String> intToString = new HashMap<Integer, String>();
 
 		for (Entry<Connection, Integer> conn : this.connections.entrySet()) {
+			System.out.println("connection going ");
 			String toRemove = null;
 			for (Entry<String, Map<Set<String>, Double>> entry : allBids.entrySet()) {
 				Map<Set<String>, Double> each = entry.getValue();
@@ -132,7 +135,7 @@ public class FinalProjectServer extends AgentServer {
 						adjusted.add(forTakehiro.get(s));
 					}
 					value.put(adjusted, toAdd.getValue());
-					this.theServer.sendToUDP(conn.getKey().getID(), new ValuationRegistration(conn.getValue(), value));
+					this.theServer.sendToTCP(conn.getKey().getID(), new ValuationRegistration(conn.getValue(), value));
 					if (valuations.containsKey(conn.getValue())) {
 						value.putAll(valuations.get(conn.getValue()));
 					}
@@ -146,9 +149,16 @@ public class FinalProjectServer extends AgentServer {
 			}
 		}
 		
-		this.manager.open(new Market(new SimpleSecondPriceDemand(), new SimpleDemandAllocation(),
-				new OutcryQueryRule(), new AnonymousPolicy(), new SamePaymentsTermination(3),
-				new SMRAActivity(), new SimpleInternalState(0, theSet)));
+		if (outcry) {
+			this.manager.open(new Market(new SimpleSecondPriceDemand(), new SimpleDemandAllocation(),
+					new OutcryQueryRule(), new AnonymousPolicy(), new SamePaymentsTermination(3),
+					new SimpleNoJumpActivityRule(), new SimpleInternalState(0, theSet)));
+		} else {
+			this.manager.open(new Market(new SimpleClockRule(), new SimpleClockAllocation(generator, intToString),
+					new OutcryQueryRule(), new AnonymousPolicy(), new SamePaymentsTermination(5),
+					new SimpleNoJumpActivityRule(), new SimpleInternalState(0, theSet)));
+		}
+
 		// Runs the auction to completion
 		Market market = this.manager.getIMarket(0);
 		while (!market.isOver()) {
@@ -161,20 +171,14 @@ public class FinalProjectServer extends AgentServer {
 		}
 		
 		if (finalround) {
-			Map<FullType, MarketState> reservePrices = new HashMap<FullType, MarketState>();
-			for (Order o : market.getOrders()) {
-				reservePrices.put(o.GOOD.getType(), new MarketState(null, o.COST));
-			}
 			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
 					new SealedBidQuery(), new AnonymousPolicy(), new OneShotTermination(),
-					new SimpleNoJumpActivityRule(), new SimpleInternalState(1, theSet, reservePrices)));
+					new SimpleNoJumpActivityRule(), new SimpleInternalState(1, theSet)));
 			Market market2 = this.manager.getIMarket(1);
-			boolean first = true;
 			while (!market2.isOver()) {
 				try {
+					Thread.sleep(2000);
 					this.updateAllAuctions(false);
-					Thread.sleep(first ? 60000 : 1000);
-					first = false;
 				} catch (InterruptedException e) {
 					Logging.log("[+] woken: " + e.getMessage());
 				}
@@ -182,7 +186,7 @@ public class FinalProjectServer extends AgentServer {
 			List<Order> firstOrders = this.manager.getIMarket(0).getOrders();
 			List<Order> secondOrders = this.manager.getIMarket(1).getOrders();
 			double totalRevenue0 = 0, totalRevenue1 = 0;
-			for (Order o : firstOrders) {
+			for (Order o : firstOrders) {				//Thread.sleep(4000);
 				totalRevenue0 += o.COST;
 			}
 			for (Order o : secondOrders) {
@@ -234,12 +238,12 @@ public class FinalProjectServer extends AgentServer {
 	}
 
 	public static void main(String[] args) throws UnsupportedBiddingLanguageException {
-		FinalProjectServer l3s = new FinalProjectServer(2121);
+		Lab8Server l3s = new Lab8Server(2121);
 		// true, false = SMRA
 		// true, true = SMRA w/ sealed bid final round
 		// false, false, = Clock auction
 		// false, true  = clock w/ VCG
-		l3s.runGame(true);
+		l3s.runGame(false, true, 0);
 	}
 
 }

@@ -14,7 +14,7 @@ import brown.messages.trades.NegotiateRequest;
 import brown.securities.mechanisms.cda.ContinuousDoubleAuction;
 import brown.securities.mechanisms.lmsr.LMSR;
 import brown.setup.Logging;
-import brown.test.prediction.cda.GameSetup;
+import brown.test.prediction.cda.CDAGameSetup;
 import brown.test.prediction.cda.PMRegistration;
 
 public abstract class Lab4Agent extends Agent {
@@ -24,7 +24,7 @@ public abstract class Lab4Agent extends Agent {
 	
 	public Lab4Agent(String host, int port)
 			throws AgentCreationException {
-		super(host, port, new GameSetup());
+		super(host, port, new CDAGameSetup());
 		this.myCoin = false;
 		this.myBalance = new Account(null);
 	}

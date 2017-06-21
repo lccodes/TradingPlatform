@@ -1,4 +1,4 @@
-package brown.lab.lab5;
+package brown.server.library;
 
 import brown.auctions.onesided.OneSidedAuction;
 import brown.lab.LabGameSetup;

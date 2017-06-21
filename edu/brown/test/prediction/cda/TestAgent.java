@@ -20,7 +20,7 @@ public class TestAgent extends Agent {
 	public boolean myCoin;
 
 	public TestAgent(String host, int port) throws AgentCreationException {
-		super(host, port, new GameSetup());
+		super(host, port, new CDAGameSetup());
 		this.ME = 2;
 		this.myCoin = false;
 	}

@@ -12,7 +12,7 @@ import com.esotericsoftware.kryo.Kryo;
  * 
  * @author lcamery
  */
-public class GameSetup implements Setup{
+public class LabGameSetup implements Setup{
 
   @Override
   public void setup(Kryo kryo) {

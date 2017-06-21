@@ -31,7 +31,7 @@ public class TestServer extends AgentServer {
 	private boolean D = Math.random() > .5;
 
 	public TestServer(int port) {
-		super(port, new GameSetup());
+		super(port, new CDAGameSetup());
 	}
 
 	@Override

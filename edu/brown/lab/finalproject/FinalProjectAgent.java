@@ -9,7 +9,7 @@ import java.util.Set;
 import brown.agent.Agent;
 import brown.assets.value.FullType;
 import brown.exceptions.AgentCreationException;
-import brown.lab.GameSetup;
+import brown.lab.LabGameSetup;
 import brown.lab.ValuationRegistration;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
@@ -25,7 +25,7 @@ public abstract class FinalProjectAgent extends Agent {
 	private Map<Set<FullType>, Double> toSample;
 
 	public FinalProjectAgent(String host, int port) throws AgentCreationException {
-		super(host, port, new GameSetup());
+		super(host, port, new LabGameSetup());
 		this.myValuation = new HashMap<Set<FullType>, Double>();
 		this.toSample = new HashMap<Set<FullType>, Double>();
 	}

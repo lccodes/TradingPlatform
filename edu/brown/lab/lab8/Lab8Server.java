@@ -26,7 +26,7 @@ import brown.auctions.query.SealedBidQuery;
 import brown.auctions.state.SimpleInternalState;
 import brown.auctions.termination.OneShotTermination;
 import brown.auctions.termination.SamePaymentsTermination;
-import brown.lab.GameSetup;
+import brown.lab.LabGameSetup;
 import brown.lab.SpecValGenerator;
 import brown.lab.ValuationRegistration;
 import brown.messages.Registration;
@@ -53,7 +53,7 @@ public class Lab8Server extends AgentServer {
 	private int numberOfBidders;
 
 	public Lab8Server(int port) {
-		super(port, new GameSetup());
+		super(port, new LabGameSetup());
 		this.INTS = new HashSet<Integer>();
 		for (int i = 0; i < GOODNUM; i++) {
 			this.INTS.add(i);

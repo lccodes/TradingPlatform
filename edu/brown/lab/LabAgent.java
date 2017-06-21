@@ -8,7 +8,7 @@ public abstract class LabAgent extends Agent {
 
 	public LabAgent(String host, int port)
 			throws AgentCreationException {
-		super(host, port, new GameSetup());
+		super(host, port, new LabGameSetup());
 	}
 	
 	public abstract void onLemonade(Lemonade wrapper);

@@ -1,4 +1,4 @@
-package brown.test.prediction.lmsr;
+package brown.server.library;
 
 import java.util.LinkedList;
 import java.util.List;

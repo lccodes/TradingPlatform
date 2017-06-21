@@ -26,7 +26,7 @@ public class TestAgent extends Agent {
 	private boolean done = false;
 
 	public TestAgent(String host, int port) throws AgentCreationException {
-		super(host, port, new GameSetup());
+		super(host, port, new LMSRGameSetup());
 	}
 
 	@Override

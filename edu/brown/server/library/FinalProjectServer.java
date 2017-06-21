@@ -1,4 +1,4 @@
-package brown.lab.finalproject;
+package brown.server.library;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +29,7 @@ import brown.auctions.termination.SamePaymentsTermination;
 import brown.lab.LabGameSetup;
 import brown.lab.SpecValGenerator;
 import brown.lab.ValuationRegistration;
+import brown.lab.finalproject.FinalProjectGood;
 import brown.messages.Registration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
