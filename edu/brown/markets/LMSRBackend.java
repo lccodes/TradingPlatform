@@ -59,6 +59,7 @@ public class LMSRBackend {
 	 * @param qd1 : new quantity yes
 	 * @param qd2 : new quantity no
 	 * @return cost : double
+	 * I have the suspicion this can be simplified...
 	 */
 	public double cost(double newq1, double newq2) {
 		return b*Math.log(Math.exp((newq1 + yes)/b) + Math.exp((newq2+no)/b))

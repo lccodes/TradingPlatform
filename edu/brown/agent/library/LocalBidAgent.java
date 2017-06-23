@@ -33,6 +33,8 @@ public class LocalBidAgent extends Lab8Agent {
 		market.bid(this, toBid);
 	}
 	
+	
+	
 	private Map<FullType, Double> localBidStrategy(Map<FullType, Double> predictions, Integer rounds) {
 		Map<FullType, Double> toBid = predictions;
 		for(int i = 0; i < rounds; i++) {

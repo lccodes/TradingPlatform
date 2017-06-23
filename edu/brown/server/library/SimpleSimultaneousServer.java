@@ -28,6 +28,7 @@ import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
 import brown.terminationconditions.OneShotTermination;
 import brown.terminationconditions.SamePaymentsTermination;
+import brown.tradeables.Lab8Good;
 import brown.tradeables.SimGood;
 import brown.tradeables.Tradeable;
 import brown.valuegenerator.SpecValGenerator;
@@ -95,7 +96,7 @@ public class SimpleSimultaneousServer extends AgentServer {
 		Set<Tradeable> theSet = new HashSet<Tradeable>();
 		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
 		for (Integer ID : this.INTS) {
-			Tradeable newT = new SimGood(ID);
+			Tradeable newT = new Lab8Good(ID);
 			theSet.add(newT);
 			forTakehiro.put(ID + "", newT.getType());
 		}

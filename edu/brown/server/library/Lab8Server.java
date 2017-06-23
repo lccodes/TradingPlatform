@@ -104,7 +104,7 @@ public class Lab8Server extends AgentServer {
 
 		// Gives everyone X seconds to join the auction
 		int i = 0;
-		while (i < 10) { //CHANGE FOR MORE OR LESS JOIN TIME
+		while (i < 20) { //CHANGE FOR MORE OR LESS JOIN TIME
 			try {
 				Thread.sleep(1000);
 				Logging.log("[-] setup phase " + i++);

@@ -11,6 +11,8 @@ import brown.clearingrules.ClosestMatchClearing;
 import brown.exceptions.AgentCreationException;
 import brown.markets.CDAServer;
 import brown.markets.IMarket;
+import brown.markets.IMarketServer;
+import brown.markets.Market;
 import brown.messages.Registration;
 import brown.registrations.PMRegistration;
 import brown.server.AgentServer;
@@ -81,7 +83,7 @@ public class Lab4Server extends AgentServer {
 		while (i < amt) {
 			try {
 				if (update) {
-					for (IMarket market : this.manager.getAuctions()) {
+					for (IMarketServer market : this.manager.getAuctions()) {
 						this.sendMarketUpdate(market);
 					}
 				}

@@ -3,6 +3,12 @@ package brown.activityrules;
 import brown.marketinternalstates.MarketInternalState;
 import brown.messages.auctions.Bid;
 
+/**
+ * One shot activity rule. Dictates that an agent may only 
+ * place one bid. 
+ * @author acoggins
+ *
+ */
 public class OneShotActivity implements ActivityRule {
 
 	@Override
