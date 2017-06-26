@@ -114,7 +114,7 @@ public class MarketManager {
 	 */
 	public void close(AgentServer server, Integer ID, StateOfTheWorld closingState) {
 		Market market = tsauctions.get(ID);
-		//TODO market.close()
+		//TODO: market.close();
 		convert(server, market, closingState);
 	}
 

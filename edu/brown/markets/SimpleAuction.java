@@ -111,10 +111,10 @@ public class SimpleAuction implements IMarket {
 		Map<FullType, MarketState> fixedBids = new HashMap<FullType,MarketState>();
 		for (Entry<FullType, Double> bid : bids.entrySet()) {
 			fixedBids.put(bid.getKey(), new MarketState(agent.ID, bid.getValue()));
-			if (fixedBids.size() > 10) {
-				agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
-				fixedBids.clear();
-			}
+//			if (fixedBids.size() > 10) {
+//				agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));
+//				fixedBids.clear();
+//			}
 		}
 		if (fixedBids.size() > 0) {
 			agent.CLIENT.sendTCP(new Bid(0,new SimpleBidBundle(fixedBids),this.ID,agent.ID));

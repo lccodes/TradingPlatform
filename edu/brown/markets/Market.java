@@ -7,6 +7,7 @@ import brown.activityrules.ActivityRule;
 import brown.allocationrules.AllocationRule;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
+import brown.bundles.BidBundle;
 import brown.irpolicies.InformationRevelationPolicy;
 import brown.marketinternalstates.MarketInternalState;
 import brown.messages.auctions.Bid;
@@ -104,8 +105,8 @@ public class Market {
 		}
 		
 		//edited to fix concurrent modification. Hopefully this is what we're looking for
-		MarketInternalState oldState = this.STATE;
-		this.STATE.setAllocation(this.ARULE.getAllocation(oldState));
+		BidBundle newState = this.ARULE.getAllocation(this.STATE);
+		this.STATE.setAllocation(newState);
 		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
 		//System.out.println(this.STATE.getPayments());
 		return this.STATE.getPayments();

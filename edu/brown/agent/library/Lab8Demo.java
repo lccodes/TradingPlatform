@@ -55,7 +55,7 @@ public class Lab8Demo extends Lab8Agent {
 	}
 	
 	public static void main(String[] args) throws AgentCreationException {
-		new Lab8Demo("localhost", 2121);
+		new Lab8Demo("caladan", 2121);
 		while(true){}
 	}
 

@@ -48,9 +48,12 @@ public class SimpleSimultaneousServer extends AgentServer {
 	private final int numberOfValuationsPerBidder = 10;
 	private final int bundleSizeMean = 5;
 	private final double bundleSizeStdez = 5;
-	private final Set<Integer> INTS;
+	private final Set<Integer> INTS; 
+	private int REQUIREDNUMBIDDERS = 2;
 
 	private int numberOfBidders;
+
+	private boolean isOver = false; 
 
 	public SimpleSimultaneousServer(int port) {
 		super(port, new LabGameSetup());
@@ -69,15 +72,6 @@ public class SimpleSimultaneousServer extends AgentServer {
 		}
 
 		Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
-		// for (Integer i : this.INTS) {
-		// if (Math.random() < .1) {
-		// continue;
-		// }
-		// double nextValue = Math.random() * 50;
-		// Set<FullType> theSet = new HashSet<FullType>();
-		// theSet.add(new FullType(TradeableType.Custom, i));
-		// value.put(theSet, nextValue);
-		// }
 		this.numberOfBidders++;
 		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(theID, value));
 
@@ -92,6 +86,7 @@ public class SimpleSimultaneousServer extends AgentServer {
 
 	public void runGame(double reserve)
 			throws UnsupportedBiddingLanguageException {
+		while (!isOver) {
 		// Constructs auction according to rules
 		Set<Tradeable> theSet = new HashSet<Tradeable>();
 		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
@@ -101,15 +96,17 @@ public class SimpleSimultaneousServer extends AgentServer {
 			forTakehiro.put(ID + "", newT.getType());
 		}
 
-		// Gives everyone X seconds to join the auction
+		// sleeps until requested number of bidders have entered the auction.
+		while (numberOfBidders < REQUIREDNUMBIDDERS) {
 		int i = 0;
-		while (i < 10) { //CHANGE FOR MORE OR LESS JOIN TIME
+		while (i < 10) {
 			try {
 				Thread.sleep(1000);
-				Logging.log("[-] setup phase " + i++);
+				i++;
 			} catch (InterruptedException e) {
 				Logging.log("[+] woken: " + e.getMessage());
 			}
+		}
 		}
 
 		// Gets valuations
@@ -153,8 +150,7 @@ public class SimpleSimultaneousServer extends AgentServer {
 			Market market = this.manager.getIMarket(0);
 			while (!market.isOver()) {
 				try {
-					Thread.sleep(4000);
-					//Thread.sleep(2000);
+					Thread.sleep(5000);
 					this.updateAllAuctions(false);
 				} catch (InterruptedException e) {
 					Logging.log("[+] woken: " + e.getMessage());
@@ -172,13 +168,6 @@ public class SimpleSimultaneousServer extends AgentServer {
 			this.updateAllAuctions(true);
 		
 
-		// Logs the winner and price
-		// Map<BidBundle, Set<ITradeable>> bundles = this.manager.getOneSided(0)
-		// .getWinners();
-		// Logging.log("[-] auction over");
-		// for (BidBundle b : bundles.keySet()) {
-		// Logging.log("[-] winner: " + b.getAgent() + " for " + b.getCost());
-		// }
 		System.out.println("\n\n\n\n\nOUTCOME:");
 		for (Account account : this.acctManager.getAccounts()) {
 			System.out.println(account);
@@ -202,15 +191,19 @@ public class SimpleSimultaneousServer extends AgentServer {
 			System.out.println(account.ID + " has a linear utility of " + (maxValue - linearCost));
 			System.out.println(account.ID + " has a strict budget utility of " + (maxValue - linearCost > 0 ? maxValue-linearCost : -1*Double.MAX_VALUE));
 			System.out.println();
+			try {
+			Thread.sleep(4000);
+			}
+			catch (InterruptedException e) {
+				Logging.log("[+] woken: " + e.getMessage());
+			}
+			numberOfBidders = 0; 
 		}
+	}
 	}
 
 	public static void main(String[] args) throws UnsupportedBiddingLanguageException {
 		SimpleSimultaneousServer l3s = new SimpleSimultaneousServer(2121);
-		// true, false = SMRA
-		// true, true = SMRA w/ sealed bid final round
-		// false, false, = Clock auction
-		// false, true  = clock w/ VCG
 		l3s.runGame(0);
 	}
 
