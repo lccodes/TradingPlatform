@@ -28,6 +28,7 @@ public class Lab8Demo extends Lab8Agent {
 			}
 			System.out.println("WORKING");
 		}
+		System.out.println(toBid);
 		System.out.println("DONE");
 		market.bid(this, toBid);
 	}

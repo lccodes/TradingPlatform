@@ -90,7 +90,6 @@ public class Market {
 			this.STATE.addBid(bid);
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -104,11 +103,10 @@ public class Market {
 			return new LinkedList<Order>();
 		}
 		
-		//edited to fix concurrent modification. Hopefully this is what we're looking for
+
 		BidBundle newState = this.ARULE.getAllocation(this.STATE);
 		this.STATE.setAllocation(newState);
 		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
-		//System.out.println(this.STATE.getPayments());
 		return this.STATE.getPayments();
 	}
 	

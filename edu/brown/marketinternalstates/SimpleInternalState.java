@@ -94,7 +94,7 @@ public class SimpleInternalState implements MarketInternalState {
 
 	@Override
 	public void tick(long time) {
-		this.ticks++;
+		this.ticks++;		
 	}
 
 	@Override

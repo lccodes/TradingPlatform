@@ -53,17 +53,20 @@ public class SimpleSecondPrice implements PaymentRule {
 				if (bid.Bundle.getType().equals(BundleType.Simple)) {
 					SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
 					MarketState otherbid = bundle.getBid(trade.getType());
+					//System.out.println("OTHER BID: " + otherbid.PRICE);
 					//second price logic
 					if (otherbid != null && otherbid.PRICE > current.PRICE && bp.PRICE > otherbid.PRICE) {
 						current = new MarketState(bp.AGENTID, otherbid.PRICE);
+						System.out.println("PRICE: " + otherbid.PRICE);
 					}
 				} else {
 					Logging.log("[X] Incorrect bundle type by " + bid.AgentID + " in auction " + bid.AuctionID);
 				}
 			}
+			//System.out.println(current);
 			orders.add(new Order(bp.AGENTID,null,current.PRICE,trade.getCount(),trade));
 		}
-		
+		System.out.println(orders);
 		return orders;
 	}
 

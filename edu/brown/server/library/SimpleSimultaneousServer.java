@@ -49,7 +49,7 @@ public class SimpleSimultaneousServer extends AgentServer {
 	private final int bundleSizeMean = 5;
 	private final double bundleSizeStdez = 5;
 	private final Set<Integer> INTS; 
-	private int REQUIREDNUMBIDDERS = 2;
+	private int REQUIREDNUMBIDDERS = 1;
 
 	private int numberOfBidders;
 
@@ -67,7 +67,7 @@ public class SimpleSimultaneousServer extends AgentServer {
 	@Override
 	protected void onRegistration(Connection connection, Registration registration) {
 		Integer theID = this.defaultRegistration(connection, registration);
-		if (theID == null) {
+		if (theID == null) {					System.out.println("this is what happened");
 			return;
 		}
 
@@ -143,7 +143,6 @@ public class SimpleSimultaneousServer extends AgentServer {
 				allBids.remove(toRemove);
 			}
 		}
-
 			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
 					new SealedBidQuery(), new AnonymousPolicy(), new OneShotTermination(),
 					new SimpleNoJumpActivityRule(), new SimpleInternalState(0, theSet)));
@@ -161,10 +160,11 @@ public class SimpleSimultaneousServer extends AgentServer {
 			for (Order o : orders) {
 				totalRevenue += o.COST;
 			}
+			this.manager.close(this, 0, null);
 		
 				System.out.println("Using sealed bids");
 				System.out.println("Total Revenue: " + totalRevenue);
-				this.manager.close(this, 0, null);
+
 			this.updateAllAuctions(true);
 		
 
