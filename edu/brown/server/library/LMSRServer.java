@@ -9,13 +9,13 @@ import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.assets.value.TradeableType;
 import brown.auctions.arules.MechanismType;
-import brown.clearingrules.ClearingRule;
-import brown.clearingrules.LMSRNoClearing;
-import brown.clearingrules.LMSRYesClearing;
 import brown.markets.ITwoSidedAuction;
 import brown.markets.LMSR;
 import brown.markets.LMSRBackend;
 import brown.markets.TwoSidedAuction;
+import brown.rules.clearingrules.ClearingRule;
+import brown.rules.clearingrules.LMSRNoClearing;
+import brown.rules.clearingrules.LMSRYesClearing;
 import brown.tradeables.Tradeable;
 
 public class LMSRServer implements TwoSidedAuction {

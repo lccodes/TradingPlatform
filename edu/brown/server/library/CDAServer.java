@@ -8,10 +8,10 @@ import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
 import brown.auctions.arules.MechanismType;
-import brown.clearingrules.ClearingRule;
 import brown.markets.ContinuousDoubleAuction;
 import brown.markets.ITwoSidedAuction;
 import brown.markets.TwoSidedAuction;
+import brown.rules.clearingrules.ClearingRule;
 import brown.tradeables.Tradeable;
 
 public class CDAServer implements TwoSidedAuction {

@@ -8,26 +8,26 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import brown.activityrules.SimpleNoJumpActivityRule;
 import brown.allocationrules.SimpleClockAllocation;
 import brown.allocationrules.SimpleHighestBidderAllocation;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
-import brown.irpolicies.library.AnonymousPolicy;
 import brown.marketinternalstates.SimpleInternalState;
 import brown.markets.Market;
 import brown.messages.Registration;
 import brown.paymentrules.library.SimpleClockRule;
 import brown.paymentrules.library.SimpleSecondPrice;
-import brown.queryrules.library.OutcryQueryRule;
-import brown.queryrules.library.SealedBidQuery;
 import brown.registrations.ValuationRegistration;
+import brown.rules.activityrules.SimpleNoJumpActivityRule;
+import brown.rules.irpolicies.library.AnonymousPolicy;
+import brown.rules.queryrules.library.OutcryQueryRule;
+import brown.rules.queryrules.library.SealedBidQuery;
+import brown.rules.terminationconditions.OneShotTermination;
+import brown.rules.terminationconditions.SamePaymentsTermination;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
-import brown.terminationconditions.OneShotTermination;
-import brown.terminationconditions.SamePaymentsTermination;
 import brown.tradeables.Lab8Good;
 import brown.tradeables.SimGood;
 import brown.tradeables.Tradeable;
@@ -42,12 +42,12 @@ import com.esotericsoftware.kryonet.Connection;
  * @author acoggins
  */
 public class SimpleSimultaneousServer extends AgentServer {
-	private final int GOODNUM = 98;
+	private final int GOODNUM = 8;
 	private final double VALUESCALE = 1E-6;
 
-	private final int numberOfValuationsPerBidder = 10;
-	private final int bundleSizeMean = 5;
-	private final double bundleSizeStdez = 5;
+	private final int numberOfValuationsPerBidder = 256;
+	private final int bundleSizeMean = 4;
+	private final double bundleSizeStdez = 2;
 	private final Set<Integer> INTS; 
 	private int REQUIREDNUMBIDDERS = 1;
 

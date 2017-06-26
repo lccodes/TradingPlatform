@@ -3,18 +3,18 @@ package brown.markets;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.activityrules.ActivityRule;
 import brown.allocationrules.AllocationRule;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.bundles.BidBundle;
-import brown.irpolicies.InformationRevelationPolicy;
 import brown.marketinternalstates.MarketInternalState;
 import brown.messages.auctions.Bid;
 import brown.messages.markets.TradeRequest;
 import brown.paymentrules.PaymentRule;
-import brown.queryrules.QueryRule;
-import brown.terminationconditions.TerminationCondition;
+import brown.rules.activityrules.ActivityRule;
+import brown.rules.irpolicies.InformationRevelationPolicy;
+import brown.rules.queryrules.QueryRule;
+import brown.rules.terminationconditions.TerminationCondition;
 
 public class Market {
 	private final PaymentRule PRULE;
