@@ -1,4 +1,4 @@
-package brown.valuegenerator;
+package brown.valuation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -212,7 +212,7 @@ public class SpecValGenerator {
 		return this.auctionResult;
 	}
 	
-	public AuctionResult runVCGWithGivenBids(Map<String, Map<Set<String>, Double>> purportedTypes) {
+	public AuctionResult runVCGWithGivenBids(Map <String, Map<Set<String>, Double>> purportedTypes) {
 		Bids<MRMLicense> givenAllBidsMadeByBidders = convertAllBiddersPurportedTypeToBids(purportedTypes);
 		this.auction = new Auction(givenAllBidsMadeByBidders, this.mrmWorld.getLicenses());
 		this.am = new XORVCGAuction<>(this.auction);

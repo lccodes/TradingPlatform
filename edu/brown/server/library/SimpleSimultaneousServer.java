@@ -31,7 +31,7 @@ import brown.setup.library.LabGameSetup;
 import brown.tradeables.Lab8Good;
 import brown.tradeables.SimGood;
 import brown.tradeables.Tradeable;
-import brown.valuegenerator.SpecValGenerator;
+import brown.valuation.SpecValGenerator;
 import ch.uzh.ifi.ce.mweiss.specval.model.UnsupportedBiddingLanguageException;
 
 import com.esotericsoftware.kryonet.Connection;

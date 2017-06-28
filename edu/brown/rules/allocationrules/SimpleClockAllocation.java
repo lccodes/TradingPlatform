@@ -19,7 +19,7 @@ import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.setup.Logging;
 import brown.tradeables.Tradeable;
-import brown.valuegenerator.SpecValGenerator;
+import brown.valuation.SpecValGenerator;
 
 public class SimpleClockAllocation implements AllocationRule {
 	private Map<FullType, MarketState> lastDemand;

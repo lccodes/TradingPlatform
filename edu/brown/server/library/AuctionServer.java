@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.allocationrules.OpenOutcryRule;
+import brown.rules.allocationrules.OpenOutcryRule;
 import brown.assets.accounting.Account;
 import brown.bundles.BidBundle;
 import brown.bundles.BundleType;
 import brown.bundles.SimpleBidBundle;
 import brown.messages.Registration;
-import brown.paymentrules.library.FirstPriceRule;
+import brown.rules.paymentrules.library.FirstPriceRule;
 import brown.registrations.AuctionRegistration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
