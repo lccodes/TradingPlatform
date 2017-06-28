@@ -12,7 +12,7 @@ import brown.auctions.arules.MechanismType;
 import brown.bundles.MarketState;
 import brown.bundles.SimpleBidBundle;
 import brown.messages.auctions.Bid;
-import brown.paymentrules.PaymentType;
+import brown.rules.paymentrules.PaymentType;
 import brown.setup.Logging;
 
 public class SimpleAuction implements IMarket {

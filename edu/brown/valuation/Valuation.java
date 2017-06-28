@@ -3,6 +3,7 @@ package brown.valuation;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import org.apache.commons.math3.distribution.NormalDistribution; 
 import org.apache.commons.math3.distribution.UniformRealDistribution; 
 
@@ -17,12 +18,22 @@ import brown.assets.value.FullType;
  */
 public interface Valuation {
 	
+	
+	public Map<Set<FullType>, Double> getTotalValuation();
+	
+	public Map<Set<FullType>, Double> getValuation (Integer numberOfValuations, 
+			Integer bundleSizeMean, Double bundleSizeStdDev, Double valueScale);
+	
+	
 	/**
 	 * NORMAL, TOTAL. 
 	 * Gets a valuation for every possible bundle of input goods. 
 	 * Not recommended for larger bundles due to time complexity.
 	 * @param goods
 	 * 		the set of goods to be valued.
+	 * @param bundleGrowth
+	 * 		a discrete function over integers to Doubles describing the 
+	 * 		value profile of bundles of input sizes
 	 * @param dist
 	 * 		the distribution of the valuation. In this case, set 
 	 * 		to gaussian, s.t. the prices of every good and each 
@@ -42,9 +53,10 @@ public interface Valuation {
 	 * 		A map of every possible subset of the input goods, with specified 
 	 * 		normally distributed values.
 	 */
-	public Map<Set<FullType>, Double>  getTotalValuation (Set<FullType> goods, 
-			NormalDistribution dist, Double expectedCovariance, Boolean isMonotonic,  
-			Double valueScale);
+//	public Map<Set<FullType>, Double>  getTotalValuation ( Set<FullType> goods, 
+//			Function<Integer, Double> bundleGrowth,
+//			NormalDistribution dist, Double expectedCovariance, Boolean isMonotonic,  
+//			Double valueScale);
 	
 	/**
 	 * UNIFORM, TOTAL. 
@@ -52,6 +64,9 @@ public interface Valuation {
 	 * Not recommended for larger bundles due to time complexity.
 	 * @param goods
 	 * 		the set of goods to be valued.
+	 * @param bundleGrowth
+	 * 		a discrete function over integers to Doubles describing the 
+	 * 		value profile of bundles of input sizes
 	 * @param dist
 	 * 		the distribution of the valuation. In this case, set 
 	 * 		to uniform, s.t. the prices of every good and each 
@@ -67,9 +82,10 @@ public interface Valuation {
 	 * 		A map of every possible subset of the input goods, with specified 
 	 * 		uniformly distributed values.
 	 */
-	public Map<Set<FullType>, Double>  getTotalValuation (Set<FullType> goods,
-			UniformRealDistribution dist, Boolean isMonotonic, 
-			Double valueScale);
+//	public Map<Set<FullType>, Double>  getTotalValuation (Set<FullType> goods,
+//			Function<Integer, Double> bundleGrowth,
+//			UniformRealDistribution dist, Boolean isMonotonic, 
+//			Double valueScale);
 	
 	/**
 	 *  POINT, TOTAL. 
@@ -77,6 +93,9 @@ public interface Valuation {
 	 * Not recommended for larger bundles due to time complexity.
 	 * @param goods
 	 * 		the set of goods to be valued.
+	 * @param bundleGrowth
+	 * 		a discrete function over integers to Doubles describing the 
+	 * 		value profile of bundles of input sizes
 	 * @param isMonotonic
 	 * 		Determines whether or not larger bundles have weakly
 	 * 		higher value than their subsets. 
@@ -87,14 +106,20 @@ public interface Valuation {
 	 * 		A map of every possible subset of the input goods, with specified 
 	 * 		point values.
 	 */
-	public Map<Set<FullType>, Double>  getTotalValuation (Set<FullType> goods,
-		 Boolean isMonotonic, Double valueScale);
+//	public Map<Set<FullType>, Double>  getTotalValuation (Set<FullType> goods,
+//		Function<Integer, Double> bundleGrowth,
+//		 Boolean isMonotonic, Double valueScale);
+//	
 	
+
 	/**
 	 * NORMAL, PARTIAL.
 	 * gets valuations for a specified number of bundles. 
 	 * @param goods
 	 * 		the set of goods to be valued. 
+	 * @param bundleGrowth
+	 * 		a discrete function over integers to Doubles describing the 
+	 * 		value profile of bundles of input sizes
 	 * @param dist
 	 * 		the distribution that the valuation of bundles will follow.
 	 * 		Set to normal. 
@@ -117,16 +142,20 @@ public interface Valuation {
 	 * @return
 	 */
 	
-	public Map<Set<FullType>, Double> getValuation (Set<FullType> goods,
-	NormalDistribution dist, Double expectedCovariance, Boolean isMonotonic,
-	Integer numberOfValuations, Integer bundleSizeMean, 
-	Double bundleSizeStdDev, Double valueScale); 
+//	public Map<Set<FullType>, Double> getValuation (Set<FullType> goods,
+//	Function<Integer, Double> bundleGrowth,
+//	NormalDistribution dist, Double expectedCovariance, Boolean isMonotonic,
+//	Integer numberOfValuations, Integer bundleSizeMean, 
+//	Double bundleSizeStdDev, Double valueScale); 
 	
 	/**
 	 * UNIFORM, PARTIAL. 
 	 * gets valuations for a specified number of bundles. 
 	 * @param goods
 	 * 		the set of goods to be valued. 
+	 * @param bundleGrowth
+	 * 		a discrete function over integers to Doubles describing the 
+	 * 		value profile of bundles of input sizes
 	 * @param dist
 	 * 		the distribution that the valuation of bundles will follow.
 	 * 		Set to uniform. 
@@ -144,15 +173,19 @@ public interface Valuation {
 	 * 		to-one default scale. 
 	 * @return
 	 */
-	public Map<Set<FullType>, Double> getValuation (Set<FullType> goods,
-			UniformRealDistribution dist, Boolean isMonotonic, Integer numberOfValuations,
-			Integer bundleSizeMean, Double bundleSizeStdDev, Double valueScale);
-	
+//	public Map<Set<FullType>, Double> getValuation (Set<FullType> goods, 
+//			Function<Integer, Double> bundleGrowth,
+//			UniformRealDistribution dist, Boolean isMonotonic, Integer numberOfValuations,
+//			Integer bundleSizeMean, Double bundleSizeStdDev, Double valueScale);
+//	
 	/**
 	 * POINT, PARTIAL. 
 	 * gets valuations for a specified number of bundles.
 	 * @param goods
 	 * 		The set of goods to be valued.
+	 * @param bundleGrowth
+	 * 		a discrete function over integers to Doubles describing the 
+	 * 		value profile of bundles of input sizes
 	 * @param isMonotonic
 	 * 		Determines whether or not larger bundles have weakly higher
 	 * 		values than their subsets.
@@ -167,9 +200,10 @@ public interface Valuation {
 	 * 		to-one default scale.
 	 * @return
 	 */
-	public Map<Set<FullType>, Double> getValuation (Set<FullType> goods, 
-			Boolean isMonotonic, Integer numberOfValuations, Integer bundleSizeMean, 
-			Double bundleSizeStdDev, Double valueScale);
+//	public Map<Set<FullType>, Double> getValuation (Set<FullType> goods, 
+//			Function<Integer, Double> bundleGrowth,
+//			Boolean isMonotonic, Integer numberOfValuations, Integer bundleSizeMean, 
+//			Double bundleSizeStdDev, Double valueScale);
 
 
 

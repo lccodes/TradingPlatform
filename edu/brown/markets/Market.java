@@ -3,14 +3,14 @@ package brown.markets;
 import java.util.LinkedList;
 import java.util.List;
 
-import brown.allocationrules.AllocationRule;
+import brown.rules.allocationrules.AllocationRule;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.bundles.BidBundle;
 import brown.marketinternalstates.MarketInternalState;
 import brown.messages.auctions.Bid;
 import brown.messages.markets.TradeRequest;
-import brown.paymentrules.PaymentRule;
+import brown.rules.paymentrules.PaymentRule;
 import brown.rules.activityrules.ActivityRule;
 import brown.rules.irpolicies.InformationRevelationPolicy;
 import brown.rules.queryrules.QueryRule;

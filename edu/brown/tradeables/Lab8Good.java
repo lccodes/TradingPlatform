@@ -39,6 +39,7 @@ public class Lab8Good extends Tradeable {
 		this.goodID = goodID;
 		this.TYPE = new FullType(TradeableType.Custom, this.goodID);
 	}
+	
 
 	@Override
 	public Integer getAgentID() {

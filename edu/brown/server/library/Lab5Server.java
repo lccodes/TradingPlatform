@@ -1,8 +1,8 @@
 package brown.server.library;
 
 
-import brown.allocationrules.LemonadeAllocation;
-import brown.paymentrules.library.LemonadePayment;
+import brown.rules.allocationrules.LemonadeAllocation;
+import brown.rules.paymentrules.library.LemonadePayment;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
