@@ -124,7 +124,6 @@ public class Lab8Server extends AgentServer {
 		Map<Integer, String> intToString = new HashMap<Integer, String>();
 
 		for (Entry<Connection, Integer> conn : this.connections.entrySet()) {
-			System.out.println("connection going ");
 			String toRemove = null;
 			for (Entry<String, Map<Set<String>, Double>> entry : allBids.entrySet()) {
 				Map<Set<String>, Double> each = entry.getValue();

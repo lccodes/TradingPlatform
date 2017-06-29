@@ -1,11 +1,17 @@
 package brown.valuation;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.exception.NotStrictlyPositiveException;
+import org.apache.commons.math3.random.ISAACRandom;
 
 import brown.assets.value.FullType;
 
@@ -44,17 +50,31 @@ public class PointValuation implements Valuation {
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getValuation(Integer numberOfvaluations, 
+	public Map<Set<FullType>, Double> getValuation(Integer numberOfValuations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev, Double ValueScale) {
-		//get n observations of a normal distribution with specified mean and standard deviation, 
-		//round down to the nearest integer. These are our subset sizes. for each one, use a random number
-		//to determine the goods to get.
-		//subset.size random numbers between 1 and goods.size
-		//since no variation, just deal justice.
-		
-		
-		
-		return null; 
+		if (bundleSizeMean > 0 && bundleSizeStdDev > 0) {
+		NormalDistribution sizeDist = new NormalDistribution(new ISAACRandom(), bundleSizeMean, 
+				bundleSizeStdDev);
+		Map<Set<FullType>, Double> existingSets = new HashMap<Set<FullType>, Double>();
+		for(int i = 0; i < numberOfValuations; i++) {
+			int size = -1; 
+			while (size < 1) {
+			size = (int) sizeDist.sample();}
+			Set<FullType> theGoods = new HashSet<>();
+			List<FullType> goodList = new ArrayList<FullType>(GOODS); 
+			for(int j = 0; j < size; j++) {
+				FullType aGood = goodList.get((int) Math.random() * (goodList.size() - j));
+				theGoods.add(aGood);
+				goodList.remove(aGood);
+			}
+			existingSets.put(theGoods, VALFUNCTION.apply(theGoods.size()) * VALUESCALE);
+		}
+			return existingSets; 
+	}
+		else {
+			System.out.println("ERROR: bundle size parameters not positive");
+			throw new NotStrictlyPositiveException(bundleSizeMean);
+		}
 	}
 
 

@@ -14,8 +14,8 @@ import brown.bundles.MarketState;
 import brown.bundles.SimpleBidBundle;
 import brown.marketinternalstates.MarketInternalState;
 import brown.messages.auctions.Bid;
-import brown.paymentrules.PaymentRule;
-import brown.paymentrules.PaymentType;
+import brown.rules.paymentrules.PaymentRule;
+import brown.rules.paymentrules.PaymentType;
 import brown.setup.Logging;
 import brown.tradeables.Tradeable;
 

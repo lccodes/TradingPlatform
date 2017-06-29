@@ -4,7 +4,7 @@ import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
 import brown.auctions.arules.MechanismType;
 import brown.bundles.ComplexBidBundle;
-import brown.paymentrules.PaymentType;
+import brown.rules.paymentrules.PaymentType;
 
 public class ComplexAuction implements IMarket {
 

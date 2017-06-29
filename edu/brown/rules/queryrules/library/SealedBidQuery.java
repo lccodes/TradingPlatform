@@ -9,7 +9,7 @@ import brown.marketinternalstates.MarketInternalState;
 import brown.markets.ComplexAuction;
 import brown.markets.SimpleAuction;
 import brown.messages.markets.TradeRequest;
-import brown.paymentrules.PaymentType;
+import brown.rules.paymentrules.PaymentType;
 import brown.rules.queryrules.QueryRule;
 
 public class SealedBidQuery implements QueryRule {

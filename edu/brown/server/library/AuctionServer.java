@@ -17,6 +17,7 @@ import brown.registrations.AuctionRegistration;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
+import brown.tradeables.TheGood;
 import brown.tradeables.Tradeable;
 
 import com.esotericsoftware.kryonet.Connection;
