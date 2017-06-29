@@ -6,20 +6,36 @@ import java.util.function.Function;
 
 import brown.assets.value.FullType;
 import brown.assets.value.TradeableType;
-import brown.tradeables.Lab8Good;
 import brown.valuation.PointValuation;
 
 
 public class PointValTest {
-	Set<FullType> fullSet = new HashSet<>(); 
+	private final Set<FullType> fullSet = new HashSet<>(); 
 	
 
-	Function<Integer, Double> linear = x -> x + 1.0; 
-	PointValuation pv = new PointValuation(fullSet, linear ,1.0);
+	private final Function<Integer, Double> linear = x -> (double) x; 
+	private final PointValuation pv = new PointValuation(fullSet, linear ,10.0);
 	
-	public void testPoint() {
+	public void testVal() {
 		fullSet.add(new FullType(TradeableType.Good, 0));
 		fullSet.add(new FullType(TradeableType.Good, 1));
 		fullSet.add(new FullType(TradeableType.Good, 2));
+		//fullSet.add(new FullType(TradeableType.Good, 3));
+		System.out.println(pv.getTotalValuation());
+	}
+	
+	public void testPartialVal() {
+		fullSet.add(new FullType(TradeableType.Good, 0));
+		fullSet.add(new FullType(TradeableType.Good, 1));
+		fullSet.add(new FullType(TradeableType.Good, 2));
+		fullSet.add(new FullType(TradeableType.Good, 3));
+		System.out.println(pv.getValuation(4, 2, 1.0));
+	}
+
+	public static void main(String[] args){
+		PointValTest pv = new PointValTest();
+		//pv.testVal();
+		pv.testPartialVal();
+		
 	}
 }

@@ -22,7 +22,7 @@ public interface Valuation {
 	public Map<Set<FullType>, Double> getTotalValuation();
 	
 	public Map<Set<FullType>, Double> getValuation (Integer numberOfValuations, 
-			Integer bundleSizeMean, Double bundleSizeStdDev, Double valueScale);
+			Integer bundleSizeMean, Double bundleSizeStdDev);
 	
 	
 	/**
