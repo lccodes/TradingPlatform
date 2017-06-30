@@ -15,13 +15,13 @@ import org.apache.commons.math3.random.ISAACRandom;
 
 import brown.assets.value.FullType;
 
-public class PointValuation implements Valuation {
+public class SizeDependentValuation implements Valuation {
 	private Set<FullType> GOODS; 
 	private Function<Integer, Double> VALFUNCTION; 
 	private Double VALUESCALE;
 
 	
-	public PointValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
+	public SizeDependentValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
 			 Double valueScale) {
 		this.GOODS = goods; 
 		this.VALFUNCTION = valFunction; 
@@ -29,7 +29,7 @@ public class PointValuation implements Valuation {
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getTotalValuation() {
+	public Map<Set<FullType>, Double> getAllValuations() {
 		
 		Map<Set<FullType>, Double> existingSets = new HashMap<Set<FullType>, Double>();
 		existingSets.put(new HashSet<FullType>(), 0.0);

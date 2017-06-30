@@ -19,7 +19,7 @@ import brown.assets.value.FullType;
 public interface Valuation {
 	
 	
-	public Map<Set<FullType>, Double> getTotalValuation();
+	public Map<Set<FullType>, Double> getAllValuations();
 	
 	public Map<Set<FullType>, Double> getValuation (Integer numberOfValuations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev);

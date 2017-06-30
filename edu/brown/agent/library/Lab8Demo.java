@@ -24,6 +24,7 @@ public class Lab8Demo extends Lab8Agent {
 		Map<FullType, Double> toBid = new HashMap<FullType,Double>();
 		for (Entry<Set<FullType>, Double> types : this.myValuation.entrySet()) {
 			for (FullType type : types.getKey()) {
+				//bidding logic 
 				toBid.put(type, types.getValue()/(double)types.getKey().size());
 			}
 			System.out.println("WORKING");

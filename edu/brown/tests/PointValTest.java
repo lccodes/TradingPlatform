@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import brown.assets.value.FullType;
 import brown.assets.value.TradeableType;
-import brown.valuation.PointValuation;
+import brown.valuation.SizeDependentValuation;
 
 
 public class PointValTest {
@@ -14,14 +14,14 @@ public class PointValTest {
 	
 
 	private final Function<Integer, Double> linear = x -> (double) x; 
-	private final PointValuation pv = new PointValuation(fullSet, linear ,10.0);
+	private final SizeDependentValuation sdv = new SizeDependentValuation(fullSet, linear ,10.0);
 	
 	public void testVal() {
 		fullSet.add(new FullType(TradeableType.Good, 0));
 		fullSet.add(new FullType(TradeableType.Good, 1));
 		fullSet.add(new FullType(TradeableType.Good, 2));
 		//fullSet.add(new FullType(TradeableType.Good, 3));
-		System.out.println(pv.getTotalValuation());
+		System.out.println(sdv.getAllValuations());
 	}
 	
 	public void testPartialVal() {
@@ -29,7 +29,7 @@ public class PointValTest {
 		fullSet.add(new FullType(TradeableType.Good, 1));
 		fullSet.add(new FullType(TradeableType.Good, 2));
 		fullSet.add(new FullType(TradeableType.Good, 3));
-		System.out.println(pv.getValuation(4, 2, 1.0));
+		System.out.println(sdv.getValuation(4, 2, 1.0));
 	}
 
 	public static void main(String[] args){

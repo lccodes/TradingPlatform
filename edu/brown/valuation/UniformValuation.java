@@ -30,7 +30,7 @@ public class UniformValuation implements Valuation{
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getTotalValuation() {
+	public Map<Set<FullType>, Double> getAllValuations() {
 		return null;
 	}
 	
