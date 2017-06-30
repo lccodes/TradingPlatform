@@ -36,7 +36,7 @@ public class UniformValuation implements Valuation{
 	
 	@Override
 	public Map<Set<FullType>, Double> getValuation(Integer numberOfvaluations, 
-			Integer bundleSizeMean, Double bundleSizeStdDev, Double valueScale) {
+			Integer bundleSizeMean, Double bundleSizeStdDev) {
 		return null; 
 	}
 
