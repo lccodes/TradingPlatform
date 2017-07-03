@@ -146,7 +146,7 @@ public class SpecValGenerator {
 		
 		// Define bidder parameters
 		this.numberOfGlobalBidders = numberOfBidders;
-		this.numberOfLocalBidders = 0;
+		this.numberOfLocalBidders = 0;https://github.com/lccodes/TradingPlatform
 		this.numberOfRegionalBidders = 0;
 				
 		// Make World

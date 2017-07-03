@@ -1,29 +1,33 @@
 package brown.valuation; 
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Set;
 
 import brown.assets.value.FullType;
 
-public abstract class Valuation {
+public class Valuation {
 	
-	private Set<FullType> goods;
-	private Double price;
+	private SimpleEntry<Set<FullType>, Double> entry;
 	
 	public Valuation(Set<FullType> goods, Double price) {
-		this.goods = goods; 
-		this.price = price; 
+		this.entry = new SimpleEntry<Set<FullType>, Double>(goods, price);
 	}
 	
 	public Set<FullType> getGoods() {
-		return goods;
+		return entry.getKey(); 
 	}
 	
 	public Double getPrice() {
-		return price; 
+		return entry.getValue(); 
 	}
 	
 	public void setPrice(Double newPrice) {
-		price = newPrice; 
+		entry.setValue(newPrice);
+	}
+
+	@Override
+	public String toString() {
+		return "Valuation [entry=" + entry + "]";
 	}
 	
 	
