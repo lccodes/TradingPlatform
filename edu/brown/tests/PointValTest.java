@@ -13,15 +13,26 @@ public class PointValTest {
 	private final Set<FullType> fullSet = new HashSet<>(); 
 	
 
-	private final Function<Integer, Double> linear = x -> (double) x; 
-	private final SizeDependentValuation sdv = new SizeDependentValuation(fullSet, linear ,10.0);
+	private final Function<Integer, Double> root = x -> Math.sqrt(x); 
+	private final Function<Integer, Double> square = x -> (double) x * x; 
+	private final SizeDependentValuation sdvRoot = new SizeDependentValuation(fullSet, root ,1.0);
+	private final SizeDependentValuation sdvSquare = new SizeDependentValuation(fullSet, square ,1.0);
 	
 	public void testVal() {
 		fullSet.add(new FullType(TradeableType.Good, 0));
 		fullSet.add(new FullType(TradeableType.Good, 1));
 		fullSet.add(new FullType(TradeableType.Good, 2));
+
 		//fullSet.add(new FullType(TradeableType.Good, 3));
-		System.out.println(sdv.getAllValuations());
+		System.out.println(sdvRoot.getAllValuations());
+	}
+	public void testVal2() {
+//		fullSet.add(new FullType(TradeableType.Good, 0));
+//		fullSet.add(new FullType(TradeableType.Good, 1));
+//		fullSet.add(new FullType(TradeableType.Good, 2));
+
+		//fullSet.add(new FullType(TradeableType.Good, 3));
+		System.out.println(sdvSquare.getAllValuations());
 	}
 	
 	public void testPartialVal() {
@@ -29,13 +40,14 @@ public class PointValTest {
 		fullSet.add(new FullType(TradeableType.Good, 1));
 		fullSet.add(new FullType(TradeableType.Good, 2));
 		fullSet.add(new FullType(TradeableType.Good, 3));
-		System.out.println(sdv.getValuation(4, 2, 1.0));
+		System.out.println(sdvRoot.getValuation(4, 2, 1.0));
 	}
 
 	public static void main(String[] args){
 		PointValTest pv = new PointValTest();
-		//pv.testVal();
-		pv.testPartialVal();
+		pv.testVal();
+		pv.testVal2();
+		//pv.testPartialVal();
 		
 	}
 }

@@ -12,7 +12,7 @@ public class NormalValTest {
 	
 	private final Set<FullType> goods = new HashSet<FullType>();
 	private final Function<Integer, Double> linear = x -> (double) x; 
-	private final NormalValuation nv = new NormalValuation(goods, linear, false, 1.0);
+	private final NormalValuation nv = new NormalValuation(goods, linear, true, 1.0);
 	
 	public void testAllVals() {
 		goods.add(new FullType(TradeableType.Good, 0));

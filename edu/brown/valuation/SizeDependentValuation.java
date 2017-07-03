@@ -15,7 +15,7 @@ import org.apache.commons.math3.random.ISAACRandom;
 
 import brown.assets.value.FullType;
 
-public class SizeDependentValuation implements Valuation {
+public class SizeDependentValuation implements IValuation {
 	private Set<FullType> GOODS; 
 	private Function<Integer, Double> VALFUNCTION; 
 	private Double VALUESCALE;
@@ -48,7 +48,7 @@ public class SizeDependentValuation implements Valuation {
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getValuation(Integer numberOfValuations, 
+	public Map<Set<FullType>, Double> getSomeValuations(Integer numberOfValuations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev) {
 		//check that input parameters are positive
 		if (bundleSizeMean > 0 && bundleSizeStdDev > 0) {

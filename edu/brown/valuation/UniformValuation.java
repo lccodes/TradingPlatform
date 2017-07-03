@@ -9,7 +9,7 @@ import org.apache.commons.math3.distribution.UniformRealDistribution;
 
 import brown.assets.value.FullType;
 
-public class UniformValuation implements Valuation{
+public class UniformValuation implements IValuation{
 	private Set<FullType> GOODS; 
 	private Function<Integer, Double> VALFUNCTION; 
 	private Boolean MONOTONIC; 
@@ -35,7 +35,7 @@ public class UniformValuation implements Valuation{
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getValuation(Integer numberOfvaluations, 
+	public Map<Set<FullType>, Double> getSomeValuations(Integer numberOfvaluations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev) {
 		return null; 
 	}
