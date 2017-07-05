@@ -2,10 +2,8 @@ package brown.valuation;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -15,71 +13,106 @@ import org.apache.commons.math3.random.ISAACRandom;
 
 import brown.assets.value.FullType;
 
+/**
+ * gets valuations where values directly depend on input size function.
+ * @author acoggins
+ *
+ */
 public class SizeDependentValuation implements IValuation {
-	private Set<FullType> GOODS; 
-	private Function<Integer, Double> VALFUNCTION; 
-	private Double VALUESCALE;
+	private Set<FullType> goods; 
+	private Function<Integer, Double> valFunction; 
+	private Double valueScale;
 
-	
+	/**
+	 * A Size Dependent Valuation constructor takes goods, a value function, and a value scale
+	 * @param goods
+	 * The set of fulltype that are given values. 
+	 * @param valFunction
+	 * The function that determines the relative values of the bundles. 
+	 * @param valueScale
+	 * Value scale that multiplies the value of all bundles.
+	 */
 	public SizeDependentValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
 			 Double valueScale) {
-		this.GOODS = goods; 
-		this.VALFUNCTION = valFunction; 
-		this.VALUESCALE = valueScale;	
+		this.goods = goods; 
+		this.valFunction = valFunction; 
+		this.valueScale = valueScale;	
 	}
 	
+	/**
+	 * gets all possible valuations for bundles of the input good.
+	 */
 	@Override
-	public Map<Set<FullType>, Double> getAllValuations() {
-		
-		Map<Set<FullType>, Double> existingSets = new HashMap<Set<FullType>, Double>();
-		existingSets.put(new HashSet<FullType>(), 0.0);
-			for(FullType good : GOODS) {
-				Map<Set<FullType>, Double> temp = new HashMap<Set<FullType>, Double>();
-				for(Set<FullType> e : existingSets.keySet()) {
+	public ValuationBundle getAllValuations() {
+		//initialize a bundle of existing sets.
+		ValuationBundle existingSets = new ValuationBundle();
+		//add an empty bundle
+		existingSets.add(new Valuation(new HashSet<FullType>(), 0.0));
+		  //iterate bundle adding process over all goods
+			for(FullType good : goods) {
+			  //create temporary bundle to be added later. 
+				ValuationBundle temp = new ValuationBundle();
+				//for each value in existingSets, create a new bundle containing that good
+				//for every bundle that does not contain that good.
+				for(Valuation e : existingSets) {
 					if (!e.contains(good)) {
-						Set<FullType> eCopy = new HashSet<FullType>(e); 
+					  //create a copy set of goods, and add the new good to it.
+						Set<FullType> eCopy = new HashSet<FullType>(e.getGoods()); 
 						eCopy.add(good);
-						temp.put(eCopy, VALFUNCTION.apply(eCopy.size()) * VALUESCALE);
+						//add it to temp with a price determined by the value function.
+						temp.add(eCopy, valFunction.apply(eCopy.size()) * valueScale);
 					}
 				}
-				existingSets.putAll(temp);
+				//add temp to existing sets
+				existingSets.addAll(temp);
 			}
 		return existingSets;
 	}
 	
+	/**
+	 * gets some value bundles over the inputs.
+	 */
 	@Override
-	public Map<Set<FullType>, Double> getSomeValuations(Integer numberOfValuations, 
+	public ValuationBundle getSomeValuations(Integer numberOfValuations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev) {
-		//check that input parameters are positive
+	  //check valid inputs for bundle size mean and std. dev.
 		if (bundleSizeMean > 0 && bundleSizeStdDev > 0) {
-		//create distribution for bundle size drawing.
+		  //create a normal distribution to draw bundle sizes. 
 			NormalDistribution sizeDist = new NormalDistribution(new ISAACRandom(), bundleSizeMean, 
 				bundleSizeStdDev);
-			Map<Set<FullType>, Double> existingSets = new HashMap<Set<FullType>, Double>();
+			//create a new bundle to add to.
+			ValuationBundle existingSets = new ValuationBundle();
+			//iterate over the number of valuations that are input
 			for(int i = 0; i < numberOfValuations; i++) {
-				//resample if the generated set has values that already exist
 				Boolean reSample = true;
+				//repeated sampling of bundles so no duplicate bundles appear in output.
 				while(reSample) {
 					int size = -1; 
-					while (size < 1 || size > GOODS.size()) {
+					//repeatedly sample bundle size until a valid size is picked.
+					while (size < 1 || size > goods.size()) {
 						size = (int) sizeDist.sample();}
+					//bundle to be added to
 						Set<FullType> theGoods = new HashSet<>();
-						List<FullType> goodList = new ArrayList<FullType>(GOODS); 
+					//list of goods to uniformly sample from
+						List<FullType> goodList = new ArrayList<FullType>(goods); 
+						//sample without replacement goods to add to the bundle size times.
 						for(int j = 0; j < size; j++) {
 							Integer rand = (int) (Math.random() * goodList.size());
 							FullType aGood = goodList.get(rand);
 							theGoods.add(aGood);
 							goodList.remove(aGood);
 						}
-						if(!existingSets.keySet().contains(theGoods)) {
-							existingSets.put(theGoods, VALFUNCTION.apply(theGoods.size()) * VALUESCALE);
+						//if the resulting bundle is already in the existing bundles,
+						//throw out and start over
+						if(!existingSets.contains(theGoods)) {
+							existingSets.add(theGoods, valFunction.apply(theGoods.size()) * valueScale);
 							reSample = false;
 						}
 				}
 			}
 			return existingSets; 
 	}
-		//if initial parameters not positive, throw an exception.
+		//throw error if inputs for bundle size mean and standard deviation are not positive. 
 		else {
 			System.out.println("ERROR: bundle size parameters not positive");
 			throw new NotStrictlyPositiveException(bundleSizeMean);

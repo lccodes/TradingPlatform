@@ -1,11 +1,6 @@
 package brown.valuation; 
 
 
-import java.util.Map;
-import java.util.Set;
-
-import brown.assets.value.FullType;
-
 /** interface for generating valuations for agents to use in auctions.
  * 
  * @author acoggins
@@ -17,7 +12,7 @@ public interface IValuation {
 	 * Gets all valuations given a set of goods. 
 	 * @return
 	 */
-	public Map<Set<FullType>, Double> getAllValuations();
+	public ValuationBundle getAllValuations();
 	
 	/**
 	 * gets a specified number of valuations given a set of goods.
@@ -30,7 +25,7 @@ public interface IValuation {
 	 * @return
 	 * a specified number of valuation bundles, 
 	 */
-	public Map<Set<FullType>, Double> getSomeValuations (Integer numberOfValuations, 
+	public ValuationBundle getSomeValuations (Integer numberOfValuations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev);
 	
 }

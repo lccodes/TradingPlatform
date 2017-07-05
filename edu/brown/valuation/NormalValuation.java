@@ -15,7 +15,13 @@ import org.apache.commons.math3.random.RandomGenerator;
 
 import brown.assets.value.FullType;
 
-public class NormalValuation implements IValuation{
+/**
+ * valuation implementation where valuations follow a normal distribution
+ * with mean bundle value determined by the value function.
+ * @author acoggins
+ *
+ */
+public class NormalValuation implements IValuation {
 	private Set<FullType> goods; 
 	private Function<Integer, Double> valFunction; 
 	private Double baseVariance; 
@@ -24,7 +30,17 @@ public class NormalValuation implements IValuation{
 	private Double valueScale;
 
 	
-	
+	/**
+	 * Normal Valuation constructor. 
+	 * @param goods
+	 * a set of fulltype to be given values.
+	 * @param valFunction
+	 * a function from bundle size to positive reals by which valuation means are determined. 
+	 * @param isMonotonic
+	 * is every set of goods weakly dominant to all its subsets? 
+	 * @param valueScale
+	 * coefficient of scale.
+	 */
 	public NormalValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
 			 Boolean isMonotonic, Double valueScale) {
 		this.goods = goods; 
@@ -35,7 +51,21 @@ public class NormalValuation implements IValuation{
 		this.valueScale = valueScale;	
 	}
 	
-	//constructor with variance controls
+	/**
+	 * Normal valuation constructor with variance covariance controls.
+	 * @param goods
+	 *  a set of FullType to be given values.
+	 * @param valFunction
+	 * a function from bundle size to positive reals by which valuation means are determined. 
+	 * @param baseVariance
+	 * the independent variance of a good's price.
+	 * @param expectedCovariance
+	 * the expected covariance between goods.
+	 * @param isMonotonic
+	 * is every set of goods weakly dominant to all its subsets? 
+	 * @param valueScale
+	 * coefficient of scale.
+	 */
 	public NormalValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
 			Double baseVariance, Double expectedCovariance, Boolean isMonotonic, 
 			Double valueScale) {
@@ -47,7 +77,7 @@ public class NormalValuation implements IValuation{
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getAllValuations() {
+	public ValuationBundle getAllValuations() {
 		//random generator for all distributions in this method
 		RandomGenerator rng = new ISAACRandom();
 		Map<Map<Integer, FullType>, Double> existingSetsID =
@@ -196,11 +226,11 @@ public class NormalValuation implements IValuation{
 			previousSize = temp;
 		}
 		//move the existing sets from an ID based to the structure in the type signature. 
-		Map<Set<FullType>, Double> existingSets = new HashMap<Set<FullType>, Double>();
+		ValuationBundle existingSets = new ValuationBundle();
 		System.out.println("*bundles printed for clarity*");
 		for(Map<Integer, FullType> idGood : existingSetsID.keySet()) {
 			Set<FullType> goodsToReturn = new HashSet<FullType>(idGood.values());
-			existingSets.put(goodsToReturn, existingSetsID.get(idGood));
+			existingSets.add(goodsToReturn, existingSetsID.get(idGood));
 			System.out.println(goodsToReturn + " " + existingSetsID.get(idGood));
 		}
 		return existingSets;

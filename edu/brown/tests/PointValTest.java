@@ -40,7 +40,7 @@ public class PointValTest {
 		fullSet.add(new FullType(TradeableType.Good, 1));
 		fullSet.add(new FullType(TradeableType.Good, 2));
 		fullSet.add(new FullType(TradeableType.Good, 3));
-		System.out.println(sdvRoot.getValuation(4, 2, 1.0));
+		System.out.println(sdvRoot.getSomeValuations(4, 2, 1.0));
 	}
 
 	public static void main(String[] args){
