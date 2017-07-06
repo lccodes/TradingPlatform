@@ -27,12 +27,12 @@ public class UniformValuation implements IValuation{
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getAllValuations() {
+	public ValuationBundle getAllValuations() {
 		return null;
 	}
 	
 	@Override
-	public Map<Set<FullType>, Double> getSomeValuations(Integer numberOfvaluations, 
+	public ValuationBundle getSomeValuations(Integer numberOfvaluations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev) {
 		return null; 
 	}

@@ -22,6 +22,18 @@ public class PointValTest {
 		fullSet.add(new FullType(TradeableType.Good, 0));
 		fullSet.add(new FullType(TradeableType.Good, 1));
 		fullSet.add(new FullType(TradeableType.Good, 2));
+		fullSet.add(new FullType(TradeableType.Good, 3));
+    fullSet.add(new FullType(TradeableType.Good, 4));
+    fullSet.add(new FullType(TradeableType.Good, 5));
+    fullSet.add(new FullType(TradeableType.Good, 6));
+    fullSet.add(new FullType(TradeableType.Good, 7));
+    fullSet.add(new FullType(TradeableType.Good, 8));
+    fullSet.add(new FullType(TradeableType.Good, 9));
+    fullSet.add(new FullType(TradeableType.Good, 10));
+    //fullSet.add(new FullType(TradeableType.Good, 11));
+    //fullSet.add(new FullType(TradeableType.Good, 12));
+    //fullSet.add(new FullType(TradeableType.Good, 13));
+
 
 		//fullSet.add(new FullType(TradeableType.Good, 3));
 		System.out.println(sdvRoot.getAllValuations());
@@ -46,7 +58,7 @@ public class PointValTest {
 	public static void main(String[] args){
 		PointValTest pv = new PointValTest();
 		pv.testVal();
-		pv.testVal2();
+		//pv.testVal2();
 		//pv.testPartialVal();
 		
 	}

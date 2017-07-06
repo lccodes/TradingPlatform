@@ -18,6 +18,9 @@ import brown.assets.value.FullType;
 /**
  * valuation implementation where valuations follow a normal distribution
  * with mean bundle value determined by the value function.
+ * TODO: positive semidefinite requirement for varCoVar
+ * cut out the old value generator
+ * connect the VCG from the old value generator.
  * @author acoggins
  *
  */
@@ -28,6 +31,7 @@ public class NormalValuation implements IValuation {
 	private Double expectedCovariance;
 	private Boolean isMonotonic; 
 	private Double valueScale;
+	private Double varCoVar[][];
 
 	
 	/**
@@ -76,8 +80,10 @@ public class NormalValuation implements IValuation {
 		this.valueScale = valueScale;	
 	}
 	
+
 	@Override
 	public ValuationBundle getAllValuations() {
+	  populateVarCoVarMatrix();
 		//random generator for all distributions in this method
 		RandomGenerator rng = new ISAACRandom();
 		Map<Map<Integer, FullType>, Double> existingSetsID =
@@ -85,85 +91,6 @@ public class NormalValuation implements IValuation {
 		//map to cater to necessary iteration structure for monotonicity
 		Map<Map<Integer, FullType>, Double> previousSize =
 				new HashMap<Map<Integer, FullType>, Double>();
-		//populate variance covariance matrix
-		//Boolean isPositiveDefinite = false; 
-		Double varCoVar[][] = new Double[goods.size()][goods.size()];
-		//while(!isPositiveDefinite) {
-		NormalDistribution varianceDist = new NormalDistribution(rng,
-				  expectedCovariance, 1.0);
-		for(int i = 0; i < goods.size(); i++) {
-			for(int j = i; j < goods.size(); j++) {
-				if (i == j) {
-					varCoVar[i][j] = baseVariance; 
-				}
-				else {
-					Double entry = Double.POSITIVE_INFINITY;
-					while (Math.abs(entry) >= baseVariance) {
-					 entry = varianceDist.sample();
-					}
-					varCoVar[i][j] = entry;
-					varCoVar[j][i] = entry;
-				}
-				}
-			}
-		//check the positive definance of the matrix.
-//		for(int i = 0; i < GOODS.size() - 1; i++) {
-//			int offset = 1;
-//			while (varCoVar[i][i] == 0 && (offset + i) < GOODS.size()) {
-//				for(int j = 0; j < GOODS.size(); j++) {
-//					Double tmp = varCoVar[i + offset][j];
-//					varCoVar[i + offset][j] = varCoVar[i][j];
-//					varCoVar[i][j] = tmp;
-//				}
-//				offset++;
-//				if(isPositiveDefinite) {
-//					isPositiveDefinite = false; 
-//				}
-//				else {
-//					isPositiveDefinite = true;
-//				}
-//			}
-//			if (varCoVar[i][i] < 0) {
-//				for(int j = 0; j < GOODS.size(); j++) {
-//					varCoVar[i][j] = varCoVar[i][j] * -1;
-//				}
-//				if(isPositiveDefinite) {
-//					isPositiveDefinite = false; 
-//				}
-//				else {
-//					isPositiveDefinite = true;
-//				}
-//			}
-//			//now, we eliminate the rows below. 
-//			for(int k = i + 1; k < GOODS.size(); k++) {
-//				Double coefficient = varCoVar[k][i] / varCoVar[i][i];
-//				for(int j = 0; j < GOODS.size(); j++) {
-//					varCoVar[k][j] -= (varCoVar[i][j] * coefficient);
-//				}
-//			}
-//			
-//		}
-//		Double product = 1.0;
-//		for(int i = 0; i < GOODS.size(); i++) {
-//			product = product * varCoVar[i][i];
-//		}
-//		if(product >= 0 && isPositiveDefinite) {
-//
-//		}
-//		else if (product < 0 && !isPositiveDefinite) {
-//			isPositiveDefinite = true;
-//		}
-//		else {
-//			isPositiveDefinite = false; 
-//		}
-//		System.out.println("A");
-//		}
-		
-		
-		
-		//now, reduce to row echelon form and check if it is positive definite.
-		//
-		//give each good an ID
  		Map<Integer, FullType> numberGoods = new HashMap<Integer, FullType>();
  		int count = 0; 
  		for (FullType good : goods) {
@@ -199,8 +126,6 @@ public class NormalValuation implements IValuation {
 							}
 							else {
 								//apply monotonic constraints. 
-								Map<Map<Integer, FullType>, Double> directSubsets = 
-									new HashMap<Map<Integer, FullType>, Double>();
 								Double highestValSubSet = 0.0;
 								for(Integer anId : eCopy.keySet()) {
 									Map<Integer, FullType> eCopyCopy = 
@@ -212,8 +137,8 @@ public class NormalValuation implements IValuation {
 										}
 									}
 								}
-								Double sampledValue = 0.0;
-								while (sampledValue <= highestValSubSet) {
+								Double sampledValue = -0.1;
+								while (sampledValue < highestValSubSet) {
 									sampledValue = bundleDist.sample();
 								}
 								temp.put(eCopy, sampledValue);
@@ -237,45 +162,169 @@ public class NormalValuation implements IValuation {
 		}
 	
 	@Override
-	public Map<Set<FullType>, Double> getSomeValuations(Integer numberOfValuations, 
+	public ValuationBundle getSomeValuations(Integer numberOfValuations, 
 			Integer bundleSizeMean, Double bundleSizeStdDev) {
-		//check that input parameters are positive
-		if (bundleSizeMean > 0 && bundleSizeStdDev > 0) {
-		//create distribution for bundle size drawing.
-			NormalDistribution sizeDist = new NormalDistribution(new ISAACRandom(), bundleSizeMean, 
-				bundleSizeStdDev);
-			Map<Set<FullType>, Double> existingSets = new HashMap<Set<FullType>, Double>();
-			for(int i = 0; i < numberOfValuations; i++) {
-				//resample if the generated set has values that already exist
-				Boolean reSample = true;
-				while(reSample) {
-					int size = -1; 
-					while (size < 1 || size > goods.size()) {
-						size = (int) sizeDist.sample();}
-						Set<FullType> theGoods = new HashSet<>();
-						List<FullType> goodList = new ArrayList<FullType>(goods); 
-						for(int j = 0; j < size; j++) {
-							Integer rand = (int) (Math.random() * goodList.size());
-							FullType aGood = goodList.get(rand);
-							theGoods.add(aGood);
-							goodList.remove(aGood);
-						}
-						if(!existingSets.keySet().contains(theGoods)) {
-							existingSets.put(theGoods, valFunction.apply(theGoods.size()) * valueScale);
-							reSample = false;
-						}
-				}
-			}
-
-			return existingSets; 
+	  if (bundleSizeMean > 0 && bundleSizeStdDev > 0) {
+	    populateVarCoVarMatrix();
+	    RandomGenerator rng = new ISAACRandom();
+	    NormalDistribution sizeDist = new NormalDistribution(rng, bundleSizeMean, 
+	        bundleSizeStdDev);
+	  ValuationBundle valuations = new ValuationBundle();
+	  for(int i = 0; i < numberOfValuations; i++) {
+	      Boolean reSample = true;
+        while(reSample) {
+          int size = -1; 
+          //repeatedly sample bundle size until a valid size is picked.
+          while (size < 1 || size > goods.size()) {
+            size = (int) sizeDist.sample();}
+          Map<Integer, FullType> theGoods = new HashMap<>();
+          Set<FullType> goodsSet = new HashSet<>();
+          //list of goods to uniformly sample from
+            List<FullType> goodList = new ArrayList<FullType>(goods); 
+            //sample without replacement goods to add to the bundle size times.
+            for(int j = 0; j < size; j++) {
+              Integer rand = (int) (Math.random() * goodList.size());
+              FullType aGood = goodList.get(rand);
+              theGoods.put(rand, aGood);
+              goodsSet.add(aGood);
+              goodList.remove(aGood);
+            }
+            if(!valuations.contains(goodsSet)) {
+              reSample = false;
+              Double variance = 0.0;
+              for(Integer id : theGoods.keySet()) {
+                for(Integer idTwo : theGoods.keySet()) {
+                  variance += varCoVar[id][idTwo];
+                }
+              }
+              NormalDistribution bundleDist = new NormalDistribution(rng,
+                  valFunction.apply(theGoods.size()), 
+                  variance);
+              if(!isMonotonic) {
+                valuations.add(new Valuation(goodsSet, bundleDist.sample()));
+              }
+              else {
+                Double minimumPrice = 0.0;
+                for(Valuation v : valuations) {
+                if(isSubset(v.getGoods(), goodsSet) &&
+                    v.getPrice() > minimumPrice) {
+                    minimumPrice = v.getPrice();
+                  }
+                }
+                Double bundlePrice = -0.1;
+                while(bundlePrice < minimumPrice) {
+                  bundlePrice = bundleDist.sample();
+                }
+                valuations.add(new Valuation(goodsSet, bundlePrice));
+              }
+            }  
+          }
+	      }
+	  return valuations; 
 	}
-		//if initial parameters not positive, throw an exception.
-		else {
-			System.out.println("ERROR: bundle size parameters not positive");
-			throw new NotStrictlyPositiveException(bundleSizeMean);
-		}
+	else {
+	  System.out.println("ERROR: bundle size parameters not positive");
+    throw new NotStrictlyPositiveException(bundleSizeMean);
+	}
 	}
 
-
+	/**
+	 * Helper function for populating the variance covariance matrix
+	 * for the above methods
+	 */
+	private void populateVarCoVarMatrix() {
+    NormalDistribution varianceDist = new NormalDistribution(new ISAACRandom(),
+    expectedCovariance, 0.1);
+   varCoVar = new Double[goods.size()][goods.size()];
+    for(int i = 0; i < goods.size(); i++) {
+      for(int j = i; j < goods.size(); j++) {
+        if (i == j) {
+          varCoVar[i][j] = baseVariance; 
+        }
+        else {
+          Double entry = Double.POSITIVE_INFINITY;
+          while (Math.abs(entry) >= baseVariance) {
+            entry = varianceDist.sample();
+          }
+          varCoVar[i][j] = entry;
+          varCoVar[j][i] = entry;
+        }
+      }
+    }
+    }
+	
+  //Boolean isPositiveDefinite = false; 
+  //check the positive definance of the matrix.
+//  for(int i = 0; i < GOODS.size() - 1; i++) {
+//    int offset = 1;
+//    while (varCoVar[i][i] == 0 && (offset + i) < GOODS.size()) {
+//      for(int j = 0; j < GOODS.size(); j++) {
+//        Double tmp = varCoVar[i + offset][j];
+//        varCoVar[i + offset][j] = varCoVar[i][j];
+//        varCoVar[i][j] = tmp;
+//      }
+//      offset++;
+//      if(isPositiveDefinite) {
+//        isPositiveDefinite = false; 
+//      }
+//      else {
+//        isPositiveDefinite = true;
+//      }
+//    }
+//    if (varCoVar[i][i] < 0) {
+//      for(int j = 0; j < GOODS.size(); j++) {
+//        varCoVar[i][j] = varCoVar[i][j] * -1;
+//      }
+//      if(isPositiveDefinite) {
+//        isPositiveDefinite = false; 
+//      }
+//      else {
+//        isPositiveDefinite = true;
+//      }
+//    }
+//    //now, we eliminate the rows below. 
+//    for(int k = i + 1; k < GOODS.size(); k++) {
+//      Double coefficient = varCoVar[k][i] / varCoVar[i][i];
+//      for(int j = 0; j < GOODS.size(); j++) {
+//        varCoVar[k][j] -= (varCoVar[i][j] * coefficient);
+//      }
+//    }
+//    
+//  }
+//  Double product = 1.0;
+//  for(int i = 0; i < GOODS.size(); i++) {
+//    product = product * varCoVar[i][i];
+//  }
+//  if(product >= 0 && isPositiveDefinite) {
+//  }
+//  else if (product < 0 && !isPositiveDefinite) {
+//    isPositiveDefinite = true;
+//  }
+//  else {
+//    isPositiveDefinite = false; 
+//  }
+//  System.out.println("A");
+//  }
+  
+  
+  //give each good an ID
+	
+	/**
+	 * Helper function, determines is the first set is a subset of the second.
+	 * @param firstSet
+	 * the first set for which we determine if it is a subset of the second
+	 * @param secondSet
+	 * the set that the first is being compared against. 
+	 * @return
+	 * whether or not the first set is a subset of the second.
+	 */
+	private Boolean isSubset(Set<FullType> firstSet, Set<FullType> secondSet) {
+	  for(FullType f : firstSet) {
+	    if(!secondSet.contains(f)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
 }
 
