@@ -5,6 +5,7 @@ import java.util.Set;
 
 import brown.assets.value.FullType;
 import brown.messages.Registration;
+import brown.valuation.ValuationBundle;
 
 /**
  * Registration with valuation from server for lab 3.
@@ -15,14 +16,14 @@ public class ValuationRegistration extends Registration {
 	/**
 	 * Agent's valuation.
 	 */
-	private final Map<Set<FullType>, Double> valueMap;
+	private final ValuationBundle valueBundle;
 
 	/**
 	 * Empty Constructor for Kryo.
 	 */
 	public ValuationRegistration() {
 		super(null);
-		this.valueMap = null;
+		this.valueBundle = null;
 	}
 
 	/**
@@ -31,21 +32,22 @@ public class ValuationRegistration extends Registration {
 	 * @param id
 	 * @param value
 	 */
-	public ValuationRegistration(Integer id, Map<Set<FullType>, Double> values) {
+	public ValuationRegistration(Integer id, ValuationBundle values) {
 		super(id);
-		this.valueMap = values;
+		this.valueBundle = values;
 	}
 
+	
 	/**
 	 * Getter.
 	 * 
 	 * @return the agents valuation.
 	 */
 	public double getValue(Set<FullType> type) {
-		return this.valueMap.getOrDefault(type, 0.0);
+		return this.valueBundle.getOrDefault(type, 0.0);
 	}
 
-	public Map<Set<FullType>, Double> getValues() {
-		return this.valueMap;
+	public ValuationBundle getValues() {
+		return this.valueBundle;
 	}
 }

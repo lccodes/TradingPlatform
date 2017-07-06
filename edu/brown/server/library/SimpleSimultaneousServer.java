@@ -32,6 +32,7 @@ import brown.tradeables.Lab8Good;
 import brown.tradeables.SimGood;
 import brown.tradeables.Tradeable;
 import brown.valuation.SpecValGenerator;
+import brown.valuation.ValuationBundle;
 import ch.uzh.ifi.ce.mweiss.specval.model.UnsupportedBiddingLanguageException;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -71,7 +72,7 @@ public class SimpleSimultaneousServer extends AgentServer {
 			return;
 		}
 
-		Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
+		ValuationBundle value = new ValuationBundle();
 		this.numberOfBidders++;
 		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(theID, value));
 

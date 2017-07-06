@@ -25,6 +25,7 @@ public class Valuation {
 	 */
 	public Valuation(Set<FullType> goods, Double price) {
 		this.entry = new SimpleEntry<Set<FullType>, Double>(goods, price);
+		this.singleEntry = null; 
 	}
 	
 	/**
@@ -36,6 +37,7 @@ public class Valuation {
 	 */
 	public Valuation(FullType good, Double price) {
 	  this.singleEntry = new SimpleEntry<FullType, Double>(good, price);
+	  this.entry = null;
 	}
 	
 	/**
@@ -44,15 +46,32 @@ public class Valuation {
 	 * a set of FullType.
 	 */
 	public Set<FullType> getGoods() {
-		return entry.getKey(); 
+	  if(this.isComplex()) {
+		return entry.getKey();
+	  }
+	  return null; 
 	}
 	
+	/**
+	 * gets the good associated with this valuation. 
+	 * @return
+	 * a FullType
+	 */
+	public FullType getGood() {
+	  if(!this.isComplex()) {
+	  return singleEntry.getKey();
+	  }
+	  return null; 
+	}
 	/**
 	 * get the price for a valuation.
 	 * @return
 	 * Double representing a price.
 	 */
 	public Double getPrice() {
+	  if(!this.isComplex()) {
+	    return singleEntry.getValue();
+	  }
 		return entry.getValue(); 
 	}
 	
@@ -61,7 +80,12 @@ public class Valuation {
 	 * @param newPrice
 	 */
 	public void setPrice(Double newPrice) {
-		entry.setValue(newPrice);
+	  if(!this.isComplex()) {
+	    singleEntry.setValue(newPrice);
+	  }
+	  else {
+	    entry.setValue(newPrice);
+	  }
 	}
 	
 	/**
@@ -73,9 +97,16 @@ public class Valuation {
 	public Boolean contains(FullType good) {
 	  return this.getGoods().contains(good);
 	}
+	
+	public Boolean isComplex() {
+	  return (entry != null);
+	}
 
 	@Override
   public String toString() {
+	  if(!this.isComplex()) {
+	    return "Valuation [entry=" + singleEntry + "]";
+	  }
     return "Valuation [entry=" + entry + "]";
   }
 	

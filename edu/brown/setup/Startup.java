@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import brown.agent.Agent;
+import brown.registrations.ValuationRegistration;
 import brown.rules.allocationrules.OpenOutcryRule;
 import brown.rules.allocationrules.SealedBidRule;
 import brown.assets.accounting.Account;
