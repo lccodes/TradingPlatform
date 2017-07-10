@@ -37,7 +37,7 @@ public class Lab8Good extends Tradeable {
 	public Lab8Good(Integer goodID) {
 		this.agentId = null;
 		this.goodID = goodID;
-		this.TYPE = new FullType(TradeableType.Custom, this.goodID);
+		this.TYPE = new FullType(TradeableType.Good, this.goodID);
 	}
 	
 

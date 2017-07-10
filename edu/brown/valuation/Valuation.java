@@ -62,6 +62,15 @@ public class Valuation {
 	  return this.getGoods().contains(good);
 	}
 	
+	/**
+	 * returns the number of goods being valued.
+	 * @return
+	 * the number of goods being valued in this valuation.
+	 */
+	public Integer size() {
+	  return entry.getKey().size();
+	}
+	
 
 	@Override
   public String toString() {

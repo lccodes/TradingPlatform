@@ -54,6 +54,8 @@ import brown.rules.clearingrules.LMSRNoClearing;
 import brown.rules.clearingrules.LMSRYesClearing;
 import brown.rules.clearingrules.LowestPriceClearing;
 import brown.tradeables.Tradeable;
+import brown.valuation.Valuation;
+import brown.valuation.ValuationBundle;
 
 import com.esotericsoftware.kryo.Kryo;
 
@@ -117,6 +119,8 @@ public final class Startup {
 		kryo.register(SecondPriceRule.class);
 		kryo.register(LiquiditySensitive.class);
 		kryo.register(LukeMM.class);
+		kryo.register(ValuationBundle.class);
+		kryo.register(Valuation.class);
 		
 		kryo.register(SimpleAuction.class);
 		

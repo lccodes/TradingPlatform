@@ -42,15 +42,17 @@ public class SimpleSecondPrice implements PaymentRule {
 			return orders;
 		}
 		SimpleBidBundle alloc = (SimpleBidBundle) state.getAllocation();
-		System.out.println("Alloc: " + alloc); 
 		MarketState def = new MarketState(null,0);
 		for (Tradeable trade : state.getTradeables()) {
+		  //this is empty
 			MarketState bp = alloc.getBid(trade.getType());
 			if (bp == null || bp.AGENTID == null) {
 				continue;
 			}
 			MarketState current = this.RESERVE.getOrDefault(trade.getType(), def);
+			System.out.println("BIDS " + state.getBids());
 			for (Bid bid : state.getBids()) {
+			  System.out.println("QQQ");
 				if (bid.Bundle.getType().equals(BundleType.Simple)) {
 					SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
 					MarketState otherbid = bundle.getBid(trade.getType());
@@ -67,7 +69,6 @@ public class SimpleSecondPrice implements PaymentRule {
 			//System.out.println(current);
 			orders.add(new Order(bp.AGENTID,null,current.PRICE,trade.getCount(),trade));
 		}
-		//System.out.println(orders);
 		return orders;
 	}
 

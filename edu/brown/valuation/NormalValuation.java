@@ -152,11 +152,9 @@ public class NormalValuation implements IValuation {
 		}
 		//move the existing sets from an ID based to the structure in the type signature. 
 		ValuationBundle existingSets = new ValuationBundle();
-		System.out.println("*bundles printed for clarity*");
 		for(Map<Integer, FullType> idGood : existingSetsID.keySet()) {
 			Set<FullType> goodsToReturn = new HashSet<FullType>(idGood.values());
 			existingSets.add(goodsToReturn, existingSetsID.get(idGood));
-			System.out.println(goodsToReturn + " " + existingSetsID.get(idGood));
 		}
 		return existingSets;
 		}

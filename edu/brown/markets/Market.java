@@ -106,7 +106,9 @@ public class Market {
 
 		BidBundle newState = this.ARULE.getAllocation(this.STATE);
 		this.STATE.setAllocation(newState);
-		this.STATE.setPayments(this.PRULE.getPayments(this.STATE));
+		//this is null, or empty
+		List<Order> newPayments = this.PRULE.getPayments(this.STATE);
+		this.STATE.setPayments(newPayments);
 		return this.STATE.getPayments();
 	}
 	

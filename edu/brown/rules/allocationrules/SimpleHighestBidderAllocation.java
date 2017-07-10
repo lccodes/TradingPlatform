@@ -19,6 +19,7 @@ import brown.tradeables.Tradeable;
 
 
 public class SimpleHighestBidderAllocation implements AllocationRule {
+  //this needs to not be null
 	private final Map<FullType, MarketState> RESERVE;
 	public SimpleHighestBidderAllocation(Map<FullType, MarketState> reserve) {
 		this.RESERVE = reserve;
@@ -34,10 +35,18 @@ public class SimpleHighestBidderAllocation implements AllocationRule {
 		MarketState def = new MarketState(null,0);
 		for (Tradeable trade : state.getTradeables()) {
 			MarketState maxBidder = this.RESERVE.getOrDefault(trade.getType(), def);
+			//where are these bids coming from? 
 			for (Bid bid : state.getBids()) {
 				if (bid.Bundle.getType().equals(BundleType.Simple)) {
 					SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
-					MarketState bp = bundle.getBid(trade.getType());
+					System.out.println("B " + bundle);
+					System.out.println(bundle.BIDS);
+					//the problem is THIS is null below
+					//so the bundle's bid has no type attached to it. 
+					//MarketState bp = bundle.getBid(trade.getType());
+					System.out.println(trade.getType());
+					MarketState bp = bundle.BIDS.get(trade.getType());
+					System.out.println(bp);
 					if (bp != null && bp.PRICE > maxBidder.PRICE) {
 						maxBidder = new MarketState(bid.AgentID, bp.PRICE);
 					}
@@ -47,7 +56,6 @@ public class SimpleHighestBidderAllocation implements AllocationRule {
 			}
 			highest.put(trade.getType(), maxBidder);
 		}
-		
 		return new SimpleBidBundle(highest);
 	}
 	@Override

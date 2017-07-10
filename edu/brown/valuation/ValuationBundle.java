@@ -26,6 +26,15 @@ public class ValuationBundle implements Iterable<Valuation> {
 		this.valMap = new HashMap<Set<FullType>, Double>();
 	}
 	
+	public ValuationBundle(ValuationBundle b) {
+	  this.valMap = new HashMap<Set<FullType>, Double>();
+	  this.addAll(b);
+	}
+	
+	public ValuationBundle(Map<Set<FullType>, Double> aMap) {
+	  this.valMap = new HashMap<Set<FullType>, Double>(aMap);
+	  }
+	
 	/**
 	 * adds a valuation to the bundle. 
 	 * @param val
@@ -73,7 +82,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	/**
 	 * gets a valuation, given a set of goods. Can be used to find a set of goods'
 	 * price. 
-	 * @param goods
+	 * @param  private Map<FullType, Double> singleValMap; goods
 	 * a set of fulltype.
 	 * @return
 	 * the valuation associated with that type.

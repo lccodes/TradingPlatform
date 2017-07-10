@@ -33,6 +33,7 @@ import brown.setup.library.LabGameSetup;
 import brown.tradeables.Lab8Good;
 import brown.tradeables.Tradeable;
 import brown.valuation.SpecValGenerator;
+import brown.valuation.ValuationBundle;
 import ch.uzh.ifi.ce.mweiss.specval.model.UnsupportedBiddingLanguageException;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -69,7 +70,7 @@ public class Lab8Server extends AgentServer {
 			return;
 		}
 
-		Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
+		ValuationBundle value = new ValuationBundle();
 		// for (Integer i : this.INTS) {
 		// if (Math.random() < .1) {
 		// continue;
@@ -81,7 +82,6 @@ public class Lab8Server extends AgentServer {
 		// }
 		this.numberOfBidders++;
 		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(theID, value));
-
 		Account oldAccount = acctManager.getAccount(connections.get(connection));
 		Account newAccount = oldAccount.addAll(10000, null);
 		acctManager.setAccount(connections.get(connection), newAccount);
@@ -104,7 +104,7 @@ public class Lab8Server extends AgentServer {
 
 		// Gives everyone X seconds to join the auction
 		int i = 0;
-		while (i < 20) { //CHANGE FOR MORE OR LESS JOIN TIME
+		while (i < 10) { //CHANGE FOR MORE OR LESS JOIN TIME
 			try {
 				Thread.sleep(1000);
 				Logging.log("[-] setup phase " + i++);
@@ -134,7 +134,8 @@ public class Lab8Server extends AgentServer {
 						adjusted.add(forTakehiro.get(s));
 					}
 					value.put(adjusted, toAdd.getValue());
-					this.theServer.sendToTCP(conn.getKey().getID(), new ValuationRegistration(conn.getValue(), value));
+					System.out.println(conn.getKey().getID());
+					this.theServer.sendToTCP(conn.getKey().getID(), new ValuationRegistration(conn.getValue(), new ValuationBundle()));
 					if (valuations.containsKey(conn.getValue())) {
 						value.putAll(valuations.get(conn.getValue()));
 					}
@@ -189,7 +190,7 @@ public class Lab8Server extends AgentServer {
 				totalRevenue0 += o.COST;
 			}
 			for (Order o : secondOrders) {
-				totalRevenue1 += o.COST;
+				totalRevenue1 += o.COST; 
 			}
 			if (totalRevenue0 > totalRevenue1) {
 				System.out.println("Using SMRA");
