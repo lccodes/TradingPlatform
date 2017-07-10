@@ -18,13 +18,12 @@ import brown.assets.value.FullType;
 public class ValuationBundle implements Iterable<Valuation> {
 	
 	private Map<Set<FullType>, Double> valMap; 
-	private Map<FullType, Double> singleValMap;
+	
 	/**
 	 * constructs an empty valuation bundle.
 	 */
 	public ValuationBundle() {
 		this.valMap = new HashMap<Set<FullType>, Double>();
-		this.singleValMap = new HashMap<FullType, Double>();
 	}
 	
 	/**
@@ -33,11 +32,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * a valuation.
 	 */
 	public void add(Valuation val) {
-	  if(val.isComplex()) {
 		valMap.put(val.getGoods(), val.getPrice());
-	  } else {
-	    singleValMap.put(val.getGood(), val.getPrice());
-	  }
 	}
 	
 	/**
@@ -51,16 +46,12 @@ public class ValuationBundle implements Iterable<Valuation> {
 		valMap.put(goods, price);
 	}
 	
-	public void add(FullType good, Double price) {
-	  singleValMap.put(good, price);
-	}
 	
 	/**
 	 * empties the bundle.
 	 */
 	public void clear() {
 		valMap = new HashMap<Set<FullType>, Double>();
-		singleValMap = new HashMap<FullType, Double>();
 	}
 	
 	/**
@@ -74,23 +65,9 @@ public class ValuationBundle implements Iterable<Valuation> {
 	  return valMap.containsKey(goods);
 	}
 	
-	/**
-   * checks for the existence of a  of fulltype.
-   * @param goods
-   * a  fulltype.
-   * @return
-   * true if the good is contained, false otherwise.
-   */
-  public Boolean contains(FullType good) {
-    return singleValMap.containsKey(good);
-  }
 	
-	//TODO figure out what this should do.
 	public Boolean contains(Valuation aValuation) {
-	  if(aValuation.isComplex()) {
 		return valMap.containsKey(aValuation.getGoods());
-	  }
-	  return singleValMap.containsKey(aValuation.getGoods());
 	}
 	
 	/**
@@ -105,10 +82,6 @@ public class ValuationBundle implements Iterable<Valuation> {
 		return new Valuation(goods, valMap.get(goods));
 	}
 	
-	public Valuation getValuation(FullType good) {
-    return new Valuation(good, singleValMap.get(good));
-  }
-	
 	public Double getOrDefault(Set<FullType> goods, Double defVal) {
 	  if(valMap.containsKey(goods)) {
 	    return valMap.get(goods);
@@ -117,15 +90,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	    return defVal;
 	  }
 	}
-	
-	public Double getOrDefault(FullType good, Double defVal) {
-    if(singleValMap.containsKey(good)) {
-      return singleValMap.get(good);
-    }
-    else {
-      return defVal;
-    }
-  }
+
 	
 	/**
 	 * 
@@ -133,7 +98,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * is the bundle empty or not.
 	 */
 	public Boolean isEmpty() {
-		return (valMap.isEmpty() && singleValMap.isEmpty());
+		return (valMap.isEmpty());
 	}
 	
 	/**
@@ -145,9 +110,6 @@ public class ValuationBundle implements Iterable<Valuation> {
 	  valMap.putAll(vals);
 	}
 	
-	public void addAllSingle(Map<FullType, Double> vals){ 
-	  singleValMap.putAll(vals);
-	}
 	
 	/**
 	 * combines valuation bundle with input bundle. 
@@ -166,11 +128,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * a valuation
 	 */
 	public void remove(Valuation val) {
-	  if (val.isComplex()) {
 	  valMap.remove(val.getGoods());
-	  } else {
-	    singleValMap.remove(val.getGood());
-	  }
 	}
 	
 	/**
