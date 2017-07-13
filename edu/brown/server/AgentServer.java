@@ -130,12 +130,14 @@ public abstract class AgentServer {
 	protected void onLimitOrder(Connection connection, Integer privateID,
 			MarketOrder limitorder) {
 		if (limitorder.marketID == null) {
+      System.out.println("ACK 2");
 			Ack rej = new Ack(privateID, limitorder, true);
 			this.theServer.sendToTCP(connection.getID(), rej);
 			return;
 		}
 		TwoSidedAuction market = this.manager.getTwoSided(limitorder.marketID);
 		if (market == null) {
+		  System.out.println("ACK 1");
 			Ack rej = new Ack(privateID, limitorder, true);
 			this.theServer.sendToTCP(connection.getID(), rej);
 			return;
@@ -152,6 +154,7 @@ public abstract class AgentServer {
 					if (!market.permitShort()
 							&& account.monies < market.quoteBid(
 									limitorder.buyShares, limitorder.price)) {
+				     System.out.println("ACK 3");
 						Ack rej = new Ack(privateID, limitorder, true);
 						this.theServer.sendToTCP(connection.getID(), rej);
 						return;
@@ -404,11 +407,14 @@ public abstract class AgentServer {
 				Account account = this.acctManager.getAccount(privateID);
 				if ((!this.SHORT && account.monies < bid.Bundle.getCost())
 						|| !auction.handleBid(bid.safeCopy(privateID))) {
+		      System.out.println("ACK 4");
+		      System.out.println("G "+bid.safeCopy(privateID));
 					Ack rej = new Ack(privateID, bid, true);
 					this.theServer.sendToTCP(connection.getID(), rej);
 				}
 			}
 		} else {
+      System.out.println("ACK 5");
 			Ack rej = new Ack(privateID, bid, true);
 			this.theServer.sendToTCP(connection.getID(), rej);
 		}

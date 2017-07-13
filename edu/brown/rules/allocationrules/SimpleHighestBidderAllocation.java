@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.value.FullType;
+import brown.assets.value.TradeableType;
 import brown.auctions.arules.MechanismType;
 import brown.bundles.BidBundle;
 import brown.bundles.BundleType;
@@ -28,7 +29,7 @@ public class SimpleHighestBidderAllocation implements AllocationRule {
 		this.RESERVE = new HashMap<FullType, MarketState>();
 	}
 	
-	@Override
+	@Override 
 	public BidBundle getAllocation(MarketInternalState state) {
 		System.out.println("BIDS? " + state.getBids());
 		Map<FullType, MarketState> highest = new HashMap<FullType, MarketState>();
@@ -39,14 +40,10 @@ public class SimpleHighestBidderAllocation implements AllocationRule {
 			for (Bid bid : state.getBids()) {
 				if (bid.Bundle.getType().equals(BundleType.Simple)) {
 					SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
-					System.out.println("B " + bundle);
-					System.out.println(bundle.BIDS);
 					//the problem is THIS is null below
 					//so the bundle's bid has no type attached to it. 
-					//MarketState bp = bundle.getBid(trade.getType());
-					System.out.println(trade.getType());
-					MarketState bp = bundle.BIDS.get(trade.getType());
-					System.out.println(bp);
+					MarketState bp = bundle.getBid(trade.getType());
+					//System.out.println(trade.getType());
 					if (bp != null && bp.PRICE > maxBidder.PRICE) {
 						maxBidder = new MarketState(bid.AgentID, bp.PRICE);
 					}

@@ -9,7 +9,7 @@ import brown.assets.value.FullType;
 
 
 public class SimpleBidBundle implements BidBundle {
-	public final Map<FullType,MarketState> BIDS;
+	private final Map<FullType,MarketState> BIDS;
 	private final BundleType BT;
 	
 	/**
@@ -64,9 +64,7 @@ public class SimpleBidBundle implements BidBundle {
 	
 	public MarketState getBid(FullType type) {
 		for (FullType ot : this.BIDS.keySet()) {
-		  //this is null. look in the allocation rule.
 			if(ot.equals(type)) {
-			  System.out.println("QQQ");
 				return BIDS.get(type);
 			}
 		}

@@ -22,11 +22,17 @@ public class SimpleSingleGoodDemo extends SimpleSingleGoodAgent {
     Map<FullType, Double> toBid = new HashMap<FullType, Double>();
     for (Valuation types : this.myValuation) {
       for (FullType type : types.getGoods()) {
+        if(types.getPrice()  > 0) {
           toBid.put(type, types.getPrice());
+        }
+        else {
+          toBid.put(type, 0.1);
+        }
       }
     }
     
     if (toBid.size() != 0) {
+      System.out.println(toBid);
       market.bid(this, toBid);
     }
   }
@@ -36,7 +42,12 @@ public class SimpleSingleGoodDemo extends SimpleSingleGoodAgent {
   		Map<FullType, Double> toBid = new HashMap<FullType, Double>();
   		for (Valuation types : this.myValuation) {
   			for (FullType type : types.getGoods()) {
-  					toBid.put(type, types.getPrice());
+  			  if(types.getPrice()  > 0) {
+            toBid.put(type, types.getPrice());
+          }
+          else {
+            toBid.put(type, 0.1);
+          }
   			}
   		}
   		

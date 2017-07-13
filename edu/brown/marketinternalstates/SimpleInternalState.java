@@ -54,7 +54,6 @@ public class SimpleInternalState implements MarketInternalState {
 	@Override
 	public void addBid(Bid bid) {
 	  System.out.println("A BID ADDED " + (SimpleBidBundle) bid.Bundle);
-	  System.out.println(this.TRADEABLES);
 		this.ticks = 0;
 		this.BIDS.add(bid);
 	}

@@ -86,6 +86,8 @@ public class Market {
 	 * @param bid
 	 */
 	public boolean handleBid(Bid bid) {
+	  //activityrule is not finding acceptable the internal state, and the bid.
+	  //what is isAcceptable
 		if (this.ACTRULE.isAcceptable(this.STATE, bid)) {
 			this.STATE.addBid(bid);
 			return true;
@@ -109,6 +111,7 @@ public class Market {
 		//this is null, or empty
 		List<Order> newPayments = this.PRULE.getPayments(this.STATE);
 		this.STATE.setPayments(newPayments);
+		System.out.println("P " + this.STATE.getPayments());
 		return this.STATE.getPayments();
 	}
 	

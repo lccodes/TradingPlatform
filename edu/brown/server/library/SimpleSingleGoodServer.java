@@ -113,13 +113,19 @@ public class SimpleSingleGoodServer extends AgentServer {
       } catch (InterruptedException e) {
         Logging.log("[+] woken: " + e.getMessage());
       }
-		}
-		List<Order> orders = this.manager.getIMarket(0).getOrders();
-		double totalRevenue = 0;
-		for (Order o : orders) {    
-      totalRevenue += o.COST;
-    }
-	  this.manager.close(this, 0, null);
+		}//   System.out.println("LL " + this.manager.getIMarket(0));
+//  List<Order> orders = this.manager.getIMarket(0).getOrders();
+//  double totalRevenue = 0;
+//  for (Order o : orders) {    
+//    totalRevenue += o.COST;
+//  }
+//		System.out.println("LL " + this.manager.getIMarket(0));
+//		List<Order> orders = this.manager.getIMarket(0).getOrders();
+//		double totalRevenue = 0;
+//		for (Order o : orders) {    
+//      totalRevenue += o.COST;
+//    }
+	  //this.manager.close(this, 0, null);
 	  this.updateAllAuctions(true);
 	  
 	  System.out.println("\n\n\n\n\nOUTCOME:");

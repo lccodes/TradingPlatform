@@ -64,14 +64,41 @@ public class Bid extends Message {
 	}
 	
 	@Override
-	public boolean equals(Object other) {
-		if (!(other instanceof Bid)) {
-			return false;
-		}
-		
-		Bid o = (Bid) other;
-		return this.ID == o.ID;
-	}
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((AgentID == null) ? 0 : AgentID.hashCode());
+    result = prime * result + ((AuctionID == null) ? 0 : AuctionID.hashCode());
+    result = prime * result + ((Bundle == null) ? 0 : Bundle.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Bid other = (Bid) obj;
+    if (AgentID == null) {
+      if (other.AgentID != null)
+        return false;
+    } else if (!AgentID.equals(other.AgentID))
+      return false;
+    if (AuctionID == null) {
+      if (other.AuctionID != null)
+        return false;
+    } else if (!AuctionID.equals(other.AuctionID))
+      return false;
+    if (Bundle == null) {
+      if (other.Bundle != null)
+        return false;
+    } else if (!Bundle.equals(other.Bundle))
+      return false;
+    return true;
+  }
 
 	@Override
 	public void dispatch(Agent agent) {
