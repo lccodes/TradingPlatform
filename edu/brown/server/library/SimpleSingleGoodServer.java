@@ -17,6 +17,7 @@ import brown.assets.value.FullType;
 import brown.assets.value.TradeableType;
 import brown.marketinternalstates.SimpleInternalState;
 import brown.markets.Market;
+import brown.markets.library.SimpleSecondPriceMarket;
 import brown.messages.Registration;
 import brown.registrations.SingleValRegistration;
 import brown.registrations.ValuationRegistration;
@@ -37,17 +38,23 @@ import brown.valuation.SizeDependentValuation;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 
+/**
+ * A sever for a single good game. 
+ * Implemented with a single good, one-shot second price auction.S
+ * @author acoggins
+ *
+ */
 public class SimpleSingleGoodServer extends AgentServer {
 	
   private int numberOfBidders;
   private Map<Integer, ValuationBundle> agentValues = new HashMap<Integer, ValuationBundle>();
-	//what do we need... we need agents, a good, a valuation for that good for each agent, 
-	//we have agents under the agent interface. 
-	//we have goods under the good interface
-	// we need predictions under the price prediction interface
+  private Function<Integer, Double> VALFUNCTION = x -> (double)x + 10;
   
-  //typically, a bundle is what is assigned to a person. 
-	
+  /**
+   * constructor for the single good server. 
+   * @param port
+   * the port of the computer on which the game is run.
+   */
 	public SimpleSingleGoodServer(int port) {
 		super(port, new LabGameSetup());
 		this.numberOfBidders = 0;
@@ -72,6 +79,10 @@ public class SimpleSingleGoodServer extends AgentServer {
 		this.sendBankUpdates(IDS);
 	}
 	
+	/**
+	 * the method that handles running the game. This includes opening and closing markets, 
+	 * setup phase, creating valuations, and printing outcomes.
+	 */
 	public void runGame() {
 		int j = 0;
 		while (j < 10) { //CHANGE FOR MORE OR LESS JOIN TIME
@@ -82,12 +93,11 @@ public class SimpleSingleGoodServer extends AgentServer {
 				Logging.log("[+] woken: " + e.getMessage());
 			}
 		}
-		//here is where I will build a valuation framework. 
-		//done baby
+		//create good
 		Set<FullType> singleGood = new HashSet<FullType>();
 		singleGood.add(new FullType(TradeableType.Good, 0));
-		Function<Integer, Double> linear = x -> (double) x;
-		NormalValuation normalVal = new NormalValuation(singleGood, linear, false, 1.0);
+		//get valuation
+		NormalValuation normalVal = new NormalValuation(singleGood, VALFUNCTION, false, 1.0);
 
 		for(Entry<Connection, Integer> conn : this.connections.entrySet()) { 
 		  //check on this
@@ -100,9 +110,8 @@ public class SimpleSingleGoodServer extends AgentServer {
 		Set<Tradeable> goodSet = new HashSet<Tradeable>();
 		goodSet.add(new Lab8Good(0));
 		//create market presets
-		this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
-		    new OutcryQueryRule(), new AnonymousPolicy(), new OneShotTermination(), 
-		    new OneShotActivity(), new SimpleInternalState(0, goodSet)));
+		SimpleSecondPriceMarket thisMarket = new SimpleSecondPriceMarket(0, goodSet);
+		this.manager.open(thisMarket.getMarket());
 		
 		//now call it
 		Market market = this.manager.getIMarket(0);
@@ -113,19 +122,7 @@ public class SimpleSingleGoodServer extends AgentServer {
       } catch (InterruptedException e) {
         Logging.log("[+] woken: " + e.getMessage());
       }
-		}//   System.out.println("LL " + this.manager.getIMarket(0));
-//  List<Order> orders = this.manager.getIMarket(0).getOrders();
-//  double totalRevenue = 0;
-//  for (Order o : orders) {    
-//    totalRevenue += o.COST;
-//  }
-//		System.out.println("LL " + this.manager.getIMarket(0));
-//		List<Order> orders = this.manager.getIMarket(0).getOrders();
-//		double totalRevenue = 0;
-//		for (Order o : orders) {    
-//      totalRevenue += o.COST;
-//    }
-	  //this.manager.close(this, 0, null);
+		}
 	  this.updateAllAuctions(true);
 	  
 	  System.out.println("\n\n\n\n\nOUTCOME:");
@@ -154,6 +151,10 @@ public class SimpleSingleGoodServer extends AgentServer {
     }	
 	}
 	
+	/**
+	 * runnable main method of the auction.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SimpleSingleGoodServer s1 = new SimpleSingleGoodServer(2122);
 		s1.runGame();

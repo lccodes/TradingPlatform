@@ -7,18 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 
 import brown.rules.allocationrules.SimpleClockAllocation;
 import brown.rules.allocationrules.SimpleHighestBidderAllocation;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
 import brown.assets.value.FullType;
+import brown.assets.value.TradeableType;
 import brown.marketinternalstates.SimpleInternalState;
 import brown.markets.Market;
+import brown.markets.library.SimpleSecondPriceMarket;
 import brown.messages.Registration;
 import brown.rules.paymentrules.library.SimpleClockRule;
 import brown.rules.paymentrules.library.SimpleSecondPrice;
 import brown.registrations.ValuationRegistration;
+import brown.rules.activityrules.OneShotActivity;
 import brown.rules.activityrules.SimpleNoJumpActivityRule;
 import brown.rules.irpolicies.library.AnonymousPolicy;
 import brown.rules.queryrules.library.OutcryQueryRule;
@@ -31,181 +35,143 @@ import brown.setup.library.LabGameSetup;
 import brown.tradeables.Lab8Good;
 import brown.tradeables.SimGood;
 import brown.tradeables.Tradeable;
+import brown.valuation.NormalValuation;
 import brown.valuation.SpecValGenerator;
+import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 import ch.uzh.ifi.ce.mweiss.specval.model.UnsupportedBiddingLanguageException;
 
 import com.esotericsoftware.kryonet.Connection;
 
 /**
- * Implementation of lab3 server.
- * 
+ * Simultaneous good server, runs auctions with a set of goods. 
+ * In this case implemented as a one-shot, second price auction.
  * @author acoggins
+ *
  */
 public class SimpleSimultaneousServer extends AgentServer {
-	private final int GOODNUM = 8;
-	private final double VALUESCALE = 1E-6;
-
-	private final int numberOfValuationsPerBidder = 256;
-	private final int bundleSizeMean = 4;
-	private final double bundleSizeStdez = 2;
-	private final Set<Integer> INTS; 
-	private int REQUIREDNUMBIDDERS = 1;
-
-	private int numberOfBidders;
-
-	private boolean isOver = false; 
-
-	public SimpleSimultaneousServer(int port) {
-		super(port, new LabGameSetup());
-		this.INTS = new HashSet<Integer>();
-		for (int i = 0; i < GOODNUM; i++) {
-			this.INTS.add(i);
-		}
-		this.numberOfBidders = 0;
-	}
-
-	@Override
-	protected void onRegistration(Connection connection, Registration registration) {
-		Integer theID = this.defaultRegistration(connection, registration);
-		if (theID == null) {					System.out.println("this is what happened");
-			return;
-		}
-
-		ValuationBundle value = new ValuationBundle();
-		this.numberOfBidders++;
-		this.theServer.sendToTCP(connection.getID(), new ValuationRegistration(theID, value));
-
-		Account oldAccount = acctManager.getAccount(connections.get(connection));
-		Account newAccount = oldAccount.addAll(10000, null);
-		acctManager.setAccount(connections.get(connection), newAccount);
-
-		List<Integer> IDS = new LinkedList<Integer>();
-		IDS.add(connections.get(connection));
-		this.sendBankUpdates(IDS);
-	}
-
-	public void runGame(double reserve)
-			throws UnsupportedBiddingLanguageException {
-		while (!isOver) {
-		// Constructs auction according to rules
-		Set<Tradeable> theSet = new HashSet<Tradeable>();
-		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
-		for (Integer ID : this.INTS) {
-			Tradeable newT = new Lab8Good(ID);
-			theSet.add(newT);
-			forTakehiro.put(ID + "", newT.getType());
-		}
-
-		// sleeps until requested number of bidders have entered the auction.
-		while (numberOfBidders < REQUIREDNUMBIDDERS) {
-		int i = 0;
-		while (i < 10) {
-			try {
-				Thread.sleep(1000);
-				i++;
-			} catch (InterruptedException e) {
-				Logging.log("[+] woken: " + e.getMessage());
-			}
-		}
-		}
-
-		// Gets valuations
-		SpecValGenerator generator = new SpecValGenerator(this.numberOfBidders, this.numberOfValuationsPerBidder,
-				this.bundleSizeMean, this.bundleSizeStdez, this.VALUESCALE);
-		generator.makeValuations();
-		Map<String, Map<Set<String>, Double>> allBids = generator
-				.convertAllBidsToSimpleBids(generator.allBidderValuations);
-		System.out.println("VALUATIONS" + allBids);
-		Map<Integer, Map<Set<FullType>, Double>> valuations = new HashMap<Integer, Map<Set<FullType>, Double>>();
-		Map<Integer, String> intToString = new HashMap<Integer, String>();
-
-		for (Entry<Connection, Integer> conn : this.connections.entrySet()) {
-			String toRemove = null;
-			for (Entry<String, Map<Set<String>, Double>> entry : allBids.entrySet()) {
-				Map<Set<String>, Double> each = entry.getValue();
-				for (Entry<Set<String>, Double> toAdd : each.entrySet()) {
-					Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
-					Set<FullType> adjusted = new HashSet<FullType>();
-					for (String s : toAdd.getKey()) {
-						adjusted.add(forTakehiro.get(s));
-					}
-					value.put(adjusted, toAdd.getValue());
-					this.theServer.sendToTCP(conn.getKey().getID(), new ValuationRegistration(conn.getValue(), value));
-					if (valuations.containsKey(conn.getValue())) {
-						value.putAll(valuations.get(conn.getValue()));
-					}
-					valuations.put(conn.getValue(), value);
-				}
-				intToString.put(conn.getValue(), entry.getKey());
-				toRemove = entry.getKey();
-			}
-			if (toRemove != null) {
-				allBids.remove(toRemove);
-			}
-		}
-			this.manager.open(new Market(new SimpleSecondPrice(), new SimpleHighestBidderAllocation(),
-					new SealedBidQuery(), new AnonymousPolicy(), new OneShotTermination(),
-					new SimpleNoJumpActivityRule(), new SimpleInternalState(0, theSet)));
-			Market market = this.manager.getIMarket(0);
-			while (!market.isOver()) {
-				try {
-					Thread.sleep(5000);
-					this.updateAllAuctions(false);
-				} catch (InterruptedException e) {
-					Logging.log("[+] woken: " + e.getMessage());
-				}
-			}
-			List<Order> orders = market.getOrders();
-			double totalRevenue = 0;
-			for (Order o : orders) {
-				totalRevenue += o.COST;
-			}
-			this.manager.close(this, 0, null);
-		
-				System.out.println("Using sealed bids");
-				System.out.println("Total Revenue: " + totalRevenue);
-
-			this.updateAllAuctions(true);
-		
-
-		System.out.println("\n\n\n\n\nOUTCOME:");
-		for (Account account : this.acctManager.getAccounts()) {
-			System.out.println(account);
-			System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
-					+ (10000 - account.monies) / account.tradeables.size());
-			Map<Set<FullType>, Double> myValue = valuations.get(account.ID);
-			Double maxValue = 0.0;
-			for (Set<FullType> wantedBundle : myValue.keySet()) {
-				int contains = 0;
-				for (Tradeable t : account.tradeables) {
-					if (wantedBundle.contains(t.getType())) {
-						contains++;
-					}
-				}
-				if (contains == wantedBundle.size()) {
-					maxValue = Math.max(maxValue, myValue.get(wantedBundle));
-				}
-			}
-			double linearCost = (10000 - account.monies) > 0 ? (10000 - account.monies) : account.monies - 10000;
-			System.out.println(account.ID + " valued what they got at " + maxValue);
-			System.out.println(account.ID + " has a linear utility of " + (maxValue - linearCost));
-			System.out.println(account.ID + " has a strict budget utility of " + (maxValue - linearCost > 0 ? maxValue-linearCost : -1*Double.MAX_VALUE));
-			System.out.println();
-			try {
-			Thread.sleep(4000);
-			}
-			catch (InterruptedException e) {
-				Logging.log("[+] woken: " + e.getMessage());
-			}
-			numberOfBidders = 0; 
-		}
-	}
-	}
-
-	public static void main(String[] args) throws UnsupportedBiddingLanguageException {
-		SimpleSimultaneousServer l3s = new SimpleSimultaneousServer(2121);
-		l3s.runGame(0);
-	}
-
+  
+  private Map<Integer, ValuationBundle> agentValues = new HashMap<Integer, ValuationBundle>();
+  private Integer numberOfBidders;
+  private Integer NUMGOODS = 8;
+  private Function<Integer, Double> VALFUNCTION = x -> (double) x + 10;
+  private Boolean MONOTONIC = true; 
+  private Double VALUESCALE = 1.0;
+  private Double BASEVARIANCE = 1.0;
+  private Double EXPCOVAR = 0.0;
+  private Integer NUMVALUATIONS = 8; 
+  private Integer BUNDLESIZEMEAN = 4; 
+  private Double BUNDLESIZESTDDEV = 1.0;
+  
+  /**
+   * constructor for the server. Connects to port. 
+   * @param port
+   * port number.
+   */
+  public SimpleSimultaneousServer (int port) {
+    super(port, new LabGameSetup());
+    this.numberOfBidders = 0; 
+  }
+  
+  @Override
+  protected void onRegistration(Connection connection, Registration registration) {
+    numberOfBidders++;
+    Integer theID = this.defaultRegistration(connection, registration);
+    if (theID == null) {
+      return;
+    }
+    ValuationBundle values = new ValuationBundle();
+    ValuationRegistration registeredValue = new ValuationRegistration(theID, values);
+    this.theServer.sendToTCP(connection.getID(), registeredValue);
+    Account oldAccount = acctManager.getAccount(connections.get(connection));
+    acctManager.setAccount(connections.get(connection), oldAccount.addAll(10000, null));
+    List<Integer> IDS = new LinkedList<Integer>();
+    IDS.add(connections.get(connection));
+    this.sendBankUpdates(IDS);
+  }
+  
+  /**
+   * runs the game. This involves setup phase, assigning valuations,\
+   * opening and closing market(s), printing output. 
+   */
+  public void runGame() {
+    //setups phase
+    int j = 0;
+    while (j < 10) { //CHANGE FOR MORE OR LESS JOIN TIME
+      try {
+        Thread.sleep(1000);
+        Logging.log("[-] setup phase " + j++);
+      } catch (InterruptedException e) {
+        Logging.log("[+] woken: " + e.getMessage());
+      }
+    }
+    //create set of goods. 
+    Set<FullType> goodSet = new HashSet<FullType>();
+    for(int i = 0; i < NUMGOODS; i++) {
+      goodSet.add(new FullType(TradeableType.Good, i));
+    }
+    
+    //create valuation
+    NormalValuation normalValuation = new NormalValuation(goodSet, VALFUNCTION,
+        BASEVARIANCE, EXPCOVAR, MONOTONIC, VALUESCALE);
+    for(Entry<Connection, Integer> conn : this.connections.entrySet()) { 
+      ValuationBundle aValue = normalValuation.getSomeValuations(NUMVALUATIONS,
+          BUNDLESIZEMEAN, BUNDLESIZESTDDEV);
+      System.out.println("val " + aValue);
+      agentValues.put(conn.getValue(), aValue);
+      this.theServer.sendToTCP(conn.getKey().getID(), 
+          new ValuationRegistration(conn.getValue(), aValue));
+    }
+    
+    //for the market
+    Set<Tradeable> marketGoods = new HashSet<Tradeable>();
+    for(int i = 0; i < NUMGOODS; i++) {
+      marketGoods.add(new Lab8Good(i));
+    }
+    //open market
+    SimpleSecondPriceMarket thisMarket = new SimpleSecondPriceMarket(0, marketGoods);
+    this.manager.open(thisMarket.getMarket());
+    
+    Market market = this.manager.getIMarket(0);
+    while(!market.isOver()) {
+      try {
+        Thread.sleep(4000);
+        this.updateAllAuctions(true);
+      } catch (InterruptedException e) {
+        Logging.log("[+] woken: " + e.getMessage());
+      }
+    }
+    this.updateAllAuctions(true);
+    
+    System.out.println("\n\n\n\n\nOUTCOME:");
+    for (Account account : this.acctManager.getAccounts()) {
+      System.out.println(account);
+      System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
+          + (10000 - account.monies) / account.tradeables.size());
+     ValuationBundle myValue = agentValues.get(account.ID);
+      Double maxValue = 0.0;
+      for (Valuation wantedBundle : myValue) {
+        int contains = 0;
+        for (Tradeable t : account.tradeables) {
+          if (wantedBundle.contains(t.getType())) {
+            contains++;
+          }
+        }
+        if (contains == wantedBundle.size()) {
+          maxValue = Math.max(maxValue, wantedBundle.getPrice());
+        }
+      }
+      double linearCost = (10000 - account.monies) > 0 ? (10000 - account.monies) : account.monies - 10000;
+      System.out.println(account.ID + " valued what they got at " + maxValue);
+      System.out.println(account.ID + " has a linear utility of " + (maxValue - linearCost));
+      System.out.println(account.ID + " has a strict budget utility of " + (maxValue - linearCost > 0 ? maxValue-linearCost : -1*Double.MAX_VALUE));
+      System.out.println();
+    } 
+  }
+  
+  public static void main(String[] args) {
+    SimpleSimultaneousServer s1 = new SimpleSimultaneousServer(2122);
+    s1.runGame();
+    
+  }
 }

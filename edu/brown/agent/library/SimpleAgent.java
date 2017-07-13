@@ -20,11 +20,11 @@ import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
 import brown.valuation.ValuationBundle;
 
-public class SimpleSingleGoodAgent extends Agent {
+public class SimpleAgent extends Agent {
   
   protected ValuationBundle myValuation;
   
-  public SimpleSingleGoodAgent(String host, int port) throws AgentCreationException {
+  public SimpleAgent(String host, int port) throws AgentCreationException {
     super(host, port, new LabGameSetup());
     this.myValuation = new ValuationBundle();
   }

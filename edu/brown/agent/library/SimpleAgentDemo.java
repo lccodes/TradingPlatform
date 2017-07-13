@@ -11,9 +11,9 @@ import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.valuation.Valuation;
 
-public class SimpleSingleGoodDemo extends SimpleSingleGoodAgent {
+public class SimpleAgentDemo extends SimpleAgent {
   
-  public SimpleSingleGoodDemo(String host, int port) throws AgentCreationException {
+  public SimpleAgentDemo(String host, int port) throws AgentCreationException {
     super(host, port);
   }
 
@@ -23,7 +23,14 @@ public class SimpleSingleGoodDemo extends SimpleSingleGoodAgent {
     for (Valuation types : this.myValuation) {
       for (FullType type : types.getGoods()) {
         if(types.getPrice()  > 0) {
-          toBid.put(type, types.getPrice());
+          if(!toBid.containsKey(type)) {
+          toBid.put(type, types.getPrice() / types.size());
+        }
+          else {
+            if(toBid.get(type) < types.getPrice()) {
+              toBid.put(type, types.getPrice() / types.size());
+            }
+          }
         }
         else {
           toBid.put(type, 0.1);
@@ -57,7 +64,7 @@ public class SimpleSingleGoodDemo extends SimpleSingleGoodAgent {
   	}
   
   public static void main(String[] args) throws AgentCreationException {
-    new SimpleSingleGoodDemo("caladan", 2122);
+    new SimpleAgentDemo("caladan", 2122);
     while(true){}
   }
 }

@@ -76,6 +76,7 @@ public class NormalValuation implements IValuation {
 		this.goods = goods; 
 		this.valFunction = valFunction; 
 		this.expectedCovariance = expectedCovariance; 
+		this.baseVariance = baseVariance; 
 		this.isMonotonic = isMonotonic; 
 		this.valueScale = valueScale;	
 	}
@@ -120,7 +121,7 @@ public class NormalValuation implements IValuation {
 							}
 							Double bundleMean = valFunction.apply(eCopy.size()) * valueScale; 
 							NormalDistribution bundleDist = new NormalDistribution(rng, bundleMean,
-									totalVariance);
+									totalVariance * valueScale);
 							if (!isMonotonic) {
 								temp.put(eCopy, bundleDist.sample());
 							}
@@ -196,8 +197,8 @@ public class NormalValuation implements IValuation {
                 }
               }
               NormalDistribution bundleDist = new NormalDistribution(rng,
-                  valFunction.apply(theGoods.size()), 
-                  variance);
+                  valFunction.apply(theGoods.size()) * valueScale, 
+                  variance * valueScale);
               if(!isMonotonic) {
                 valuations.add(new Valuation(goodsSet, bundleDist.sample()));
               }
