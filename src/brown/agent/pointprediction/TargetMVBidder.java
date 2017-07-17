@@ -46,7 +46,7 @@ public class TargetMVBidder extends SimpleAgent {
       //for every good in the prediction vector.
       for (GoodPrice p : aPrediction.getPrediction()) {
         if(types.contains(p.getGood())) {
-          Double biddingPrice = calculateMarginalValue(types, prediction, p);
+          Double biddingPrice = calculateMarginalValue(prediction, p);
           toBid.put(p.getGood(), biddingPrice);
         }
         else {
@@ -111,31 +111,31 @@ public class TargetMVBidder extends SimpleAgent {
    * @param good
    * @return
    */
-  private Double calculateMarginalValue (Valuation optimal, 
-      PredictionVector aVec, GoodPrice good) {  
+  private Double calculateMarginalValue (GoodPrice good, PredictionVector aVec) {  
     //create a copy without the specified good
+    PredictionVector goodFree = new PredictionVector(aVec);
+    goodFree.add(good.getGood(), 0.0);
     PredictionVector goodUnavailable = new PredictionVector(aVec);
     goodUnavailable.add(good.getGood(), Double.POSITIVE_INFINITY);
     //get the acquisition bundle for copy
-    ValuationBundle acq2 = this.getAcquisition(goodUnavailable);
-    if (acq2.size() == 0) {
-      Double optimalVal = optimal.getPrice();
-      for(GoodPrice g : aVec) {
-        if(optimal.contains(g.getGood())) {
-        optimalVal -= g.getPrice();
-        }
-      }
-      return optimalVal;
-    }
-    Valuation optimalSansGood = optimal;
-    for(Valuation v : acq2) {
+    ValuationBundle acqFree = this.getAcquisition(goodFree);
+    ValuationBundle acqUnavailable = this.getAcquisition(goodUnavailable);
+
+    
+    Valuation optimalSansGood = new Valuation(null, null);
+    for(Valuation v : acqUnavailable) {
       optimalSansGood = v;
       break;
     }
-    Double optimalVal = optimal.getPrice();
+    Valuation optimalFreeGood = new Valuation(null, null);
+    for(Valuation v : acqFree) {
+      optimalFreeGood = v;
+      break;
+    }
+    Double optimalVal = optimalFreeGood.getPrice();
     Double optimalVal2 = optimalSansGood.getPrice();
     for(GoodPrice g : aVec) {
-      if (optimal.contains(g.getGood())) {
+      if (optimalFreeGood.contains(g.getGood())) {
         optimalVal -= g.getPrice();
       }
       if (optimalSansGood.contains(g.getGood())) {
