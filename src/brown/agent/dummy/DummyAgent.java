@@ -1,4 +1,4 @@
-package brown.agent;
+package brown.agent.dummy;
 import java.util.HashMap;
 import java.util.Map;
 
