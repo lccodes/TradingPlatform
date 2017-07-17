@@ -1,7 +1,10 @@
-package brown.agent.pointprediction;
+package brown.agent.pointprediction; 
+
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import brown.agent.library.SimpleAgent;
 import brown.assets.value.FullType;
@@ -13,47 +16,38 @@ import brown.prediction.PredictionVector;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 
-/**
- * a point prediction utilizing agent, targetBidder
- * bids the goods in their optimal bundle at the price given 
- * by the point prediction vector.
- * @author acoggins
- *
- */
-public class TargetPriceBidder extends SimpleAgent {
+public class TargetMVBidder extends SimpleAgent {
   
   private PointPrediction aPrediction;
+  
   /**
    * constructor for auction 
    * @param host
    * @param port
    * @throws AgentCreationException
    */
-  public TargetPriceBidder(String host, int port,
+  public TargetMVBidder(String host, int port,
       PointPrediction aPrediction) throws AgentCreationException {
     super(host, port);
     this.aPrediction = aPrediction; 
   }
   
-  /**
-   * bids in simple sealed auction. 
-   * @param market
-   * the market to be bid in.
-   */
+  @Override
   public void onSimpleSealed(SimpleAuction market) {
+    PredictionVector prediction = aPrediction.getPrediction();
     //map of the goods to be bid. 
     Map<FullType, Double> toBid = new HashMap<FullType, Double>();
     //acquisition bundle. 
-    ValuationBundle acq = this.getAcquisition(aPrediction.getPrediction());
+    ValuationBundle acq = this.getAcquisition(prediction);
     //the acquisition should really only have one value, but iterate and
     //grab the first (since the utilities of all optimal bid bundles are
     //the same, we're indifferent.)
     for (Valuation types : acq) {
       //for every good in the prediction vector.
       for (GoodPrice p : aPrediction.getPrediction()) {
-        //if the good is in the optimal bundle, add it to toBid
         if(types.contains(p.getGood())) {
-          toBid.put(p.getGood(), p.getPrice());
+          Double biddingPrice = calculateMarginalValue(types, prediction, p);
+          toBid.put(p.getGood(), biddingPrice);
         }
         else {
           toBid.put(p.getGood(), 0.000001);
@@ -108,8 +102,52 @@ public class TargetPriceBidder extends SimpleAgent {
     return acquisition;
   }
   
+  /**
+   * Given a valuation, a point price prediction, and a good, 
+   * calculates the marginal value of good. That is, the difference in 
+   * utility between optimal bundles with and without the good.
+   * @param optimal
+   * @param aVec
+   * @param good
+   * @return
+   */
+  private Double calculateMarginalValue (Valuation optimal, 
+      PredictionVector aVec, GoodPrice good) {  
+    //create a copy without the specified good
+    PredictionVector goodUnavailable = new PredictionVector(aVec);
+    goodUnavailable.add(good.getGood(), Double.POSITIVE_INFINITY);
+    //get the acquisition bundle for copy
+    ValuationBundle acq2 = this.getAcquisition(goodUnavailable);
+    if (acq2.size() == 0) {
+      Double optimalVal = optimal.getPrice();
+      for(GoodPrice g : aVec) {
+        if(optimal.contains(g.getGood())) {
+        optimalVal -= g.getPrice();
+        }
+      }
+      return optimalVal;
+    }
+    Valuation optimalSansGood = optimal;
+    for(Valuation v : acq2) {
+      optimalSansGood = v;
+      break;
+    }
+    Double optimalVal = optimal.getPrice();
+    Double optimalVal2 = optimalSansGood.getPrice();
+    for(GoodPrice g : aVec) {
+      if (optimal.contains(g.getGood())) {
+        optimalVal -= g.getPrice();
+      }
+      if (optimalSansGood.contains(g.getGood())) {
+        optimalVal2 -= g.getPrice();
+      }
+    }
+    return (optimalVal - optimalVal2);
+  }
+  
+  
   public static void main(String[] args) throws AgentCreationException {
-    new TargetPriceBidder("caladan", 2121, new PointPrediction(new PredictionVector()));
+    new TargetPriceBidder("localhost", 2121, new PointPrediction(new PredictionVector()));
     while(true){}
   }
   
