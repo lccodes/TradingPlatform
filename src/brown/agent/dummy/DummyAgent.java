@@ -10,16 +10,28 @@ import brown.markets.SimpleAuction;
 import brown.valuation.Valuation;
 
 
-
+/**
+ * simple agent that bids on set of goods at average valuation price. 
+ * mainly for debugging.
+ * @author acoggins
+ *
+ */
 public class DummyAgent extends SimpleAgent {
   
+  /**
+   * constructor
+   * @param host
+   * server host
+   * @param port
+   * server port
+   * @throws AgentCreationException
+   */
   public DummyAgent(String host, int port) throws AgentCreationException {
     super(host, port);
   }
 
   @Override
   public void onSimpleSealed(SimpleAuction market) {
-    System.out.println("A");
     Map<FullType, Double> toBid = new HashMap<FullType, Double>();
     for (Valuation types : this.myValuation) {
       for (FullType type : types.getGoods()) {
@@ -45,9 +57,9 @@ public class DummyAgent extends SimpleAgent {
     }
   }
   
+  //this one is used.
   @Override
     public void onSimpleOpenOutcry(SimpleAuction market) {
-    System.out.println("B");
       Map<FullType, Double> toBid = new HashMap<FullType, Double>();
       for (Valuation types : this.myValuation) {
         for (FullType type : types.getGoods()) {
@@ -65,6 +77,11 @@ public class DummyAgent extends SimpleAgent {
       }
     }
   
+  /**
+   * main class, for running
+   * @param args
+   * @throws AgentCreationException
+   */
   public static void main(String[] args) throws AgentCreationException {
     new DummyAgent("caladan", 2122);
     while(true){}

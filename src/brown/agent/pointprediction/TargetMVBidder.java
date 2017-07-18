@@ -2,9 +2,7 @@ package brown.agent.pointprediction;
 
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import brown.agent.library.SimpleAgent;
 import brown.assets.value.FullType;
@@ -16,6 +14,16 @@ import brown.prediction.PredictionVector;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 
+/**
+ * agent that bids each good in its optimal bundle at its marginal vlaue. 
+ * since we don't always have complete information on every possible bundle's
+ * value, marginal value is described as the difference between
+ * the utility of an optimal bundle where the good is free, and the most optimal 
+ * bundle that does not contain the good (if it exists- if not, this is just zero). 
+ * 
+ * @author acoggins
+ *
+ */
 public class TargetMVBidder extends SimpleAgent {
   
   private PointPrediction aPrediction;
@@ -32,15 +40,16 @@ public class TargetMVBidder extends SimpleAgent {
   
   @Override
   public void onSimpleOpenOutcry(SimpleAuction market) {
+    //populate point prediction-- for now, predictions pulled from the ether
     aPrediction = new PointPrediction();
     PredictionVector prediction = aPrediction.getPrediction();
     for(FullType f : this.allGoods) {
       GoodPrice good = new GoodPrice(f, 3.0);
       aPrediction.setPrediction(good);
     }
-    //map of the goods to be bid. 
+    //initialize map of the goods to be bid. 
     Map<FullType, Double> toBid = new HashMap<FullType, Double>();
-    //acquisition bundle. 
+    //acquisition bundle returns all optimal bundles.
     ValuationBundle acq = this.getAcquisition(prediction);
     //the acquisition should really only have one value, but iterate and
     //grab the first (since the utilities of all optimal bid bundles are
@@ -49,14 +58,17 @@ public class TargetMVBidder extends SimpleAgent {
       //for every good in the prediction vector.
       for (GoodPrice p : aPrediction.getPrediction()) {
         if(types.contains(p.getGood())) {
+          //calculate the marginal value of the good.
           Double biddingPrice = calculateMarginalValue(p, prediction);
           toBid.put(p.getGood(), biddingPrice);
         }
         else {
+          //if not, put negligibly small bid (hack: may change this to 0)
           toBid.put(p.getGood(), 0.000001);
         }
       }
       //we only need one
+      //this is a bit hacky, could sort instead? Although this is less big-O complex.
       break;
       }
     //bid in the market. 
@@ -75,7 +87,7 @@ public class TargetMVBidder extends SimpleAgent {
    * for convenience of use.
    */
   private ValuationBundle getAcquisition(PredictionVector aPrediction) {
-    //the return bundle
+    //make a copy for editing.
     ValuationBundle copy = new ValuationBundle(this.myValuation);
     ValuationBundle acquisition = new ValuationBundle();
     //max value to be determined
@@ -118,16 +130,17 @@ public class TargetMVBidder extends SimpleAgent {
    * @return
    */
   private Double calculateMarginalValue (GoodPrice good, PredictionVector aVec) {  
-    //create a copy without the specified good
+    //create a copy with the specified good free of charge. 
     PredictionVector goodFree = new PredictionVector(aVec);
     goodFree.add(good.getGood(), 0.0);
+    //and now one where the good is unavailable.
     PredictionVector goodUnavailable = new PredictionVector(aVec);
     goodUnavailable.add(good.getGood(), Double.POSITIVE_INFINITY);
-    //get the acquisition bundle for copy
+    //get the acquisition for each of these cases.
     ValuationBundle acqFree = this.getAcquisition(goodFree);
     ValuationBundle acqUnavailable = this.getAcquisition(goodUnavailable);
 
-    
+    //collect an optimal bundle from each of these acquisitions.
     Valuation optimalSansGood = new Valuation(null, null);
     for(Valuation v : acqUnavailable) {
       optimalSansGood = v;
@@ -138,6 +151,8 @@ public class TargetMVBidder extends SimpleAgent {
       optimalFreeGood = v;
       break;
     }
+    //get the utility of both and take the difference- this is 
+    //the marginal value. 
     Double optimalVal = optimalFreeGood.getPrice();
     Double optimalVal2 = optimalSansGood.getPrice();
     for(GoodPrice g : aVec) {

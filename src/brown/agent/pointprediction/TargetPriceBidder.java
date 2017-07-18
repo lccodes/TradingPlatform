@@ -15,7 +15,8 @@ import brown.valuation.ValuationBundle;
 
 /**
  * a point prediction utilizing agent, targetBidder
- * bids the goods in their optimal bundle at the price given 
+ * bids the goods in an optimal bundle (typically there is only one)
+ * at the price given 
  * by the point prediction vector.
  * @author acoggins
  *
