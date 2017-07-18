@@ -15,6 +15,11 @@ public class Valuation {
 	
 	private SimpleEntry<Set<FullType>, Double> entry;
 	
+	
+	public Valuation() {
+	  
+	}
+	
 	/**
 	 * constructor for a valuation over a set of goods.
 	 * @param goods

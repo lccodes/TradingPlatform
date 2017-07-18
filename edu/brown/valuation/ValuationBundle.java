@@ -166,6 +166,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	
 	/**
 	 * iterator for valuationbundle
+	 * read-only, apparently. May need to fix this along the way somewhere. 
 	 */
   public Iterator<Valuation> iterator() {
     ValuationIterator v = new ValuationIterator(this);

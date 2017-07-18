@@ -21,7 +21,7 @@ import brown.markets.library.SimpleSecondPriceMarket;
 import brown.messages.Registration;
 import brown.rules.paymentrules.library.SimpleClockRule;
 import brown.rules.paymentrules.library.SimpleSecondPrice;
-import brown.registrations.ValuationRegistration;
+import brown.registrations.PPValRegistration;
 import brown.rules.activityrules.OneShotActivity;
 import brown.rules.activityrules.SimpleNoJumpActivityRule;
 import brown.rules.irpolicies.library.AnonymousPolicy;
@@ -81,7 +81,8 @@ public class SimpleSimultaneousServer extends AgentServer {
       return;
     }
     ValuationBundle values = new ValuationBundle();
-    ValuationRegistration registeredValue = new ValuationRegistration(theID, values);
+    Set<FullType> allGoods = new HashSet<FullType>();
+    PPValRegistration registeredValue = new PPValRegistration(theID, values, allGoods);
     this.theServer.sendToTCP(connection.getID(), registeredValue);
     Account oldAccount = acctManager.getAccount(connections.get(connection));
     acctManager.setAccount(connections.get(connection), oldAccount.addAll(10000, null));
@@ -97,7 +98,7 @@ public class SimpleSimultaneousServer extends AgentServer {
   public void runGame() {
     //setups phase
     int j = 0;
-    while (j < 10) { //CHANGE FOR MORE OR LESS JOIN TIME
+    while (j < 5) { //CHANGE FOR MORE OR LESS JOIN TIME
       try {
         Thread.sleep(1000);
         Logging.log("[-] setup phase " + j++);
@@ -120,7 +121,7 @@ public class SimpleSimultaneousServer extends AgentServer {
       System.out.println("val " + aValue);
       agentValues.put(conn.getValue(), aValue);
       this.theServer.sendToTCP(conn.getKey().getID(), 
-          new ValuationRegistration(conn.getValue(), aValue));
+          new PPValRegistration(conn.getValue(), aValue, goodSet));
     }
     
     //for the market

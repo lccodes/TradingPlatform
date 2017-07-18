@@ -110,6 +110,7 @@ public class Market {
 		this.STATE.setAllocation(newState);
 		//this is null, or empty
 		List<Order> newPayments = this.PRULE.getPayments(this.STATE);
+		System.out.println("new payments " + newPayments);
 		this.STATE.setPayments(newPayments);
 		System.out.println("P " + this.STATE.getPayments());
 		return this.STATE.getPayments();

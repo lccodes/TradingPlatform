@@ -41,7 +41,7 @@ public class NormalValuation implements IValuation {
 	 * @param valFunction
 	 * a function from bundle size to positive reals by which valuation means are determined. 
 	 * @param isMonotonic
-	 * is every set of goods weakly dominant to all its subsets? 
+	 * is every set of goods weakly dominant over all of its subsets? 
 	 * @param valueScale
 	 * coefficient of scale.
 	 */
@@ -232,6 +232,9 @@ public class NormalValuation implements IValuation {
 	 * for the above methods
 	 */
 	private void populateVarCoVarMatrix() {
+	  //distribution to draw covariance observations. Currently included a default value
+	  //to assure positive semidefiniance but hoping to later change this with a method 
+	  //that assures positive semidefinance as defined by Sylvester's Criterion.
     NormalDistribution varianceDist = new NormalDistribution(new ISAACRandom(),
     expectedCovariance, 0.1);
    varCoVar = new Double[goods.size()][goods.size()];

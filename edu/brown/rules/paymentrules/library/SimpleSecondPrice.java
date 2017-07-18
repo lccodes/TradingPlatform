@@ -46,6 +46,7 @@ public class SimpleSecondPrice implements PaymentRule {
 		for (Tradeable trade : state.getTradeables()) {
 		  //this is empty
 			MarketState bp = alloc.getBid(trade.getType());
+			System.out.println("BP " + bp);
 			if (bp == null || bp.AGENTID == null) {
 				continue;
 			}
@@ -54,8 +55,9 @@ public class SimpleSecondPrice implements PaymentRule {
 				if (bid.Bundle.getType().equals(BundleType.Simple)) {
 					SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
 					MarketState otherbid = bundle.getBid(trade.getType());
+					System.out.println("ob " + otherbid);
 					//second price logic
-					if (otherbid != null && otherbid.PRICE > current.PRICE && bp.PRICE > otherbid.PRICE) {
+					if (otherbid != null && otherbid.PRICE > current.PRICE && bp.PRICE >= otherbid.PRICE) {
 						current = new MarketState(bp.AGENTID, otherbid.PRICE);
 					}
 				} else {

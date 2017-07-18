@@ -17,15 +17,6 @@ public class NormalValTest {
 	
 	public void testAllVals() {
 		goods.add(new FullType(TradeableType.Good, 0));
-		goods.add(new FullType(TradeableType.Good, 1));
-		goods.add(new FullType(TradeableType.Good, 2));
-    goods.add(new FullType(TradeableType.Good, 3));
-    goods.add(new FullType(TradeableType.Good, 4));
-    goods.add(new FullType(TradeableType.Good, 5));
-    goods.add(new FullType(TradeableType.Good, 6));
-    goods.add(new FullType(TradeableType.Good, 7));
-    goods.add(new FullType(TradeableType.Good, 8));
-    goods.add(new FullType(TradeableType.Good, 9));
 		System.out.println(nv.getAllValuations());
 	}
 	
@@ -39,7 +30,7 @@ public class NormalValTest {
 	
 	public static void main(String[] args) {
 		NormalValTest nv = new NormalValTest(); 
-		nv.testSomeVals();
+		nv.testAllVals();
 	}
 }
 

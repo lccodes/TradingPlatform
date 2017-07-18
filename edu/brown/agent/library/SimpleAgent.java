@@ -1,6 +1,7 @@
 package brown.agent.library;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import brown.agent.Agent;
@@ -15,7 +16,7 @@ import brown.messages.Registration;
 import brown.messages.auctions.BidRequest;
 import brown.messages.markets.GameReport;
 import brown.messages.trades.NegotiateRequest;
-import brown.registrations.ValuationRegistration;
+import brown.registrations.PPValRegistration;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
 import brown.valuation.ValuationBundle;
@@ -23,17 +24,20 @@ import brown.valuation.ValuationBundle;
 public class SimpleAgent extends Agent {
   
   protected ValuationBundle myValuation;
+  protected Set<FullType> allGoods;
   
   public SimpleAgent(String host, int port) throws AgentCreationException {
     super(host, port, new LabGameSetup());
     this.myValuation = new ValuationBundle();
+    this.allGoods = new HashSet<FullType>();
   }
   
   @Override
   public void onRegistration(Registration registration) {
     super.onRegistration(registration);
-    ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
+    PPValRegistration valuationRegistration = (PPValRegistration) registration;
     this.myValuation.addAll(valuationRegistration.getValues());
+    this.allGoods.addAll(valuationRegistration.getGoods());
     System.out.println(myValuation);
   }
 
