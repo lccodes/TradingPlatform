@@ -19,6 +19,7 @@ public class DummyAgent extends SimpleAgent {
 
   @Override
   public void onSimpleSealed(SimpleAuction market) {
+    System.out.println("A");
     Map<FullType, Double> toBid = new HashMap<FullType, Double>();
     for (Valuation types : this.myValuation) {
       for (FullType type : types.getGoods()) {
@@ -46,6 +47,7 @@ public class DummyAgent extends SimpleAgent {
   
   @Override
     public void onSimpleOpenOutcry(SimpleAuction market) {
+    System.out.println("B");
       Map<FullType, Double> toBid = new HashMap<FullType, Double>();
       for (Valuation types : this.myValuation) {
         for (FullType type : types.getGoods()) {
@@ -64,7 +66,7 @@ public class DummyAgent extends SimpleAgent {
     }
   
   public static void main(String[] args) throws AgentCreationException {
-    new SimpleAgentDemo("caladan", 2122);
+    new DummyAgent("caladan", 2122);
     while(true){}
   }
 }

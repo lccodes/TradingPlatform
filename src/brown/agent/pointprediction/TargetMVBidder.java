@@ -46,7 +46,7 @@ public class TargetMVBidder extends SimpleAgent {
       //for every good in the prediction vector.
       for (GoodPrice p : aPrediction.getPrediction()) {
         if(types.contains(p.getGood())) {
-          Double biddingPrice = calculateMarginalValue(prediction, p);
+          Double biddingPrice = calculateMarginalValue(p, prediction);
           toBid.put(p.getGood(), biddingPrice);
         }
         else {
@@ -147,7 +147,7 @@ public class TargetMVBidder extends SimpleAgent {
   
   
   public static void main(String[] args) throws AgentCreationException {
-    new TargetPriceBidder("localhost", 2121, new PointPrediction(new PredictionVector()));
+    new TargetPriceBidder("localhost", 2121);
     while(true){}
   }
   

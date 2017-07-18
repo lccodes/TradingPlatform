@@ -7,6 +7,8 @@ import brown.generatepredictions.Price;
 public interface IPricePrediction {
 	
 	public PredictionVector getPrediction();
+	
+	public void setPrediction(GoodPrice aPrediction);
 
 
 }

@@ -29,10 +29,8 @@ public class TargetPriceBidder extends SimpleAgent {
    * @param port
    * @throws AgentCreationException
    */
-  public TargetPriceBidder(String host, int port,
-      PointPrediction aPrediction) throws AgentCreationException {
+  public TargetPriceBidder(String host, int port) throws AgentCreationException {
     super(host, port);
-    this.aPrediction = aPrediction; 
   }
   
   /**
@@ -40,7 +38,12 @@ public class TargetPriceBidder extends SimpleAgent {
    * @param market
    * the market to be bid in.
    */
-  public void onSimpleSealed(SimpleAuction market) {
+  public void onSimpleOpenOutcry(SimpleAuction market) {
+    aPrediction = new PointPrediction();
+    for(FullType f : this.allGoods) {
+      GoodPrice good = new GoodPrice(f, 3.0);
+      aPrediction.setPrediction(good);
+    }
     //map of the goods to be bid. 
     Map<FullType, Double> toBid = new HashMap<FullType, Double>();
     //acquisition bundle. 
@@ -79,11 +82,12 @@ public class TargetPriceBidder extends SimpleAgent {
    */
   private ValuationBundle getAcquisition(PredictionVector aPrediction) {
     //the return bundle
+    ValuationBundle copy = new ValuationBundle(this.myValuation);
     ValuationBundle acquisition = new ValuationBundle();
     //max value to be determined
     Double maxValue = 0.0;
     //for each of the agent's private valuations run this block
-    for (Valuation aVal : this.myValuation) {
+    for (Valuation aVal : copy) {
       //get the price of the bundle
       Double value = aVal.getPrice();
       //for every good in the prediction vector run this block
@@ -94,22 +98,24 @@ public class TargetPriceBidder extends SimpleAgent {
         if(aVal.contains(p.getGood())) 
         value -= p.getPrice();
       }
+      copy.add(aVal.getGoods(), value);
       //determine the maximum utility. 
       maxValue = (value > maxValue) ? value : maxValue; 
     }
     //now that we have the max utility, for all bundles with this utility, 
     //add to the acquisition.
-    for(Valuation types : this.myValuation) {
+    for(Valuation types : copy) {
       if (types.getPrice() >= maxValue) {
         acquisition.add(types);
       }
     }
     //return
+    System.out.println("acquisition " + acquisition);
     return acquisition;
   }
   
   public static void main(String[] args) throws AgentCreationException {
-    new TargetPriceBidder("caladan", 2121, new PointPrediction(new PredictionVector()));
+    new TargetPriceBidder("caladan", 2122);
     while(true){}
   }
   

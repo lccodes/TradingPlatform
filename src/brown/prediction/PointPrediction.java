@@ -6,6 +6,10 @@ public class PointPrediction implements IPricePrediction {
 
   private PredictionVector predictions;
   
+  
+  public PointPrediction() {
+    this.predictions = new PredictionVector();
+  }
   public PointPrediction(PredictionVector p) {
     this.predictions = p;
   }
@@ -13,6 +17,11 @@ public class PointPrediction implements IPricePrediction {
   @Override
   public PredictionVector getPrediction() {
     return predictions;
+  }
+  
+  @Override
+  public void setPrediction(GoodPrice aPrediction) {
+    this.predictions.add(aPrediction);
   }
 
   
