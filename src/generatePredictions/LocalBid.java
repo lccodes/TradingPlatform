@@ -18,16 +18,16 @@ public class LocalBid implements IBidStrategy {
 				double marginalUtility=0.0;
 				double totalMarginalUtility;
 				for (int j=1; j<NUM_SAMPLES; j++){
-					Map<Good,Price> prices =pp.getSamplePricePrediction();
+					Map<Good,Price> prices =pp.getRandomPricePrediction();
 					double totalPrice=0.0;
 					Set<Good> winnings = new HashSet<Good>();
 					for(Good g:prices.keySet()){
-						if(bids.get(good)+slack >prices.get(good)){
+						if(bids.get(good).getValue()+slack >prices.get(good).getValue()){
 							winnings.add(good);
 							if(!good.equals(g)){
-								totalPrice += prices.get(g);
+								totalPrice += prices.get(g).getValue();
 							}
-						}
+						}   
 					}
 					double valWithGood, valWithOutGood;
 					valWithGood=val.get(winningsWithGood.add(good));

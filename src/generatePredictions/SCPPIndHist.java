@@ -15,18 +15,19 @@ public class SCPPIndHist implements IPredictionStrategy {
 		 IPricePrediction temp = new IndHistogram(Constants.NUM_GOODS);
 		 for (int i=1; i<NUM_ITERATIONS; i++){
 			 temp.clear();
-			 temp=populateTemp();
-			 pp=smooth(pp,temp);
+			 temp=populateTemp(temp, bs);
+			 pp=this.smooth(pp,temp);
 		 }
 		 pricePrediction=pp;
 	 }
 	 private IndHistogram populateTemp(IPricePrediction pp, IBidStrategy bs){
-		 IPricePrediction temp = new IndHistogram();
+		 IPricePrediction temp = new IndHistogram(Constants.NUM_GOODS);
 		 for(int j=1; j<NUM_SAMPLES; j++){
 			 for(int l=1; l<Constants.NUM_AGENTS; l++){
 				 Map<Good,Price> bids =bs.getBids();//PSeudocode has bb.getBids(pp) 
 				 for(Good good:bids.keySet()){
-					 double price =temp.getBucket(good, bids.get(good));
+					 double priceValue =temp.getBucket(good, bids.get(good));
+					 Price price = new Price(priceValue);
 					 temp.incCount(good,price);
 				 }
 			 }
@@ -64,7 +65,7 @@ public class SCPPIndHist implements IPredictionStrategy {
 	}
 	@Override
 	public int goodSize() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 	

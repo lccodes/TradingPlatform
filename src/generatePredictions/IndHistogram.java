@@ -18,10 +18,13 @@ private Set<Price> _priceSet;
 		 double range =Constants.MAX_VAL- Constants.MIN_VAL;
 		 double step =(range +1.0)/(double)Constants.NUM_PRICES;
 		 for(int j=1; j<Constants.NUM_PRICES; j++){
-			 Math.round(_priceSet.add(Constants.MIN_VAL +j*step));
+			 Price price= new Price((double)Math.round((Constants.MIN_VAL +j*step)));
+			_priceSet.add(price);
 		 }
+		 
 		 for (double i=Constants.MIN_VAL; i<Constants.MAX_VAL +1; i+=step ){
-			 _priceSet.add(j);
+			 Price priceStep = new Price(i);
+			 _priceSet.add(priceStep);
 		 }
 		 for(Good good:Constants.goodSet){
 			 Map<Price, Double> initialCounts = new HashMap<Price, Double>();
@@ -33,15 +36,18 @@ private Set<Price> _priceSet;
 	}
 	
 	public Price getBucket(Good g, double bid){
-		return Math.max(Constants.MIN_VAL, Math.min(Constants.MAX_VAL, Math.round(bid)));
+		Price bucketPrice= new Price(Math.max(Constants.MIN_VAL, Math.min(Constants.MAX_VAL, Math.round(bid))));
+		return bucketPrice;
 	}
 	
 	public void incCount(Good good, Price price){
-		_hist.put(good, put(price,_hist.get(good).get(price)+1));
+		Map<Price, Double> innerMap = new HashMap<Price, Double>();
+		innerMap.put(price, _hist.get(good).get(price)+1.0);
+		_hist.put(good, innerMap);
 	}
 	
 	
-	
+	@Override
 	public Map<Price, Double> normalize(Map<Price, Double> toNormalize){
 		Map<Price, Double> normalized = new HashMap<Price,Double>();
 		double total =0.0;
@@ -63,10 +69,12 @@ private Set<Price> _priceSet;
 			Good nextGood = goodIterator.next();
 			Map<Price, Double> priceSet = _hist.get(nextGood);
 			Iterator<Price> priceIterator=priceSet.keySet().iterator();
-			Price mean;
+			Price mean = new Price(0.0);
+			Double meanPrice = 0.0;
 			while(priceIterator.hasNext()){
 				Price nextPrice = priceIterator.next();
-				mean += nextPrice * priceSet.get(nextPrice); //Need to associate Price with Double
+				meanPrice += nextPrice.getValue() * priceSet.get(nextPrice); 
+				mean.setValue(meanPrice);
 				priceIterator.remove(); //Check whether this line is necessary
 			}
 			meanPricePrediction.put(nextGood, mean);
@@ -79,9 +87,42 @@ private Set<Price> _priceSet;
 
 	@Override
 	public Map<Good, Price> getRandomPricePrediction() {
-		// TODO Auto-generated method stub
-		return null;
+		Map<Good, Price> randomPricePredictionMap = new HashMap<Good,Price>();
+		Double[] increasingProbs = new Double[_hist.size()];
+		Set<Good> good = _hist.keySet();
+		Iterator<Good> goodIterator = good.iterator();
+		Map<Double, Price> increasedProbsMap = new HashMap<Double, Price>();
+		while(goodIterator.hasNext()){
+			Good nextGood = goodIterator.next();
+			Map<Price, Double> priceSet = _hist.get(nextGood);
+			Iterator<Price> priceIterator=priceSet.keySet().iterator();
+			Price priceOne = priceIterator.next();
+			increasingProbs[0]=priceOne.getValue();
+			increasedProbsMap.put(priceOne.getValue(),priceOne);
+			int counter =1;
+			while(priceIterator.hasNext()){
+				Price nextPrice=priceIterator.next();
+				increasingProbs[counter]=nextPrice.getValue()+increasingProbs[counter-1];
+				increasedProbsMap.put(increasingProbs[counter], nextPrice);
+				counter+=1;
+			}
+			double randomSample =Math.random();
+			Price randomPrice=null;
+			int newCounter=1;
+			if (randomSample > increasingProbs[0]){
+				while (randomSample>increasingProbs[newCounter]){
+					newCounter+=1;
+				}
+				randomPrice=increasedProbsMap.get(increasingProbs[counter]);
+			}
+			else{
+				randomPrice=increasedProbsMap.get(increasingProbs[0]);
+			}
+			randomPricePredictionMap.put(nextGood,randomPrice);
+		}
+		return randomPricePredictionMap;
 	}
+	
 	
 	@Override
 	public Iterator<T> iterator(){
