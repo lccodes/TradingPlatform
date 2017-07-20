@@ -2,7 +2,9 @@ package brown.generatepredictions;
 
 import java.util.Map;
 
-import brown.prediction.IPricePrediction;
+import brown.interfaces.IBidStrategy;
+import brown.interfaces.IPredictionStrategy;
+import brown.interfaces.IPricePrediction;
 
 public class SCPPIndHist implements IPredictionStrategy {
 	 double alpha =0.1;

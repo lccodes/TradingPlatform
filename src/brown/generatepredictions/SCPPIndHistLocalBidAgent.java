@@ -1,5 +1,8 @@
 package brown.generatepredictions;
 
+import brown.interfaces.IBidStrategy;
+import brown.interfaces.IValuation;
+
 public class SCPPIndHistLocalBidAgent {
 	
 	IValuation val = new AdditiveValuation(NUM_GOODS);

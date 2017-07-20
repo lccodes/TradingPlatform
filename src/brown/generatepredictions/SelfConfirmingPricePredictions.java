@@ -3,6 +3,7 @@ package brown.generatepredictions;
 import java.util.Map;
 import java.util.Set;
 
+import brown.interfaces.IPredictionStrategy;
 import Prediction.IPricePrediction;
 
 public class SelfConfirmingPricePredictions implements IPricePrediction {

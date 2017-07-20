@@ -4,7 +4,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import brown.prediction.IPricePrediction;
+import brown.interfaces.IBidStrategy;
+import brown.interfaces.IPricePrediction;
 
 public class LocalBid implements IBidStrategy {
 	double slack = 0.0001;

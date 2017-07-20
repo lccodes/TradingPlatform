@@ -1,5 +1,7 @@
 package brown.prediction;
 
+import brown.interfaces.IPricePrediction;
+
 
 
 public class PointPrediction implements IPricePrediction {
@@ -10,6 +12,7 @@ public class PointPrediction implements IPricePrediction {
   public PointPrediction() {
     this.predictions = new PredictionVector();
   }
+  
   public PointPrediction(PredictionVector p) {
     this.predictions = p;
   }

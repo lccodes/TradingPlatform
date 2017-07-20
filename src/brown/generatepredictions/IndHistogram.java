@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import brown.interfaces.IIndependentPrediction;
+
 public class IndHistogram implements IIndependentPrediction {
 
 private Double[][] _histogram;

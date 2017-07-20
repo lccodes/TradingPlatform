@@ -1,6 +1,5 @@
-package brown.generatepredictions;
+package brown.interfaces;
 
-import brown.prediction.IPricePrediction;
 
 public interface IPredictionStrategy {
 

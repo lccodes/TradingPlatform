@@ -1,4 +1,5 @@
-package brown.generatepredictions;
+package brown.interfaces;
+
 
 public interface IJointPrediction extends IDistribution {
 
