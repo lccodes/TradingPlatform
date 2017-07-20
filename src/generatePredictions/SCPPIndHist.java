@@ -34,11 +34,12 @@ public class SCPPIndHist implements IPredictionStrategy {
 		 }
 		 return temp.normalize();
 	 }
+	 
 	 private IndHistogram smooth(IndHistogram pp, IndHistogram temp){
-		 for(Good good:pp.keySet()){
-			 for(Map<Price,Double> probs: pp.get(good)){
+		 for(Good good:pp.getMap().keySet()){ //I changed this from pp.keySet() to pp.getMap().keySet()
+			 for(Map<Price,Double> probs:pp.getMap().get(good)){
 				 for(Price price:probs.keySet()){
-					 double newProb =(1.0-alpha)*pp.get(good).get(price)+alpha*temp.get(good).get(price);
+					 double newProb =(1.0-alpha)*pp.getMap().get(good).get(price)+alpha*temp.getMap().get(good).get(price);
 					 pp.put(good).put(price,newProb);
 				 }
 				 
@@ -46,6 +47,7 @@ public class SCPPIndHist implements IPredictionStrategy {
 		 }
 		 return pp;
 	 }
+	 
 	 private double testConvergnce(IndHistogram pp, IndHistogram temp){
 		 Double error = Double.NEGATIVE_INFINITY;
 		 Double totalError=0.0;
@@ -62,11 +64,6 @@ public class SCPPIndHist implements IPredictionStrategy {
 	@Override
 	public IPricePrediction getPrediction() {
 		return pricePrediction;
-	}
-	@Override
-	public int goodSize() {
-		
-		return 0;
 	}
 	
 }

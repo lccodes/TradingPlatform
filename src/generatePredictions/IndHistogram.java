@@ -9,11 +9,10 @@ import java.util.Set;
 
 public class IndHistogram implements IIndependentPrediction {
 
-private Double[][] _histogram;
+
 private Map<Good, Map<Price, Double>> _hist;
 private Set<Price> _priceSet;
 	public IndHistogram(int numGoods){
-		// _histogram = new Double[(int) Constants.NUM_GOODS][(int) Constants.NUM_PRICES];
 		  _priceSet = new HashSet<Price>();
 		 double range =Constants.MAX_VAL- Constants.MIN_VAL;
 		 double step =(range +1.0)/(double)Constants.NUM_PRICES;
@@ -58,6 +57,9 @@ private Set<Price> _priceSet;
 			normalized.put(price, toNormalize.get(price)/total);
 		}
 		return normalized;
+	}
+	public Map<Good,Map<Price,Double>> getMap(){
+		return _hist;
 	}
 
 	@Override
