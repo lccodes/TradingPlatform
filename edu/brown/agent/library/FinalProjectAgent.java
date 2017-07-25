@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import brown.agent.Agent;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.ContinuousDoubleAuction;
 import brown.markets.LMSR;
@@ -21,13 +21,13 @@ import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
 
 public abstract class FinalProjectAgent extends Agent {
-	protected Map<Set<FullType>, Double> myValuation;
-	private Map<Set<FullType>, Double> toSample;
+	protected Map<Set<BasicType>, Double> myValuation;
+	private Map<Set<BasicType>, Double> toSample;
 
 	public FinalProjectAgent(String host, int port) throws AgentCreationException {
 		super(host, port, new LabGameSetup());
-		this.myValuation = new HashMap<Set<FullType>, Double>();
-		this.toSample = new HashMap<Set<FullType>, Double>();
+		this.myValuation = new HashMap<Set<BasicType>, Double>();
+		this.toSample = new HashMap<Set<BasicType>, Double>();
 	}
 
 	@Override
@@ -36,9 +36,9 @@ public abstract class FinalProjectAgent extends Agent {
 		ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
 		this.myValuation.putAll(valuationRegistration.getValues());
 		Logging.log("[+] new XOR values: " + valuationRegistration.getValues());
-		for (Entry<Set<FullType>, Double> entry : this.myValuation.entrySet()) {
-			Set<FullType> theSet = new HashSet<FullType>();
-			for (FullType t : entry.getKey()) {
+		for (Entry<Set<BasicType>, Double> entry : this.myValuation.entrySet()) {
+			Set<BasicType> theSet = new HashSet<BasicType>();
+			for (BasicType t : entry.getKey()) {
 				if (theSet.size() == 0 || Math.random() > .33) {
 					theSet.add(t);
 				}
@@ -88,21 +88,21 @@ public abstract class FinalProjectAgent extends Agent {
 
 	}
 	
-	public Map<Set<FullType>, Double> sampleValuation() {
+	public Map<Set<BasicType>, Double> sampleValuation() {
 		resample();
 		return this.toSample;
 	}
 	
-	public Map<Set<FullType>, Double> sampleValuation(int agentNum) {
+	public Map<Set<BasicType>, Double> sampleValuation(int agentNum) {
 		resample();
 		return this.toSample;
 	}
 	
 	public void resample() {
 		this.toSample.clear();
-		for (Entry<Set<FullType>, Double> entry : this.myValuation.entrySet()) {
-			Set<FullType> theSet = new HashSet<FullType>();
-			for (FullType t : entry.getKey()) {
+		for (Entry<Set<BasicType>, Double> entry : this.myValuation.entrySet()) {
+			Set<BasicType> theSet = new HashSet<BasicType>();
+			for (BasicType t : entry.getKey()) {
 				//if (theSet.size() == 0 || Math.random() > .33) {
 					theSet.add(t);
 				//}

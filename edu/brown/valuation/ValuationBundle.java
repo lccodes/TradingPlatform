@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 
 //TODO: accomodate single good case? 
 //done. need to idiot-proof and fix bottom methods.
@@ -17,22 +17,22 @@ import brown.assets.value.FullType;
  */
 public class ValuationBundle implements Iterable<Valuation> {
 	
-	private Map<Set<FullType>, Double> valMap; 
+	private Map<Set<BasicType>, Double> valMap; 
 	
 	/**
 	 * constructs an empty valuation bundle.
 	 */
 	public ValuationBundle() {
-		this.valMap = new HashMap<Set<FullType>, Double>();
+		this.valMap = new HashMap<Set<BasicType>, Double>();
 	}
 	
 	public ValuationBundle(ValuationBundle b) {
-	  this.valMap = new HashMap<Set<FullType>, Double>();
+	  this.valMap = new HashMap<Set<BasicType>, Double>();
 	  this.addAll(b);
 	}
 	
-	public ValuationBundle(Map<Set<FullType>, Double> aMap) {
-	  this.valMap = new HashMap<Set<FullType>, Double>(aMap);
+	public ValuationBundle(Map<Set<BasicType>, Double> aMap) {
+	  this.valMap = new HashMap<Set<BasicType>, Double>(aMap);
 	  }
 	
 	/**
@@ -51,7 +51,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * @param price
 	 * the price of the goods.
 	 */
-	public void add(Set<FullType> goods, Double price) {
+	public void add(Set<BasicType> goods, Double price) {
 		valMap.put(goods, price);
 	}
 	
@@ -60,7 +60,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * empties the bundle.
 	 */
 	public void clear() {
-		valMap = new HashMap<Set<FullType>, Double>();
+		valMap = new HashMap<Set<BasicType>, Double>();
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * @return
 	 * true if the set is contained, false otherwise.
 	 */
-	public Boolean contains(Set<FullType> goods) {
+	public Boolean contains(Set<BasicType> goods) {
 	  return valMap.containsKey(goods);
 	}
 	
@@ -87,11 +87,11 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * @return
 	 * the valuation associated with that type.
 	 */
-	public Valuation getValuation(Set<FullType> goods) {
+	public Valuation getValuation(Set<BasicType> goods) {
 		return new Valuation(goods, valMap.get(goods));
 	}
 	
-	public Double getOrDefault(Set<FullType> goods, Double defVal) {
+	public Double getOrDefault(Set<BasicType> goods, Double defVal) {
 	  if(valMap.containsKey(goods)) {
 	    return valMap.get(goods);
 	  }
@@ -115,7 +115,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	 * @param vals
 	 * a map from sets of fulltype to double.
 	 */
-	public void addAll(Map<Set<FullType>, Double> vals) {
+	public void addAll(Map<Set<BasicType>, Double> vals) {
 	  valMap.putAll(vals);
 	}
 	
@@ -157,7 +157,7 @@ public class ValuationBundle implements Iterable<Valuation> {
 	public Valuation[] toArray() {
 	  Valuation[] valArray = new Valuation[this.size()];
 	  int i = 0; 
-	  for(Set<FullType> goods : valMap.keySet()) {
+	  for(Set<BasicType> goods : valMap.keySet()) {
 	    valArray[i] = this.getValuation(goods);
 	    i++;
 	  }

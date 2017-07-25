@@ -32,7 +32,12 @@ import ch.uzh.ifi.ce.mweiss.specvalopt.vcg.external.domain.XORAllocation;
 import ch.uzh.ifi.ce.mweiss.specvalopt.vcg.external.domain.mechanisms.AuctionMechanism;
 import ch.uzh.ifi.ce.mweiss.specvalopt.vcg.external.vcg.XORVCGAuction;
 
-
+/**
+ * The old value generator that is limited in its range and reusability. 
+ * TODO: un-tether from VCG functionality. 
+ * @author acoggins
+ *
+ */
 public class SpecValGenerator {	
 	public int numberOfBidders;
 	public int numberOfValuationsPerBidder;

@@ -1,11 +1,11 @@
 package brown.assets.accounting;
 
 import java.util.Collection;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import brown.markets.Market;
 import brown.markets.TwoSidedAuction;
 import brown.server.AgentServer;
@@ -13,12 +13,20 @@ import brown.setup.Logging;
 import brown.states.StateOfTheWorld;
 import brown.tradeables.Tradeable;
 
+/**
+ * Market manager stores and handles multiple markets 
+ * @author lcamery
+ *
+ */
 public class MarketManager {
 	private Map<Market, Ledger> ledgers;
 	private Map<Integer, Market> tsauctions;
 	
 	private Map<Integer, TwoSidedAuction> twosided;
 
+	/**
+	 * for Kryo do not use.
+	 */
 	public MarketManager() {
 		this.ledgers = new ConcurrentHashMap<Market, Ledger>();
 		this.tsauctions = new ConcurrentHashMap<Integer, Market>();
@@ -27,12 +35,12 @@ public class MarketManager {
 	}
 	
 	/**
-	 * Process each account
-	 * @param server
-	 * @param market
-	 * @param ledger
-	 * @param t
-	 * @param toReplace
+	 * Process each market.
+	 * @param server: a server
+	 * @param market: market to be processed
+	 * @param ledger: a ledger for the market.
+	 * @param t: transaction to be processed in the markets.
+	 * @param toReplace: account to replace. 
 	 */
 	private void process(AgentServer server, Market market, Ledger ledger, 
 			Transaction t, Account toReplace) {

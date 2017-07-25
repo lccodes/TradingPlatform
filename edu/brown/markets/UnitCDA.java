@@ -4,7 +4,7 @@ import java.util.SortedMap;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 
 public class UnitCDA implements ITwoSidedUnitSetter {
 	private final ContinuousDoubleAuction WRAP;
@@ -49,7 +49,7 @@ public class UnitCDA implements ITwoSidedUnitSetter {
 	}
 
 	@Override
-	public FullType getTradeableType() {
+	public BasicType getTradeableType() {
 		return this.WRAP.getTradeableType();
 	}
 

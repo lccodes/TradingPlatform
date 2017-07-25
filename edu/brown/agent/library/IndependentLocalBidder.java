@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.messages.markets.GameReport;
@@ -19,11 +19,11 @@ public class IndependentLocalBidder extends Lab8Agent {
 		super(host, port);
 	}
 	
-	private Map<FullType, Double> localBidStrategy (Map<Set<FullType>, Double> bundles,
-			Map<FullType, Double> predictions, Integer rounds) {
-		Map<FullType, Double> toBid = predictions;
+	private Map<BasicType, Double> localBidStrategy (Map<Set<BasicType>, Double> bundles,
+			Map<BasicType, Double> predictions, Integer rounds) {
+		Map<BasicType, Double> toBid = predictions;
 		for(int i = 0; i < rounds; i++) {
-			for (Entry<FullType, Double> good : toBid.entrySet()) { 
+			for (Entry<BasicType, Double> good : toBid.entrySet()) { 
 				//localbid produces the 
 				
 				//the vector P = the expected price distribution under the predictions. 
@@ -41,24 +41,24 @@ public class IndependentLocalBidder extends Lab8Agent {
 	public void onSimpleSealed(SimpleAuction market) {
 		//change all of this to implement the localbid strategy
 		System.out.println("Start");
-		Map<FullType, Double> predictions = new HashMap<FullType,Double>();
+		Map<BasicType, Double> predictions = new HashMap<BasicType,Double>();
 		
-		for (Entry<Set<FullType>, Double> types : this.myValuation.entrySet()) {
-			for (FullType type : types.getKey()) {
+		for (Entry<Set<BasicType>, Double> types : this.myValuation.entrySet()) {
+			for (BasicType type : types.getKey()) {
 				predictions.put(type, types.getValue()/(double)types.getKey().size());
 			}
 			System.out.println("WORKING");
 		}
-		Map<FullType, Double> toBid = localBidStrategy(this.myValuation, predictions, ROUNDS);
+		Map<BasicType, Double> toBid = localBidStrategy(this.myValuation, predictions, ROUNDS);
 		System.out.println("DONE");
 		market.bid(this, toBid);
 	}
 	
 	@Override
 	public void onSimpleOpenOutcry(SimpleAuction market) {
-		Set<FullType> toBid = new HashSet<FullType>();
-		for (Set<FullType> types : this.myValuation.keySet()) {
-			for (FullType type : types) {
+		Set<BasicType> toBid = new HashSet<BasicType>();
+		for (Set<BasicType> types : this.myValuation.keySet()) {
+			for (BasicType type : types) {
 				if (market.getMarketState(type).PRICE < Math.min(100,this.myValuation.get(types))) {
 					toBid.add(type);
 				}

@@ -9,7 +9,7 @@ import java.util.Set;
 
 import brown.assets.accounting.Account;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.auctions.arules.MechanismType;
 import brown.bundles.BundleType;
 import brown.bundles.SimpleBidBundle;
@@ -85,7 +85,7 @@ public class LemonadeAllocation implements AllocationRule {
 			for (Integer person : slots[i]) {
 				Set<Tradeable> goods = new HashSet<Tradeable>();
 				final double pay = payoff;
-				goods.add(new Contract(person, 1, new FullType(), s -> {
+				goods.add(new Contract(person, 1, new BasicType(), s -> {
 					List<Account> list = new LinkedList<Account>();
 					list.add(new Account(null).add(pay));
 					return list;

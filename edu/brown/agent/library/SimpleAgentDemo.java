@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.valuation.Valuation;
@@ -19,9 +19,9 @@ public class SimpleAgentDemo extends SimpleAgent {
 
   @Override
   public void onSimpleSealed(SimpleAuction market) {
-    Map<FullType, Double> toBid = new HashMap<FullType, Double>();
+    Map<BasicType, Double> toBid = new HashMap<BasicType, Double>();
     for (Valuation types : this.myValuation) {
-      for (FullType type : types.getGoods()) {
+      for (BasicType type : types.getGoods()) {
         if(types.getPrice()  > 0) {
           if(!toBid.containsKey(type)) {
           toBid.put(type, types.getPrice() / types.size());
@@ -46,9 +46,9 @@ public class SimpleAgentDemo extends SimpleAgent {
   
   @Override
   	public void onSimpleOpenOutcry(SimpleAuction market) {
-  		Map<FullType, Double> toBid = new HashMap<FullType, Double>();
+  		Map<BasicType, Double> toBid = new HashMap<BasicType, Double>();
   		for (Valuation types : this.myValuation) {
-  			for (FullType type : types.getGoods()) {
+  			for (BasicType type : types.getGoods()) {
   			  if(types.getPrice()  > 0) {
             toBid.put(type, types.getPrice());
           }

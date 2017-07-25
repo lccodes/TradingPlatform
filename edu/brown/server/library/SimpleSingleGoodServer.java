@@ -13,7 +13,7 @@ import com.esotericsoftware.kryonet.Connection;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.marketinternalstates.SimpleInternalState;
 import brown.markets.Market;
@@ -94,8 +94,8 @@ public class SimpleSingleGoodServer extends AgentServer {
 			}
 		}
 		//create good
-		Set<FullType> singleGood = new HashSet<FullType>();
-		singleGood.add(new FullType(TradeableType.Good, 0));
+		Set<BasicType> singleGood = new HashSet<BasicType>();
+		singleGood.add(new BasicType(TradeableType.Good, 0));
 		//get valuation
 		NormalValuation normalVal = new NormalValuation(singleGood, VALFUNCTION, false, 1.0);
 

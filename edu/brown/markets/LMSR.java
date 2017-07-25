@@ -2,7 +2,7 @@ package brown.markets;
 
 import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.messages.markets.MarketOrder;
 
 public class LMSR implements ITwoSidedAuction, ITwoSidedPriceTaker {
@@ -25,7 +25,7 @@ public class LMSR implements ITwoSidedAuction, ITwoSidedPriceTaker {
 	}
 
 	@Override
-	public FullType getTradeableType() {
+	public BasicType getTradeableType() {
 		return this.LMSR.getTradeableType();
 	}
 

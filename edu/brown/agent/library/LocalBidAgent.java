@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.messages.markets.GameReport;
@@ -22,9 +22,9 @@ public class LocalBidAgent extends Lab8Agent {
 	public void onSimpleSealed(SimpleAuction market) {
 		//change all of this to implement the localbid strategy
 		System.out.println("Start");
-		Map<FullType, Double> toBid = new HashMap<FullType,Double>();
-		for (Entry<Set<FullType>, Double> types : this.myValuation.entrySet()) {
-			for (FullType type : types.getKey()) {
+		Map<BasicType, Double> toBid = new HashMap<BasicType,Double>();
+		for (Entry<Set<BasicType>, Double> types : this.myValuation.entrySet()) {
+			for (BasicType type : types.getKey()) {
 				toBid.put(type, types.getValue()/(double)types.getKey().size());
 			}
 			System.out.println("WORKING");
@@ -35,10 +35,10 @@ public class LocalBidAgent extends Lab8Agent {
 	
 	
 	
-	private Map<FullType, Double> localBidStrategy(Map<FullType, Double> predictions, Integer rounds) {
-		Map<FullType, Double> toBid = predictions;
+	private Map<BasicType, Double> localBidStrategy(Map<BasicType, Double> predictions, Integer rounds) {
+		Map<BasicType, Double> toBid = predictions;
 		for(int i = 0; i < rounds; i++) {
-			for (Entry<FullType, Double> good : toBid.entrySet()) { 
+			for (Entry<BasicType, Double> good : toBid.entrySet()) { 
 				//do something
 			}
 		}
@@ -47,9 +47,9 @@ public class LocalBidAgent extends Lab8Agent {
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleAuction market) {
-		Set<FullType> toBid = new HashSet<FullType>();
-		for (Set<FullType> types : this.myValuation.keySet()) {
-			for (FullType type : types) {
+		Set<BasicType> toBid = new HashSet<BasicType>();
+		for (Set<BasicType> types : this.myValuation.keySet()) {
+			for (BasicType type : types) {
 				if (market.getMarketState(type).PRICE < Math.min(100,this.myValuation.get(types))) {
 					toBid.add(type);
 				}

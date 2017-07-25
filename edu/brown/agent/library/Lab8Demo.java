@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.messages.markets.GameReport;
@@ -22,9 +22,9 @@ public class Lab8Demo extends Lab8Agent {
 	@Override
 	public void onSimpleSealed(SimpleAuction market) {
 		System.out.println("Start");
-		Map<FullType, Double> toBid = new HashMap<FullType,Double>();
+		Map<BasicType, Double> toBid = new HashMap<BasicType,Double>();
 		for (Valuation types : this.myValuation) {
-			for (FullType type : types.getGoods()) {
+			for (BasicType type : types.getGoods()) {
 				//bidding logic 
 				toBid.put(type, types.getPrice()/(double)types.size());
 			}
@@ -37,9 +37,9 @@ public class Lab8Demo extends Lab8Agent {
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleAuction market) {
-		Set<FullType> toBid = new HashSet<FullType>();
+		Set<BasicType> toBid = new HashSet<BasicType>();
 		for (Valuation types : this.myValuation) {
-			for (FullType type : types.getGoods()) {
+			for (BasicType type : types.getGoods()) {
 				if (market.getMarketState(type).PRICE < Math.min(100,types.getPrice())) {
 					toBid.add(type);
 				}

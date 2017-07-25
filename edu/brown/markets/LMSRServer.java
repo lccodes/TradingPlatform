@@ -6,7 +6,7 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.auctions.arules.MechanismType;
 import brown.rules.clearingrules.ClearingRule;
@@ -17,7 +17,7 @@ import brown.tradeables.Tradeable;
 public class LMSRServer implements TwoSidedAuction {
 	private final Integer ID;
 	private final ClearingRule RULE;
-	private final FullType TYPE;
+	private final BasicType TYPE;
 	private final LMSRBackend BACKEND;
 	
 	public LMSRServer() {
@@ -30,7 +30,7 @@ public class LMSRServer implements TwoSidedAuction {
 	public LMSRServer(Integer ID, boolean dir, LMSRBackend backend, boolean shortSelling) {
 		this.ID = ID;
 		this.RULE = dir ? new LMSRYesClearing(backend, shortSelling) : new LMSRNoClearing(backend, shortSelling);
-		this.TYPE = new FullType(dir ? TradeableType.PredictionYes : TradeableType.PredictionNo, 
+		this.TYPE = new BasicType(dir ? TradeableType.PredictionYes : TradeableType.PredictionNo, 
 				backend.getId());
 		this.BACKEND = backend;
 	}
@@ -51,7 +51,7 @@ public class LMSRServer implements TwoSidedAuction {
 	}
 
 	@Override
-	public FullType getTradeableType() {
+	public BasicType getTradeableType() {
 		return this.TYPE;
 	}
 

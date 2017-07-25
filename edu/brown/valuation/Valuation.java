@@ -3,7 +3,7 @@ package brown.valuation;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 
 //TODO: Different datatype for single valuation? Or overload this one.
 /**
@@ -13,7 +13,7 @@ import brown.assets.value.FullType;
  */
 public class Valuation {
 	
-	private SimpleEntry<Set<FullType>, Double> entry;
+	private SimpleEntry<Set<BasicType>, Double> entry;
 	
 	
 	public Valuation() {
@@ -27,8 +27,8 @@ public class Valuation {
 	 * @param price
 	 * a price for this set.
 	 */
-	public Valuation(Set<FullType> goods, Double price) {
-		this.entry = new SimpleEntry<Set<FullType>, Double>(goods, price);
+	public Valuation(Set<BasicType> goods, Double price) {
+		this.entry = new SimpleEntry<Set<BasicType>, Double>(goods, price);
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public class Valuation {
 	 * @return
 	 * a set of FullType.
 	 */
-	public Set<FullType> getGoods() {
+	public Set<BasicType> getGoods() {
 		return entry.getKey();
 	}
 	
@@ -63,7 +63,7 @@ public class Valuation {
 	 * @return
 	 * the FullType good.
 	 */
-	public Boolean contains(FullType good) {
+	public Boolean contains(BasicType good) {
 	  return this.getGoods().contains(good);
 	}
 	

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import brown.tradeables.Tradeable;
 
+//not sure exactly how this is useful.
 public interface IBidBundle {
 	/**
 	 * Gives the market a complex bid bundle

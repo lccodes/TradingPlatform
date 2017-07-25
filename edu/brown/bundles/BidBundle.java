@@ -23,6 +23,10 @@ public interface BidBundle {
 	 */
 	public BundleType getType();
 	
+	/**
+	 * comparator for BidBundles.
+	 *
+	 */
 	public static class BidBundleComparator implements Comparator<BidBundle> {
 
 		@Override

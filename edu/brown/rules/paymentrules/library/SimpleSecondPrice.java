@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.bundles.BidBundle;
 import brown.bundles.BundleType;
 import brown.bundles.MarketState;
@@ -20,18 +20,18 @@ import brown.setup.Logging;
 import brown.tradeables.Tradeable;
 
 public class SimpleSecondPrice implements PaymentRule {
-	private final Map<FullType, MarketState> RESERVE;
+	private final Map<BasicType, MarketState> RESERVE;
 	
-	public SimpleSecondPrice(Map<FullType, MarketState> reserve) {
+	public SimpleSecondPrice(Map<BasicType, MarketState> reserve) {
 		if (reserve == null) {
-			this.RESERVE = new HashMap<FullType, MarketState>();
+			this.RESERVE = new HashMap<BasicType, MarketState>();
 		} else {
 			this.RESERVE = reserve;
 		}
 	}
 	
 	public SimpleSecondPrice() {
-		this.RESERVE = new HashMap<FullType, MarketState>();
+		this.RESERVE = new HashMap<BasicType, MarketState>();
 	}
 
 	@Override

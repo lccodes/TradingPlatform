@@ -3,16 +3,29 @@ package brown.tradeables;
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.states.StateOfTheWorld;
 
+/**
+ * Luke wrote this, so I am not exactly sure what it is for.
+ * Possibly testing.
+ * @author lcamery
+ *
+ */
 public class TheGood extends Tradeable {
 	private Integer agentID;
 	
+	/**
+	 * for Kryo
+	 */
 	public TheGood() {
 		this.agentID = null;
 	}
 	
+	/**
+	 * Constructor just contains an agent id and nothing else.
+	 * @param agentID
+	 */
 	public TheGood(Integer agentID) {
 		this.agentID = agentID;
 	}
@@ -50,7 +63,7 @@ public class TheGood extends Tradeable {
 	}
 
 	@Override
-	public FullType getType() {
+	public BasicType getType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

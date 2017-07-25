@@ -13,7 +13,7 @@ import brown.rules.allocationrules.SimpleClockAllocation;
 import brown.rules.allocationrules.SimpleHighestBidderAllocation;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.marketinternalstates.SimpleInternalState;
 import brown.markets.Market;
@@ -81,7 +81,7 @@ public class SimpleSimultaneousServer extends AgentServer {
       return;
     }
     ValuationBundle values = new ValuationBundle();
-    Set<FullType> allGoods = new HashSet<FullType>();
+    Set<BasicType> allGoods = new HashSet<BasicType>();
     PPValRegistration registeredValue = new PPValRegistration(theID, values, allGoods);
     this.theServer.sendToTCP(connection.getID(), registeredValue);
     Account oldAccount = acctManager.getAccount(connections.get(connection));
@@ -107,9 +107,9 @@ public class SimpleSimultaneousServer extends AgentServer {
       }
     }
     //create set of goods. 
-    Set<FullType> goodSet = new HashSet<FullType>();
+    Set<BasicType> goodSet = new HashSet<BasicType>();
     for(int i = 0; i < NUMGOODS; i++) {
-      goodSet.add(new FullType(TradeableType.Good, i));
+      goodSet.add(new BasicType(TradeableType.Good, i));
     }
     
     //create valuation

@@ -3,7 +3,7 @@ package brown.registrations;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.messages.Registration;
 import brown.valuation.ValuationBundle;
 
@@ -17,7 +17,7 @@ public class PPValRegistration extends Registration {
    * Agent's valuation.
    */
   private final ValuationBundle valueBundle;
-  private final Set<FullType> allGoods;
+  private final Set<BasicType> allGoods;
 
   /**
    * Empty Constructor for Kryo.
@@ -34,7 +34,7 @@ public class PPValRegistration extends Registration {
    * @param id
    * @param value
    */
-  public PPValRegistration(Integer id, ValuationBundle values, Set<FullType> allGoods) {
+  public PPValRegistration(Integer id, ValuationBundle values, Set<BasicType> allGoods) {
     super(id);
     this.valueBundle = values;
     this.allGoods = allGoods;
@@ -46,11 +46,11 @@ public class PPValRegistration extends Registration {
    * 
    * @return the agents valuation.
    */
-  public double getValue(Set<FullType> type) {
+  public double getValue(Set<BasicType> type) {
     return this.valueBundle.getOrDefault(type, 0.0);
   }
   
-  public Set<FullType> getGoods() {
+  public Set<BasicType> getGoods() {
     return this.allGoods;
   }
 

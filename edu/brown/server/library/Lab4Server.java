@@ -5,7 +5,7 @@ import java.util.List;
 
 import brown.agent.library.Lab4DemoAgent;
 import brown.assets.accounting.Account;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.CDAServer;
@@ -30,7 +30,7 @@ public class Lab4Server extends AgentServer {
 	private final int ID = 1;
 	// private final FullType TYPENO = new FullType(SecurityType.PredictionNo,
 	// ID);
-	private final FullType TYPEYES = new FullType(TradeableType.PredictionYes,
+	private final BasicType TYPEYES = new BasicType(TradeableType.PredictionYes,
 			ID);
 	// private boolean yes, no = false;
 

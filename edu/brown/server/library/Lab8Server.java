@@ -13,7 +13,7 @@ import brown.rules.allocationrules.SimpleDemandAllocation;
 import brown.rules.allocationrules.SimpleHighestBidderAllocation;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.marketinternalstates.SimpleInternalState;
 import brown.markets.Market;
 import brown.messages.Registration;
@@ -95,7 +95,7 @@ public class Lab8Server extends AgentServer {
 			throws UnsupportedBiddingLanguageException {
 		// Constructs auction according to rules
 		Set<Tradeable> theSet = new HashSet<Tradeable>();
-		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
+		Map<String, BasicType> forTakehiro = new HashMap<String, BasicType>();
 		for (Integer ID : this.INTS) {
 			Tradeable newT = new Lab8Good(ID);
 			theSet.add(newT);
@@ -120,7 +120,7 @@ public class Lab8Server extends AgentServer {
 		Map<String, Map<Set<String>, Double>> allBids = generator
 				.convertAllBidsToSimpleBids(generator.allBidderValuations);
 		System.out.println("VALUATIONS" + allBids);
-		Map<Integer, Map<Set<FullType>, Double>> valuations = new HashMap<Integer, Map<Set<FullType>, Double>>();
+		Map<Integer, Map<Set<BasicType>, Double>> valuations = new HashMap<Integer, Map<Set<BasicType>, Double>>();
 		Map<Integer, String> intToString = new HashMap<Integer, String>();
 
 		for (Entry<Connection, Integer> conn : this.connections.entrySet()) {
@@ -128,8 +128,8 @@ public class Lab8Server extends AgentServer {
 			for (Entry<String, Map<Set<String>, Double>> entry : allBids.entrySet()) {
 				Map<Set<String>, Double> each = entry.getValue();
 				for (Entry<Set<String>, Double> toAdd : each.entrySet()) {
-					Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
-					Set<FullType> adjusted = new HashSet<FullType>();
+					Map<Set<BasicType>, Double> value = new HashMap<Set<BasicType>, Double>();
+					Set<BasicType> adjusted = new HashSet<BasicType>();
 					for (String s : toAdd.getKey()) {
 						adjusted.add(forTakehiro.get(s));
 					}
@@ -216,9 +216,9 @@ public class Lab8Server extends AgentServer {
 			System.out.println(account);
 			System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
 					+ (10000 - account.monies) / account.tradeables.size());
-			Map<Set<FullType>, Double> myValue = valuations.get(account.ID);
+			Map<Set<BasicType>, Double> myValue = valuations.get(account.ID);
 			Double maxValue = 0.0;
-			for (Set<FullType> wantedBundle : myValue.keySet()) {
+			for (Set<BasicType> wantedBundle : myValue.keySet()) {
 				int contains = 0;
 				for (Tradeable t : account.tradeables) {
 					if (wantedBundle.contains(t.getType())) {

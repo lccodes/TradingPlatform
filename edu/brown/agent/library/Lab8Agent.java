@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.agent.Agent;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.ContinuousDoubleAuction;
 import brown.markets.LMSR;

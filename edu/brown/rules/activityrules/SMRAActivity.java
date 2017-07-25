@@ -1,6 +1,6 @@
 package brown.rules.activityrules;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.bundles.SimpleBidBundle;
 import brown.marketinternalstates.MarketInternalState;
 import brown.messages.auctions.Bid;
@@ -24,7 +24,7 @@ public class SMRAActivity implements ActivityRule {
 		double newTotalOldBid = 0;
 		SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
 		SimpleBidBundle oldBundle = (SimpleBidBundle) state.getAllocation();
-		for (FullType demanded : bundle.getDemandSet()) {
+		for (BasicType demanded : bundle.getDemandSet()) {
 			if (bid.AgentID.equals(oldBundle.getBid(demanded).AGENTID)) {
 				newTotalNewBId += oldBundle.getBid(demanded).PRICE;
 			} else {
@@ -33,7 +33,7 @@ public class SMRAActivity implements ActivityRule {
 			oldTotalNewBid += oldBundle.getBid(demanded).PRICE;
 		}
 		
-		for (FullType oldDemanded : oldBundle.getDemandSet()) {
+		for (BasicType oldDemanded : oldBundle.getDemandSet()) {
 			if (bid.AgentID.equals(oldBundle.getBid(oldDemanded).AGENTID)
 					&& bundle.getDemandSet().contains(oldDemanded)) {
 				//if agent is on top, get the working price.

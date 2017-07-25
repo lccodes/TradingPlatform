@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.auctions.arules.MechanismType;
 import brown.bundles.BidBundle;
@@ -21,18 +21,18 @@ import brown.tradeables.Tradeable;
 
 public class SimpleHighestBidderAllocation implements AllocationRule {
   //this needs to not be null
-	private final Map<FullType, MarketState> RESERVE;
-	public SimpleHighestBidderAllocation(Map<FullType, MarketState> reserve) {
+	private final Map<BasicType, MarketState> RESERVE;
+	public SimpleHighestBidderAllocation(Map<BasicType, MarketState> reserve) {
 		this.RESERVE = reserve;
 	}
 	public SimpleHighestBidderAllocation() {
-		this.RESERVE = new HashMap<FullType, MarketState>();
+		this.RESERVE = new HashMap<BasicType, MarketState>();
 	}
 	
 	@Override 
 	public BidBundle getAllocation(MarketInternalState state) {
 		System.out.println("BIDS? " + state.getBids());
-		Map<FullType, MarketState> highest = new HashMap<FullType, MarketState>();
+		Map<BasicType, MarketState> highest = new HashMap<BasicType, MarketState>();
 		MarketState def = new MarketState(null,0);
 		for (Tradeable trade : state.getTradeables()) {
 			MarketState maxBidder = this.RESERVE.getOrDefault(trade.getType(), def);

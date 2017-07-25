@@ -5,7 +5,7 @@ import java.util.List;
 
 import brown.agent.library.LukeAgent;
 import brown.assets.accounting.Account;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.CDAServer;
@@ -29,7 +29,7 @@ public class TestServerCDA extends AgentServer {
 	private final int ID = 1;
 	// private final FullType TYPENO = new FullType(SecurityType.PredictionNo,
 	// ID);
-	private final FullType TYPEYES = new FullType(TradeableType.PredictionYes, ID);
+	private final BasicType TYPEYES = new BasicType(TradeableType.PredictionYes, ID);
 	// private booleaimport brown.states.TestStateCDA;n yes, no = false;
 
 	private boolean C = Math.random() > .5;

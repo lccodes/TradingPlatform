@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.bundles.BidBundle;
 import brown.bundles.BundleType;
 import brown.bundles.MarketState;
@@ -49,7 +49,7 @@ public class SimpleSecondPriceDemand implements PaymentRule {
 
 	@Override
 	public BidBundle getReserve() {
-		return new SimpleBidBundle(new HashMap<FullType, MarketState>());
+		return new SimpleBidBundle(new HashMap<BasicType, MarketState>());
 	}
 
 	@Override

@@ -7,14 +7,14 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.markets.LMSRBackend;
 import brown.tradeables.Tradeable;
 
 public class LMSRYesClearing implements ClearingRule {
 	private final LMSRBackend BACKEND;
-	private final FullType TYPE;
+	private final BasicType TYPE;
 	private final boolean SHORT;
 
 	public LMSRYesClearing() {
@@ -26,7 +26,7 @@ public class LMSRYesClearing implements ClearingRule {
 	public LMSRYesClearing(LMSRBackend backend, boolean shortSelling) {
 		this.BACKEND = backend;
 		this.SHORT = shortSelling;
-		this.TYPE = new FullType(TradeableType.PredictionYes, backend.getId());
+		this.TYPE = new BasicType(TradeableType.PredictionYes, backend.getId());
 	}
 
 	@Override

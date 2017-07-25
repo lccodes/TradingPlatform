@@ -12,7 +12,7 @@ import brown.rules.allocationrules.SimpleDemandAllocation;
 import brown.rules.allocationrules.SimpleHighestBidderAllocation;
 import brown.assets.accounting.Account;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.bundles.MarketState;
 import brown.marketinternalstates.SimpleInternalState;
 import brown.markets.Market;
@@ -69,7 +69,7 @@ public class FinalProjectServer extends AgentServer {
 			return;
 		}
 
-		Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
+		Map<Set<BasicType>, Double> value = new HashMap<Set<BasicType>, Double>();
 		// for (Integer i : this.INTS) {
 		// if (Math.random() < .1) {
 		// continue;
@@ -94,7 +94,7 @@ public class FinalProjectServer extends AgentServer {
 	public void runGame(boolean finalround) throws UnsupportedBiddingLanguageException {
 		// Constructs auction according to rules
 		Set<Tradeable> theSet = new HashSet<Tradeable>();
-		Map<String, FullType> forTakehiro = new HashMap<String, FullType>();
+		Map<String, BasicType> forTakehiro = new HashMap<String, BasicType>();
 		for (Integer ID : this.INTS) {
 			Tradeable newT = new FinalProjectGood(ID);
 			theSet.add(newT);
@@ -119,7 +119,7 @@ public class FinalProjectServer extends AgentServer {
 		Map<String, Map<Set<String>, Double>> allBids = generator
 				.convertAllBidsToSimpleBids(generator.allBidderValuations);
 		System.out.println("VALUATIONS " + allBids);
-		Map<Integer, Map<Set<FullType>, Double>> valuations = new HashMap<Integer, Map<Set<FullType>, Double>>();
+		Map<Integer, Map<Set<BasicType>, Double>> valuations = new HashMap<Integer, Map<Set<BasicType>, Double>>();
 		Map<Integer, String> intToString = new HashMap<Integer, String>();
 
 		for (Entry<Connection, Integer> conn : this.connections.entrySet()) {
@@ -127,8 +127,8 @@ public class FinalProjectServer extends AgentServer {
 			for (Entry<String, Map<Set<String>, Double>> entry : allBids.entrySet()) {
 				Map<Set<String>, Double> each = entry.getValue();
 				for (Entry<Set<String>, Double> toAdd : each.entrySet()) {
-					Map<Set<FullType>, Double> value = new HashMap<Set<FullType>, Double>();
-					Set<FullType> adjusted = new HashSet<FullType>();
+					Map<Set<BasicType>, Double> value = new HashMap<Set<BasicType>, Double>();
+					Set<BasicType> adjusted = new HashSet<BasicType>();
 					for (String s : toAdd.getKey()) {
 						adjusted.add(forTakehiro.get(s));
 					}
@@ -162,7 +162,7 @@ public class FinalProjectServer extends AgentServer {
 		}
 		
 		if (finalround) {
-			Map<FullType, MarketState> reservePrices = new HashMap<FullType, MarketState>();
+			Map<BasicType, MarketState> reservePrices = new HashMap<BasicType, MarketState>();
 			for (Order o : market.getOrders()) {
 				reservePrices.put(o.GOOD.getType(), new MarketState(null, o.COST));
 			}
@@ -213,9 +213,9 @@ public class FinalProjectServer extends AgentServer {
 			System.out.println(account);
 			System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
 					+ (10000 - account.monies) / account.tradeables.size());
-			Map<Set<FullType>, Double> myValue = valuations.get(account.ID);
+			Map<Set<BasicType>, Double> myValue = valuations.get(account.ID);
 			Double maxValue = 0.0;
-			for (Set<FullType> wantedBundle : myValue.keySet()) {
+			for (Set<BasicType> wantedBundle : myValue.keySet()) {
 				int contains = 0;
 				for (Tradeable t : account.tradeables) {
 					if (wantedBundle.contains(t.getType())) {

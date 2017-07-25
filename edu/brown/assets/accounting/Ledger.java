@@ -10,12 +10,20 @@ import java.util.Set;
 import brown.markets.Market;
 import brown.tradeables.Tradeable;
 
+/**
+ * A ledger tracks all trades within a market. 
+ * @author lcamery
+ *
+ */
 public class Ledger {
 	protected final List<Transaction> transactions;
 	protected final Map<Tradeable, Transaction> latest;
 	protected final List<Transaction> unshared;
 	protected final Market market;
 	
+	/**
+	 * For Kryo do not use
+	 */
 	public Ledger() {
 		this.transactions = null;
 		this.latest = null;

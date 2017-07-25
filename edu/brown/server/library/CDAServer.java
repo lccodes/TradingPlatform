@@ -6,7 +6,7 @@ import java.util.SortedMap;
 
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.auctions.arules.MechanismType;
 import brown.markets.ContinuousDoubleAuction;
 import brown.markets.ITwoSidedAuction;
@@ -16,7 +16,7 @@ import brown.tradeables.Tradeable;
 
 public class CDAServer implements TwoSidedAuction {
 	private final Integer ID;
-	private final FullType TYPE;
+	private final BasicType TYPE;
 	private final ClearingRule RULE;
 	
 	/**
@@ -35,7 +35,7 @@ public class CDAServer implements TwoSidedAuction {
 	 * @param type : SecurityType
 	 * @param rule : ClearingRule
 	 */
-	public CDAServer(Integer ID, FullType type, ClearingRule rule) {
+	public CDAServer(Integer ID, BasicType type, ClearingRule rule) {
 		this.ID = ID;
 		this.TYPE = type;
 		this.RULE = rule;
@@ -47,7 +47,7 @@ public class CDAServer implements TwoSidedAuction {
 	}
 
 	@Override
-	public FullType getTradeableType() {
+	public BasicType getTradeableType() {
 		return this.TYPE;
 	}
 

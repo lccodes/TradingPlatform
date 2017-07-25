@@ -17,7 +17,7 @@ import brown.assets.accounting.Account;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
 import brown.assets.accounting.Transaction;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.auctions.arules.MechanismType;
 import brown.bundles.BidBundle;
@@ -62,6 +62,12 @@ import com.esotericsoftware.kryo.Kryo;
 public final class Startup {
 	
 	//TODO: Consider reflection for dynamic loading
+  /**
+   * registers most necessary classes with Kryo.
+   * @param kryo
+   * instance of the kryo object.
+   * @return
+   */
 	public static boolean start(Kryo kryo) {
 		kryo.register(IllegalArgumentException.class);
 		kryo.register(java.util.LinkedList.class);
@@ -106,7 +112,7 @@ public final class Startup {
 		kryo.register(LMSRYesClearing.class);
 		kryo.register(LMSRNoClearing.class);
 		kryo.register(TradeableType.class);
-		kryo.register(FullType.class);
+		kryo.register(BasicType.class);
 		kryo.register(CDAServer.class);
 		kryo.register(ClosestMatchClearing.class);
 		kryo.register(LowestPriceClearing.class);

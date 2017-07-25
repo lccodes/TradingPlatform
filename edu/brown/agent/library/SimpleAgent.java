@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import brown.agent.Agent;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.ContinuousDoubleAuction;
 import brown.markets.LMSR;
@@ -24,12 +24,12 @@ import brown.valuation.ValuationBundle;
 public class SimpleAgent extends Agent {
   
   protected ValuationBundle myValuation;
-  protected Set<FullType> allGoods;
+  protected Set<BasicType> allGoods;
   
   public SimpleAgent(String host, int port) throws AgentCreationException {
     super(host, port, new LabGameSetup());
     this.myValuation = new ValuationBundle();
-    this.allGoods = new HashSet<FullType>();
+    this.allGoods = new HashSet<BasicType>();
   }
   
   @Override

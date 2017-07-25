@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.auctions.arules.MechanismType;
 import brown.bundles.BidBundle;
 import brown.bundles.BundleType;
@@ -22,14 +22,14 @@ import brown.tradeables.Tradeable;
 import brown.valuation.SpecValGenerator;
 
 public class SimpleClockAllocation implements AllocationRule {
-	private Map<FullType, MarketState> lastDemand;
+	private Map<BasicType, MarketState> lastDemand;
 	private final SpecValGenerator GENERATOR;
 	private final Map<Integer, String> IDTOSTRING;
 	private double maxRevenue;
 
 	public SimpleClockAllocation(SpecValGenerator generator,
 			Map<Integer, String> idToString) {
-		this.lastDemand = new HashMap<FullType, MarketState>();
+		this.lastDemand = new HashMap<BasicType, MarketState>();
 		this.GENERATOR = generator;
 		this.IDTOSTRING = idToString;
 		this.maxRevenue = 0;
@@ -37,7 +37,7 @@ public class SimpleClockAllocation implements AllocationRule {
 
 	@Override
 	public BidBundle getAllocation(MarketInternalState state) {
-		Map<FullType, MarketState> highest = new HashMap<FullType, MarketState>();
+		Map<BasicType, MarketState> highest = new HashMap<BasicType, MarketState>();
 		for (Tradeable trade : state.getTradeables()) {
 			MarketState lastHigh = this.lastDemand.getOrDefault(
 					trade.getType(), new MarketState(null, 0));
@@ -63,7 +63,7 @@ public class SimpleClockAllocation implements AllocationRule {
 		}
 		System.out.println("last highest " + highest);
 		//clock price ascension
-		for (Entry<FullType, MarketState> entry : highest.entrySet()) {
+		for (Entry<BasicType, MarketState> entry : highest.entrySet()) {
 			this.lastDemand.put(
 					entry.getKey(),
 					new MarketState(entry.getValue().AGENTID, entry
@@ -79,7 +79,7 @@ public class SimpleClockAllocation implements AllocationRule {
 		System.out.println("last Demanded " + this.lastDemand);
 
 		Map<String, Map<Set<String>, Double>> forVCGGenerator = new HashMap<String, Map<Set<String>, Double>>();
-		Map<String, FullType> recoverTypes = new HashMap<String, FullType>();
+		Map<String, BasicType> recoverTypes = new HashMap<String, BasicType>();
 		Map<String, MarketState> recoverBidders = new HashMap<String, MarketState>();
 		for (Bid bid : state.getBids()) {
 			double totalForBid = 0;
@@ -87,7 +87,7 @@ public class SimpleClockAllocation implements AllocationRule {
 				SimpleBidBundle bundle = (SimpleBidBundle) bid.Bundle;
 				Map<Set<String>, Double> bundlePriceGenerator = new HashMap<Set<String>, Double>();
 				Set<String> types = new HashSet<String>();
-				for (FullType t : bundle.getDemandSet()) {
+				for (BasicType t : bundle.getDemandSet()) {
 					types.add("" + t.ID);
 					recoverTypes.put("" + t.ID, t);
 					if (bundle.isDemanded(t)) {
@@ -127,7 +127,7 @@ public class SimpleClockAllocation implements AllocationRule {
 			state.setMaximizingRevenue(false);
 		}
 
-		Map<FullType, MarketState> vcgHighest = new HashMap<FullType, MarketState>();
+		Map<BasicType, MarketState> vcgHighest = new HashMap<BasicType, MarketState>();
 		for (Entry<String, SortedSet<String>> entry : simpleAllocation
 				.entrySet()) {
 			for (String type : entry.getValue()) {
@@ -152,12 +152,12 @@ public class SimpleClockAllocation implements AllocationRule {
 	}
 
 	public static MarketState getBP(
-			Map<FullType, MarketState> highest, FullType type) {
+			Map<BasicType, MarketState> highest, BasicType type) {
 		MarketState attempt = highest.get(type);
 		if (attempt != null) {
 			return attempt;
 		}
-		for (Entry<FullType, MarketState> entry : highest.entrySet()) {
+		for (Entry<BasicType, MarketState> entry : highest.entrySet()) {
 			if (entry.getKey().equals(type)) {
 				return entry.getValue();
 			}

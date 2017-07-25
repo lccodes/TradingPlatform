@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import brown.agent.Agent;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.ContinuousDoubleAuction;
 import brown.markets.LMSR;
@@ -83,9 +83,9 @@ public class AuctionAgent extends Agent {
 
 	@Override
 	public void onSimpleSealed(SimpleAuction market) {
-		for (FullType type : market.getTradeables()) {
+		for (BasicType type : market.getTradeables()) {
 			Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getMarketState(type).PRICE);
-			Map<FullType, Double> bids = new HashMap<FullType, Double>();
+			Map<BasicType, Double> bids = new HashMap<BasicType, Double>();
 			bids.put(type, this.myMax);
 			market.bid(this, bids);
 		}
@@ -93,10 +93,10 @@ public class AuctionAgent extends Agent {
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleAuction market) {
-		for (FullType type : market.getTradeables()) {
+		for (BasicType type : market.getTradeables()) {
 			Logging.log("[-] bidRequest for " + market.getAuctionID() + " w/ hb " + market.getMarketState(type).PRICE);
 			if (market.getMarketState(type).AGENTID == null && market.getMarketState(type).PRICE < this.myMax) {
-				Map<FullType, Double> bids = new HashMap<FullType, Double>();
+				Map<BasicType, Double> bids = new HashMap<BasicType, Double>();
 				bids.put(type, market.getMarketState(type).PRICE+1);
 				market.bid(this, bids);
 			}

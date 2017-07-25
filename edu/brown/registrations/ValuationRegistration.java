@@ -3,7 +3,7 @@ package brown.registrations;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.messages.Registration;
 import brown.valuation.ValuationBundle;
 
@@ -43,7 +43,7 @@ public class ValuationRegistration extends Registration {
 	 * 
 	 * @return the agents valuation.
 	 */
-	public double getValue(Set<FullType> type) {
+	public double getValue(Set<BasicType> type) {
 		return this.valueBundle.getOrDefault(type, 0.0);
 	}
 

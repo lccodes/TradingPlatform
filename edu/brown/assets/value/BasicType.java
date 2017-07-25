@@ -1,15 +1,33 @@
 package brown.assets.value;
 
-public class FullType {
+/**
+ * the basic, indivisible trading datatype. 
+ * Implemented by every other type of tradeable
+ * and used in auctions.
+ * @author acoggins
+ *
+ */
+public class BasicType {
 	public final TradeableType TYPE;
 	public final Integer ID;
 	
-	public FullType() {
+	/**
+	 * for Kryo.
+	 */
+	public BasicType() {
 		this.TYPE = null;
 		this.ID = null;
 	}
 	
-	public FullType(TradeableType type, Integer ID) {
+	/**
+	 * A BasicType consists of a TradeableType enum, and the private
+	 * ID of its agent owner.
+	 * @param type
+	 * the type enum of the basicType
+	 * @param ID
+	 * the private id of the agent that owns the BasicType.
+	 */
+	public BasicType(TradeableType type, Integer ID) {
 		this.TYPE = type;
 		this.ID = ID;
 	}
@@ -36,7 +54,7 @@ public class FullType {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    FullType other = (FullType) obj;
+    BasicType other = (BasicType) obj;
     if (ID == null) {
       if (other.ID != null)
         return false;

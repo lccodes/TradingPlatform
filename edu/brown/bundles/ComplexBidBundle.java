@@ -3,10 +3,16 @@ package brown.bundles;
 import java.util.Map;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 
+/**
+ * A Complex Bid Bundle is a bid bundle that submits bids for vectors 
+ * of goods. i.e. (a b c) = 1
+ * @author acoggins
+ *
+ */
 public class ComplexBidBundle implements BidBundle {
-	private final Map<Set<FullType>, MarketState> BIDS;
+	private final Map<Set<BasicType>, MarketState> BIDS;
 	private final BundleType BT;
 	
 	/**
@@ -23,7 +29,7 @@ public class ComplexBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public ComplexBidBundle(Map<Set<FullType>, MarketState> bid, Integer agent) {
+	public ComplexBidBundle(Map<Set<BasicType>, MarketState> bid, Integer agent) {
 		this.BIDS = bid;
 		this.BT = BundleType.Complex;
 	}
@@ -47,7 +53,7 @@ public class ComplexBidBundle implements BidBundle {
 		return this.BT;
 	}
 	
-	public MarketState getBid(Set<FullType> types) {
+	public MarketState getBid(Set<BasicType> types) {
 		return this.BIDS.get(types);
 	}
 

@@ -7,6 +7,12 @@ import java.util.Set;
 
 import brown.tradeables.Tradeable;
 
+/**
+ * an account belongs to an agent and stores tradeables
+ * and money for that agent.
+ * @author acoggins
+ *
+ */
 public class Account {
 	public final Integer ID;
 	public final double monies;
@@ -96,7 +102,7 @@ public class Account {
 	}
 	
 	/**
-	 * Removes monies and goods; leave 0 or null if not using both
+	 * Removes monies and goods; leave 0 or null if gives an already constructed account to a particular agent.not using both
 	 * @param newMonies : money to remove
 	 * @param newGoods : goods to remove 
 	 * @return updated Account
@@ -110,6 +116,14 @@ public class Account {
 		return new Account(this.ID, this.monies-removeMonies, this.tradeables);
 	}
 
+	/**
+	 * removes an individual tradeable and money
+	 * @param removeMonies
+	 * money to be removed
+	 * @param t
+	 * tradeable to be removed
+	 * @return updated account.
+	 */
 	public Account remove(double removeMonies, Tradeable t) {
 		if (t == null) {
 			return new Account(this.ID, this.monies-removeMonies, this.tradeables);
@@ -124,10 +138,22 @@ public class Account {
 		return new Account(this.ID, this.monies-removeMonies, unique);
 	}
 
+	/**
+	 * add money to an account.
+	 * @param add
+	 * money to be added
+	 * @return
+	 * an updated account.
+	 */
 	public Account add(double add) {
 		return new Account(this.ID, this.monies+add, this.tradeables);
 	}
 	
+	/**
+	 * copies this account.
+	 * @return
+	 * copied account.
+	 */
 	public Account toAgent() {
 		List<Tradeable> forAgent = new LinkedList<Tradeable>();
 		for (Tradeable t : this.tradeables) {

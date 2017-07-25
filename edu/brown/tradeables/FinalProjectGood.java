@@ -3,7 +3,7 @@ package brown.tradeables;
 import java.util.List;
 
 import brown.assets.accounting.Account;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
 import brown.states.StateOfTheWorld;
 
@@ -19,7 +19,7 @@ public class FinalProjectGood extends Tradeable {
 	 */
 	private Integer agentId;
 	private final Integer goodID;
-	private final FullType TYPE;
+	private final BasicType TYPE;
 
 	/**
 	 * Empty Constructor.
@@ -32,12 +32,13 @@ public class FinalProjectGood extends Tradeable {
 	/**
 	 * Constructor.
 	 * 
-	 * @param agentId
+	 * @param goodID
+	 * private id of the agent who owns the good
 	 */
 	public FinalProjectGood(Integer goodID) {
 		this.agentId = null;
 		this.goodID = goodID;
-		this.TYPE = new FullType(TradeableType.Custom, this.goodID);
+		this.TYPE = new BasicType(TradeableType.Custom, this.goodID);
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class FinalProjectGood extends Tradeable {
 	}
 
 	@Override
-	public FullType getType() {
+	public BasicType getType() {
 		return this.TYPE;
 	}
 

@@ -11,7 +11,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.random.ISAACRandom;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 
 /**
  * gets valuations where values directly depend on input size function.
@@ -19,7 +19,7 @@ import brown.assets.value.FullType;
  *
  */
 public class SizeDependentValuation implements IValuation {
-	private Set<FullType> goods; 
+	private Set<BasicType> goods; 
 	private Function<Integer, Double> valFunction; 
 	private Double valueScale;
 
@@ -32,7 +32,7 @@ public class SizeDependentValuation implements IValuation {
 	 * @param valueScale
 	 * Value scale that multiplies the value of all bundles.
 	 */
-	public SizeDependentValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
+	public SizeDependentValuation (Set<BasicType> goods, Function<Integer, Double> valFunction, 
 			 Double valueScale) {
 		this.goods = goods; 
 		this.valFunction = valFunction; 
@@ -47,9 +47,9 @@ public class SizeDependentValuation implements IValuation {
 		//initialize a bundle of existing sets.
 		ValuationBundle existingSets = new ValuationBundle();
 		//add an empty bundle
-		existingSets.add(new Valuation(new HashSet<FullType>(), 0.0));
+		existingSets.add(new Valuation(new HashSet<BasicType>(), 0.0));
 		  //iterate bundle adding process over all goods
-			for(FullType good : goods) {
+			for(BasicType good : goods) {
 			  //create temporary bundle to be added later. 
 				ValuationBundle temp = new ValuationBundle();
 				//for each value in existingSets, create a new bundle containing that good
@@ -57,7 +57,7 @@ public class SizeDependentValuation implements IValuation {
 				for(Valuation e : existingSets) {
 					if (!e.contains(good)) {
 					  //create a copy set of goods, and add the new good to it.
-						Set<FullType> eCopy = new HashSet<FullType>(e.getGoods()); 
+						Set<BasicType> eCopy = new HashSet<BasicType>(e.getGoods()); 
 						eCopy.add(good);
 						//add it to temp with a price determined by the value function.
 						temp.add(eCopy, valFunction.apply(eCopy.size()) * valueScale);
@@ -92,13 +92,13 @@ public class SizeDependentValuation implements IValuation {
 					while (size < 1 || size > goods.size()) {
 						size = (int) sizeDist.sample();}
 					//bundle to be added to
-						Set<FullType> theGoods = new HashSet<>();
+						Set<BasicType> theGoods = new HashSet<>();
 					//list of goods to uniformly sample from
-						List<FullType> goodList = new ArrayList<FullType>(goods); 
+						List<BasicType> goodList = new ArrayList<BasicType>(goods); 
 						//sample without replacement goods to add to the bundle size times.
 						for(int j = 0; j < size; j++) {
 							Integer rand = (int) (Math.random() * goodList.size());
-							FullType aGood = goodList.get(rand);
+							BasicType aGood = goodList.get(rand);
 							theGoods.add(aGood);
 							goodList.remove(aGood);
 						}

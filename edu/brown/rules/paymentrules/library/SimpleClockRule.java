@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.bundles.BidBundle;
 import brown.bundles.BundleType;
 import brown.bundles.MarketState;
@@ -20,7 +20,7 @@ import brown.setup.Logging;
 import brown.tradeables.Tradeable;
 
 public class SimpleClockRule implements PaymentRule {
-	private final SimpleBidBundle RESERVE = new SimpleBidBundle(new HashMap<FullType, MarketState>());
+	private final SimpleBidBundle RESERVE = new SimpleBidBundle(new HashMap<BasicType, MarketState>());
 
 	@Override
 	public List<Order> getPayments(MarketInternalState state) {

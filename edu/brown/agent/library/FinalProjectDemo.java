@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.messages.markets.GameReport;
@@ -21,11 +21,11 @@ public class FinalProjectDemo extends FinalProjectAgent {
 	@Override
 	public void onSimpleSealed(SimpleAuction market) {
 		System.out.println("Start");
-		Map<FullType, Double> toBid = new HashMap<FullType,Double>();
-		for (Entry<Set<FullType>, Double> types : this.myValuation.entrySet()) {
+		Map<BasicType, Double> toBid = new HashMap<BasicType,Double>();
+		for (Entry<Set<BasicType>, Double> types : this.myValuation.entrySet()) {
 			System.out.println("Sample others...");
 			System.out.println(this.sampleValuation());
-			for (FullType type : types.getKey()) {
+			for (BasicType type : types.getKey()) {
 				toBid.put(type, types.getValue()/(double)types.getKey().size());
 			}
 			System.out.println("WORKING");
@@ -36,10 +36,10 @@ public class FinalProjectDemo extends FinalProjectAgent {
 
 	@Override
 	public void onSimpleOpenOutcry(SimpleAuction market) {
-		Set<FullType> toBid = new HashSet<FullType>();
+		Set<BasicType> toBid = new HashSet<BasicType>();
 		System.out.println(this.sampleValuation());
-		for (Set<FullType> types : this.myValuation.keySet()) {
-			for (FullType type : types) {
+		for (Set<BasicType> types : this.myValuation.keySet()) {
+			for (BasicType type : types) {
 				if (market.getMarketState(type).PRICE < Math.min(100,this.myValuation.get(types))) {
 					toBid.add(type);
 				}

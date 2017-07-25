@@ -8,12 +8,12 @@ import java.util.TreeMap;
 import brown.agent.Agent;
 import brown.assets.accounting.Ledger;
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.messages.markets.MarketOrder;
 
 public class ContinuousDoubleAuction implements ITwoSidedPriceSetter {
 	private final Integer MARKETID;
-	private final FullType TYPE;
+	private final BasicType TYPE;
 	private final SortedMap<Double, Double> BUYBOOK;
 	private final SortedMap<Double, Double> SELLBOOK;
 	private final Ledger LEDGER;
@@ -56,7 +56,7 @@ public class ContinuousDoubleAuction implements ITwoSidedPriceSetter {
 	}
 
 	@Override
-	public FullType getTradeableType() {
+	public BasicType getTradeableType() {
 		return this.TYPE;
 	}
 

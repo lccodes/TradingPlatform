@@ -13,7 +13,7 @@ import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.random.ISAACRandom;
 import org.apache.commons.math3.random.RandomGenerator;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 
 /**
  * valuation implementation where valuations follow a normal distribution
@@ -25,7 +25,7 @@ import brown.assets.value.FullType;
  *
  */
 public class NormalValuation implements IValuation {
-	private Set<FullType> goods; 
+	private Set<BasicType> goods; 
 	private Function<Integer, Double> valFunction; 
 	private Double baseVariance; 
 	private Double expectedCovariance;
@@ -45,7 +45,7 @@ public class NormalValuation implements IValuation {
 	 * @param valueScale
 	 * coefficient of scale.
 	 */
-	public NormalValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
+	public NormalValuation (Set<BasicType> goods, Function<Integer, Double> valFunction, 
 			 Boolean isMonotonic, Double valueScale) {
 		this.goods = goods; 
 		this.valFunction = valFunction; 
@@ -70,7 +70,7 @@ public class NormalValuation implements IValuation {
 	 * @param valueScale
 	 * coefficient of scale.
 	 */
-	public NormalValuation (Set<FullType> goods, Function<Integer, Double> valFunction, 
+	public NormalValuation (Set<BasicType> goods, Function<Integer, Double> valFunction, 
 			Double baseVariance, Double expectedCovariance, Boolean isMonotonic, 
 			Double valueScale) {
 		this.goods = goods; 
@@ -87,29 +87,29 @@ public class NormalValuation implements IValuation {
 	  populateVarCoVarMatrix();
 		//random generator for all distributions in this method
 		RandomGenerator rng = new ISAACRandom();
-		Map<Map<Integer, FullType>, Double> existingSetsID =
-				new HashMap<Map<Integer, FullType>, Double>();
+		Map<Map<Integer, BasicType>, Double> existingSetsID =
+				new HashMap<Map<Integer, BasicType>, Double>();
 		//map to cater to necessary iteration structure for monotonicity
-		Map<Map<Integer, FullType>, Double> previousSize =
-				new HashMap<Map<Integer, FullType>, Double>();
- 		Map<Integer, FullType> numberGoods = new HashMap<Integer, FullType>();
+		Map<Map<Integer, BasicType>, Double> previousSize =
+				new HashMap<Map<Integer, BasicType>, Double>();
+ 		Map<Integer, BasicType> numberGoods = new HashMap<Integer, BasicType>();
  		int count = 0; 
- 		for (FullType good : goods) {
+ 		for (BasicType good : goods) {
  			numberGoods.put(count, good);
  			count++;
  		}
  		//give maps starting values
-		existingSetsID.put(new HashMap<Integer, FullType>(), 0.0);
-		previousSize.put(new HashMap<Integer, FullType>(), 0.0);
+		existingSetsID.put(new HashMap<Integer, BasicType>(), 0.0);
+		previousSize.put(new HashMap<Integer, BasicType>(), 0.0);
 		for(int i = 0; i < numberGoods.size(); i++) {
 			//hashmap populated with every subset of size i;
-			Map<Map<Integer, FullType>, Double> temp =
-					new HashMap<Map<Integer, FullType>, Double>();
+			Map<Map<Integer, BasicType>, Double> temp =
+					new HashMap<Map<Integer, BasicType>, Double>();
 			//for each good in the previous size subset
-			for(Map<Integer, FullType> e : previousSize.keySet()) {
+			for(Map<Integer, BasicType> e : previousSize.keySet()) {
 					//for each good, create a new bundle, as 
 					for(Integer id : numberGoods.keySet()){
-						Map<Integer, FullType> eCopy = new HashMap<Integer, FullType>(e);
+						Map<Integer, BasicType> eCopy = new HashMap<Integer, BasicType>(e);
 						if(!e.keySet().contains(id)) {
 							eCopy.put(id, numberGoods.get(id));
 							if (!temp.containsKey(eCopy)) {
@@ -129,8 +129,8 @@ public class NormalValuation implements IValuation {
 								//apply monotonic constraints. 
 								Double highestValSubSet = 0.0;
 								for(Integer anId : eCopy.keySet()) {
-									Map<Integer, FullType> eCopyCopy = 
-											new HashMap<Integer, FullType>(eCopy);
+									Map<Integer, BasicType> eCopyCopy = 
+											new HashMap<Integer, BasicType>(eCopy);
 									eCopyCopy.remove(anId);
 									if(existingSetsID.containsKey(eCopyCopy)) {
 										if(existingSetsID.get(eCopyCopy) > highestValSubSet) {
@@ -153,8 +153,8 @@ public class NormalValuation implements IValuation {
 		}
 		//move the existing sets from an ID based to the structure in the type signature. 
 		ValuationBundle existingSets = new ValuationBundle();
-		for(Map<Integer, FullType> idGood : existingSetsID.keySet()) {
-			Set<FullType> goodsToReturn = new HashSet<FullType>(idGood.values());
+		for(Map<Integer, BasicType> idGood : existingSetsID.keySet()) {
+			Set<BasicType> goodsToReturn = new HashSet<BasicType>(idGood.values());
 			existingSets.add(goodsToReturn, existingSetsID.get(idGood));
 		}
 		return existingSets;
@@ -176,14 +176,14 @@ public class NormalValuation implements IValuation {
           //repeatedly sample bundle size until a valid size is picked.
           while (size < 1 || size > goods.size()) {
             size = (int) sizeDist.sample();}
-          Map<Integer, FullType> theGoods = new HashMap<>();
-          Set<FullType> goodsSet = new HashSet<>();
+          Map<Integer, BasicType> theGoods = new HashMap<>();
+          Set<BasicType> goodsSet = new HashSet<>();
           //list of goods to uniformly sample from
-            List<FullType> goodList = new ArrayList<FullType>(goods); 
+            List<BasicType> goodList = new ArrayList<BasicType>(goods); 
             //sample without replacement goods to add to the bundle size times.
             for(int j = 0; j < size; j++) {
               Integer rand = (int) (Math.random() * goodList.size());
-              FullType aGood = goodList.get(rand);
+              BasicType aGood = goodList.get(rand);
               theGoods.put(rand, aGood);
               goodsSet.add(aGood);
               goodList.remove(aGood);
@@ -320,8 +320,8 @@ public class NormalValuation implements IValuation {
 	 * @return
 	 * whether or not the first set is a subset of the second.
 	 */
-	private Boolean isSubset(Set<FullType> firstSet, Set<FullType> secondSet) {
-	  for(FullType f : firstSet) {
+	private Boolean isSubset(Set<BasicType> firstSet, Set<BasicType> secondSet) {
+	  for(BasicType f : firstSet) {
 	    if(!secondSet.contains(f)) {
 	      return false;
 	    }

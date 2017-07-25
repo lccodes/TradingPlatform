@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import brown.assets.accounting.Account;
 import brown.assets.value.EndState;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.states.StateOfTheWorld;
 
 /**
@@ -18,7 +18,7 @@ public class Tradeable {
 	protected Function<EndState, List<Account>> CONVERTER;
 	
 	protected final long TIMESTAMP;
-	protected final FullType TYPE;
+	protected final BasicType TYPE;
 	
 	/**
 	 * For KyroNet
@@ -34,10 +34,13 @@ public class Tradeable {
 	/**
 	 * Simple Good
 	 * @param type
+	 * the type of the tradeable, meaning its enum type and private id of the owner.
 	 * @param count
+	 * number of BasicTypes in the tradeable.
 	 * @param owner
+	 * Owner of the Tradeable.
 	 */
-	public Tradeable(FullType type, double count, Integer owner) {
+	public Tradeable(BasicType type, double count, Integer owner) {
 		this.count = count;
 		this.TYPE = type;
 		this.agentID = owner;
@@ -49,9 +52,11 @@ public class Tradeable {
 	/**
 	 * Simple good w/o owner
 	 * @param type
+	 * the type of the tradeable, meaning its enum type and private id of the owner.
 	 * @param count
+	 * number of Basictypes in the tradeable.
 	 */
-	public Tradeable(FullType type, double count) {
+	public Tradeable(BasicType type, double count) {
 		this.count = count;
 		this.TYPE = type;
 		this.agentID = null;
@@ -63,11 +68,15 @@ public class Tradeable {
 	/**
 	 * Contract
 	 * @param type
+	 * BasicType of the tradeable.
 	 * @param count
+	 * number of tradeables.
 	 * @param owner
+	 * private id of the tradeable's owner.
 	 * @param closure
+	 * function describing the closure of the tradeable (ask about this?)
 	 */
-	public Tradeable(FullType type, double count, Integer owner,
+	public Tradeable(BasicType type, double count, Integer owner,
 			Function<EndState, List<Account>> closure) {
 		this.count = count;
 		this.TYPE = type;
@@ -83,7 +92,7 @@ public class Tradeable {
 	 * @param count
 	 * @param closure
 	 */
-	public Tradeable(FullType type, double count,
+	public Tradeable(BasicType type, double count,
 			Function<EndState, List<Account>> closure) {
 		this.count = count;
 		this.TYPE = type;
@@ -93,23 +102,45 @@ public class Tradeable {
 		this.CONVERTER = closure;
 	}
 	
+	/**
+	 * gets agent id
+	 * @return
+	 * Agent id
+	 */
 	public Integer getAgentID() {
 		return this.agentID;
 	}
 	
+	/**
+	 * sets agent id
+	 * @param ID
+	 * a private ID
+	 */
 	public void setAgentID(Integer ID) {
 		this.agentID = ID;
 	}
 	
+	/**
+	 * get count of number of basic goods.
+	 * @return
+	 */
 	public double getCount() {
 		return this.count;
 	}
 
+	/**
+	 * set the count of the number of basic goods.
+	 * @param count
+	 */
 	public void setCount(double count) {
 		this.count = count;
 	}
 	
-	public FullType getType() {
+	/**
+	 * get the enum type of the tradeable.
+	 * @return
+	 */
+	public BasicType getType() {
 		return this.TYPE;
 	}
 	
@@ -122,6 +153,14 @@ public class Tradeable {
 		return new Tradeable(this.TYPE, newCount, this.agentID, this.CONVERTER);
 	}
 	
+	/**
+	 * gives an already-created Tradeable to an agent.
+	 * @param id
+	 * agent's private id.
+	 * @return
+	 * returns a new tradeable that belongs to the 
+	 * agent specified by the id. 
+	 */
 	public Tradeable toAgent(Integer id) {
 		Integer toInclude = null;
 		if (id.equals(this.agentID)) {

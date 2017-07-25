@@ -43,6 +43,7 @@ import com.esotericsoftware.kryonet.Server;
  * away all of the communication logic and largely the shared market structures
  * (auctions, markets, trading) so that designers can focus on their game
  * specifics
+ * 
  */
 public abstract class AgentServer {
 	protected Map<Connection, Integer> connections;

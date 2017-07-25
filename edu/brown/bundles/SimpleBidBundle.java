@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 
 
 public class SimpleBidBundle implements BidBundle {
-	private final Map<FullType,MarketState> BIDS;
+	private final Map<BasicType,MarketState> BIDS;
 	private final BundleType BT;
 	
 	/**
@@ -26,7 +26,7 @@ public class SimpleBidBundle implements BidBundle {
 	 * @param bid : agent's bid
 	 * @param agent : agent ID
 	 */
-	public SimpleBidBundle(Map<FullType, MarketState> bids) {
+	public SimpleBidBundle(Map<BasicType, MarketState> bids) {
 		if (bids == null) {
 			throw new IllegalArgumentException("Null bids");
 		}
@@ -50,8 +50,8 @@ public class SimpleBidBundle implements BidBundle {
 
 	@Override
 	public BidBundle wipeAgent(Integer ID) {
-		Map<FullType, MarketState> newBids = new HashMap<FullType, MarketState>();
-		for (Entry<FullType, MarketState> entry : this.BIDS.entrySet()) {
+		Map<BasicType, MarketState> newBids = new HashMap<BasicType, MarketState>();
+		for (Entry<BasicType, MarketState> entry : this.BIDS.entrySet()) {
 			if (ID.equals(entry.getValue().AGENTID)) {
 				newBids.put(entry.getKey(), entry.getValue());
 			} else {
@@ -62,8 +62,8 @@ public class SimpleBidBundle implements BidBundle {
 		return new SimpleBidBundle(newBids);
 	}
 	
-	public MarketState getBid(FullType type) {
-		for (FullType ot : this.BIDS.keySet()) {
+	public MarketState getBid(BasicType type) {
+		for (BasicType ot : this.BIDS.keySet()) {
 			if(ot.equals(type)) {
 				return BIDS.get(type);
 			}
@@ -76,15 +76,15 @@ public class SimpleBidBundle implements BidBundle {
 		return "[" + this.BT + ": " + this.BIDS + "]";
 	}
 
-	public boolean isDemanded(FullType type) {
+	public boolean isDemanded(BasicType type) {
 		return this.getBid(type) != null;
 	}
 	
-	public Set<FullType> getDemandSet() {
+	public Set<BasicType> getDemandSet() {
 		return this.BIDS.keySet();
 	}
 
-	public Set<FullType> getTradeables() {
+	public Set<BasicType> getTradeables() {
 		return this.BIDS.keySet();
 	}
 }

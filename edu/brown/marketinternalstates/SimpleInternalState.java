@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.assets.accounting.Order;
-import brown.assets.value.FullType;
+import brown.assets.value.BasicType;
 import brown.bundles.BidBundle;
 import brown.bundles.MarketState;
 import brown.bundles.SimpleBidBundle;
@@ -33,7 +33,7 @@ public class SimpleInternalState implements MarketInternalState {
 		this.TRADEABLES = tradeables;
 		this.ID = ID;
 		this.ticks = 0;
-		Map<FullType, MarketState> reserve = new HashMap<FullType, MarketState>();
+		Map<BasicType, MarketState> reserve = new HashMap<BasicType, MarketState>();
 		for (Tradeable t : this.TRADEABLES) {
 			reserve.put(t.getType(), new MarketState(null,0));
 		}
@@ -41,7 +41,7 @@ public class SimpleInternalState implements MarketInternalState {
 		this.maximizing = false;
 	}
 	
-	public SimpleInternalState(Integer ID, Set<Tradeable> tradeables, Map<FullType, MarketState> reserve) {
+	public SimpleInternalState(Integer ID, Set<Tradeable> tradeables, Map<BasicType, MarketState> reserve) {
 		this.BIDS = new LinkedList<Bid>();
 		this.lastAlloc = null;
 		this.lastPayments = null;
@@ -140,7 +140,7 @@ public class SimpleInternalState implements MarketInternalState {
 			return 0;
 		}
 		SimpleBidBundle bundle = (SimpleBidBundle) this.reserve;
-		for (FullType type : bundle.getDemandSet()) {
+		for (BasicType type : bundle.getDemandSet()) {
 			MarketState state = bundle.getBid(type);
 			if (state != null && state.AGENTID != null) {
 				elig+=1;
