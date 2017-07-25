@@ -98,7 +98,7 @@ public class SimpleSimultaneousServer extends AgentServer {
   public void runGame() {
     //setups phase
     int j = 0;
-    while (j < 5) { //CHANGE FOR MORE OR LESS JOIN TIME
+    while (j < 10) { //CHANGE FOR MORE OR LESS JOIN TIME
       try {
         Thread.sleep(1000);
         Logging.log("[-] setup phase " + j++);
