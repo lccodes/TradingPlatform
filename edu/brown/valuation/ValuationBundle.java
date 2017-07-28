@@ -7,8 +7,6 @@ import java.util.Set;
 
 import brown.assets.value.BasicType;
 
-//TODO: accomodate single good case? 
-//done. need to idiot-proof and fix bottom methods.
 /**
  * Valuation bundle class. A group of Valuations. Is iterable
  * and has properties of both a hashmap and a set.
