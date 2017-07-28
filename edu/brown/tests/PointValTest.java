@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
-import brown.valuation.SizeDependentValuation;
+import brown.valuation.library.SizeDependentValuation;
 
 
 public class PointValTest {

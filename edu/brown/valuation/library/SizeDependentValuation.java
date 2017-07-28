@@ -1,4 +1,4 @@
-package brown.valuation;
+package brown.valuation.library;
 
 
 import java.util.ArrayList;
@@ -12,6 +12,8 @@ import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.random.ISAACRandom;
 
 import brown.assets.value.BasicType;
+import brown.valuation.Valuation;
+import brown.valuation.ValuationBundle;
 
 /**
  * gets valuations where values directly depend on input size function.

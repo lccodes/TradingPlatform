@@ -1,4 +1,4 @@
-package brown.valuation;
+package brown.valuation.library;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,8 @@ import org.apache.commons.math3.random.ISAACRandom;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import brown.assets.value.BasicType;
+import brown.valuation.Valuation;
+import brown.valuation.ValuationBundle;
 
 /**
  * valuation implementation where valuations follow a normal distribution

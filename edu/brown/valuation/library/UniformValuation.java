@@ -1,13 +1,13 @@
-package brown.valuation;
+package brown.valuation.library;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 
 import brown.assets.value.BasicType;
+import brown.valuation.ValuationBundle;
 
 /**
  * gives a valuation distributed over a uniform distribution. 

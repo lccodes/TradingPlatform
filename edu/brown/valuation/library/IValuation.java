@@ -1,4 +1,6 @@
-package brown.valuation; 
+package brown.valuation.library; 
+
+import brown.valuation.ValuationBundle;
 
 
 /** interface for generating valuations for agents to use in auctions.

@@ -33,10 +33,10 @@ import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
 import brown.tradeables.Lab8Good;
 import brown.tradeables.Tradeable;
-import brown.valuation.NormalValuation;
-import brown.valuation.SizeDependentValuation;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
+import brown.valuation.library.NormalValuation;
+import brown.valuation.library.SizeDependentValuation;
 
 /**
  * A sever for a single good game. 
