@@ -11,7 +11,6 @@ import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.messages.markets.GameReport;
 import brown.setup.Logging;
-import brown.valuation.Valuation;
 
 public class Lab8Demo extends Lab8Agent {
 
@@ -23,10 +22,10 @@ public class Lab8Demo extends Lab8Agent {
 	public void onSimpleSealed(SimpleAuction market) {
 		System.out.println("Start");
 		Map<BasicType, Double> toBid = new HashMap<BasicType,Double>();
-		for (Valuation types : this.myValuation) {
-			for (BasicType type : types.getGoods()) {
+		for (Set<BasicType> types : this.myValuation.keySet()) {
+			for (BasicType type : types) {
 				//bidding logic 
-				toBid.put(type, types.getPrice()/(double)types.size());
+				toBid.put(type, myValuation.get(types)/(double)types.size());
 			}
 			System.out.println("WORKING");
 		}
@@ -38,9 +37,9 @@ public class Lab8Demo extends Lab8Agent {
 	@Override
 	public void onSimpleOpenOutcry(SimpleAuction market) {
 		Set<BasicType> toBid = new HashSet<BasicType>();
-		for (Valuation types : this.myValuation) {
-			for (BasicType type : types.getGoods()) {
-				if (market.getMarketState(type).PRICE < Math.min(100,types.getPrice())) {
+		for (Set<BasicType> types : this.myValuation.keySet()) {
+			for (BasicType type : types) {
+				if (market.getMarketState(type).PRICE < Math.min(100, myValuation.get(types))) {
 					toBid.add(type);
 				}
 			}

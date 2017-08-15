@@ -5,7 +5,8 @@ import java.util.Set;
 
 import brown.assets.value.BasicType;
 import brown.messages.Registration;
-import brown.valuation.ValuationBundle;
+import brown.valuable.IValuable;
+import brown.valuation.IValuationSet;
 
 /**
  * Registration with valuation from server for lab 3.
@@ -16,7 +17,7 @@ public class PPValRegistration extends Registration {
   /**
    * Agent's valuation.
    */
-  private final ValuationBundle valueBundle;
+  private final Map<Set<BasicType>, Double> valueBundle;
   private final Set<BasicType> allGoods;
 
   /**
@@ -34,7 +35,7 @@ public class PPValRegistration extends Registration {
    * @param id
    * @param value
    */
-  public PPValRegistration(Integer id, ValuationBundle values, Set<BasicType> allGoods) {
+  public PPValRegistration(Integer id, Map<Set<BasicType>, Double> values, Set<BasicType> allGoods) {
     super(id);
     this.valueBundle = values;
     this.allGoods = allGoods;
@@ -54,7 +55,7 @@ public class PPValRegistration extends Registration {
     return this.allGoods;
   }
 
-  public ValuationBundle getValues() {
+  public Map<Set<BasicType>, Double> getValues() {
     return this.valueBundle;
   }
 }

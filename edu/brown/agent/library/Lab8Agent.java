@@ -17,21 +17,20 @@ import brown.messages.trades.NegotiateRequest;
 import brown.registrations.ValuationRegistration;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
-import brown.valuation.ValuationBundle;
 
 public abstract class Lab8Agent extends Agent {
-	protected ValuationBundle myValuation;
+	protected Map<Set<BasicType>, Double> myValuation;
 
 	public Lab8Agent(String host, int port) throws AgentCreationException {
 		super(host, port, new LabGameSetup());
-		this.myValuation = new ValuationBundle();
+		this.myValuation = new HashMap<Set<BasicType>, Double>();
 	}
 
 	@Override
 	public void onRegistration(Registration registration) {
 		super.onRegistration(registration);
 		ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
-		this.myValuation.addAll(valuationRegistration.getValues());
+		this.myValuation.putAll(valuationRegistration.getValues());
 		Logging.log("[+] new XOR values: " + valuationRegistration.getValues());
 	}
 

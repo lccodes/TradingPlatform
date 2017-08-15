@@ -30,9 +30,9 @@ import brown.rules.terminationconditions.SamePaymentsTermination;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
+import brown.specval.SpecValGenerator;
 import brown.tradeables.FinalProjectGood;
 import brown.tradeables.Tradeable;
-import brown.valuation.SpecValGenerator;
 import ch.uzh.ifi.ce.mweiss.specval.model.UnsupportedBiddingLanguageException;
 
 import com.esotericsoftware.kryonet.Connection;

@@ -30,10 +30,11 @@ import brown.rules.terminationconditions.SamePaymentsTermination;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
+import brown.specval.SpecValGenerator;
 import brown.tradeables.Lab8Good;
 import brown.tradeables.Tradeable;
-import brown.valuation.SpecValGenerator;
-import brown.valuation.ValuationBundle;
+import brown.valuation.IValuationSet;
+import brown.valuation.library.BundleValuationSet;
 import ch.uzh.ifi.ce.mweiss.specval.model.UnsupportedBiddingLanguageException;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -70,7 +71,7 @@ public class Lab8Server extends AgentServer {
 			return;
 		}
 
-		ValuationBundle value = new ValuationBundle();
+		BundleValuationSet value = new BundleValuationSet();
 		// for (Integer i : this.INTS) {
 		// if (Math.random() < .1) {
 		// continue;

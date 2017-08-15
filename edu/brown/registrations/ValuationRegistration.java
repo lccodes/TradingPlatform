@@ -1,11 +1,13 @@
 package brown.registrations;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import brown.assets.value.BasicType;
 import brown.messages.Registration;
-import brown.valuation.ValuationBundle;
+import brown.valuable.IValuable;
+import brown.valuation.IValuationSet;
 
 /**
  * Registration with valuation from server for lab 3.
@@ -16,7 +18,7 @@ public class ValuationRegistration extends Registration {
 	/**
 	 * Agent's valuation.
 	 */
-	private final ValuationBundle valueBundle;
+	private final Map<Set<BasicType>, Double> valueBundle;
 
 	/**
 	 * Empty Constructor for Kryo.
@@ -32,7 +34,7 @@ public class ValuationRegistration extends Registration {
 	 * @param id
 	 * @param value
 	 */
-	public ValuationRegistration(Integer id, ValuationBundle values) {
+	public ValuationRegistration(Integer id, Map<Set<BasicType>, Double> values) {
 		super(id);
 		this.valueBundle = values;
 	}
@@ -43,11 +45,15 @@ public class ValuationRegistration extends Registration {
 	 * 
 	 * @return the agents valuation.
 	 */
-	public double getValue(Set<BasicType> type) {
-		return this.valueBundle.getOrDefault(type, 0.0);
+	public Double getValue(Set<BasicType> aVal) {
+		return this.valueBundle.getOrDefault(aVal, 0.0);
+	}
+	
+	public Set<Double> getAllValues() {
+	  return new HashSet<Double> (this.valueBundle.values());
 	}
 
-	public ValuationBundle getValues() {
+	public Map<Set<BasicType>, Double> getValues() {
 		return this.valueBundle;
 	}
 }

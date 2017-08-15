@@ -12,31 +12,21 @@ import java.util.function.Function;
 import com.esotericsoftware.kryonet.Connection;
 
 import brown.assets.accounting.Account;
-import brown.assets.accounting.Order;
 import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
-import brown.marketinternalstates.SimpleInternalState;
+import brown.generator.library.NormalGenerator;
 import brown.markets.Market;
 import brown.markets.library.SimpleSecondPriceMarket;
 import brown.messages.Registration;
 import brown.registrations.SingleValRegistration;
-import brown.registrations.ValuationRegistration;
-import brown.rules.activityrules.OneShotActivity;
-import brown.rules.allocationrules.SimpleHighestBidderAllocation;
-import brown.rules.irpolicies.library.AnonymousPolicy;
-import brown.rules.paymentrules.library.SecondPriceRule;
-import brown.rules.paymentrules.library.SimpleSecondPrice;
-import brown.rules.queryrules.library.OutcryQueryRule;
-import brown.rules.terminationconditions.OneShotTermination;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
 import brown.tradeables.Lab8Good;
 import brown.tradeables.Tradeable;
-import brown.valuation.Valuation;
-import brown.valuation.ValuationBundle;
-import brown.valuation.library.NormalValuation;
-import brown.valuation.library.SizeDependentValuation;
+import brown.valuable.library.Good;
+import brown.valuation.library.AdditiveValuation;
+
 
 /**
  * A sever for a single good game. 
@@ -47,7 +37,7 @@ import brown.valuation.library.SizeDependentValuation;
 public class SimpleSingleGoodServer extends AgentServer {
 	
   private int numberOfBidders;
-  private Map<Integer, ValuationBundle> agentValues = new HashMap<Integer, ValuationBundle>();
+  private Map<Integer, AdditiveValuation> agentValues = new HashMap<Integer, AdditiveValuation>();
   private Function<Integer, Double> VALFUNCTION = x -> (double)x + 10;
   
   /**
@@ -67,8 +57,8 @@ public class SimpleSingleGoodServer extends AgentServer {
 		if (theID == null) {
 			return;
 		}
-		ValuationBundle values = new ValuationBundle();
-		ValuationRegistration registeredValue = new ValuationRegistration(theID, values);
+		SingleValRegistration registeredValue = 
+		    new SingleValRegistration(0, new BasicType(TradeableType.Good, 0), 0.0);
 		this.theServer.sendToTCP(connection.getID(), registeredValue);
 
 		Account oldAccount = acctManager.getAccount(connections.get(connection));
@@ -94,17 +84,18 @@ public class SimpleSingleGoodServer extends AgentServer {
 			}
 		}
 		//create good
-		Set<BasicType> singleGood = new HashSet<BasicType>();
-		singleGood.add(new BasicType(TradeableType.Good, 0));
+		BasicType singleType = new BasicType(TradeableType.Good, 0);
+		Good singleGood = new Good(0);
 		//get valuation
-		NormalValuation normalVal = new NormalValuation(singleGood, VALFUNCTION, false, 1.0);
+		NormalGenerator normalVal = new NormalGenerator(VALFUNCTION, false, 1.0);
 
 		for(Entry<Connection, Integer> conn : this.connections.entrySet()) { 
 		  //check on this
-	    ValuationBundle aValue = normalVal.getAllValuations();
+	    AdditiveValuation aValue = normalVal.getSingleValuation(singleGood);
 	    System.out.println("val " + aValue);
 	    agentValues.put(conn.getValue(), aValue);
-		  this.theServer.sendToTCP(conn.getKey().getID(), new ValuationRegistration(conn.getValue(), aValue));
+		  this.theServer.sendToTCP(conn.getKey().getID(),
+		      new SingleValRegistration(conn.getValue(), singleType, aValue.getPrice()));
 		}
 		//for the market
 		Set<Tradeable> goodSet = new HashSet<Tradeable>();
@@ -130,23 +121,12 @@ public class SimpleSingleGoodServer extends AgentServer {
       System.out.println(account);
       System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
           + (10000 - account.monies) / account.tradeables.size());
-     ValuationBundle myValue = agentValues.get(account.ID);
-      Double maxValue = 0.0;
-      for (Valuation wantedBundle : myValue) {
-        int contains = 0;
-        for (Tradeable t : account.tradeables) {
-          if (wantedBundle.contains(t.getType())) {
-            contains++;
-          }
-        }
-        if (contains == wantedBundle.size()) {
-          maxValue = Math.max(maxValue, wantedBundle.getPrice());
-        }
-      }
+     AdditiveValuation myValue = agentValues.get(account.ID);
       double linearCost = (10000 - account.monies) > 0 ? (10000 - account.monies) : account.monies - 10000;
-      System.out.println(account.ID + " valued what they got at " + maxValue);
-      System.out.println(account.ID + " has a linear utility of " + (maxValue - linearCost));
-      System.out.println(account.ID + " has a strict budget utility of " + (maxValue - linearCost > 0 ? maxValue-linearCost : -1*Double.MAX_VALUE));
+      System.out.println(account.ID + " valued what they got at " + myValue.getPrice());
+      System.out.println(account.ID + " has a linear utility of " + (myValue.getPrice() - linearCost));
+      System.out.println(account.ID + " has a strict budget utility of " + 
+      (myValue.getPrice() - linearCost > 0 ? myValue.getPrice()-linearCost : -1* Double.MAX_VALUE));
       System.out.println();
     }	
 	}

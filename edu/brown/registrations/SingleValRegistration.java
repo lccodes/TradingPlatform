@@ -1,8 +1,5 @@
 package brown.registrations;
 
-import java.util.Map;
-import java.util.Set;
-
 import brown.assets.value.BasicType;
 import brown.messages.Registration;
 
@@ -15,14 +12,16 @@ public class SingleValRegistration extends Registration {
 	/**
 	 * Agent's valuation.
 	 */
-	private final Map<BasicType, Double> valueMap;
-
+	private BasicType good;
+	private Double value; 
+	
 	/**
 	 * Empty Constructor for Kryo.
 	 */
 	public SingleValRegistration() {
 		super(null);
-		this.valueMap = null;
+		this.good = null;
+		this.value = null; 
 	}
 
 	/**
@@ -31,9 +30,10 @@ public class SingleValRegistration extends Registration {
 	 * @param id
 	 * @param value
 	 */
-	public SingleValRegistration(Integer id, Map<BasicType, Double> values) {
+	public SingleValRegistration(Integer id, BasicType good, Double value) {
 		super(id);
-		this.valueMap = values;
+		this.good = good; 
+		this.value = value;
 	}
 
 	/**
@@ -41,11 +41,11 @@ public class SingleValRegistration extends Registration {
 	 * 
 	 * @return the agents valuation.
 	 */
-	public double getValue(BasicType type) {
-		return this.valueMap.getOrDefault(type, 0.0);
+	public double getValue() {
+		return value; 
 	}
 
-	public Map<BasicType, Double> getValues() {
-		return this.valueMap;
+	public BasicType getGood() {
+		return good;
 	}
 }

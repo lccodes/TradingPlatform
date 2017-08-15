@@ -9,37 +9,25 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 
-import brown.rules.allocationrules.SimpleClockAllocation;
-import brown.rules.allocationrules.SimpleHighestBidderAllocation;
 import brown.assets.accounting.Account;
-import brown.assets.accounting.Order;
 import brown.assets.value.BasicType;
 import brown.assets.value.TradeableType;
-import brown.marketinternalstates.SimpleInternalState;
+import brown.generator.library.NormalGenerator;
 import brown.markets.Market;
 import brown.markets.library.SimpleSecondPriceMarket;
 import brown.messages.Registration;
-import brown.rules.paymentrules.library.SimpleClockRule;
-import brown.rules.paymentrules.library.SimpleSecondPrice;
 import brown.registrations.PPValRegistration;
-import brown.rules.activityrules.OneShotActivity;
-import brown.rules.activityrules.SimpleNoJumpActivityRule;
-import brown.rules.irpolicies.library.AnonymousPolicy;
-import brown.rules.queryrules.library.OutcryQueryRule;
-import brown.rules.queryrules.library.SealedBidQuery;
-import brown.rules.terminationconditions.OneShotTermination;
-import brown.rules.terminationconditions.SamePaymentsTermination;
 import brown.server.AgentServer;
 import brown.setup.Logging;
 import brown.setup.library.LabGameSetup;
 import brown.tradeables.Lab8Good;
-import brown.tradeables.SimGood;
 import brown.tradeables.Tradeable;
-import brown.valuation.SpecValGenerator;
-import brown.valuation.Valuation;
-import brown.valuation.ValuationBundle;
-import brown.valuation.library.NormalValuation;
-import ch.uzh.ifi.ce.mweiss.specval.model.UnsupportedBiddingLanguageException;
+import brown.valuable.library.Bundle;
+import brown.valuable.library.Good;
+import brown.valuation.IValuation;
+import brown.valuation.IValuationSet;
+import brown.valuation.library.BundleValuation;
+import brown.valuation.library.BundleValuationSet;
 
 import com.esotericsoftware.kryonet.Connection;
 
@@ -51,7 +39,7 @@ import com.esotericsoftware.kryonet.Connection;
  */
 public class SimpleSimultaneousServer extends AgentServer {
   
-  private Map<Integer, ValuationBundle> agentValues = new HashMap<Integer, ValuationBundle>();
+  private Map<Integer, IValuationSet> agentValues = new HashMap<Integer, IValuationSet>();
   private Integer numberOfBidders;
   private Integer NUMGOODS = 8;
   private Function<Integer, Double> VALFUNCTION = x -> (double) x + 10;
@@ -80,8 +68,8 @@ public class SimpleSimultaneousServer extends AgentServer {
     if (theID == null) {
       return;
     }
-    ValuationBundle values = new ValuationBundle();
     Set<BasicType> allGoods = new HashSet<BasicType>();
+    Map<Set<BasicType>, Double> values = new HashMap<Set<BasicType>, Double>();
     PPValRegistration registeredValue = new PPValRegistration(theID, values, allGoods);
     this.theServer.sendToTCP(connection.getID(), registeredValue);
     Account oldAccount = acctManager.getAccount(connections.get(connection));
@@ -107,21 +95,24 @@ public class SimpleSimultaneousServer extends AgentServer {
       }
     }
     //create set of goods. 
-    Set<BasicType> goodSet = new HashSet<BasicType>();
+    Set<BasicType> typeSet = new HashSet<BasicType>();
+    Set<Good> goodSet = new HashSet<Good>(); 
     for(int i = 0; i < NUMGOODS; i++) {
-      goodSet.add(new BasicType(TradeableType.Good, i));
+     typeSet.add(new BasicType(TradeableType.Good, i));
+     goodSet.add(new Good(i));
     }
     
     //create valuation
-    NormalValuation normalValuation = new NormalValuation(goodSet, VALFUNCTION,
+    NormalGenerator normalValuation = new NormalGenerator(VALFUNCTION,
         BASEVARIANCE, EXPCOVAR, MONOTONIC, VALUESCALE);
     for(Entry<Connection, Integer> conn : this.connections.entrySet()) { 
-      ValuationBundle aValue = normalValuation.getSomeValuations(NUMVALUATIONS,
+      BundleValuationSet aValue = normalValuation.getSomeBundleValuations(
+          new Bundle(goodSet), NUMVALUATIONS,
           BUNDLESIZEMEAN, BUNDLESIZESTDDEV);
       System.out.println("val " + aValue);
       agentValues.put(conn.getValue(), aValue);
       this.theServer.sendToTCP(conn.getKey().getID(), 
-          new PPValRegistration(conn.getValue(), aValue, goodSet));
+          new PPValRegistration(conn.getValue(), convert(aValue), typeSet));
     }
     
     //for the market
@@ -149,16 +140,18 @@ public class SimpleSimultaneousServer extends AgentServer {
       System.out.println(account);
       System.out.println(account.ID + " got " + account.tradeables.size() + " items with an average cost of "
           + (10000 - account.monies) / account.tradeables.size());
-     ValuationBundle myValue = agentValues.get(account.ID);
+     BundleValuationSet myValue = (BundleValuationSet) agentValues.get(account.ID);
       Double maxValue = 0.0;
-      for (Valuation wantedBundle : myValue) {
+      for (IValuation wantedBundle : myValue) {
+        BundleValuation wantedBundleTwo = (BundleValuation) wantedBundle;
         int contains = 0;
         for (Tradeable t : account.tradeables) {
-          if (wantedBundle.contains(t.getType())) {
+          Good corresponding = new Good(t.getType().ID);
+          if (wantedBundleTwo.contains(corresponding)) {
             contains++;
           }
         }
-        if (contains == wantedBundle.size()) {
+        if (contains == wantedBundleTwo.size()) {
           maxValue = Math.max(maxValue, wantedBundle.getPrice());
         }
       }
@@ -168,6 +161,24 @@ public class SimpleSimultaneousServer extends AgentServer {
       System.out.println(account.ID + " has a strict budget utility of " + (maxValue - linearCost > 0 ? maxValue-linearCost : -1*Double.MAX_VALUE));
       System.out.println();
     } 
+  }
+  
+  /**
+   * converts from a bundleValuationSet to a map of set of basictype
+   * @param bvs
+   * @return
+   */
+  private Map<Set<BasicType>, Double> convert(BundleValuationSet bvs) {
+    Map<Set<BasicType>, Double>  valMap = new HashMap<Set<BasicType>, Double>();
+    for(IValuation b : bvs) {
+      BundleValuation newB = (BundleValuation) b;
+      Set<BasicType> basic = new HashSet<BasicType>();
+      Bundle bund = (Bundle) b.getValuable();
+      for(Good g : bund.bundle)
+        basic.add(new BasicType(TradeableType.Good, g.ID));
+      valMap.put(basic, b.getPrice());
+    }
+    return valMap;
   }
   
   public static void main(String[] args) {
